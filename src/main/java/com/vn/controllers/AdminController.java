@@ -185,6 +185,13 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
+	@GetMapping("order")
+	public String getQLDonHang(Model model) {
+		String page = "order.jsp";
+		model.addAttribute("page", page);
+		return "/Admin/production/homeadmin";
+	}
+
 	@Autowired
 	ServletContext app;
 
@@ -734,13 +741,6 @@ public class AdminController {
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
 	}
-
-    @GetMapping("order")
-    public String getQLDonHang(Model model) {
-        String page = "order.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
 
 	@ModelAttribute("fillRank")
 	public Map<Integer, String> getCategory() {
