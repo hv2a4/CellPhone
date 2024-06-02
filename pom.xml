@@ -80,9 +80,14 @@
 			<artifactId>mssql-jdbc</artifactId>
 		</dependency>
 		<dependency>
+<<<<<<< HEAD
 			<groupId>jakarta.el</groupId>
 			<artifactId>jakarta.el-api</artifactId>
 			<version>6.0.0</version>
+=======
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+>>>>>>> origin/vu
 		</dependency>
 	</dependencies>
 

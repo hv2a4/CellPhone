@@ -1,6 +1,7 @@
 package com.vn.controllers;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.text.ParseException;
 =======
 import java.time.LocalDate;
@@ -10,11 +11,19 @@ import java.util.Iterator;
 >>>>>>> origin/khoi
 import java.util.List;
 import java.util.Optional;
+=======
+>>>>>>> origin/vu
 
+import com.vn.DAO.rankDao;
+import com.vn.DAO.userDao;
+import com.vn.entity.rank;
+import com.vn.entity.user;
+import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,10 +79,27 @@ import com.vn.entity.phone;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+=======
+import org.springframework.web.bind.annotation.*;
+
+import com.vn.DAO.ColorDao;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+>>>>>>> origin/vu
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+<<<<<<< HEAD
 	@Autowired
 	HttpServletRequest req;
 	@Autowired
@@ -172,21 +198,38 @@ public class AdminController {
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
 	}
+=======
+    @Autowired
+    HttpServletRequest req;
+    @Autowired
+    ColorDao colorDao;
+    @Autowired
+    userDao userDao;
+    @Autowired
+    rankDao rankDao;
 
-	@GetMapping("product")
-	public String getQLSanPham(Model model) {
-		String page = "product.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
+    @Autowired
+    ServletContext app;
 
-	@GetMapping("order")
-	public String getQLDonHang(Model model) {
-		String page = "order.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
+    @GetMapping({"login", "logout"})
+    public String getlogin(Model model) {
+        return "/Admin/production/login";
+    }
+>>>>>>> origin/vu
 
+    @GetMapping("")
+    public String getMethodName(Model model) {
+        String page = "tongquan.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @ModelAttribute("fillTableUser")
+    public List<user> getList() {
+        return userDao.findAll();
+    }
+
+<<<<<<< HEAD
 	@GetMapping("discount")
 	public String getQLMaGiamGia(Model model) {
 		String page = "discount.jsp";
@@ -728,5 +771,222 @@ public class AdminController {
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
 	}
+=======
+    @ModelAttribute("fillRank")
+    public Map<Integer, String> getCategory() {
+        Map<Integer, String> map = new HashMap<>();
+        List<rank> ranks = rankDao.findAll();
+        for (rank r : ranks) {
+            map.put(r.getID(), r.getNAME());
+        }
+        return map;
+    }
+
+    @ModelAttribute("fillRole")
+    public Map<Boolean, String> getRole() {
+        Map<Boolean, String> map = new HashMap<>();
+        map.put(true, "Admin");
+        map.put(false, "User");
+        return map;
+    }
+
+    @ModelAttribute("gender")
+    public Map<String, String> getGender() {
+        Map<String, String> map = new HashMap<>();
+        map.put("NAM", "Nam");
+        map.put("NU", "Nữ");
+        map.put("KHAC", "Khác");
+        return map;
+    }
+
+    @PostMapping("create-admin")
+    public String create(Model model, @ModelAttribute("userItem") user users, @RequestParam("photo_file") MultipartFile img) throws IOException {
+        if (!img.isEmpty()) {
+            String filename = img.getOriginalFilename();
+
+            // Sử dụng getServletContext().getRealPath() để lấy đường dẫn thư mục đúng
+            String uploadDir = req.getServletContext().getRealPath("/images-user/");
+            File uploadFolder = new File(uploadDir);
+
+            // Kiểm tra và tạo thư mục nếu nó không tồn tại
+            if (!uploadFolder.exists()) {
+                uploadFolder.mkdirs();
+            }
+
+            // Tạo file trong thư mục images
+            File destFile = new File(uploadFolder, filename);
+
+            // Lưu trữ file vào thư mục đã xác định
+            img.transferTo(destFile);
+
+            // Thiết lập các thuộc tính người dùng
+            users.setAVATAR(filename);
+            users.setSTATUS(true);
+            users.setCREATE_AT(new Date());
+            users.setUpdate_at(new Date());
+
+            // Lưu người dùng vào cơ sở dữ liệu
+            userDao.save(users);
+        }
+        return "redirect:/admin/user";
+    }
+
+
+    @GetMapping("user")
+    public String getQLNguoiDung(Model model, @ModelAttribute("userItem") user user) {
+        model.addAttribute("userItem", user);
+        String page = "qlnguoidung.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("profile")
+    public String getProfile(Model model) {
+        String page = "profile.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("authorize/{id}")
+    public String getAuthorize(Model model, @PathVariable("id") String id) {
+        user users = userDao.findById(id).get();
+        users.setROLE(true);
+        users.setUpdate_at(new Date());
+        userDao.save(users);
+        String page = "qlnguoidung.jsp";
+        model.addAttribute("page", page);
+        return "redirect:/admin/user";
+    }
+
+    @GetMapping("unlock/{id}")
+    public String getUnlock(Model model, @PathVariable("id") String id) {
+        user users = userDao.findById(id).get();
+        users.setSTATUS(true);
+        users.setUpdate_at(new Date());
+        userDao.save(users);
+        String page = "qlnguoidung.jsp";
+        model.addAttribute("page", page);
+        return "redirect:/admin/user";
+    }
+
+    @GetMapping("product")
+    public String getQLSanPham(Model model) {
+        String page = "product.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("order")
+    public String getQLDonHang(Model model) {
+        String page = "order.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("discount")
+    public String getQLMaGiamGia(Model model) {
+        String page = "discount.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("color")
+    public String getQLMau(Model model) {
+        String page = "color.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("storage")
+    public String getQLstorage(Model model) {
+        String page = "storage.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("rank")
+    public String getQLrank(Model model) {
+        String page = "rank.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("system")
+    public String getQLsystem(Model model) {
+        String page = "system.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("brand")
+    public String getQLbrand(Model model) {
+        String page = "brand.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("battery_type")
+    public String getQLbattery_type(Model model) {
+        String page = "battery_type.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("headphone_jack")
+    public String getQLheadphone_jack(Model model) {
+        String page = "headphone_jack.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("charging_port")
+    public String getQLcharging_port(Model model) {
+        String page = "charging_port.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("charging_technology")
+    public String getQLcharging_technology(Model model) {
+        String page = "charging_technology.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("statistical")
+    public String getStatistical(Model model) {
+        String page = "statistical.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("screen_resolution")
+    public String getDoPhanGiai(Model model) {
+        String page = "screen_resolution.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("graphics_chip")
+    public String getQLChipDoHoa(Model model) {
+        String page = "graphics_chip.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("status_order")
+    public String getQLTTDonHang(Model model) {
+        String page = "status_order.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+
+    @GetMapping("payment_method")
+    public String getQLPTThanhToan(Model model) {
+        String page = "payment_method.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+>>>>>>> origin/vu
 
 }
