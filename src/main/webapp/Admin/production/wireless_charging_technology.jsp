@@ -29,8 +29,8 @@
 								<div class="modal-body">
 
 									<form:form class="form-horizontal form-label-left"
-										method="POST" modelAttribute="graphics_chip"
-										action="/admin/graphics_chip/create">
+										method="POST" modelAttribute="wireless_charging_technology"
+										action="/admin/wireless_charging_technology/create">
 										<div class="form-group ">
 											<label class="control-label">Tên</label>
 											<form:input path="NAME" cssClass="form-control"
@@ -63,7 +63,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="item" items="${list_graphics_chip }">
+										<c:forEach var="item" items="${list_wireless_charging_technology }">
 											<tr>
 												<td>${item.ID }</td>
 												<td>${item.NAME }</td>
@@ -120,7 +120,7 @@
 																<div class="modal-footer">
 																	<button type="button" class="btn btn-secondary"
 																		data-bs-dismiss="modal">Close</button>
-																	<a href="/admin/graphics_chip/delete?id=${item.ID }"
+																	<a href="/admin/wireless_charging_technology/delete?id=${item.ID }"
 																		class="btn btn-danger">Delete</a>
 																</div>
 															</div>

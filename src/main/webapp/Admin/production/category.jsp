@@ -22,17 +22,17 @@
 						<div class="modal-dialog modal-lg">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h1 class="modal-title fs-5" id="themLabel">Thêm dung lượng mới</h1>
+									<h1 class="modal-title fs-5" id="themLabel">Thêm màu mới</h1>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
 									<form:form class="form-horizontal form-label-left"
-										method="POST" modelAttribute="storage"
-										action="/admin/storage/create">
+										method="POST" modelAttribute="category"
+										action="/admin/category/create">
 										<div class="form-group ">
-											<label class="control-label">Dung lượng</label>
-											<form:input path="GB" cssClass="form-control"
+											<label class="control-label">Tên màu</label>
+											<form:input path="NAME" cssClass="form-control"
 												placeholder="" />
 										</div>
 										<div class="modal-footer">
@@ -57,19 +57,18 @@
 									cellspacing="0" width="100%">
 									<thead>
 										<tr>
-											<th>Mã</th>
-											<th>Tên</th>
+											<th>Mã màu</th>
+											<th>Tên màu</th>
 											<th class="text-center">Hoạt động</th>
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="item" items="${list_storage}">
+										<c:forEach var="item" items="${list_category}">
 											<tr>
 												<td>${item.ID }</td>
-												<td><fmt:formatNumber pattern="###,###">
-													${item.GB }</fmt:formatNumber> GB</td>
+												<td>${item.NAME }</td>
 												<td class="text-center"><i
-													onclick="getstorageById(${item.ID })"
+													onclick="getcategoryById(${item.ID })"
 													class="fa-solid fa-pen-to-square fs-4 mr-3"></i> <i
 													onclick="modelDelete(${item.ID })"
 													class="fa-solid fa-trash fs-4 "></i></td>
@@ -110,17 +109,17 @@
 											</div>
 											<div class="modal-body">
 												<form:form class="form-horizontal form-label-left"
-													method="POST" modelAttribute="storageUpdate"
-													action="/admin/storage/update">
+													method="POST" modelAttribute="categoryUpdate"
+													action="/admin/category/update">
 													<div class="row text-left">
 														<div class="form-group">
 															<label class="control-label">Id</label>
-															<form:input id="storageId" value="${storageUpdate.ID}"
+															<form:input id="categoryId" value="${categoryUpdate.ID}"
 																path="ID" type="text" class="form-control" />
 														</div>
 														<div class="form-group">
-															<label class="control-label">Dung lượng</label>
-															<form:input id="storageGB" path="GB" type="text"
+															<label class="control-label">Tên danh mục</label>
+															<form:input id="categoryName" path="NAME" type="text"
 																class="form-control" placeholder="" />
 														</div>
 													</div>
@@ -143,14 +142,14 @@
 		</div>
 	</div>
 	<script>
-		function getstorageById(id) {
+		function getcategoryById(id) {
 		    $.ajax({
 		        type: "GET",
-		        url: "/admin/ajax/getstorage/" + id,
-		        success: function(storage) {
+		        url: "/admin/ajax/getcategory/" + id,
+		        success: function(category) {
 		            // Đổ dữ liệu vào form:form
-		            $("#storageId").val(storage.id);
-		            $("#storageGB").val(storage.gb); 
+		            $("#categoryId").val(category.id);
+		            $("#categoryName").val(category.name); 
 		            var modal = new bootstrap.Modal(document
 							.getElementById('updateModel'));
 					modal.show();
@@ -164,16 +163,16 @@
 		function modelDelete(id) {
 		    $.ajax({
 		        type: "GET",
-		        url: "/admin/ajax/getstorage/" + id,
-		        success: function(storage) {
+		        url: "/admin/ajax/getcategory/" + id,
+		        success: function(category) {
 		        	  // Đổ dữ liệu vào modal
-	                $("#thongbao").text("Bạn có muốn xóa dung lượng: " + storage.gb+" GB");
+	                $("#thongbao").text("Bạn có muốn xóa danh mục: " + category.name);
 	                var modal = new bootstrap.Modal(document.getElementById('delete'));
 	                modal.show();
 	                
 	                // Xử lý khi nhấn nút Delete
 	                $("#deleteButton").on("click", function() {
-	                    window.location.href = "/admin/storage/delete?id=" + storage.id;
+	                    window.location.href = "/admin/category/delete?id=" + category.id;
 	                });
 		        },
 		        error: function(xhr, status, error) {

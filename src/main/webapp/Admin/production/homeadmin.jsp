@@ -1,13 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <jsp:include page="/Admin/production/head.jsp"></jsp:include>
 <body class="nav-md">
 	<div class="container body">
 		<div class="main_container">
+			<!-- Menu -->
 			<jsp:include page="/Admin/production/menubar.jsp"></jsp:include>
+			
+			<!-- Top nav -->
 			<jsp:include page="/Admin/production/topnav.jsp"></jsp:include>
-
 
 			<!-- Page Content -->
 			<div class="right_col" role="main">
@@ -159,7 +164,7 @@
 			options : options
 		});
 	</script>
-
+	
 	<!-- jQuery -->
 	<script src="/Admin/vendors/jquery/dist/jquery.min.js"></script>
 	<!-- Bootstrap -->

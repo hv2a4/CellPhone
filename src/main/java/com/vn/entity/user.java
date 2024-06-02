@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "USER")
+@Table(name = "[USER]")
 public class user implements Serializable{
 	@Id
 	String USERNAME;
@@ -29,14 +29,15 @@ public class user implements Serializable{
 	String FULLNAME;
 	String GENDER;
 	String PHONE_NUMBER;
+	Integer INCORRECT_PASSWORD;
 	
 	@Temporal(TemporalType.DATE)
 	@JoinColumn(name="CREATE_AT")
-	Date createDate;
+	Date CREATE_AT;
 	
 	@Temporal(TemporalType.DATE)
 	@JoinColumn(name = "UPDATE_AT")
-	Date update_at;
+	Date UPDATE_AT;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_RANK")

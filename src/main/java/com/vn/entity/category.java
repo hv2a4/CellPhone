@@ -3,7 +3,7 @@ package com.vn.entity;
 import java.io.Serializable;
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +23,7 @@ public class category implements Serializable {
 	String NAME;
 
 	@OneToMany(mappedBy = "category")
+	@JsonIgnore
 	List<phone> phones;
 
 }
