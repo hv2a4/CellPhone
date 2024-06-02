@@ -1,21 +1,16 @@
 package com.vn.controllers;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import java.text.ParseException;
-=======
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Iterator;
->>>>>>> origin/khoi
 import java.util.List;
 import java.util.Optional;
-=======
->>>>>>> origin/vu
 
 import com.vn.DAO.rankDao;
-import com.vn.DAO.userDao;
+
 import com.vn.entity.rank;
 import com.vn.entity.user;
 import jakarta.servlet.ServletContext;
@@ -23,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-<<<<<<< HEAD
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vn.DAO.ColorDao;
-<<<<<<< HEAD
+
 import com.vn.DAO.battery_typeDao;
 import com.vn.DAO.brandDao;
 import com.vn.DAO.categoryDao;
@@ -46,6 +41,7 @@ import com.vn.DAO.status_orderDao;
 import com.vn.DAO.charging_portDao;
 import com.vn.DAO.storageDao;
 import com.vn.DAO.systemDao;
+
 import com.vn.DAO.variantDao;
 import com.vn.DAO.wireless_charging_technologyDao;
 import com.vn.entity.battery_type;
@@ -66,7 +62,7 @@ import com.vn.entity.system;
 import com.vn.entity.variant;
 import com.vn.entity.wireless_charging_technology;
 import com.vn.utils.ParamService;
-=======
+
 import com.vn.DAO.invoiceDao;
 import com.vn.DAO.orderDao;
 import com.vn.DAO.order_itemDao;
@@ -74,17 +70,13 @@ import com.vn.DAO.userDao;
 import com.vn.DAO.variantDao;
 import com.vn.entity.color;
 import com.vn.entity.phone;
->>>>>>> origin/khoi
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-=======
+
 import org.springframework.web.bind.annotation.*;
 
-import com.vn.DAO.ColorDao;
-
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -94,18 +86,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
->>>>>>> origin/vu
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-<<<<<<< HEAD
 	@Autowired
 	HttpServletRequest req;
 	@Autowired
 	ColorDao colorDao;
 	@Autowired
-<<<<<<< HEAD
 	discount_codeDao discount_codeDao;
 	@Autowired
 	rankDao rankDao;
@@ -136,13 +125,7 @@ public class AdminController {
 	@Autowired
 	categoryDao categoryDao;
 
-	@ModelAttribute("list_rank")
-	public List<rank> getListRank() {
-		return rankDao.findAll();
-	}
-
-	@GetMapping({ "login", "logout" })
-=======
+	@Autowired
 	userDao UserDao;
 	@Autowired
 	invoiceDao invoiceDao;
@@ -150,36 +133,39 @@ public class AdminController {
 	orderDao orderDao;
 	@Autowired
 	variantDao variantDao;
-	
-	@GetMapping({"login","logout"})
->>>>>>> origin/khoi
+
+	@ModelAttribute("list_rank")
+	public List<rank> getListRank() {
+		return rankDao.findAll();
+	}
+
+	@GetMapping({ "login", "logout" })
 	public String getlogin(Model model) {
 		return "/Admin/production/login";
 	}
 
 	@GetMapping("")
 	public String getMethodName(Model model) {
-		 
-        LocalDate now = LocalDate.now();
 
-       
-        int numDays = now.lengthOfMonth();
+		LocalDate now = LocalDate.now();
 
-        int currentYear = now.getYear();
-        int currentMonth = now.getMonthValue();
-        List<Integer> daysList = new ArrayList<>();
-        for (int i = 1; i <= numDays; i++) {
-            daysList.add(i);
-        }
-        List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
-        int countUser = UserDao.countUser(false);
-        long sumRevenue = invoiceDao.sumRevenue();
-        long countOrder = orderDao.countOrder();
-        model.addAttribute("sumRevenue",sumRevenue);
-        model.addAttribute("getTotalPricePerDay",getTotalPricePerDay);
-        model.addAttribute("countOrder",countOrder);
-        model.addAttribute("countUser",countUser);
-        model.addAttribute("daysList",daysList);
+		int numDays = now.lengthOfMonth();
+
+		int currentYear = now.getYear();
+		int currentMonth = now.getMonthValue();
+		List<Integer> daysList = new ArrayList<>();
+		for (int i = 1; i <= numDays; i++) {
+			daysList.add(i);
+		}
+		List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+		int countUser = UserDao.countUser(false);
+		long sumRevenue = invoiceDao.sumRevenue();
+		long countOrder = orderDao.countOrder();
+		model.addAttribute("sumRevenue", sumRevenue);
+		model.addAttribute("getTotalPricePerDay", getTotalPricePerDay);
+		model.addAttribute("countOrder", countOrder);
+		model.addAttribute("countUser", countUser);
+		model.addAttribute("daysList", daysList);
 		String page = "tongquan.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
@@ -198,38 +184,15 @@ public class AdminController {
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
 	}
-=======
-    @Autowired
-    HttpServletRequest req;
-    @Autowired
-    ColorDao colorDao;
-    @Autowired
-    userDao userDao;
-    @Autowired
-    rankDao rankDao;
 
-    @Autowired
-    ServletContext app;
+	@Autowired
+	ServletContext app;
 
-    @GetMapping({"login", "logout"})
-    public String getlogin(Model model) {
-        return "/Admin/production/login";
-    }
->>>>>>> origin/vu
+	@ModelAttribute("fillTableUser")
+	public List<user> getList() {
+		return UserDao.findAll();
+	}
 
-    @GetMapping("")
-    public String getMethodName(Model model) {
-        String page = "tongquan.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
-
-    @ModelAttribute("fillTableUser")
-    public List<user> getList() {
-        return userDao.findAll();
-    }
-
-<<<<<<< HEAD
 	@GetMapping("discount")
 	public String getQLMaGiamGia(Model model) {
 		String page = "discount.jsp";
@@ -734,147 +697,43 @@ public class AdminController {
 
 	@GetMapping("statistical")
 	public String getStatistical(Model model) {
-		  // Lấy ngày hiện tại
-        LocalDate now = LocalDate.now();
+		// Lấy ngày hiện tại
+		LocalDate now = LocalDate.now();
 
-        // Số ngày của tháng hiện tại
-        int numDays = now.lengthOfMonth();
-        int currentYear = now.getYear();
-        int currentMonth = now.getMonthValue();
-        // Tạo list chứa các số ngày
-        List<Integer> daysList = new ArrayList<>();
-        for (int i = 1; i <= numDays; i++) {
-            daysList.add(i);
-        }
-        List<Integer> hoursList = new ArrayList<>();
-        for (int i = 1; i <= 24; i++) {
+		// Số ngày của tháng hiện tại
+		int numDays = now.lengthOfMonth();
+		int currentYear = now.getYear();
+		int currentMonth = now.getMonthValue();
+		// Tạo list chứa các số ngày
+		List<Integer> daysList = new ArrayList<>();
+		for (int i = 1; i <= numDays; i++) {
+			daysList.add(i);
+		}
+		List<Integer> hoursList = new ArrayList<>();
+		for (int i = 1; i <= 24; i++) {
 			hoursList.add(i);
 		}
-        List<Integer> monthsList = new ArrayList<>();
-        for (int i = 1; i <= 12; i++) {
-            monthsList.add(i);
-        }
-        List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
-        int countUsers = UserDao.countUsers();
-        long totalSumProducts = variantDao.totalSumProduct();
-        long sumRevenue = invoiceDao.sumRevenue();
-        long countOrder = orderDao.countOrder();
-        model.addAttribute("getTotalPricePerDay",getTotalPricePerDay);
-        model.addAttribute("totalSumProducts",totalSumProducts);
-        model.addAttribute("sumRevenue",sumRevenue);
-        model.addAttribute("countOrder",countOrder);
-        model.addAttribute("countUsers",countUsers);
-        model.addAttribute("monthsList", monthsList);
-        model.addAttribute("daysList",daysList);
-        model.addAttribute("hoursList",hoursList);
+		List<Integer> monthsList = new ArrayList<>();
+		for (int i = 1; i <= 12; i++) {
+			monthsList.add(i);
+		}
+		List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+		int countUsers = UserDao.countUsers();
+		long totalSumProducts = variantDao.totalSumProduct();
+		long sumRevenue = invoiceDao.sumRevenue();
+		long countOrder = orderDao.countOrder();
+		model.addAttribute("getTotalPricePerDay", getTotalPricePerDay);
+		model.addAttribute("totalSumProducts", totalSumProducts);
+		model.addAttribute("sumRevenue", sumRevenue);
+		model.addAttribute("countOrder", countOrder);
+		model.addAttribute("countUsers", countUsers);
+		model.addAttribute("monthsList", monthsList);
+		model.addAttribute("daysList", daysList);
+		model.addAttribute("hoursList", hoursList);
 		String page = "statistical.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
 	}
-=======
-    @ModelAttribute("fillRank")
-    public Map<Integer, String> getCategory() {
-        Map<Integer, String> map = new HashMap<>();
-        List<rank> ranks = rankDao.findAll();
-        for (rank r : ranks) {
-            map.put(r.getID(), r.getNAME());
-        }
-        return map;
-    }
-
-    @ModelAttribute("fillRole")
-    public Map<Boolean, String> getRole() {
-        Map<Boolean, String> map = new HashMap<>();
-        map.put(true, "Admin");
-        map.put(false, "User");
-        return map;
-    }
-
-    @ModelAttribute("gender")
-    public Map<String, String> getGender() {
-        Map<String, String> map = new HashMap<>();
-        map.put("NAM", "Nam");
-        map.put("NU", "Nữ");
-        map.put("KHAC", "Khác");
-        return map;
-    }
-
-    @PostMapping("create-admin")
-    public String create(Model model, @ModelAttribute("userItem") user users, @RequestParam("photo_file") MultipartFile img) throws IOException {
-        if (!img.isEmpty()) {
-            String filename = img.getOriginalFilename();
-
-            // Sử dụng getServletContext().getRealPath() để lấy đường dẫn thư mục đúng
-            String uploadDir = req.getServletContext().getRealPath("/images-user/");
-            File uploadFolder = new File(uploadDir);
-
-            // Kiểm tra và tạo thư mục nếu nó không tồn tại
-            if (!uploadFolder.exists()) {
-                uploadFolder.mkdirs();
-            }
-
-            // Tạo file trong thư mục images
-            File destFile = new File(uploadFolder, filename);
-
-            // Lưu trữ file vào thư mục đã xác định
-            img.transferTo(destFile);
-
-            // Thiết lập các thuộc tính người dùng
-            users.setAVATAR(filename);
-            users.setSTATUS(true);
-            users.setCREATE_AT(new Date());
-            users.setUpdate_at(new Date());
-
-            // Lưu người dùng vào cơ sở dữ liệu
-            userDao.save(users);
-        }
-        return "redirect:/admin/user";
-    }
-
-
-    @GetMapping("user")
-    public String getQLNguoiDung(Model model, @ModelAttribute("userItem") user user) {
-        model.addAttribute("userItem", user);
-        String page = "qlnguoidung.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
-
-    @GetMapping("profile")
-    public String getProfile(Model model) {
-        String page = "profile.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
-
-    @GetMapping("authorize/{id}")
-    public String getAuthorize(Model model, @PathVariable("id") String id) {
-        user users = userDao.findById(id).get();
-        users.setROLE(true);
-        users.setUpdate_at(new Date());
-        userDao.save(users);
-        String page = "qlnguoidung.jsp";
-        model.addAttribute("page", page);
-        return "redirect:/admin/user";
-    }
-
-    @GetMapping("unlock/{id}")
-    public String getUnlock(Model model, @PathVariable("id") String id) {
-        user users = userDao.findById(id).get();
-        users.setSTATUS(true);
-        users.setUpdate_at(new Date());
-        userDao.save(users);
-        String page = "qlnguoidung.jsp";
-        model.addAttribute("page", page);
-        return "redirect:/admin/user";
-    }
-
-    @GetMapping("product")
-    public String getQLSanPham(Model model) {
-        String page = "product.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
 
     @GetMapping("order")
     public String getQLDonHang(Model model) {
@@ -883,110 +742,88 @@ public class AdminController {
         return "/Admin/production/homeadmin";
     }
 
-    @GetMapping("discount")
-    public String getQLMaGiamGia(Model model) {
-        String page = "discount.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+	@ModelAttribute("fillRank")
+	public Map<Integer, String> getCategory() {
+		Map<Integer, String> map = new HashMap<>();
+		List<rank> ranks = rankDao.findAll();
+		for (rank r : ranks) {
+			map.put(r.getID(), r.getNAME());
+		}
+		return map;
+	}
 
-    @GetMapping("color")
-    public String getQLMau(Model model) {
-        String page = "color.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+	@ModelAttribute("fillRole")
+	public Map<Boolean, String> getRole() {
+		Map<Boolean, String> map = new HashMap<>();
+		map.put(true, "Admin");
+		map.put(false, "User");
+		return map;
+	}
 
-    @GetMapping("storage")
-    public String getQLstorage(Model model) {
-        String page = "storage.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+	@ModelAttribute("gender")
+	public Map<String, String> getGender() {
+		Map<String, String> map = new HashMap<>();
+		map.put("NAM", "Nam");
+		map.put("NU", "Nữ");
+		map.put("KHAC", "Khác");
+		return map;
+	}
 
-    @GetMapping("rank")
-    public String getQLrank(Model model) {
-        String page = "rank.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+	@PostMapping("create-admin")
+	public String create(Model model, @ModelAttribute("userItem") user users,
+			@RequestParam("photo_file") MultipartFile img) throws IOException {
+		if (!img.isEmpty()) {
+			String filename = img.getOriginalFilename();
 
-    @GetMapping("system")
-    public String getQLsystem(Model model) {
-        String page = "system.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+			// Sử dụng getServletContext().getRealPath() để lấy đường dẫn thư mục đúng
+			String uploadDir = req.getServletContext().getRealPath("/images-user/");
+			File uploadFolder = new File(uploadDir);
 
-    @GetMapping("brand")
-    public String getQLbrand(Model model) {
-        String page = "brand.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+			// Kiểm tra và tạo thư mục nếu nó không tồn tại
+			if (!uploadFolder.exists()) {
+				uploadFolder.mkdirs();
+			}
 
-    @GetMapping("battery_type")
-    public String getQLbattery_type(Model model) {
-        String page = "battery_type.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+			// Tạo file trong thư mục images
+			File destFile = new File(uploadFolder, filename);
 
-    @GetMapping("headphone_jack")
-    public String getQLheadphone_jack(Model model) {
-        String page = "headphone_jack.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+			// Lưu trữ file vào thư mục đã xác định
+			img.transferTo(destFile);
 
-    @GetMapping("charging_port")
-    public String getQLcharging_port(Model model) {
-        String page = "charging_port.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+			// Thiết lập các thuộc tính người dùng
+			users.setAVATAR(filename);
+			users.setSTATUS(true);
+			users.setCREATE_AT(new Date());
+			users.setUpdate_at(new Date());
 
-    @GetMapping("charging_technology")
-    public String getQLcharging_technology(Model model) {
-        String page = "charging_technology.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+			// Lưu người dùng vào cơ sở dữ liệu
+			UserDao.save(users);
+		}
+		return "redirect:/admin/user";
+	}
 
-    @GetMapping("statistical")
-    public String getStatistical(Model model) {
-        String page = "statistical.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+	@GetMapping("authorize/{id}")
+	public String getAuthorize(Model model, @PathVariable("id") String id) {
+		user users;
+		users = UserDao.findById(id).get();
 
-    @GetMapping("screen_resolution")
-    public String getDoPhanGiai(Model model) {
-        String page = "screen_resolution.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
+		users.setROLE(true);
+		users.setUpdate_at(new Date());
+		UserDao.save(users);
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+		return "redirect:/admin/user";
+	}
 
-    @GetMapping("graphics_chip")
-    public String getQLChipDoHoa(Model model) {
-        String page = "graphics_chip.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
-
-    @GetMapping("status_order")
-    public String getQLTTDonHang(Model model) {
-        String page = "status_order.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
-
-    @GetMapping("payment_method")
-    public String getQLPTThanhToan(Model model) {
-        String page = "payment_method.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
->>>>>>> origin/vu
+	@GetMapping("unlock/{id}")
+	public String getUnlock(Model model, @PathVariable("id") String id) {
+		user users = UserDao.findById(id).get();
+		users.setSTATUS(true);
+		users.setUpdate_at(new Date());
+		UserDao.save(users);
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+		return "redirect:/admin/user";
+	}
 
 }

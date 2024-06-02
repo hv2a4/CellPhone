@@ -20,10 +20,7 @@ public class system implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int ID;
 	String SYSTEM;
-<<<<<<< HEAD
-	
-=======
->>>>>>> origin/vu
+
 	@OneToMany(mappedBy = "system")
 	List<phone> phones;
 }
