@@ -34,10 +34,7 @@ public class UserController {
 	public String getForgotpass3(Model model) {
 		return "/views/forgotpass3";
 	}
-	@GetMapping("signup")
-	public String getSignUp(Model model) {
-		return "/views/signup";
-	}
+	
 
 	@RequestMapping("")
 	public String getHome(Model model) {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,10 +20,11 @@
 </head>
 
 <body>
-   <form id="form" action="">
-        <div class="container d-flex justify-content-center align-items-center min-vh-100">
+     <form:form id="form"  action="/shop/register"  method="post" modelAttribute="item" enctype="multipart/form-data">
+      <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-3 bg-white shadow box-area">
-            <div class="row mb-3">
+       
+               <div class="row mb-3">
                 <div class="col-md-12 rounded-4 d-flex justify-content-center align-items-center flex-column left-box"
                     style="background: linear-gradient(45deg, #858383, #abbaab);">
                     <div class="featured-image mb-3">
@@ -36,18 +38,19 @@
             <div class="col-md-6 right-box pt-0">
                 <div class="row align-items-center">
                 <div class="input-group">
-                        <input id="userName" type="text" class="form-control-lg fs-6 input" placeholder=" ">
+                       <form:input id="userName" path="USERNAME" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Tài khoản</label>
                          <span class="mt-2"></span>
                     </div>
                     
                     <div class="input-group">
-                        <input id="fullName" type="text" class=" form-control-lg fs-6 input"  placeholder=" ">
+                        
+                        <form:input id="fullName" path="FULLNAME" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label" for="full-name">Họ tên</label>
                         <span class="mt-2"></span>
                     </div>
                     <div class="input-group">
-                        <input id="email" type="text" class="form-control-lg fs-6 input" placeholder=" ">
+                         <form:input id="email" path="EMAIL" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Email</label>
                          <span class="mt-2"></span>
                     </div>
@@ -60,12 +63,12 @@
                         <p>Welcome back! We're happy to have you.</p>
                     </div> -->
                     <div class="input-group">
-                        <input id="phoneNumber" type="text" class="form-control-lg fs-6 input" placeholder=" ">
+                        <form:input id="phoneNumber" path="PHONE_NUMBER" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Số điện thoại</label>
                          <span class="mt-2"></span>
                     </div>
                     <div class="input-group">
-                        <input id="password" type="password" class="form-control-lg fs-6 input" placeholder=" ">
+                         <form:input id="password" path="PASSWORD" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Mật khẩu</label>
                          <span class="mt-2"></span>
                     </div>
@@ -74,16 +77,22 @@
                         <label class="label">Nhập lại</label>
                          <span class="mt-2"></span>
                     </div>
+                     <form:hidden path="rank.ID" />
                 </div>
             </div>
             <hr>
             <div class="input-group" style="margin-top: 5px;">
                 <button class="btn btn-lg btn-primary w-100 fs-6 mb-2" >Đăng ký</button>
-            </div>	
+            </div>
+        
+            	
+            
+            
         </div>
         
     </div>
-   </form>
+     </form:form>
+       
     <script>
            let userName=document.getElementById('userName');
            let fullName=document.getElementById('fullName');
@@ -98,33 +107,41 @@
             if(phoneNumber.value.trim()===""){
            phoneNumber.style.border="1px solid red";
            phoneNumber.parentElement.querySelector('span').textContent="không được đẻ trống";
+           return false;
            }else if(!numberPhoneRegex.test(phoneNumber.value.trim())){
             phoneNumber.style.border="1px solid red";
             phoneNumber.parentElement.querySelector('span').textContent="Số điện thoại không đúng";
+            return false;
            }else{
             phoneNumber.style.border="1px solid black";
             phoneNumber.parentElement.querySelector('span').textContent="";
+            return true;
            }
           }
           function checkUserName(){
             if(userName.value.trim()===""){
               userName.style.border="1px solid red";
               userName.parentElement.querySelector('span').textContent="không được đẻ trống";
+              return false;
             }else if(userName.value.length<=5){
               userName.style.border="1px solid red";
               userName.parentElement.querySelector('span').textContent="không được dưới 5 kí tự";
+              return false;
             }else{
               userName.style.border="1px solid black";
               userName.parentElement.querySelector('span').textContent="";
+              return true;
             }
           }
           function checkFullName(){
              if(fullName.value.trim()===""){
               fullName.style.border="1px solid red";
               fullName.parentElement.querySelector('span').textContent="không được đẻ trống"; 
+              return false;
              }else{
               fullName.style.border="1px solid black";
               fullName.parentElement.querySelector('span').textContent="";
+              return true;
              }
           }
           function checkEmail(){
@@ -132,44 +149,58 @@
             if(email.value.trim()===""){
               email.style.border="1px solid red";
               email.parentElement.querySelector('span').textContent="không được đẻ trống"; 
+              return false;
             }else if(!emailPattern.test(email.value.trim())){
               email.style.border="1px solid red";
               email.parentElement.querySelector('span').textContent="không đúng định dạng"; 
+              return false;
             }else{
               email.style.border="1px solid black";
               email.parentElement.querySelector('span').textContent=""; 
+              return true;
             }
           }
           function checkPassWord(){
            if(passWord.value.trim()===""){
               passWord.style.border="1px solid red";
               passWord.parentElement.querySelector('span').textContent="không được đẻ trống"; 
+              return false;
            }else{
               passWord.style.border="1px solid black";
               passWord.parentElement.querySelector('span').textContent=""; 
+              return true;
            }
           }
           function checkRenterPassWord(){
             if(renterPassWord.value.trim()===""){
               renterPassWord.style.border="1px solid red";
               renterPassWord.parentElement.querySelector('span').textContent="không được đẻ trống";
+              return false;
            }else if(renterPassWord.value.trim() != passWord.value.trim()){
               renterPassWord.style.border="1px solid red";
               renterPassWord.parentElement.querySelector('span').textContent="Mật khẩu nhập lại không trùng";
+              return false;
            }else{
             renterPassWord.style.border="1px solid black";
               renterPassWord.parentElement.querySelector('span').textContent="";
+              return true;
            }
           }
-          form.addEventListener('submit',(event)=>{
-           event.preventDefault();
-           checkUserName();
-           checkFullName();
-           checkEmail();
-          checkNumber();
-          checkPassWord();
-         checkRenterPassWord();
-});
+          document.getElementById('form').addEventListener('submit', (event) => {
+              let isValid = true;
+              if (!checkUserName()) isValid = false;
+              if (!checkFullName()) isValid = false
+              if (!checkEmail()) isValid = false;
+              if (!checkNumber()) isValid = false;
+              if (!checkPassWord()) isValid = false;
+              if (!checkRenterPassWord()) isValid = false;
+
+              // Prevent form submission if there are validation errors
+              if (!isValid) {
+                  event.preventDefault();
+              }
+          });
         </script>
+    
 </body>
 </html>
