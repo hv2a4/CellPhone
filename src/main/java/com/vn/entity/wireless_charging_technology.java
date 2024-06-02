@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "WIRELESS_CHARGIN_TECHNOLOGY")
+@Table(name = "WIRELESS_CHARGING_TECHNOLOGY")
 public class wireless_charging_technology {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
