@@ -14,10 +14,7 @@ public class UserController {
 	@Autowired
 	HttpServletRequest req;
 	
-	@GetMapping({"login","logout"})
-	public String getlogin(Model model) {
-		return "/views/login";
-	}
+	
 	@GetMapping("changepass")
 	public String getchangepass(Model model) {
 		return "/views/changepassword";

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
      <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+     
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/login.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <title>Sign Up |</title>
     <style>
     span{
@@ -54,6 +56,10 @@
                         <label class="label">Email</label>
                          <span class="mt-2"></span>
                     </div>
+                   <div class=" form-check mt-3">
+    <div class="g-recaptcha" data-sitekey="6Ldic9opAAAAANQLYMn3UmCMdmET4chfi2qvRnkc"></div>
+         <span>${name}</span>
+  </div>
                 </div>
             </div>
             <div class="col-md-6 right-box pt-0">
