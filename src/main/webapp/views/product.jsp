@@ -502,7 +502,7 @@
                 </div>
               </div>
               <div class="add-to-cart">
-                <a href="checkout.html">
+                <a href="/shop/checkout">
                   <button class="add-to-cart-btn">
                     <i class="fa-brands fa-bitcoin" style="font-size: 20px"></i>
                     Mua ngay
@@ -548,7 +548,7 @@
                 </div>
               </div>
               <div class="add-to-cart">
-                <a href="checkout.html">
+                <a href="/shop/checkout">
                   <button class="add-to-cart-btn">
                     <i class="fa-brands fa-bitcoin" style="font-size: 20px"></i>
                     Mua ngay
@@ -594,7 +594,7 @@
                 </div>
               </div>
               <div class="add-to-cart">
-                <a href="checkout.html">
+                <a href="/shop/checkout">
                   <button class="add-to-cart-btn">
                     <i class="fa-brands fa-bitcoin" style="font-size: 20px"></i>
                     Mua ngay

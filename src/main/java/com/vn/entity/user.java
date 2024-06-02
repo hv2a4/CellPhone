@@ -13,8 +13,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "[USER]")
 public class user implements Serializable{
@@ -33,11 +35,19 @@ public class user implements Serializable{
 	
 	@Temporal(TemporalType.DATE)
 	@JoinColumn(name="CREATE_AT")
+<<<<<<< HEAD
 	Date CREATE_AT;
 	
 	@Temporal(TemporalType.DATE)
 	@JoinColumn(name = "UPDATE_AT")
 	Date UPDATE_AT;
+=======
+	Date CREATE_AT=new Date();
+	
+	@Temporal(TemporalType.DATE)
+	@JoinColumn(name = "UPDATE_AT")
+	Date UPDATE_AT=new Date();
+>>>>>>> origin/nghia
 
 	@ManyToOne
 	@JoinColumn(name = "ID_RANK")
