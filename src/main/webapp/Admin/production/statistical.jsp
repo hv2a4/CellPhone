@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <body>
@@ -11,7 +12,7 @@
 				</h2>
 				<hr>
 				<h1 class="ml-2">
-					<b>283,387,451</b>
+					<b><fmt:formatNumber pattern="###,###">${sumRevenue}</fmt:formatNumber></b>
 				</h1>
 			</div>
 		</div>
@@ -22,18 +23,18 @@
 				</h2>
 				<hr>
 				<h1 class="ml-2">
-					<b>252,383</b>
+					<b><fmt:formatNumber pattern="###,###">${countOrder}</fmt:formatNumber></b>
 				</h1>
 			</div>
 		</div>
 		<div class="col-md-3 p-2">
 			<div class="card w-100 p-4 custom-rounded">
 				<h2 class="ml-2">
-					<b>Tổng sản phẩm</b>
+					<b>Tổng số lượng sản phẩm</b>
 				</h2>
 				<hr>
 				<h1 class="ml-2">
-					<b>25,283</b>
+					<b><fmt:formatNumber pattern="###,###">${totalSumProducts}</fmt:formatNumber></b>
 				</h1>
 			</div>
 		</div>
@@ -44,7 +45,7 @@
 				</h2>
 				<hr>
 				<h1 class="ml-2">
-					<b>17,463</b>
+					<b><fmt:formatNumber pattern="###,###">${countUsers }</fmt:formatNumber></b>
 				</h1>
 			</div>
 		</div>

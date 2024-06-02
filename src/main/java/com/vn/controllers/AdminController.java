@@ -1,6 +1,13 @@
 package com.vn.controllers;
 
+<<<<<<< HEAD
 import java.text.ParseException;
+=======
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Iterator;
+>>>>>>> origin/khoi
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vn.DAO.ColorDao;
+<<<<<<< HEAD
 import com.vn.DAO.battery_typeDao;
 import com.vn.DAO.brandDao;
 import com.vn.DAO.categoryDao;
@@ -49,6 +57,15 @@ import com.vn.entity.system;
 import com.vn.entity.variant;
 import com.vn.entity.wireless_charging_technology;
 import com.vn.utils.ParamService;
+=======
+import com.vn.DAO.invoiceDao;
+import com.vn.DAO.orderDao;
+import com.vn.DAO.order_itemDao;
+import com.vn.DAO.userDao;
+import com.vn.DAO.variantDao;
+import com.vn.entity.color;
+import com.vn.entity.phone;
+>>>>>>> origin/khoi
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,6 +79,7 @@ public class AdminController {
 	@Autowired
 	ColorDao colorDao;
 	@Autowired
+<<<<<<< HEAD
 	discount_codeDao discount_codeDao;
 	@Autowired
 	rankDao rankDao;
@@ -98,12 +116,44 @@ public class AdminController {
 	}
 
 	@GetMapping({ "login", "logout" })
+=======
+	userDao UserDao;
+	@Autowired
+	invoiceDao invoiceDao;
+	@Autowired
+	orderDao orderDao;
+	@Autowired
+	variantDao variantDao;
+	
+	@GetMapping({"login","logout"})
+>>>>>>> origin/khoi
 	public String getlogin(Model model) {
 		return "/Admin/production/login";
 	}
 
 	@GetMapping("")
 	public String getMethodName(Model model) {
+		 
+        LocalDate now = LocalDate.now();
+
+       
+        int numDays = now.lengthOfMonth();
+
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+        List<Integer> daysList = new ArrayList<>();
+        for (int i = 1; i <= numDays; i++) {
+            daysList.add(i);
+        }
+        List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+        int countUser = UserDao.countUser(false);
+        long sumRevenue = invoiceDao.sumRevenue();
+        long countOrder = orderDao.countOrder();
+        model.addAttribute("sumRevenue",sumRevenue);
+        model.addAttribute("getTotalPricePerDay",getTotalPricePerDay);
+        model.addAttribute("countOrder",countOrder);
+        model.addAttribute("countUser",countUser);
+        model.addAttribute("daysList",daysList);
 		String page = "tongquan.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
@@ -641,6 +691,39 @@ public class AdminController {
 
 	@GetMapping("statistical")
 	public String getStatistical(Model model) {
+		  // Lấy ngày hiện tại
+        LocalDate now = LocalDate.now();
+
+        // Số ngày của tháng hiện tại
+        int numDays = now.lengthOfMonth();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+        // Tạo list chứa các số ngày
+        List<Integer> daysList = new ArrayList<>();
+        for (int i = 1; i <= numDays; i++) {
+            daysList.add(i);
+        }
+        List<Integer> hoursList = new ArrayList<>();
+        for (int i = 1; i <= 24; i++) {
+			hoursList.add(i);
+		}
+        List<Integer> monthsList = new ArrayList<>();
+        for (int i = 1; i <= 12; i++) {
+            monthsList.add(i);
+        }
+        List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+        int countUsers = UserDao.countUsers();
+        long totalSumProducts = variantDao.totalSumProduct();
+        long sumRevenue = invoiceDao.sumRevenue();
+        long countOrder = orderDao.countOrder();
+        model.addAttribute("getTotalPricePerDay",getTotalPricePerDay);
+        model.addAttribute("totalSumProducts",totalSumProducts);
+        model.addAttribute("sumRevenue",sumRevenue);
+        model.addAttribute("countOrder",countOrder);
+        model.addAttribute("countUsers",countUsers);
+        model.addAttribute("monthsList", monthsList);
+        model.addAttribute("daysList",daysList);
+        model.addAttribute("hoursList",hoursList);
 		String page = "statistical.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";

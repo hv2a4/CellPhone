@@ -18,7 +18,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "ORDER")
+@Table(name = "[ORDER]")
 public class order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

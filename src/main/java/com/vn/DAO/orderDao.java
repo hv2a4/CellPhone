@@ -1,11 +1,15 @@
 package com.vn.DAO;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-import com.vn.entity.color;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import com.vn.entity.order;
-import com.vn.entity.system;
 
 public interface orderDao extends JpaRepository<order, Integer> {
+	@Query("select count(o) from order o")
+	long countOrder();
 
 }
