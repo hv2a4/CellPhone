@@ -1,5 +1,9 @@
 package com.vn.controllers;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.vn.DAO.ColorDao;
+import com.vn.DAO.invoiceDao;
+import com.vn.DAO.orderDao;
+import com.vn.DAO.order_itemDao;
+import com.vn.DAO.userDao;
+import com.vn.DAO.variantDao;
 import com.vn.entity.color;
+import com.vn.entity.phone;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -20,6 +30,14 @@ public class AdminController {
 	HttpServletRequest req;
 	@Autowired
 	ColorDao colorDao;
+	@Autowired
+	userDao UserDao;
+	@Autowired
+	invoiceDao invoiceDao;
+	@Autowired
+	orderDao orderDao;
+	@Autowired
+	variantDao variantDao;
 	
 	@GetMapping({"login","logout"})
 	public String getlogin(Model model) {
@@ -28,6 +46,27 @@ public class AdminController {
 
 	@GetMapping("")
 	public String getMethodName(Model model) {
+		 
+        LocalDate now = LocalDate.now();
+
+       
+        int numDays = now.lengthOfMonth();
+
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+        List<Integer> daysList = new ArrayList<>();
+        for (int i = 1; i <= numDays; i++) {
+            daysList.add(i);
+        }
+        List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+        int countUser = UserDao.countUser(false);
+        long sumRevenue = invoiceDao.sumRevenue();
+        long countOrder = orderDao.countOrder();
+        model.addAttribute("sumRevenue",sumRevenue);
+        model.addAttribute("getTotalPricePerDay",getTotalPricePerDay);
+        model.addAttribute("countOrder",countOrder);
+        model.addAttribute("countUser",countUser);
+        model.addAttribute("daysList",daysList);
 		String page = "tongquan.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
@@ -137,6 +176,39 @@ public class AdminController {
 	
 	@GetMapping("statistical")
 	public String getStatistical(Model model) {
+		  // Lấy ngày hiện tại
+        LocalDate now = LocalDate.now();
+
+        // Số ngày của tháng hiện tại
+        int numDays = now.lengthOfMonth();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+        // Tạo list chứa các số ngày
+        List<Integer> daysList = new ArrayList<>();
+        for (int i = 1; i <= numDays; i++) {
+            daysList.add(i);
+        }
+        List<Integer> hoursList = new ArrayList<>();
+        for (int i = 1; i <= 24; i++) {
+			hoursList.add(i);
+		}
+        List<Integer> monthsList = new ArrayList<>();
+        for (int i = 1; i <= 12; i++) {
+            monthsList.add(i);
+        }
+        List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+        int countUsers = UserDao.countUsers();
+        long totalSumProducts = variantDao.totalSumProduct();
+        long sumRevenue = invoiceDao.sumRevenue();
+        long countOrder = orderDao.countOrder();
+        model.addAttribute("getTotalPricePerDay",getTotalPricePerDay);
+        model.addAttribute("totalSumProducts",totalSumProducts);
+        model.addAttribute("sumRevenue",sumRevenue);
+        model.addAttribute("countOrder",countOrder);
+        model.addAttribute("countUsers",countUsers);
+        model.addAttribute("monthsList", monthsList);
+        model.addAttribute("daysList",daysList);
+        model.addAttribute("hoursList",hoursList);
 		String page = "statistical.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";

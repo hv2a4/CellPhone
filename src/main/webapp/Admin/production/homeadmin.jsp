@@ -20,19 +20,16 @@
 		</div>
 	</div>
 	<script>
+	var daysList = ${daysList}
+	var getTotalPricePerDay = ${getTotalPricePerDay}
 		var ctx = document.getElementById('columnChart').getContext('2d');
 
 		//Data chart
 		var data = {
-			labels : [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
-					'12', '13', '14', '15', '16', '17', '18', '19', '20', '21',
-					'22', '23', '24', '25', '26', '27', '28', '29', '30' ],
+			labels : daysList,
 			datasets : [ {
 				label : 'Doanh thu',
-				data : [ 1200, 1500, 900, 1800, 1900, 1400, 900, 1800, 200,
-						700, 1200, 1500, 900, 1800, 1900, 1400, 900, 1800, 200,
-						700, 900, 1800, 1900, 1400, 900, 1800, 200, 700, 600,
-						800 ],
+				data : getTotalPricePerDay,
 				backgroundColor : 'rgba(38,185,154, 0.7)',
 				borderColor : 'rgba(46, 204, 113, 1)',
 				borderWidth : 0
@@ -54,51 +51,16 @@
 			options : options
 		});
 	</script>
+
 	<script>
-		// Lấy tham chiếu đến phần tử <canvas>
-		var ctx = document.getElementById('columnChart').getContext('2d');
-
-		// Dữ liệu và cấu hình biểu đồ
-		var data = {
-			labels : [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
-					'12', '13', '14', '15', '16', '17', '18', '19', '20', '21',
-					'22', '23', '24', '25', '26', '27', '28', '29', '30' ],
-			datasets : [ {
-				label : 'Doanh thu',
-				data : [ 1200, 1500, 900, 1800, 1900, 1400, 900, 1800, 200,
-						700, 1200, 1500, 900, 1800, 1900, 1400, 900, 1800, 200,
-						700, 900, 1800, 1900, 1400, 900, 1800, 200, 700, 600,
-						800 ],
-				backgroundColor : 'rgba(38,185,154, 0.7)',
-				borderColor : 'rgba(46, 204, 113, 1)',
-				borderWidth : 0
-			} ]
-		};
-
-		var options = {
-			scales : {
-				y : {
-					beginAtZero : true
-				}
-			}
-		};
-
-		// Tạo biểu đồ cột
-		var columnChart = new Chart(ctx, {
-			type : 'bar',
-			data : data,
-			options : options
-		});
-	</script>
-	<script>
+	var hoursList = ${hoursList}
+	
 		// Lấy tham chiếu đến phần tử <canvas>
 		var ctx = document.getElementById('columnChartday').getContext('2d');
 
 		// Dữ liệu và cấu hình biểu đồ
 		var data = {
-			labels : [ '1h', '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h',
-					'10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h',
-					'18h', '19h', '20h', '21h', '22h', '23h', '24h' ],
+			labels : hoursList,
 			datasets : [ {
 				label : 'Doanh thu',
 				data : [ 0, 0, 0, 0, 0, 0, 900, 1800, 200, 700, 1200, 1500,
@@ -126,18 +88,17 @@
 		});
 	</script>
 	<script>
+	var monthsList = ${monthsList}
+	var getTotalPricePerDay = ${getTotalPricePerDay}
 		// Lấy tham chiếu đến phần tử <canvas>
 		var ctx = document.getElementById('columnChartyear').getContext('2d');
 
 		// Dữ liệu và cấu hình biểu đồ
 		var data = {
-			labels : [ 'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5',
-					'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 0',
-					'Tháng 11', 'Tháng 12' ],
+			labels : monthsList,
 			datasets : [ {
 				label : 'Doanh thu',
-				data : [ 1200, 1500, 900, 1800, 1900, 1400, 900, 1800, 200,
-						700, 1200, 1500 ],
+				data : getTotalPricePerDay,
 				backgroundColor : 'rgba(38,185,154, 0.7)',
 				borderColor : 'rgba(46, 204, 113, 1)',
 				borderWidth : 0
