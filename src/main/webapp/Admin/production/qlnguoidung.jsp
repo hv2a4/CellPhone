@@ -221,7 +221,7 @@
                                                     <h2>Bậc: ${item.rank.NAME}</h2>
                                                     <h2>Quyền: ${item.ROLE ? "Admin":"User"}</h2>
                                                     <h2>Ngày tạo: ${item.CREATE_AT}</h2>
-                                                    <h2>Ngày cập nhật: <fmt:formatDate value="${item.update_at}"
+                                                    <h2>Ngày cập nhật: <fmt:formatDate value="${item.UPDATE_AT}"
                                                                                        pattern="yyyy-MM-dd"/></h2>
                                                     <h2>Trạng thái: ${item.STATUS ? "Hoạt động": "Đã khóa"}</h2>
                                                 </div>

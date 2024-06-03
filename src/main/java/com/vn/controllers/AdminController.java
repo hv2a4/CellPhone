@@ -171,13 +171,6 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
-	@GetMapping("user")
-	public String getQLNguoiDung(Model model) {
-		String page = "qlnguoidung.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
-
 	@GetMapping("profile")
 	public String getProfile(Model model) {
 		String page = "profile.jsp";
@@ -794,12 +787,22 @@ public class AdminController {
 			users.setAVATAR(filename);
 			users.setSTATUS(true);
 			users.setCREATE_AT(new Date());
-			users.setUpdate_at(new Date());
+			users.setUPDATE_AT(new Date());
 
 			// Lưu người dùng vào cơ sở dữ liệu
 			UserDao.save(users);
 		}
 		return "redirect:/admin/user";
+	}
+
+	@RequestMapping("user")
+	public String getQLNguoiDung(Model model) {
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+
+		user userItem = new user();
+		model.addAttribute("userItem", userItem);
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("authorize/{id}")
@@ -808,7 +811,7 @@ public class AdminController {
 		users = UserDao.findById(id).get();
 
 		users.setROLE(true);
-		users.setUpdate_at(new Date());
+		users.setUPDATE_AT(new Date());
 		UserDao.save(users);
 		String page = "qlnguoidung.jsp";
 		model.addAttribute("page", page);
@@ -819,7 +822,7 @@ public class AdminController {
 	public String getUnlock(Model model, @PathVariable("id") String id) {
 		user users = UserDao.findById(id).get();
 		users.setSTATUS(true);
-		users.setUpdate_at(new Date());
+		users.setUPDATE_AT(new Date());
 		UserDao.save(users);
 		String page = "qlnguoidung.jsp";
 		model.addAttribute("page", page);

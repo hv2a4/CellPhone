@@ -42,11 +42,16 @@ public class user implements Serializable {
 	@JoinColumn(name = "CREATE_AT")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date CREATE_AT;
-	
+
 	@Temporal(TemporalType.DATE)
 	@JoinColumn(name = "UPDATE_AT")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date UPDATE_AT;
+
+	@Temporal(TemporalType.DATE)
+	@JoinColumn(name = "CLOCKDOWN_PERIOD")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date CLOCKDOWN_PERIOD;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_RANK")
