@@ -3,6 +3,8 @@ package com.vn.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,5 +22,6 @@ public class screen_resolution implements Serializable {
 	int ID;
 	String NAME;
 	@OneToMany(mappedBy = "screen_resolution")
+	@JsonIgnore
 	List<phone> phones;
 }

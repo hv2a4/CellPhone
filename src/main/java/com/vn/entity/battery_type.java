@@ -3,6 +3,7 @@ package com.vn.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,5 +25,6 @@ public class battery_type implements Serializable {
 	String NAME;
 	
 	@OneToMany(mappedBy = "battery_type")
+	@JsonIgnore
 	List<phone> phones;
 }

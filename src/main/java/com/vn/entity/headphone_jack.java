@@ -3,6 +3,8 @@ package com.vn.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +19,7 @@ public class headphone_jack implements Serializable {
 	String NAME;
 	
 	@OneToMany(mappedBy = "headphone_jack")
+	@JsonIgnore
 	List<phone> phones;
 
 }

@@ -2,6 +2,8 @@ package com.vn.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,5 +22,6 @@ public class wireless_charging_technology {
 	String NAME;
 
 	@OneToMany(mappedBy = "wireless_charging_technology")
+	@JsonIgnore
 	List<wp> wps;
 }

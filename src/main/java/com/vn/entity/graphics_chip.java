@@ -1,7 +1,7 @@
 package com.vn.entity;
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,5 +20,6 @@ public class graphics_chip {
 	Integer ID;
 	String NAME;
 	@OneToMany(mappedBy = "graphics_chip")
+	@JsonIgnore
 	List<phone> phones;
 }

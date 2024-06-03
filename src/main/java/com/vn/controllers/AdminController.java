@@ -208,6 +208,9 @@ public class AdminController {
 
 		discount_code discount_code = new discount_code();
 		model.addAttribute("discount_code", discount_code);
+		
+		discount_code discount_codeUpdate = new discount_code();
+		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
 
 		return "/Admin/production/homeadmin";
 	}
@@ -218,11 +221,26 @@ public class AdminController {
 		return "redirect:/admin/discount";
 	}
 
+	@PostMapping("discount_code/update")
+	public String updateDiscount_code(@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate) {
+		discount_codeDao.save(discount_codeUpdate);
+		return "redirect:/admin/discount";
+	}
+
 	@GetMapping("discount_code/delete")
 	public String deleteDiscount_code(@Param("id") Integer id) {
 		discount_code discount_code = discount_codeDao.getById(id);
 		discount_codeDao.delete(discount_code);
 		return "redirect:/admin/discount";
+	}
+
+	@GetMapping("ajax/getdiscount_code/{id}")
+	@ResponseBody
+	public Optional<discount_code> getdiscount_codeById(Model model, @PathVariable("id") Integer id) {
+		Optional<discount_code> discount_codeUpdate = discount_codeDao.findById(id);
+		
+		model.addAttribute("discount_codeUpdate", discount_codeUpdate.orElseGet(null).getClass());
+		return discount_codeUpdate;
 	}
 
 	@GetMapping("category")
@@ -412,6 +430,9 @@ public class AdminController {
 		battery_type battery_type = new battery_type();
 		model.addAttribute("battery_type", battery_type);
 
+		battery_type battery_typeUpdate = new battery_type();
+		model.addAttribute("battery_typeUpdate", battery_typeUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -421,11 +442,25 @@ public class AdminController {
 		return "redirect:/admin/battery_type";
 	}
 
+	@PostMapping("battery_type/update")
+	public String updateBattery_type(@ModelAttribute("battery_type") battery_type battery_type) {
+		battery_typeDao.save(battery_type);
+		return "redirect:/admin/battery_type";
+	}
+
 	@GetMapping("battery_type/delete")
 	public String deletebattery_type(@Param("id") Integer id) {
 		battery_type battery_type = battery_typeDao.getById(id);
 		battery_typeDao.delete(battery_type);
 		return "redirect:/admin/battery_type";
+	}
+
+	@GetMapping("ajax/getbattery_type/{id}")
+	@ResponseBody
+	public Optional<battery_type> getbattery_typeById(Model model, @PathVariable("id") Integer id) {
+		Optional<battery_type> battery_typeUpdate = battery_typeDao.findById(id);
+		model.addAttribute("battery_typeUpdate", battery_typeUpdate.orElseGet(null).getClass());
+		return battery_typeUpdate;
 	}
 
 	@GetMapping("system")
@@ -439,6 +474,9 @@ public class AdminController {
 		system system = new system();
 		model.addAttribute("system", system);
 
+		system systemUpdate = new system();
+		model.addAttribute("systemUpdate", systemUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -448,11 +486,25 @@ public class AdminController {
 		return "redirect:/admin/system";
 	}
 
+	@PostMapping("system/update")
+	public String updateSystemm(@ModelAttribute("system") system system) {
+		systemDao.save(system);
+		return "redirect:/admin/system";
+	}
+
 	@GetMapping("system/delete")
 	public String deletesystem(@Param("id") Integer id) {
 		system system = systemDao.getById(id);
 		systemDao.delete(system);
 		return "redirect:/admin/system";
+	}
+
+	@GetMapping("ajax/getsystem/{id}")
+	@ResponseBody
+	public Optional<system> getsystemById(Model model, @PathVariable("id") Integer id) {
+		Optional<system> systemUpdate = systemDao.findById(id);
+		model.addAttribute("systemUpdate", systemUpdate.orElseGet(null).getClass());
+		return systemUpdate;
 	}
 
 	@GetMapping("rank")
@@ -466,6 +518,9 @@ public class AdminController {
 		rank rank = new rank();
 		model.addAttribute("rank", rank);
 
+		rank rankUpdate = new rank();
+		model.addAttribute("rankUpdate", rankUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -475,11 +530,25 @@ public class AdminController {
 		return "redirect:/admin/rank";
 	}
 
+	@PostMapping("rank/update")
+	public String updateRank(@ModelAttribute("rank") rank rank) {
+		rankDao.save(rank);
+		return "redirect:/admin/rank";
+	}
+
 	@GetMapping("rank/delete")
 	public String deleterank(@Param("id") Integer id) {
 		rank rank = rankDao.getById(id);
 		rankDao.delete(rank);
 		return "redirect:/admin/rank";
+	}
+
+	@GetMapping("ajax/getrank/{id}")
+	@ResponseBody
+	public Optional<rank> getrankById(Model model, @PathVariable("id") Integer id) {
+		Optional<rank> rankUpdate = rankDao.findById(id);
+		model.addAttribute("rankUpdate", rankUpdate.orElseGet(null).getClass());
+		return rankUpdate;
 	}
 
 	@GetMapping("headphone_jack")
@@ -493,6 +562,9 @@ public class AdminController {
 		headphone_jack headphone_jack = new headphone_jack();
 		model.addAttribute("headphone_jack", headphone_jack);
 
+		headphone_jack headphone_jackUpdate = new headphone_jack();
+		model.addAttribute("headphone_jackUpdate", headphone_jackUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -502,11 +574,25 @@ public class AdminController {
 		return "redirect:/admin/headphone_jack";
 	}
 
+	@PostMapping("headphone_jack/update")
+	public String UpdateHeadphone_jack(@ModelAttribute("headphone_jack") headphone_jack headphone_jack) {
+		headphone_jackDao.save(headphone_jack);
+		return "redirect:/admin/headphone_jack";
+	}
+
 	@GetMapping("headphone_jack/delete")
 	public String deleteheadphone_jack(@Param("id") Integer id) {
 		headphone_jack headphone_jack = headphone_jackDao.getById(id);
 		headphone_jackDao.delete(headphone_jack);
 		return "redirect:/admin/headphone_jack";
+	}
+
+	@GetMapping("ajax/getheadphone_jack/{id}")
+	@ResponseBody
+	public Optional<headphone_jack> getheadphone_jackById(Model model, @PathVariable("id") Integer id) {
+		Optional<headphone_jack> headphone_jackUpdate = headphone_jackDao.findById(id);
+		model.addAttribute("headphone_jackUpdate", headphone_jackUpdate.orElseGet(null).getClass());
+		return headphone_jackUpdate;
 	}
 
 	@GetMapping("charging_port")
@@ -520,6 +606,9 @@ public class AdminController {
 		charging_port charging_port = new charging_port();
 		model.addAttribute("charging_port", charging_port);
 
+		charging_port charging_portUpdate = new charging_port();
+		model.addAttribute("charging_portUpdate", charging_portUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -529,11 +618,25 @@ public class AdminController {
 		return "redirect:/admin/charging_port";
 	}
 
+	@PostMapping("charging_port/update")
+	public String updateCharging_port(@ModelAttribute("charging_port") charging_port charging_port) {
+		charging_portDao.save(charging_port);
+		return "redirect:/admin/charging_port";
+	}
+
 	@GetMapping("charging_port/delete")
 	public String deletecharging_port(@Param("id") Integer id) {
 		charging_port charging_port = charging_portDao.getById(id);
 		charging_portDao.delete(charging_port);
 		return "redirect:/admin/charging_port";
+	}
+
+	@GetMapping("ajax/getcharging_port/{id}")
+	@ResponseBody
+	public Optional<charging_port> getcharging_portById(Model model, @PathVariable("id") Integer id) {
+		Optional<charging_port> charging_portUpdate = charging_portDao.findById(id);
+		model.addAttribute("charging_portUpdate", charging_portUpdate.orElseGet(null).getClass());
+		return charging_portUpdate;
 	}
 
 	@GetMapping("wireless_charging_technology")
@@ -548,6 +651,9 @@ public class AdminController {
 		wireless_charging_technology wireless_charging_technology = new wireless_charging_technology();
 		model.addAttribute("wireless_charging_technology", wireless_charging_technology);
 
+		wireless_charging_technology wireless_charging_technologyUpdate = new wireless_charging_technology();
+		model.addAttribute("wireless_charging_technologyUpdate", wireless_charging_technologyUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -558,11 +664,29 @@ public class AdminController {
 		return "redirect:/admin/wireless_charging_technology";
 	}
 
+	@PostMapping("wireless_charging_technology/update")
+	public String updateƯireless_charging_technology(
+			@ModelAttribute("wireless_charging_technologyUpdate") wireless_charging_technology wireless_charging_technologyUpdate) {
+		wireless_charging_technologyDao.save(wireless_charging_technologyUpdate);
+		return "redirect:/admin/wireless_charging_technology";
+	}
+
 	@GetMapping("wireless_charging_technology/delete")
 	public String deletewireless_charging_technology(@Param("id") Integer id) {
 		wireless_charging_technology wireless_charging_technology = wireless_charging_technologyDao.getById(id);
 		wireless_charging_technologyDao.delete(wireless_charging_technology);
 		return "redirect:/admin/wireless_charging_technology";
+	}
+
+	@GetMapping("ajax/getwireless_charging_technology/{id}")
+	@ResponseBody
+	public Optional<wireless_charging_technology> wireless_charging_technologyById(Model model,
+			@PathVariable("id") Integer id) {
+		Optional<wireless_charging_technology> wireless_charging_technologyUpdate = wireless_charging_technologyDao
+				.findById(id);
+		model.addAttribute("wireless_charging_technologyUpdate",
+				wireless_charging_technologyUpdate.orElseGet(null).getClass());
+		return wireless_charging_technologyUpdate;
 	}
 
 	@GetMapping("screen_resolution")
@@ -576,6 +700,9 @@ public class AdminController {
 		screen_resolution screen_resolution = new screen_resolution();
 		model.addAttribute("screen_resolution", screen_resolution);
 
+		screen_resolution screen_resolutionUpdate = new screen_resolution();
+		model.addAttribute("screen_resolutionUpdate", screen_resolutionUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -585,11 +712,26 @@ public class AdminController {
 		return "redirect:/admin/screen_resolution";
 	}
 
+	@PostMapping("screen_resolution/update")
+	public String updateScreen_resolution(
+			@ModelAttribute("screen_resolutionUpdate") screen_resolution screen_resolutionUpdate) {
+		screen_resolutionDao.save(screen_resolutionUpdate);
+		return "redirect:/admin/screen_resolution";
+	}
+
 	@GetMapping("screen_resolution/delete")
 	public String deletescreen_resolution(@Param("id") Integer id) {
 		screen_resolution screen_resolution = screen_resolutionDao.getById(id);
 		screen_resolutionDao.delete(screen_resolution);
 		return "redirect:/admin/screen_resolution";
+	}
+
+	@GetMapping("ajax/getscreen_resolution/{id}")
+	@ResponseBody
+	public Optional<screen_resolution> screen_resolutionById(Model model, @PathVariable("id") Integer id) {
+		Optional<screen_resolution> screen_resolutionUpdate = screen_resolutionDao.findById(id);
+		model.addAttribute("screen_resolutionUpdate", screen_resolutionUpdate.orElseGet(null).getClass());
+		return screen_resolutionUpdate;
 	}
 
 	@GetMapping("graphics_chip")
@@ -603,6 +745,9 @@ public class AdminController {
 		graphics_chip graphics_chip = new graphics_chip();
 		model.addAttribute("graphics_chip", graphics_chip);
 
+		graphics_chip graphics_chipUpdate = new graphics_chip();
+		model.addAttribute("graphics_chipUpdate", graphics_chipUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -612,11 +757,25 @@ public class AdminController {
 		return "redirect:/admin/graphics_chip";
 	}
 
+	@PostMapping("graphics_chip/update")
+	public String updateGraphics_chip(@ModelAttribute("graphics_chipUpdate") graphics_chip graphics_chipUpdate) {
+		graphics_chipDao.save(graphics_chipUpdate);
+		return "redirect:/admin/graphics_chip";
+	}
+
 	@GetMapping("graphics_chip/delete")
 	public String deletegraphics_chip(@Param("id") Integer id) {
 		graphics_chip graphics_chip = graphics_chipDao.getById(id);
 		graphics_chipDao.delete(graphics_chip);
 		return "redirect:/admin/graphics_chip";
+	}
+
+	@GetMapping("ajax/getgraphics_chip/{id}")
+	@ResponseBody
+	public Optional<graphics_chip> graphics_chipById(Model model, @PathVariable("id") Integer id) {
+		Optional<graphics_chip> graphics_chipUpdate = graphics_chipDao.findById(id);
+		model.addAttribute("graphics_chipUpdate", graphics_chipUpdate.orElseGet(null).getClass());
+		return graphics_chipUpdate;
 	}
 
 	@GetMapping("status_order")
@@ -630,6 +789,9 @@ public class AdminController {
 		status_order status_order = new status_order();
 		model.addAttribute("status_order", status_order);
 
+		status_order status_orderUpdate = new status_order();
+		model.addAttribute("status_orderUpdate", status_orderUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -639,11 +801,25 @@ public class AdminController {
 		return "redirect:/admin/status_order";
 	}
 
+	@PostMapping("status_order/update")
+	public String updateStatus_order(@ModelAttribute("status_orderUpdate") status_order status_orderUpdate) {
+		status_orderDao.save(status_orderUpdate);
+		return "redirect:/admin/status_order";
+	}
+
 	@GetMapping("status_order/delete")
 	public String deletestatus_order(@Param("id") Integer id) {
 		status_order status_order = status_orderDao.getById(id);
 		status_orderDao.delete(status_order);
 		return "redirect:/admin/status_order";
+	}
+
+	@GetMapping("ajax/getstatus_order/{id}")
+	@ResponseBody
+	public Optional<status_order> status_orderById(Model model, @PathVariable("id") Integer id) {
+		Optional<status_order> status_orderUpdate = status_orderDao.findById(id);
+		model.addAttribute("status_orderUpdate", status_orderUpdate.orElseGet(null).getClass());
+		return status_orderUpdate;
 	}
 
 	@GetMapping("payment_method")
@@ -657,6 +833,9 @@ public class AdminController {
 		payment_method payment_method = new payment_method();
 		model.addAttribute("payment_method", payment_method);
 
+		payment_method payment_methodUpdate = new payment_method();
+		model.addAttribute("payment_methodUpdate", payment_methodUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -666,11 +845,25 @@ public class AdminController {
 		return "redirect:/admin/payment_method";
 	}
 
+	@PostMapping("payment_method/update")
+	public String updatePayment_method(@ModelAttribute("payment_methodUpdate") payment_method payment_methodUpdate) {
+		payment_methodDao.save(payment_methodUpdate);
+		return "redirect:/admin/payment_method";
+	}
+
 	@GetMapping("payment_method/delete")
 	public String deletepayment_method(@Param("id") Integer id) {
 		payment_method payment_method = payment_methodDao.getById(id);
 		payment_methodDao.delete(payment_method);
 		return "redirect:/admin/payment_method";
+	}
+
+	@GetMapping("ajax/getpayment_method/{id}")
+	@ResponseBody
+	public Optional<payment_method> payment_methodById(Model model, @PathVariable("id") Integer id) {
+		Optional<payment_method> payment_methodUpdate = payment_methodDao.findById(id);
+		model.addAttribute("payment_methodUpdate", payment_methodUpdate.orElseGet(null).getClass());
+		return payment_methodUpdate;
 	}
 
 	@GetMapping("status_invoice")
@@ -684,6 +877,9 @@ public class AdminController {
 		status_invoice status_invoice = new status_invoice();
 		model.addAttribute("status_invoice", status_invoice);
 
+		status_invoice status_invoiceUpdate = new status_invoice();
+		model.addAttribute("status_invoiceUpdate", status_invoiceUpdate);
+
 		return "/Admin/production/homeadmin";
 	}
 
@@ -693,11 +889,25 @@ public class AdminController {
 		return "redirect:/admin/status_invoice";
 	}
 
+	@PostMapping("status_invoice/update")
+	public String updateStatus_invoice(@ModelAttribute("status_invoiceUpdate") status_invoice status_invoiceUpdate) {
+		status_invoiceDao.save(status_invoiceUpdate);
+		return "redirect:/admin/status_invoice";
+	}
+
 	@GetMapping("status_invoice/delete")
 	public String deletestatus_invoice(@Param("id") Integer id) {
 		status_invoice status_invoice = status_invoiceDao.getById(id);
 		status_invoiceDao.delete(status_invoice);
 		return "redirect:/admin/status_invoice";
+	}
+
+	@GetMapping("ajax/getstatus_invoice/{id}")
+	@ResponseBody
+	public Optional<status_invoice> status_invoiceById(Model model, @PathVariable("id") Integer id) {
+		Optional<status_invoice> status_invoiceUpdate = status_invoiceDao.findById(id);
+		model.addAttribute("status_invoiceUpdate", status_invoiceUpdate.orElseGet(null).getClass());
+		return status_invoiceUpdate;
 	}
 
 	@GetMapping("statistical")

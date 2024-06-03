@@ -118,7 +118,7 @@
 																path="ID" type="text" class="form-control" />
 														</div>
 														<div class="form-group">
-															<label class="control-label">Tên màu</label>
+															<label class="control-label">Tên hãng</label>
 															<form:input id="brandName" path="NAME" type="text"
 																class="form-control" placeholder="" />
 														</div>
