@@ -93,6 +93,8 @@ public class AdminController {
 	@Autowired
 	HttpServletRequest req;
 	@Autowired
+	ServletContext app;
+	@Autowired
 	ColorDao colorDao;
 	@Autowired
 	discount_codeDao discount_codeDao;
@@ -124,7 +126,6 @@ public class AdminController {
 	status_invoiceDao status_invoiceDao;
 	@Autowired
 	categoryDao categoryDao;
-
 	@Autowired
 	userDao UserDao;
 	@Autowired
@@ -185,8 +186,12 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
-	@Autowired
-	ServletContext app;
+	@GetMapping("product")
+	public String getQLSanPham(Model model) {
+		String page = "product.jsp";
+		model.addAttribute("page", page);
+		return "/Admin/production/homeadmin";
+	}
 
 	@ModelAttribute("fillTableUser")
 	public List<user> getList() {
