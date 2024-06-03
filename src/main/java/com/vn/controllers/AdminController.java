@@ -1,13 +1,24 @@
 package com.vn.controllers;
 
 import java.text.ParseException;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import com.vn.DAO.rankDao;
+
+import com.vn.entity.rank;
+import com.vn.entity.user;
+import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vn.DAO.ColorDao;
+
 import com.vn.DAO.battery_typeDao;
 import com.vn.DAO.brandDao;
 import com.vn.DAO.categoryDao;
@@ -29,6 +41,7 @@ import com.vn.DAO.status_orderDao;
 import com.vn.DAO.charging_portDao;
 import com.vn.DAO.storageDao;
 import com.vn.DAO.systemDao;
+
 import com.vn.DAO.variantDao;
 import com.vn.DAO.wireless_charging_technologyDao;
 import com.vn.entity.battery_type;
@@ -50,15 +63,37 @@ import com.vn.entity.variant;
 import com.vn.entity.wireless_charging_technology;
 import com.vn.utils.ParamService;
 
+import com.vn.DAO.invoiceDao;
+import com.vn.DAO.orderDao;
+import com.vn.DAO.order_itemDao;
+import com.vn.DAO.userDao;
+import com.vn.DAO.variantDao;
+import com.vn.entity.color;
+import com.vn.entity.phone;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 	@Autowired
 	HttpServletRequest req;
+	@Autowired
+	ServletContext app;
 	@Autowired
 	ColorDao colorDao;
 	@Autowired
@@ -91,6 +126,14 @@ public class AdminController {
 	status_invoiceDao status_invoiceDao;
 	@Autowired
 	categoryDao categoryDao;
+	@Autowired
+	userDao UserDao;
+	@Autowired
+	invoiceDao invoiceDao;
+	@Autowired
+	orderDao orderDao;
+	@Autowired
+	variantDao variantDao;
 
 	@ModelAttribute("list_rank")
 	public List<rank> getListRank() {
@@ -104,14 +147,27 @@ public class AdminController {
 
 	@GetMapping("")
 	public String getMethodName(Model model) {
-		String page = "tongquan.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
 
-	@GetMapping("user")
-	public String getQLNguoiDung(Model model) {
-		String page = "qlnguoidung.jsp";
+		LocalDate now = LocalDate.now();
+
+		int numDays = now.lengthOfMonth();
+
+		int currentYear = now.getYear();
+		int currentMonth = now.getMonthValue();
+		List<Integer> daysList = new ArrayList<>();
+		for (int i = 1; i <= numDays; i++) {
+			daysList.add(i);
+		}
+		List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+		int countUser = UserDao.countUser(false);
+		long sumRevenue = invoiceDao.sumRevenue();
+		long countOrder = orderDao.countOrder();
+		model.addAttribute("sumRevenue", sumRevenue);
+		model.addAttribute("getTotalPricePerDay", getTotalPricePerDay);
+		model.addAttribute("countOrder", countOrder);
+		model.addAttribute("countUser", countUser);
+		model.addAttribute("daysList", daysList);
+		String page = "tongquan.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
 	}
@@ -123,6 +179,13 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
+	@GetMapping("order")
+	public String getQLDonHang(Model model) {
+		String page = "order.jsp";
+		model.addAttribute("page", page);
+		return "/Admin/production/homeadmin";
+	}
+
 	@GetMapping("product")
 	public String getQLSanPham(Model model) {
 		String page = "product.jsp";
@@ -130,11 +193,9 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
-	@GetMapping("order")
-	public String getQLDonHang(Model model) {
-		String page = "order.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
+	@ModelAttribute("fillTableUser")
+	public List<user> getList() {
+		return UserDao.findAll();
 	}
 
 	@GetMapping("discount")
@@ -641,9 +702,136 @@ public class AdminController {
 
 	@GetMapping("statistical")
 	public String getStatistical(Model model) {
+		// Lấy ngày hiện tại
+		LocalDate now = LocalDate.now();
+
+		// Số ngày của tháng hiện tại
+		int numDays = now.lengthOfMonth();
+		int currentYear = now.getYear();
+		int currentMonth = now.getMonthValue();
+		// Tạo list chứa các số ngày
+		List<Integer> daysList = new ArrayList<>();
+		for (int i = 1; i <= numDays; i++) {
+			daysList.add(i);
+		}
+		List<Integer> hoursList = new ArrayList<>();
+		for (int i = 1; i <= 24; i++) {
+			hoursList.add(i);
+		}
+		List<Integer> monthsList = new ArrayList<>();
+		for (int i = 1; i <= 12; i++) {
+			monthsList.add(i);
+		}
+		List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+		int countUsers = UserDao.countUsers();
+		long totalSumProducts = variantDao.totalSumProduct();
+		long sumRevenue = invoiceDao.sumRevenue();
+		long countOrder = orderDao.countOrder();
+		model.addAttribute("getTotalPricePerDay", getTotalPricePerDay);
+		model.addAttribute("totalSumProducts", totalSumProducts);
+		model.addAttribute("sumRevenue", sumRevenue);
+		model.addAttribute("countOrder", countOrder);
+		model.addAttribute("countUsers", countUsers);
+		model.addAttribute("monthsList", monthsList);
+		model.addAttribute("daysList", daysList);
+		model.addAttribute("hoursList", hoursList);
 		String page = "statistical.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
+	}
+
+	@ModelAttribute("fillRank")
+	public Map<Integer, String> getCategory() {
+		Map<Integer, String> map = new HashMap<>();
+		List<rank> ranks = rankDao.findAll();
+		for (rank r : ranks) {
+			map.put(r.getID(), r.getNAME());
+		}
+		return map;
+	}
+
+	@ModelAttribute("fillRole")
+	public Map<Boolean, String> getRole() {
+		Map<Boolean, String> map = new HashMap<>();
+		map.put(true, "Admin");
+		map.put(false, "User");
+		return map;
+	}
+
+	@ModelAttribute("gender")
+	public Map<String, String> getGender() {
+		Map<String, String> map = new HashMap<>();
+		map.put("NAM", "Nam");
+		map.put("NU", "Nữ");
+		map.put("KHAC", "Khác");
+		return map;
+	}
+
+	@PostMapping("create-admin")
+	public String create(Model model, @ModelAttribute("userItem") user users,
+			@RequestParam("photo_file") MultipartFile img) throws IOException {
+		if (!img.isEmpty()) {
+			String filename = img.getOriginalFilename();
+
+			// Sử dụng getServletContext().getRealPath() để lấy đường dẫn thư mục đúng
+			String uploadDir = req.getServletContext().getRealPath("/images-user/");
+			File uploadFolder = new File(uploadDir);
+
+			// Kiểm tra và tạo thư mục nếu nó không tồn tại
+			if (!uploadFolder.exists()) {
+				uploadFolder.mkdirs();
+			}
+
+			// Tạo file trong thư mục images
+			File destFile = new File(uploadFolder, filename);
+
+			// Lưu trữ file vào thư mục đã xác định
+			img.transferTo(destFile);
+
+			// Thiết lập các thuộc tính người dùng
+			users.setAVATAR(filename);
+			users.setSTATUS(true);
+			users.setCREATE_AT(new Date());
+			users.setUPDATE_AT(new Date());
+
+			// Lưu người dùng vào cơ sở dữ liệu
+			UserDao.save(users);
+		}
+		return "redirect:/admin/user";
+	}
+
+	@RequestMapping("user")
+	public String getQLNguoiDung(Model model) {
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+
+		user userItem = new user();
+		model.addAttribute("userItem", userItem);
+		return "/Admin/production/homeadmin";
+	}
+
+	@GetMapping("authorize/{id}")
+	public String getAuthorize(Model model, @PathVariable("id") String id) {
+		user users;
+		users = UserDao.findById(id).get();
+
+		users.setROLE(true);
+		users.setUPDATE_AT(new Date());
+		UserDao.save(users);
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+		return "redirect:/admin/user";
+	}
+
+	@GetMapping("unlock/{id}")
+	public String getUnlock(Model model, @PathVariable("id") String id) {
+		user users = UserDao.findById(id).get();
+		users.setSTATUS(true);
+		users.setUPDATE_AT(new Date());
+		UserDao.save(users);
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+		return "redirect:/admin/user";
 	}
 
 }
