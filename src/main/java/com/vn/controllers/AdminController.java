@@ -6,6 +6,7 @@ import com.vn.entity.order;
 import com.vn.entity.rank;
 import com.vn.entity.status_order;
 import com.vn.entity.user;
+import com.vn.utils.SessionService;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,20 +41,41 @@ public class AdminController {
 
     @Autowired
     orderDao orderDaos;
-
+    @Autowired
+    SessionService sessionService;
     @Autowired
     status_orderDao status_orderDao;
 
-    @GetMapping({"login", "logout"})
+    @GetMapping("login")
     public String getlogin(Model model) {
         return "/Admin/production/login";
     }
 
-    @GetMapping("")
-    public String getMethodName(Model model) {
+//    @GetMapping("")
+//    public String getMethodName(Model model) {
+//        String page = "tongquan.jsp";
+//        model.addAttribute("page", page);
+//        return "/Admin/production/homeadmin";
+//    }
+
+    @GetMapping("/{id}")
+    public String getSession(Model model, @PathVariable("id") String id) {
+        System.out.println(id);
         String page = "tongquan.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
+        user sessionUser = (user) sessionService.get("list");
+        System.out.println("Dữ liệu lấy từ session: " + sessionUser.getFULLNAME());
+        if (sessionUser.getROLE()) {
+            model.addAttribute("page", page);
+            return "/Admin/production/homeadmin";
+        } else {
+            return "/Admin/production/404notfound";
+        }
+    }
+
+    @RequestMapping("logout")
+    public String logOut() {
+        sessionService.remove("list");
+        return "redirect:/shop/login";
     }
 
     @ModelAttribute("fillTableUser")

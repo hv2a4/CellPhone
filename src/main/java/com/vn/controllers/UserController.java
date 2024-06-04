@@ -14,14 +14,8 @@ public class UserController {
 	@Autowired
 	HttpServletRequest req;
 	
-	@GetMapping({"login","logout"})
-	public String getlogin(Model model) {
-		return "/views/login";
-	}
-	@GetMapping("changepass")
-	public String getchangepass(Model model) {
-		return "/views/changepassword";
-	}
+	
+	
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
 		return "/views/forgotpass1";
@@ -34,10 +28,7 @@ public class UserController {
 	public String getForgotpass3(Model model) {
 		return "/views/forgotpass3";
 	}
-	@GetMapping("signup")
-	public String getSignUp(Model model) {
-		return "/views/signup";
-	}
+	
 
 	@RequestMapping("")
 	public String getHome(Model model) {

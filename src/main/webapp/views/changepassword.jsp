@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,8 @@
     <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-	<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <form id="form"  action="/shop/changepass"  method="post" >
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-3 bg-white shadow box-area">
             <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box"
                 style="background: linear-gradient(45deg, #858383, #abbaab);">
@@ -25,7 +27,7 @@
                     </div>
                     <div class="input-group">
                         <input type="text" class=" form-control-lg fs-6 input"
-                            placeholder=" ">
+                            placeholder=" " name="userName"  value ="${list.USERNAME}" readonly>
                         <label for="" class="label">Tài khoản</label>
                     </div>
                     <div class="input-group">
@@ -55,5 +57,7 @@
             </div>
         </div>
     </div>
+  </form>
+	
 </body>
 </html>

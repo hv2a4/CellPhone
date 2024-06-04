@@ -12,11 +12,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.NoArgsConstructor;
+
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "[USER]")
 public class user implements Serializable {
@@ -38,6 +40,9 @@ public class user implements Serializable {
 
     String GENDER;
     String PHONE_NUMBER;
+
+    @JoinColumn(name = "CLOCKDOWN_PERIOD")
+    Date CLOCKDOWN_PERIOD;
 
     Integer INCORRECT_PASSWORD = 0;
 
