@@ -113,9 +113,8 @@
 													action="/admin/status_invoice/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="status_invoiceId" value="${status_invoiceUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên trạng thái hóa đơn</label>

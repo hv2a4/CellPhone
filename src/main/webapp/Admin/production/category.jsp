@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -30,10 +29,11 @@
 									<form:form class="form-horizontal form-label-left"
 										method="POST" modelAttribute="category"
 										action="/admin/category/create">
-										<div class="form-group ">
+										<div class="form-group">
 											<label class="control-label">Tên màu</label>
 											<form:input path="NAME" cssClass="form-control"
 												placeholder="" />
+											<form:errors path="NAME" cssClass="text-danger mt-1" />
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary"
@@ -113,9 +113,8 @@
 													action="/admin/category/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="categoryId" value="${categoryUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên danh mục</label>

@@ -113,9 +113,8 @@
 													action="/admin/graphics_chip/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="graphics_chipId" value="${graphics_chipUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên chíp đồ họa</label>

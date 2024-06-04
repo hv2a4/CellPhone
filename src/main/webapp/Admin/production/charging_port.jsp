@@ -113,9 +113,8 @@
 													action="/admin/charging_port/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="charging_portId" value="${charging_portUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên cổng sạc</label>

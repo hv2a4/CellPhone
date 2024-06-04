@@ -116,10 +116,9 @@
 													action="/admin/wireless_charging_technology/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="wireless_charging_technologyId"
 																value="${wireless_charging_technologyUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên công nghệ sạc</label>

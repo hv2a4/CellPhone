@@ -113,9 +113,8 @@
 													action="/admin/screen_resolution/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="screen_resolutionId" value="${screen_resolutionUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Màng hình</label>

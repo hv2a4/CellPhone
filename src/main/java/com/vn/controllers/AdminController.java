@@ -238,7 +238,6 @@ public class AdminController {
 	@ResponseBody
 	public Optional<discount_code> getdiscount_codeById(Model model, @PathVariable("id") Integer id) {
 		Optional<discount_code> discount_codeUpdate = discount_codeDao.findById(id);
-		
 		model.addAttribute("discount_codeUpdate", discount_codeUpdate.orElseGet(null).getClass());
 		return discount_codeUpdate;
 	}

@@ -146,11 +146,10 @@
 														action="/admin/discount_code/update">
 														<div class="row text-left">
 															<div class="col-md-6">
-																<div class="form-group">
-																	<label class="control-label">Id</label>
-																	<form:input type="text" class="form-control"
-																		id="discount_codeId" path="ID" />
-																</div>
+
+																<form:input type="hidden" class="form-control"
+																	id="discount_codeId" path="ID" />
+
 																<div class="form-group">
 																	<label class="control-label">Mã giảm giá</label>
 																	<form:input id="code" type="text" class="form-control"

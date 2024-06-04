@@ -113,9 +113,8 @@
 													action="/admin/brand/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
-															<form:input id="brandId" value="${brandUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+															<form:input id="brandId" 
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên hãng</label>

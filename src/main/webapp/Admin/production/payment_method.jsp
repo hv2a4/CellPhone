@@ -113,9 +113,8 @@
 													action="/admin/payment_method/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="payment_methodId" value="${payment_methodUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên phương thức thanh toán</label>

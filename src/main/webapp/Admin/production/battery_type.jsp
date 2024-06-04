@@ -35,6 +35,7 @@
 											<label class="control-label">Tên loại pin</label>
 											<form:input path="NAME" cssClass="form-control"
 												placeholder="" />
+											<form:errors path="NAME"></form:errors>
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary"
@@ -114,10 +115,7 @@
 													action="/admin/battery_type/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
-															<form:input id="battery_typeId"
-																value="${battery_typeUpdate.ID}" path="ID" type="text"
-																class="form-control" />
+															<form:input type="hidden" id="battery_typeId" path="ID" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên loại pin</label>
