@@ -1,17 +1,16 @@
 package com.vn.controllers;
 
 
-import com.vn.DAO.rankDao;
-import com.vn.DAO.userDao;
+import com.vn.DAO.*;
+import com.vn.entity.order;
 import com.vn.entity.rank;
+import com.vn.entity.status_order;
 import com.vn.entity.user;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import com.vn.DAO.ColorDao;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +37,12 @@ public class AdminController {
 
     @Autowired
     ServletContext app;
+
+    @Autowired
+    orderDao orderDaos;
+
+    @Autowired
+    status_orderDao status_orderDao;
 
     @GetMapping({"login", "logout"})
     public String getlogin(Model model) {
@@ -142,6 +147,54 @@ public class AdminController {
         return "redirect:/admin/user";
     }
 
+    //trả hàng
+    @GetMapping("returns/{id}")
+    public String getReturns(Model model, @PathVariable("id") Integer id) {
+        // Tìm đối tượng order theo ID
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
+        status_order returnStatus = status_orderDao.findById(6).orElseThrow(() -> new RuntimeException("Status not found"));
+
+        // Cập nhật trạng thái trả hàng cho đối tượng order
+        orders.setStatus_order(returnStatus);
+
+        // Lưu lại đối tượng order
+        orderDaos.save(orders);
+
+        return "redirect:/admin/order";
+    }
+
+    @GetMapping("confirmation/{id}")
+    public String getConfirmation(Model model, @PathVariable("id") Integer id) {
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        status_order returnStatus = status_orderDao.findById(3).orElseThrow(() -> new RuntimeException("Status not found"));
+        orders.setStatus_order(returnStatus);
+        System.out.println("Order ID: " + id + " updated to status: " + returnStatus.getSTATUS());
+        orderDaos.save(orders);
+        return "redirect:/admin/order";
+    }
+
+    @GetMapping("delivery/{id}")
+    public String getDelivery(@PathVariable("id") Integer id) {
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        status_order statusOrder = status_orderDao.findById(4).orElseThrow(() -> new RuntimeException("Status not found"));
+        orders.setStatus_order(statusOrder);
+        System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
+        orderDaos.save(orders);
+        return "redirect:/admin/order";
+    }
+
+    @GetMapping("completed/{id}")
+    public String getCompleted(@PathVariable("id") Integer id) {
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        status_order statusOrder = status_orderDao.findById(1).orElseThrow(() -> new RuntimeException("Status not found"));
+        orders.setStatus_order(statusOrder);
+        System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
+        orderDaos.save(orders);
+        return "redirect:/admin/order";
+    }
+
     @GetMapping("unlock/{id}")
     public String getUnlock(Model model, @PathVariable("id") String id) {
         user users = userDao.findById(id).get();
@@ -158,6 +211,16 @@ public class AdminController {
         String page = "product.jsp";
         model.addAttribute("page", page);
         return "/Admin/production/homeadmin";
+    }
+
+    @ModelAttribute("confirmations")
+    List<order> getConfigmationOrder() {
+        return orderDaos.findAll();
+    }
+
+    @ModelAttribute("fillOrder")
+    public List<order> getListOrder() {
+        return orderDaos.findAll();
     }
 
     @GetMapping("order")

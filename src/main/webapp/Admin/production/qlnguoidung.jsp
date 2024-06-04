@@ -97,7 +97,7 @@
                                                 <label class="control-label">Bậc</label>
                                                 <form:select path="rank.ID" id="rank" class="form-control">
                                                     <form:option value="">Chọn bậc</form:option>
-                                                    <form:options items="${fillRank}"/>
+                                                    <form:options items="${fillRank}" />
                                                 </form:select>
                                                 <div id="rankError" style="color: red;"></div>
                                             </div>
