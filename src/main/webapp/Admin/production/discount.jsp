@@ -166,13 +166,13 @@
 																	<form:input id="minimun" type="text"
 																		class="form-control" path="MINIMUM" placeholder="" />
 																</div>
-															</div>
-															<div class="col-md-6">
 																<div class="form-group">
 																	<label class="control-label">Số lượng</label>
 																	<form:input id="quantity" type="text"
 																		class="form-control" path="QUANTITY" />
 																</div>
+															</div>
+															<div class="col-md-6">
 																<div class="form-group">
 																	<label class="control-label">Bậc</label>
 																	<form:select itemLabel="rank.NAME" id="rank"
