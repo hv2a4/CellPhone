@@ -34,6 +34,7 @@ import com.vn.DAO.discount_codeDao;
 import com.vn.DAO.graphics_chipDao;
 import com.vn.DAO.headphone_jackDao;
 import com.vn.DAO.payment_methodDao;
+import com.vn.DAO.phoneDao;
 import com.vn.DAO.rankDao;
 import com.vn.DAO.screen_resolutionDao;
 import com.vn.DAO.status_invoiceDao;
@@ -134,10 +135,52 @@ public class AdminController {
 	orderDao orderDao;
 	@Autowired
 	variantDao variantDao;
+	@Autowired
+	phoneDao phoneDao;
 
 	@ModelAttribute("list_rank")
 	public List<rank> getListRank() {
 		return rankDao.findAll();
+	}
+	
+	@ModelAttribute("list_brand")
+	public List<brand> getListBrand() {
+		return brandDao.findAll();
+	}
+	
+	@ModelAttribute("list_system")
+	public List<system> getListSystem() {
+		return systemDao.findAll();
+	}
+	
+	@ModelAttribute("list_charging_port")
+	public List<charging_port> getList_charging_port() {
+		return charging_portDao.findAll();
+	}
+	
+	@ModelAttribute("list_headphone_jack")
+	public List<headphone_jack> getList_headphone_jack() {
+		return headphone_jackDao.findAll();
+	}
+	
+	@ModelAttribute("list_battery_type")
+	public List<battery_type> getList_battery_type() {
+		return battery_typeDao.findAll();
+	}
+	
+	@ModelAttribute("list_screen_resolution")
+	public List<screen_resolution> getList_screen_resolution() {
+		return screen_resolutionDao.findAll();
+	}
+	
+	@ModelAttribute("list_graphics_chip")
+	public List<graphics_chip> getList_graphics_chip() {
+		return graphics_chipDao.findAll();
+	}
+	
+	@ModelAttribute("list_wireless_charging_technology")
+	public List<wireless_charging_technology> getList_wireless_charging_technology() {
+		return wireless_charging_technologyDao.findAll();
 	}
 
 	@GetMapping({ "login", "logout" })
@@ -190,7 +233,44 @@ public class AdminController {
 	public String getQLSanPham(Model model) {
 		String page = "product.jsp";
 		model.addAttribute("page", page);
+
+		List<phone> list_phone = phoneDao.findAll();
+		model.addAttribute("list_phone", list_phone);
+		
+		phone phone = new phone();
+		model.addAttribute("phone", phone);
+		
+		phone phoneUpdate = new phone();
+		model.addAttribute("phoneUpdate", phoneUpdate);
+
 		return "/Admin/production/homeadmin";
+	}
+
+	@PostMapping("phone/create")
+	public String createPhone(@ModelAttribute("phone") phone phone) {
+		phoneDao.save(phone);
+		return "redirect:/admin/product";
+	}
+	
+	@PostMapping("phone/update")
+	public String updatePhone(@ModelAttribute("phoneUpdate") phone phoneUpdate) {
+		phoneDao.save(phoneUpdate);
+		return "redirect:/admin/product";
+	}
+
+	@GetMapping("phone/delete")
+	public String deletePhone(@Param("id") Integer id) {
+		phone phone = phoneDao.getById(id);
+		phoneDao.delete(phone);
+		return "redirect:/admin/discount";
+	}
+
+	@GetMapping("ajax/phone/{id}")
+	@ResponseBody
+	public Optional<phone> getphone(Model model, @PathVariable("id") Integer id) {
+		Optional<phone> phoneUpdate = phoneDao.findById(id);
+		model.addAttribute("phoneUpdate", phoneUpdate.orElseGet(null).getClass());
+		return phoneUpdate;
 	}
 
 	@ModelAttribute("fillTableUser")
@@ -208,7 +288,7 @@ public class AdminController {
 
 		discount_code discount_code = new discount_code();
 		model.addAttribute("discount_code", discount_code);
-		
+
 		discount_code discount_codeUpdate = new discount_code();
 		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
 
