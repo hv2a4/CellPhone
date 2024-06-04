@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -83,18 +84,26 @@
 								<div class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 										<i class="fa-solid fa-user"></i>
-										<span>Tài khoản</span>
+											<span>${list.FULLNAME}</span>
 									</a>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-										<li><a href="/shop/login">Đăng nhập</a></li>
+									<c:choose>
+									   
+									  <c:when test="${empty list.FULLNAME}">
+									    <li><a href="/shop/login">Đăng nhập</a></li>
 										<li><a href="/shop/register">Đăng ký</a></li>
-										<li role="separator" class="divider"></li>
-										<li><a href="/shop/profile">Thông tin cá nhân</a></li>
+									  </c:when>
+									  <c:otherwise>
+									  <li><a href="/shop/profile">Thông tin cá nhân</a></li>
 										<li><a href="/shop/changepass">Đổi mật khẩu</a></li>
 										<li><a href="/shop/forgotpass1">Quên mật khẩu</a></li>
 										<li role="separator" class="divider"></li>
 										<li><a href="/shop/address">Quản lý địa chỉ</a></li>
 										<li><a href="/shop/order">Đơn hàng của bạn</a></li>
+										<li role="separator" class="divider"></li>
+										<li><a href="/shop/logout">Đăng xuất</a></li>
+									  </c:otherwise>
+									</c:choose>
 									  </ul>
 								</div>
 								<!-- /Giỏ hàng -->

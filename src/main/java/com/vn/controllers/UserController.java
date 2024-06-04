@@ -15,10 +15,7 @@ public class UserController {
 	HttpServletRequest req;
 	
 	
-	@GetMapping("changepass")
-	public String getchangepass(Model model) {
-		return "/views/changepassword";
-	}
+	
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
 		return "/views/forgotpass1";

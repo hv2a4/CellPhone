@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "[USER]")
 public class user implements Serializable{
+	 private static final long serialVersionUID = 1L;
+	
 	@Id
 	String USERNAME;
 	
@@ -31,15 +33,20 @@ public class user implements Serializable{
 	String FULLNAME;
 	String GENDER;
 	String PHONE_NUMBER;
+	int INCORRECT_PASSWORD;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name="CREATE_AT")
 	Date CREATE_AT=new Date();
 	
 	@Temporal(TemporalType.DATE)
 	@JoinColumn(name = "UPDATE_AT")
-	Date UPDATE_AT=new Date();
+	Date UPDATE_AT;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@JoinColumn(name = "CLOCKDOWN_PERIOD")
+	Date CLOCKDOWN_PERIOD;
+	
 	@ManyToOne
 	@JoinColumn(name = "ID_RANK")
 	rank rank;
