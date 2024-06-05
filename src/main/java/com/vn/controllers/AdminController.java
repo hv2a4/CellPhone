@@ -51,25 +51,11 @@ public class AdminController {
         return "/Admin/production/login";
     }
 
-//    @GetMapping("")
-//    public String getMethodName(Model model) {
-//        String page = "tongquan.jsp";
-//        model.addAttribute("page", page);
-//        return "/Admin/production/homeadmin";
-//    }
-
-    @GetMapping("/{id}")
-    public String getSession(Model model, @PathVariable("id") String id) {
-        System.out.println(id);
+    @GetMapping("")
+    public String getMethodName(Model model) {
         String page = "tongquan.jsp";
-        user sessionUser = (user) sessionService.get("list");
-        System.out.println("Dữ liệu lấy từ session: " + sessionUser.getFULLNAME());
-        if (sessionUser.getROLE()) {
-            model.addAttribute("page", page);
-            return "/Admin/production/homeadmin";
-        } else {
-            return "/Admin/production/404notfound";
-        }
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
     }
 
     @RequestMapping("logout")
