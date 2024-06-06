@@ -97,7 +97,7 @@
                                                 <label class="control-label">Bậc</label>
                                                 <form:select path="rank.ID" id="rank" class="form-control">
                                                     <form:option value="">Chọn bậc</form:option>
-                                                    <form:options items="${fillRank}" />
+                                                    <form:options items="${fillRank}"/>
                                                 </form:select>
                                                 <div id="rankError" style="color: red;"></div>
                                             </div>
@@ -162,7 +162,7 @@
                                             data-bs-target="#exampleModal_${stt.index + 1}">${stt.index + 1}</td>
                                         <td data-bs-toggle="modal"
                                             data-bs-target="#exampleModal_${stt.index + 1}">${item.FULLNAME}</td>
-                                        <td>${item.USERNAME}</td>
+                                        <td>${item.USERNAME} </td>
                                         <td>${item.EMAIL}</td>
                                         <td>${item.PHONE_NUMBER}</td>
                                         <td>${item.STATUS ? "Hoạt động" : "Đã khóa"}</td>

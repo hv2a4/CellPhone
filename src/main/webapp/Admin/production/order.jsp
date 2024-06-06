@@ -26,7 +26,7 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link " id="contact-tab" data-bs-toggle="tab"
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
                         data-bs-target="#contact-tab-pane" type="button" role="tab"
                         aria-controls="contact-tab-pane" aria-selected="false" style="width: 150px">
                     <span style="font-size: 15px;">Đã xác nhận</span>
@@ -35,32 +35,31 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="dangvanchuyen-tab"
                         data-bs-toggle="tab" data-bs-target="#dangvanchuyen" type="button"
-                        role="tab" aria-controls="contact-tab-pane" aria-selected="false" style="width: 150px">
+                        role="tab" aria-controls="dangvanchuyen" aria-selected="false" style="width: 150px">
                     <span style="font-size: 15px;">Đang vận chuyển</span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="hoanthanh-tab" data-bs-toggle="tab"
                         data-bs-target="#hoanthanh" type="button" role="tab"
-                        aria-controls="contact-tab-pane" aria-selected="false" style="width: 150px">
-                    <span style="font-size: 15px;"> Hoàn thành</span>
+                        aria-controls="hoanthanh" aria-selected="false" style="width: 150px">
+                    <span style="font-size: 15px;">Hoàn thành</span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="trahang-tab" data-bs-toggle="tab"
                         data-bs-target="#trahang" type="button" role="tab"
-                        aria-controls="contact-tab-pane" aria-selected="false" style="width: 150px">
+                        aria-controls="trahang" aria-selected="false" style="width: 150px">
                     <span style="font-size: 15px;">Trả hàng</span>
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="dahuy-tab" data-bs-toggle="tab"
                         data-bs-target="#dahuy" type="button" role="tab"
-                        aria-controls="contact-tab-pane" aria-selected="false" style="width: 150px">
-                    <span style="font-size: 15px;"> Đã hủy</span>
+                        aria-controls="dahuy" aria-selected="false" style="width: 150px">
+                    <span style="font-size: 15px;">Đã hủy</span>
                 </button>
             </li>
-
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home-tab-pane"
@@ -94,7 +93,9 @@
                                                 <tbody>
                                                 <c:forEach var="item" items="${fillOrder}" varStatus="loop">
                                                     <tr>
-                                                        <td>00${loop.index +1}</td>
+                                                        <td>DK<fmt:formatDate
+                                                                value="${item.UPDATE_AT}"
+                                                                pattern="yyyyMMdd"/>${loop.index +1}</td>
                                                         <td>${item.user.FULLNAME}</td>
                                                         <td>${item.TOTAL_AMOUNT}</td>
                                                         <td>${item.CREATE_AT}</td>
@@ -296,7 +297,10 @@
                                                 <c:forEach var="item" varStatus="loop" items="${confirmations}">
                                                     <c:if test="${item.status_order.STATUS == 'Chờ xác nhận'}">
                                                         <tr>
-                                                            <td>${loop.index + 1}</td>
+                                                            <td>DK<fmt:formatDate
+                                                                    value="${item.UPDATE_AT}"
+                                                                    pattern="yyyyMMdd"/>${loop.index +1}
+                                                            </td>
                                                             <td>${item.user.FULLNAME}</td>
                                                             <td>${item.user.PHONE_NUMBER}</td>
                                                             <td>${item.CREATE_AT}</td>
@@ -359,7 +363,10 @@
                                                 <c:forEach var="item" varStatus="loop" items="${confirmations}">
                                                     <c:if test="${item.status_order.STATUS == 'Đã xác nhận'}">
                                                         <tr>
-                                                            <td>00${item.ID}</td>
+                                                            <td>DK<fmt:formatDate
+                                                                    value="${item.UPDATE_AT}"
+                                                                    pattern="yyyyMMdd"/>${loop.index +1}
+                                                            </td>
                                                             <td>${item.user.FULLNAME}</td>
                                                             <td>${item.TOTAL_AMOUNT}</td>
                                                             <td>${item.CREATE_AT}</td>
@@ -424,7 +431,9 @@
                                                 <c:forEach var="item" varStatus="loop" items="${confirmations}">
                                                     <c:if test="${item.status_order.STATUS == 'Giao hàng'}">
                                                         <tr>
-                                                            <td>00${item.ID}</td>
+                                                            <td>DK<fmt:formatDate
+                                                                    value="${item.UPDATE_AT}"
+                                                                    pattern="yyyyMMdd"/>${loop.index +1}</td>
                                                             <td>${item.user.FULLNAME}</td>
                                                             <td>${item.TOTAL_AMOUNT}</td>
                                                             <td>${item.CREATE_AT}</td>
@@ -487,7 +496,10 @@
                                                 <c:forEach var="item" varStatus="loop" items="${confirmations}">
                                                     <c:if test="${item.status_order.STATUS == 'Hoàn thành'}">
                                                         <tr>
-                                                            <td>00${item.ID}</td>
+                                                            <td>DK<fmt:formatDate
+                                                                    value="${item.UPDATE_AT}"
+                                                                    pattern="yyyyMMdd"/>${loop.index +1}
+                                                            </td>
                                                             <td>${item.user.FULLNAME}</td>
                                                             <td>${item.TOTAL_AMOUNT}</td>
                                                             <td>${item.CREATE_AT}</td>
@@ -589,7 +601,10 @@
                                                 <c:forEach var="item" varStatus="loop" items="${confirmations}">
                                                     <c:if test="${item.status_order.STATUS == 'Trả hàng'}">
                                                         <tr>
-                                                            <td>${loop.index + 1}</td>
+                                                            <td>DK<fmt:formatDate
+                                                                    value="${item.UPDATE_AT}"
+                                                                    pattern="yyyyMMdd"/>${loop.index +1}
+                                                            </td>
                                                             <td>${item.user.FULLNAME}</td>
                                                             <td>${item.user.PHONE_NUMBER}</td>
                                                             <td>${item.CREATE_AT}</td>
@@ -602,7 +617,7 @@
                                                             <td>
                                                                 <a class="btn btn-dark"
                                                                    href="/admin/returns/${item.ID}"
-                                                                   style="">
+                                                                   style="" id="btn-tab-4">
                                                                     Trả hàng
                                                                 </a>
                                                             </td>
@@ -651,7 +666,10 @@
                                                 <c:forEach var="item" varStatus="loop" items="${confirmations}">
                                                     <c:if test="${item.status_order.STATUS == 'Hủy'}">
                                                         <tr>
-                                                            <td>00${item.ID}</td>
+                                                            <td>DK<fmt:formatDate
+                                                                    value="${item.UPDATE_AT}"
+                                                                    pattern="yyyyMMdd"/>${loop.index +1}
+                                                             </td>
                                                             <td>${item.user.FULLNAME}</td>
                                                             <td>${item.TOTAL_AMOUNT}</td>
                                                             <td>${item.CREATE_AT}</td>
@@ -734,9 +752,9 @@
 
     // Thêm sự kiện click cho các nút
     document.getElementById('btn-tab-1').addEventListener('click', () => changeTab(1));
-    document.getElementById('btn-tab-2').addEventListener('click', () => changeTab(2));
-    document.getElementById('btn-tab-3').addEventListener('click', () => changeTab(3));
-
+    document.getElementById('btn-tab-2').addEventListener('click', () => changeTab(2)); // Note: Index for "Đang vận chuyển"
+    document.getElementById('btn-tab-3').addEventListener('click', () => changeTab(3)); // Note: Index for "Hoàn thành"
+    document.getElementById('btn-tab-4').addEventListener('click', () => changeTab(5));
     // Khi trang được tải lại, khôi phục trạng thái tab
     document.addEventListener('DOMContentLoaded', () => {
         const activeTab = localStorage.getItem('activeTab');
