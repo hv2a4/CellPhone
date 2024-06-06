@@ -18,7 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import com.vn.DAO.categoryDao;
 import com.vn.DAO.discount_codeDao;
 import com.vn.DAO.graphics_chipDao;
 import com.vn.DAO.headphone_jackDao;
+import com.vn.DAO.imageDao;
 import com.vn.DAO.payment_methodDao;
 import com.vn.DAO.phoneDao;
 import com.vn.DAO.rankDao;
@@ -53,6 +55,7 @@ import com.vn.entity.color;
 import com.vn.entity.discount_code;
 import com.vn.entity.graphics_chip;
 import com.vn.entity.headphone_jack;
+import com.vn.entity.image;
 import com.vn.entity.payment_method;
 import com.vn.entity.status_invoice;
 import com.vn.entity.rank;
@@ -137,47 +140,54 @@ public class AdminController {
 	variantDao variantDao;
 	@Autowired
 	phoneDao phoneDao;
+	@Autowired
+	imageDao imageDao;
 
 	@ModelAttribute("list_rank")
 	public List<rank> getListRank() {
 		return rankDao.findAll();
 	}
 	
+	@ModelAttribute("list_category")
+	public List<category> getListCategory() {
+		return categoryDao.findAll();
+	}
+
 	@ModelAttribute("list_brand")
 	public List<brand> getListBrand() {
 		return brandDao.findAll();
 	}
-	
+
 	@ModelAttribute("list_system")
 	public List<system> getListSystem() {
 		return systemDao.findAll();
 	}
-	
+
 	@ModelAttribute("list_charging_port")
 	public List<charging_port> getList_charging_port() {
 		return charging_portDao.findAll();
 	}
-	
+
 	@ModelAttribute("list_headphone_jack")
 	public List<headphone_jack> getList_headphone_jack() {
 		return headphone_jackDao.findAll();
 	}
-	
+
 	@ModelAttribute("list_battery_type")
 	public List<battery_type> getList_battery_type() {
 		return battery_typeDao.findAll();
 	}
-	
+
 	@ModelAttribute("list_screen_resolution")
 	public List<screen_resolution> getList_screen_resolution() {
 		return screen_resolutionDao.findAll();
 	}
-	
+
 	@ModelAttribute("list_graphics_chip")
 	public List<graphics_chip> getList_graphics_chip() {
 		return graphics_chipDao.findAll();
 	}
-	
+
 	@ModelAttribute("list_wireless_charging_technology")
 	public List<wireless_charging_technology> getList_wireless_charging_technology() {
 		return wireless_charging_technologyDao.findAll();
@@ -236,10 +246,10 @@ public class AdminController {
 
 		List<phone> list_phone = phoneDao.findAll();
 		model.addAttribute("list_phone", list_phone);
-		
+
 		phone phone = new phone();
 		model.addAttribute("phone", phone);
-		
+
 		phone phoneUpdate = new phone();
 		model.addAttribute("phoneUpdate", phoneUpdate);
 
@@ -247,11 +257,52 @@ public class AdminController {
 	}
 
 	@PostMapping("phone/create")
-	public String createPhone(@ModelAttribute("phone") phone phone) {
+	public String createPhone(@ModelAttribute("phone") phone phone, @RequestParam("anh") List<MultipartFile> images) {
+
+		MultipartFile img = images.getFirst();
+		String filename = img.getOriginalFilename();
+
+		String uploadDir = req.getServletContext().getRealPath("/images/");
+		File uploadFolder = new File(uploadDir);
+
+		if (!uploadFolder.exists()) {
+			uploadFolder.mkdirs();
+		}
+		File destFile = new File(uploadFolder, filename);
+		try {
+			img.transferTo(destFile);
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+		phone.setIMAGE(filename);
+		phone.setCREATE_AT(new Date());
+		phone.setUPDATE_AT(new Date());
+		phone.setIS_DELETE(false);
 		phoneDao.save(phone);
+
+		for (int i = 1; i < images.size(); i++) {
+			if (!images.get(i).isEmpty()) {
+				MultipartFile imgimg = images.get(i);
+				String filenameimg = imgimg.getOriginalFilename();
+
+				// Tạo file trong thư mục images
+				File destFileimg = new File(uploadFolder, filenameimg);
+
+				// Lưu trữ file vào thư mục đã xác định
+				try {
+					imgimg.transferTo(destFileimg);
+				} catch (IllegalStateException | IOException e) {
+					e.printStackTrace();
+				}
+				image image = new image();
+				image.setPhone(phone);
+				image.setIMAGE(filenameimg);
+				imageDao.save(image);
+			}
+		}
 		return "redirect:/admin/product";
 	}
-	
+
 	@PostMapping("phone/update")
 	public String updatePhone(@ModelAttribute("phoneUpdate") phone phoneUpdate) {
 		phoneDao.save(phoneUpdate);
@@ -262,7 +313,7 @@ public class AdminController {
 	public String deletePhone(@Param("id") Integer id) {
 		phone phone = phoneDao.getById(id);
 		phoneDao.delete(phone);
-		return "redirect:/admin/discount";
+		return "redirect:/admin/product";
 	}
 
 	@GetMapping("ajax/phone/{id}")
@@ -323,26 +374,43 @@ public class AdminController {
 	}
 
 	@GetMapping("category")
-	public String getQLcategory(Model model) {
+	public String getQLcategory(Model model, @ModelAttribute("category") category category) {
 		String page = "category.jsp";
 		model.addAttribute("page", page);
 
 		List<category> list_category = categoryDao.findAll();
 		model.addAttribute("list_category", list_category);
 
-		category category = new category();
-		model.addAttribute("category", category);
-
 		category categoryUpdate = new category();
 		model.addAttribute("categoryUpdate", categoryUpdate);
+
+		// Đặt giá trị true để hiển thị modal
+		model.addAttribute("showModal", true);
 
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("category/create")
-	public String postMethodName(@ModelAttribute("category") category category) {
-		categoryDao.save(category);
-		return "redirect:/admin/category";
+	public String postMethodName(Model model, @Validated @ModelAttribute("category") category category,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			String page = "category.jsp";
+			model.addAttribute("page", page);
+
+			List<category> list_category = categoryDao.findAll();
+			model.addAttribute("list_category", list_category);
+
+			category categoryUpdate = new category();
+			model.addAttribute("categoryUpdate", categoryUpdate);
+
+			// Đặt giá trị true để hiển thị modal
+			model.addAttribute("showModal", true);
+
+			return "/Admin/production/homeadmin";
+		} else {
+			categoryDao.save(category);
+			return "redirect:/admin/category";
+		}
 	}
 
 	@PostMapping("category/update")

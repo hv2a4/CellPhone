@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -11,12 +12,11 @@
 			<div class="x_panel">
 				<div class="x_title">
 					<h2>Danh Sách</h2>
-
 					<!-- Button trigger modal -->
 					<button type="button" class="btn btn-primary float-end mr-3 px-5"
 						data-bs-toggle="modal" data-bs-target="#them">Thêm</button>
 					<!-- Modal -->
-					<div div class="modal fade " id="them" tabindex="-1"
+					<div div class="modal fade" id="them" tabindex="-1"
 						aria-labelledby="themLabel" aria-hidden="true">
 						<div class="modal-dialog modal-lg">
 							<div class="modal-content">
@@ -26,21 +26,24 @@
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
-									<form:form class="form-horizontal form-label-left"
-										method="POST" modelAttribute="category"
-										action="/admin/category/create">
-										<div class="form-group">
-											<label class="control-label">Tên màu</label>
-											<form:input path="NAME" cssClass="form-control"
-												placeholder="" />
-											<form:errors path="NAME" cssClass="text-danger mt-1" />
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary"
-												data-bs-dismiss="modal">Close</button>
-											<button type="submit" class="btn btn-primary">Create</button>
-										</div>
-									</form:form>
+									<div id="createFormContainer">
+										<form:form class="form-horizontal form-label-left"
+											method="POST" modelAttribute="category"
+											action="/admin/category/create" id="createForm"
+											onsubmit="submitForm(event)">
+											<div class="form-group">
+												<label class="control-label">Tên màu</label>
+												<form:input path="NAME" cssClass="form-control"
+													placeholder="" />
+												<form:errors path="NAME" cssClass="text-danger mt-1" />
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Close</button>
+												<button type="submit" class="btn btn-primary">Create</button>
+											</div>
+										</form:form>
+									</div>
 								</div>
 
 							</div>

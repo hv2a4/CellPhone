@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -59,6 +60,8 @@ public class phone implements Serializable {
 	String NAME;
 	String CONNECTION;
 	String DESCRIPTION;
+	@Column(name = "SCREEN_RESOLUTION")
+	String SCREEN_RESOLUTIONKT;
 	Double SCREEN_SIZE;
 	String PROCESSOR;
 	Double RAM;

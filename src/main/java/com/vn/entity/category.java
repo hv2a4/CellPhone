@@ -22,7 +22,7 @@ public class category implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
 
-	@NotBlank(message = "dddddddddddd")
+	@NotBlank(message = "Vui lòng nhập tên")
 	String NAME;
 
 	@OneToMany(mappedBy = "category")
