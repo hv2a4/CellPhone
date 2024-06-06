@@ -34,6 +34,7 @@ import com.vn.DAO.discount_codeDao;
 import com.vn.DAO.graphics_chipDao;
 import com.vn.DAO.headphone_jackDao;
 import com.vn.DAO.payment_methodDao;
+import com.vn.DAO.phoneDao;
 import com.vn.DAO.rankDao;
 import com.vn.DAO.screen_resolutionDao;
 import com.vn.DAO.status_invoiceDao;
@@ -52,6 +53,7 @@ import com.vn.entity.color;
 import com.vn.entity.discount_code;
 import com.vn.entity.graphics_chip;
 import com.vn.entity.headphone_jack;
+import com.vn.entity.order_item;
 import com.vn.entity.payment_method;
 import com.vn.entity.status_invoice;
 import com.vn.entity.rank;
@@ -134,7 +136,14 @@ public class AdminController {
 	orderDao orderDao;
 	@Autowired
 	variantDao variantDao;
+	@Autowired
+	phoneDao phoneDao;
 
+	LocalDate now = LocalDate.now();
+	int numDays = now.lengthOfMonth();
+	int currentYear = now.getYear();
+	int currentMonth = now.getMonthValue();
+	int currentDay = now.getDayOfMonth();
 	@ModelAttribute("list_rank")
 	public List<rank> getListRank() {
 		return rankDao.findAll();
@@ -147,13 +156,6 @@ public class AdminController {
 
 	@GetMapping("")
 	public String getMethodName(Model model) {
-
-		LocalDate now = LocalDate.now();
-
-		int numDays = now.lengthOfMonth();
-
-		int currentYear = now.getYear();
-		int currentMonth = now.getMonthValue();
 		List<Integer> daysList = new ArrayList<>();
 		for (int i = 1; i <= numDays; i++) {
 			daysList.add(i);
@@ -702,32 +704,31 @@ public class AdminController {
 
 	@GetMapping("statistical")
 	public String getStatistical(Model model) {
-		// Lấy ngày hiện tại
-		LocalDate now = LocalDate.now();
-
-		// Số ngày của tháng hiện tại
-		int numDays = now.lengthOfMonth();
-		int currentYear = now.getYear();
-		int currentMonth = now.getMonthValue();
-		// Tạo list chứa các số ngày
 		List<Integer> daysList = new ArrayList<>();
 		for (int i = 1; i <= numDays; i++) {
 			daysList.add(i);
 		}
 		List<Integer> hoursList = new ArrayList<>();
-		for (int i = 1; i <= 24; i++) {
+		for (int i = 0; i < 24; i++) {
 			hoursList.add(i);
 		}
 		List<Integer> monthsList = new ArrayList<>();
 		for (int i = 1; i <= 12; i++) {
 			monthsList.add(i);
 		}
+		
+		List<Object[]> getTop7Quantity = phoneDao.getTop7Phones();
 		List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+		List<Double> getTotalAmountPerHour = invoiceDao.getTotalAmountPerHour(currentYear, currentMonth, currentDay);
+		List<Double> getTotalPricePerMonth = invoiceDao.getTotalPricePerMonth(currentYear);
 		int countUsers = UserDao.countUsers();
 		long totalSumProducts = variantDao.totalSumProduct();
 		long sumRevenue = invoiceDao.sumRevenue();
 		long countOrder = orderDao.countOrder();
+		model.addAttribute("getTop7Quantity", getTop7Quantity);
 		model.addAttribute("getTotalPricePerDay", getTotalPricePerDay);
+		model.addAttribute("getTotalAmountPerHour", getTotalAmountPerHour);
+		model.addAttribute("getTotalPricePerMonth", getTotalPricePerMonth);
 		model.addAttribute("totalSumProducts", totalSumProducts);
 		model.addAttribute("sumRevenue", sumRevenue);
 		model.addAttribute("countOrder", countOrder);

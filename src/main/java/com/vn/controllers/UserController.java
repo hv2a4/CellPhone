@@ -1,10 +1,24 @@
 package com.vn.controllers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.vn.DAO.categoryDao;
+import com.vn.DAO.phoneDao;
+import com.vn.DAO.storageDao;
+import com.vn.DAO.systemDao;
+import com.vn.entity.ProductStore;
+import com.vn.entity.category;
+import com.vn.entity.storage;
+import com.vn.entity.system;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -13,7 +27,12 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserController {
 	@Autowired
 	HttpServletRequest req;
-	
+	@Autowired
+	categoryDao categoryDao;
+	@Autowired
+	systemDao systemDao;
+	@Autowired
+	storageDao storageDao;
 	
 	@GetMapping("changepass")
 	public String getchangepass(Model model) {
@@ -41,6 +60,8 @@ public class UserController {
 	}
 	@RequestMapping("store")
 	public String getStore(Model model) {
+		List<category> finByAllCategories = categoryDao.findAll();
+		model.addAttribute("finByAllCategories", finByAllCategories);
 		String page = "store.jsp";
 		model.addAttribute("page", page);
 		return "index";

@@ -54,7 +54,7 @@
 
 	<script>
 		var hoursList = ${hoursList}
-
+		var getTotalAmountPerHour = ${getTotalAmountPerHour}
 		// Lấy tham chiếu đến phần tử <canvas>
 		var ctx = document.getElementById('columnChartday').getContext('2d');
 
@@ -63,9 +63,7 @@
 			labels : hoursList,
 			datasets : [ {
 				label : 'Doanh thu',
-				data : [ 0, 0, 0, 0, 0, 0, 900, 1800, 200, 700, 1200, 1500,
-						900, 1800, 1900, 1400, 900, 1800, 200, 700, 900, 1800,
-						1900, 1400 ],
+				data : getTotalAmountPerHour,
 				backgroundColor : 'rgba(38,185,154, 0.7)',
 				borderColor : 'rgba(46, 204, 113, 1)',
 				borderWidth : 0
@@ -89,7 +87,7 @@
 	</script>
 	<script>
 		var monthsList = ${monthsList}
-		var getTotalPricePerDay = ${getTotalPricePerDay}
+		var getTotalPricePerMonth = ${getTotalPricePerMonth}
 		// Lấy tham chiếu đến phần tử <canvas>
 		var ctx = document.getElementById('columnChartyear').getContext('2d');
 
@@ -98,7 +96,7 @@
 			labels : monthsList,
 			datasets : [ {
 				label : 'Doanh thu',
-				data : getTotalPricePerDay,
+				data : getTotalPricePerMonth,
 				backgroundColor : 'rgba(38,185,154, 0.7)',
 				borderColor : 'rgba(46, 204, 113, 1)',
 				borderWidth : 0

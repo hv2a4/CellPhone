@@ -83,6 +83,7 @@ public class phone implements Serializable {
 	int MAXIMUM_BRIGHTNESS;
 	String VIDEO_RECORDING;
 	Double CPU_SPEED;
+	String IMAGE;
 	
 
 	@OneToMany(mappedBy = "phone")
