@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -59,12 +60,14 @@ public class phone implements Serializable {
 	String NAME;
 	String CONNECTION;
 	String DESCRIPTION;
+	@Column(name = "SCREEN_RESOLUTION")
+	String SCREEN_RESOLUTIONKT;
 	Double SCREEN_SIZE;
 	String PROCESSOR;
 	Double RAM;
-	String SELFIE_CAMERA;
-	String MAIN_CAMERA;
-	int BATTERY_CAPACITY;
+	Integer SELFIE_CAMERA;
+	Integer MAIN_CAMERA;
+	Integer BATTERY_CAPACITY;
 	Boolean IS_DELETE;
 
 	@Temporal(TemporalType.DATE)
@@ -79,12 +82,11 @@ public class phone implements Serializable {
 	Double WIDTH;
 	Double HEIGHT;
 	Double WEIGHT;
-	int REFRESH_RATE;
-	int MAXIMUM_BRIGHTNESS;
+	Integer REFRESH_RATE;
+	Integer MAXIMUM_BRIGHTNESS;
 	String VIDEO_RECORDING;
 	Double CPU_SPEED;
 	String IMAGE;
-	
 
 	@OneToMany(mappedBy = "phone")
 	List<variant> variants;

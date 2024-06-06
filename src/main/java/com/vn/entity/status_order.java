@@ -1,6 +1,9 @@
 package com.vn.entity;
 import java.io.Serializable;
+
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +21,8 @@ public class status_order implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
 	String STATUS;
-	
+
 	@OneToMany(mappedBy = "status_order")
+	@JsonIgnore
 	List<order> orders;
 }

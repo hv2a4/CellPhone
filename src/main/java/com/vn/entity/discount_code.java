@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,12 +31,10 @@ public class discount_code implements Serializable {
 	String CODE;
 	
 	@Temporal(TemporalType.DATE)
-	@JoinColumn(name="EXPIRY_DATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date EXPIRY_DATE;
 	
 	@Temporal(TemporalType.DATE)
-	@JoinColumn(name = "START_DATE")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date START_DATE;
 	
@@ -43,6 +43,7 @@ public class discount_code implements Serializable {
 	int QUANTITY;
 
 	@OneToMany(mappedBy = "discount_code")
+	@JsonIgnore
 	List<order> orders;
 
 	@ManyToOne

@@ -81,10 +81,8 @@
 									<div class="modal-dialog">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h1 class="modal-title fs-5" id="deleteLabel">Xác nhận
-													xóa</h1>
-												<button type="button" class="btn-close"
-													data-bs-dismiss="modal" aria-label="Close"></button>
+												<h1 class="modal-title fs-5" id="deleteLabel">Xác nhận xóa</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
 											<div class="modal-body text-left" id="thongbao"></div>
 											<div class="modal-footer">
@@ -104,7 +102,7 @@
 											<div class="modal-header">
 												<h1 class="modal-title fs-5" id="updateLabel">Cập nhật</h1>
 												<button type="button" class="btn-close"
-													data-bs-dismiss="modal" aria-label="Close"></button>
+														data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
 											<div class="modal-body">
 												<form:form class="form-horizontal form-label-left"
@@ -112,9 +110,8 @@
 													action="/admin/color/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<label class="control-label">Id</label>
 															<form:input id="colorId" value="${colorUpdate.ID}"
-																path="ID" type="text" class="form-control" />
+																path="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên màu</label>
