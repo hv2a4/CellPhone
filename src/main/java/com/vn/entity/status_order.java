@@ -21,7 +21,6 @@ public class status_order implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
 	String STATUS;
-
 	@OneToMany(mappedBy = "status_order")
 	@JsonIgnore
 	List<order> orders;

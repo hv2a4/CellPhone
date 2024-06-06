@@ -12,6 +12,15 @@ import java.util.Optional;
 import com.vn.DAO.*;
 import com.vn.entity.*;
 import com.vn.utils.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.vn.DAO.rankDao;
+
+import com.vn.entity.rank;
+import com.vn.entity.user;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +29,62 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.vn.DAO.ColorDao;
+
+import com.vn.DAO.battery_typeDao;
+import com.vn.DAO.brandDao;
+import com.vn.DAO.categoryDao;
+import com.vn.DAO.discount_codeDao;
+import com.vn.DAO.graphics_chipDao;
+import com.vn.DAO.headphone_jackDao;
+import com.vn.DAO.payment_methodDao;
+import com.vn.DAO.screen_resolutionDao;
+import com.vn.DAO.status_invoiceDao;
+import com.vn.DAO.status_orderDao;
+import com.vn.DAO.charging_portDao;
+import com.vn.DAO.storageDao;
+import com.vn.DAO.systemDao;
+
+import com.vn.DAO.variantDao;
+import com.vn.DAO.wireless_charging_technologyDao;
+import com.vn.entity.battery_type;
+import com.vn.entity.brand;
+import com.vn.entity.category;
+import com.vn.entity.charging_port;
+import com.vn.entity.color;
+import com.vn.entity.discount_code;
+import com.vn.entity.graphics_chip;
+import com.vn.entity.headphone_jack;
+import com.vn.entity.payment_method;
+import com.vn.entity.status_invoice;
+import com.vn.entity.screen_resolution;
+import com.vn.entity.status_order;
+import com.vn.entity.storage;
+import com.vn.entity.system;
+import com.vn.entity.wireless_charging_technology;
+
+import com.vn.DAO.invoiceDao;
+import com.vn.DAO.orderDao;
+import com.vn.DAO.userDao;
+
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -95,7 +159,6 @@ public class AdminController {
 	@ModelAttribute("list_rank")
 	public List<rank> getListRank() {
 		return rankDao.findAll();
-	}
 	
 	@ModelAttribute("list_category")
 	public List<category> getListCategory() {
@@ -149,6 +212,13 @@ public class AdminController {
 
 	@GetMapping("")
 	public String getMethodName(Model model) {
+
+		LocalDate now = LocalDate.now();
+
+		int numDays = now.lengthOfMonth();
+
+		int currentYear = now.getYear();
+		int currentMonth = now.getMonthValue();
 		List<Integer> daysList = new ArrayList<>();
 		for (int i = 1; i <= numDays; i++) {
 			daysList.add(i);
@@ -181,22 +251,7 @@ public class AdminController {
 
 	
 
-	@GetMapping("product")
-	public String getQLSanPham(Model model) {
-		String page = "product.jsp";
-		model.addAttribute("page", page);
-
-		List<phone> list_phone = phoneDao.findAll();
-		model.addAttribute("list_phone", list_phone);
-
-		phone phone = new phone();
-		model.addAttribute("phone", phone);
-
-		phone phoneUpdate = new phone();
-		model.addAttribute("phoneUpdate", phoneUpdate);
-
-		return "/Admin/production/homeadmin";
-	}
+	
 
 	@PostMapping("phone/create")
 	public String createPhone(@ModelAttribute("phone") phone phone, @RequestParam("anh") List<MultipartFile> images) {
@@ -266,6 +321,23 @@ public class AdminController {
 		return phoneUpdate;
 	}
 
+	@GetMapping("product")
+	public String getQLSanPham(Model model) {
+		String page = "product.jsp";
+		model.addAttribute("page", page);
+
+		List<discount_code> list_discount_code = discount_codeDao.findAll();
+		model.addAttribute("list_discount_code", list_discount_code);
+
+		discount_code discount_code = new discount_code();
+		model.addAttribute("discount_code", discount_code);
+
+		discount_code discount_codeUpdate = new discount_code();
+		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
+
+		return "/Admin/production/homeadmin";
+	}
+
 	@ModelAttribute("fillTableUser")
 	public List<user> getList() {
 		return UserDao.findAll();
@@ -281,9 +353,6 @@ public class AdminController {
 
 		discount_code discount_code = new discount_code();
 		model.addAttribute("discount_code", discount_code);
-
-		discount_code discount_codeUpdate = new discount_code();
-		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
 
 		return "/Admin/production/homeadmin";
 	}
@@ -325,9 +394,6 @@ public class AdminController {
 
 		category categoryUpdate = new category();
 		model.addAttribute("categoryUpdate", categoryUpdate);
-
-		// Đặt giá trị true để hiển thị modal
-		model.addAttribute("showModal", true);
 
 		return "/Admin/production/homeadmin";
 	}
@@ -954,10 +1020,9 @@ public class AdminController {
 
 		status_order status_orderUpdate = new status_order();
 		model.addAttribute("status_orderUpdate", status_orderUpdate);
-
 		return "/Admin/production/homeadmin";
 	}
-
+	
 	@PostMapping("status_order/create")
 	public String postMethodName(@ModelAttribute("status_order") status_order status_order) {
 		status_orderDao.save(status_order);
@@ -966,13 +1031,11 @@ public class AdminController {
 
 	@PostMapping("status_order/update")
 	public String updateStatus_order(@ModelAttribute("status_orderUpdate") status_order status_orderUpdate) {
-		status_orderDao.save(status_orderUpdate);
 		return "redirect:/admin/status_order";
 	}
 
 	@GetMapping("status_order/delete")
-	public String deletestatus_order(@Param("id") Integer id) {
-		status_order status_order = status_orderDao.getById(id);
+	public String deleteStatus_order(@ModelAttribute("status_order") status_order status_order) {
 		status_orderDao.delete(status_order);
 		return "redirect:/admin/status_order";
 	}
@@ -1195,6 +1258,6 @@ public class AdminController {
 		return "redirect:/admin/user";
 	}
 
-
+	
 
 }

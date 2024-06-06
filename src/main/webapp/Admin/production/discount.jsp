@@ -16,7 +16,7 @@
 
 						<!-- Button trigger modal -->
 						<button type="button" class="btn btn-primary float-end mr-3 px-5"
-							data-bs-toggle="modal" data-bs-target="#them">Thêm</button>
+						data-bs-toggle="modal" data-bs-target="#them">Thêm</button>
 						<!-- Modal -->
 						<div div class="modal fade " id="them" tabindex="-1"
 							aria-labelledby="themLabel" aria-hidden="true">
