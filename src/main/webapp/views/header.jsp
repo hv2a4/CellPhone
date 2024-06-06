@@ -84,7 +84,7 @@
 								<div class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 										<i class="fa-solid fa-user"></i>
-											<span>${list.FULLNAME}</span>
+											<span>${empty list?"Tài Khoản":list.FULLNAME}</span>
 									</a>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 									<c:choose>
@@ -93,7 +93,19 @@
 									    <li><a href="/shop/login">Đăng nhập</a></li>
 										<li><a href="/shop/register">Đăng ký</a></li>
 									  </c:when>
+									  <c:when test="${list.ROLE}">
+							              <li><a href="/admin">Trang quản lí</a></li>
+							              <li><a href="/shop/profile">Thông tin cá nhân</a></li>
+										<li><a href="/shop/changepass">Đổi mật khẩu</a></li>
+										<li><a href="/shop/forgotpass1">Quên mật khẩu</a></li>
+										<li role="separator" class="divider"></li>
+										<li><a href="/shop/address">Quản lý địa chỉ</a></li>
+										<li><a href="/shop/order">Đơn hàng của bạn</a></li>
+										<li role="separator" class="divider"></li>
+									      <li><a href="/shop/logout">Đăng xuất</a></li>
+									  </c:when>
 									  <c:otherwise>
+									  
 									  <li><a href="/shop/profile">Thông tin cá nhân</a></li>
 										<li><a href="/shop/changepass">Đổi mật khẩu</a></li>
 										<li><a href="/shop/forgotpass1">Quên mật khẩu</a></li>

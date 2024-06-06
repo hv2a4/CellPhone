@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+    <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +9,11 @@
  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/login.css">
+        <style>
+    span{
+  color: red;
+}
+    </style>
 </head>
 <body>
   <form id="form"  action="/shop/changepass"  method="post" >
@@ -31,23 +36,29 @@
                         <label for="" class="label">Tài khoản</label>
                     </div>
                     <div class="input-group">
-                        <input type="password" class="form-control-lg fs-6 input"
+                        <input name="password" type="password" class="form-control-lg fs-6 input"
                             placeholder=" ">
+                            <span class="mt-2">${message1}</span>
                         <label for="" class="label">Mật khẩu hiện tại</label>
                     </div>
                     <div class="input-group">
-                        <input type="password" class="form-control-lg fs-6 input"
+                          <input name="newPassword" type="password" class="form-control-lg fs-6 input"
                             placeholder=" ">
+                              <span class="mt-2">${message2}</span>
                         <label for="" class="label">Mật khẩu mới</label>
                     </div>
                     <div class="input-group">
-                        <input type="password" class="form-control-lg fs-6 input"
+                        <input name="reterNewPassword" type="password" class="form-control-lg fs-6 input"
                             placeholder=" ">
+                              <span class="mt-2">${message3}</span>
                         <label for="" class="label">Xác nhận</label>
                     </div>
                     <div class="input-group d-flex justify-content-between">
                         <div class="forgot">
                             <small><a href="/shop/forgotpass1">Forgot Password?</a></small>
+                        </div>
+                        <div class="forgot">
+                            <small><a href="/shop">Quay lại trang chủ</a></small>
                         </div>
                     </div>
                     <div class="input-group">
@@ -58,6 +69,13 @@
         </div>
     </div>
   </form>
-	
+	<script>
+	 const formSubmitted = ${formSubmitted}; // This will be true or false
+     const message = "${messages}";
+     
+     if (formSubmitted && message) {
+         alert(message);
+     }
+	</script>
 </body>
 </html>

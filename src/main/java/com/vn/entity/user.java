@@ -12,6 +12,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,15 +27,28 @@ public class user implements Serializable{
 	 private static final long serialVersionUID = 1L;
 	
 	@Id
+	@NotBlank(message = "Không Được để trống")
 	String USERNAME;
 	
+	@NotBlank(message = "Không Được để trống")
+	@Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự")
 	String PASSWORD; 
+	
+	@NotBlank(message = "Không Được để trống")
+	@Email(message = "Không Đúng Định Dạng Email")
 	String EMAIL;
 	Boolean ROLE;
 	Boolean STATUS;
 	String AVATAR;
+	@NotBlank(message = "Không Được để trống")
 	String FULLNAME;
 	String GENDER;
+	
+	@NotBlank(message = "Không Được để trống")
+	  @Pattern(
+		        regexp = "^(032|033|034|035|036|037|038|039|096|097|098|086|083|084|085|081|082|088|091|094|070|079|077|076|078|090|093|089|056|058|092|059|099)[0-9]{7}$",
+		        message = "Số điện thoại không hợp lệ"
+		    )
 	String PHONE_NUMBER;
 	int INCORRECT_PASSWORD;
 	
