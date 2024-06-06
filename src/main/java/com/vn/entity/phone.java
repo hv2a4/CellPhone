@@ -21,6 +21,7 @@ import lombok.Data;
 @Entity
 @Table(name = "PHONE")
 public class phone implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int ID;

@@ -161,7 +161,7 @@
                                             data-bs-target="#exampleModal_${stt.index + 1}">${stt.index + 1}</td>
                                         <td data-bs-toggle="modal"
                                             data-bs-target="#exampleModal_${stt.index + 1}">${item.FULLNAME}</td>
-                                        <td>${item.USERNAME}</td>
+                                        <td>${item.USERNAME} </td>
                                         <td>${item.EMAIL}</td>
                                         <td>${item.PHONE_NUMBER}</td>
                                         <td>${item.STATUS ? "Hoạt động" : "Đã khóa"}</td>

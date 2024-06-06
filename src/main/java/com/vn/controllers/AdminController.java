@@ -9,6 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import com.vn.DAO.*;
+import com.vn.entity.*;
+import com.vn.utils.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.vn.DAO.rankDao;
 
 import com.vn.entity.rank;
@@ -20,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,10 +43,7 @@ import com.vn.DAO.categoryDao;
 import com.vn.DAO.discount_codeDao;
 import com.vn.DAO.graphics_chipDao;
 import com.vn.DAO.headphone_jackDao;
-import com.vn.DAO.imageDao;
 import com.vn.DAO.payment_methodDao;
-import com.vn.DAO.phoneDao;
-import com.vn.DAO.rankDao;
 import com.vn.DAO.screen_resolutionDao;
 import com.vn.DAO.status_invoiceDao;
 import com.vn.DAO.status_orderDao;
@@ -55,29 +61,20 @@ import com.vn.entity.color;
 import com.vn.entity.discount_code;
 import com.vn.entity.graphics_chip;
 import com.vn.entity.headphone_jack;
-import com.vn.entity.image;
 import com.vn.entity.payment_method;
 import com.vn.entity.status_invoice;
-import com.vn.entity.rank;
 import com.vn.entity.screen_resolution;
 import com.vn.entity.status_order;
 import com.vn.entity.storage;
 import com.vn.entity.system;
-import com.vn.entity.variant;
 import com.vn.entity.wireless_charging_technology;
-import com.vn.utils.ParamService;
 
 import com.vn.DAO.invoiceDao;
 import com.vn.DAO.orderDao;
-import com.vn.DAO.order_itemDao;
 import com.vn.DAO.userDao;
-import com.vn.DAO.variantDao;
-import com.vn.entity.color;
-import com.vn.entity.phone;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -85,10 +82,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -141,12 +146,19 @@ public class AdminController {
 	@Autowired
 	phoneDao phoneDao;
 	@Autowired
+    orderDao orderDaos;
+    @Autowired
+    SessionService sessionService;
 	imageDao imageDao;
 
+	LocalDate now = LocalDate.now();
+	int numDays = now.lengthOfMonth();
+	int currentYear = now.getYear();
+	int currentMonth = now.getMonthValue();
+	int currentDay = now.getDayOfMonth();
 	@ModelAttribute("list_rank")
 	public List<rank> getListRank() {
 		return rankDao.findAll();
-	}
 	
 	@ModelAttribute("list_category")
 	public List<category> getListCategory() {
@@ -193,10 +205,10 @@ public class AdminController {
 		return wireless_charging_technologyDao.findAll();
 	}
 
-	@GetMapping({ "login", "logout" })
-	public String getlogin(Model model) {
-		return "/Admin/production/login";
-	}
+    @GetMapping("login")
+    public String getlogin(Model model) {
+        return "/Admin/production/login";
+    }
 
 	@GetMapping("")
 	public String getMethodName(Model model) {
@@ -231,30 +243,15 @@ public class AdminController {
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
 	}
+    @RequestMapping("logout")
+    public String logOut() {
+        sessionService.remove("list");
+        return "redirect:/shop/login";
+    }
 
-	@GetMapping("order")
-	public String getQLDonHang(Model model) {
-		String page = "order.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
+	
 
-	@GetMapping("product")
-	public String getQLSanPham(Model model) {
-		String page = "product.jsp";
-		model.addAttribute("page", page);
-
-		List<phone> list_phone = phoneDao.findAll();
-		model.addAttribute("list_phone", list_phone);
-
-		phone phone = new phone();
-		model.addAttribute("phone", phone);
-
-		phone phoneUpdate = new phone();
-		model.addAttribute("phoneUpdate", phoneUpdate);
-
-		return "/Admin/production/homeadmin";
-	}
+	
 
 	@PostMapping("phone/create")
 	public String createPhone(@ModelAttribute("phone") phone phone, @RequestParam("anh") List<MultipartFile> images) {
@@ -324,6 +321,23 @@ public class AdminController {
 		return phoneUpdate;
 	}
 
+	@GetMapping("product")
+	public String getQLSanPham(Model model) {
+		String page = "product.jsp";
+		model.addAttribute("page", page);
+
+		List<discount_code> list_discount_code = discount_codeDao.findAll();
+		model.addAttribute("list_discount_code", list_discount_code);
+
+		discount_code discount_code = new discount_code();
+		model.addAttribute("discount_code", discount_code);
+
+		discount_code discount_codeUpdate = new discount_code();
+		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
+
+		return "/Admin/production/homeadmin";
+	}
+
 	@ModelAttribute("fillTableUser")
 	public List<user> getList() {
 		return UserDao.findAll();
@@ -339,9 +353,6 @@ public class AdminController {
 
 		discount_code discount_code = new discount_code();
 		model.addAttribute("discount_code", discount_code);
-
-		discount_code discount_codeUpdate = new discount_code();
-		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
 
 		return "/Admin/production/homeadmin";
 	}
@@ -384,9 +395,6 @@ public class AdminController {
 		category categoryUpdate = new category();
 		model.addAttribute("categoryUpdate", categoryUpdate);
 
-		// Đặt giá trị true để hiển thị modal
-		model.addAttribute("showModal", true);
-
 		return "/Admin/production/homeadmin";
 	}
 
@@ -412,6 +420,64 @@ public class AdminController {
 			return "redirect:/admin/category";
 		}
 	}
+    //trả hàng
+    @GetMapping("returns/{id}")
+    public String getReturns(Model model, @PathVariable("id") Integer id) {
+        // Tìm đối tượng order theo ID
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
+        status_order returnStatus = status_orderDao.findById(6).orElseThrow(() -> new RuntimeException("Status not found"));
+
+        // Cập nhật trạng thái trả hàng cho đối tượng order
+        orders.setStatus_order(returnStatus);
+
+        // Lưu lại đối tượng order
+        orderDaos.save(orders);
+
+        return "redirect:/admin/order";
+    }
+
+    @GetMapping("confirmation/{id}")
+    public String getConfirmation(Model model, @PathVariable("id") Integer id) {
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        status_order returnStatus = status_orderDao.findById(3).orElseThrow(() -> new RuntimeException("Status not found"));
+        orders.setStatus_order(returnStatus);
+        System.out.println("Order ID: " + id + " updated to status: " + returnStatus.getSTATUS());
+        orderDaos.save(orders);
+        return "redirect:/admin/order";
+    }
+
+    @GetMapping("delivery/{id}")
+    public String getDelivery(@PathVariable("id") Integer id) {
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        status_order statusOrder = status_orderDao.findById(4).orElseThrow(() -> new RuntimeException("Status not found"));
+        orders.setStatus_order(statusOrder);
+        System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
+        orderDaos.save(orders);
+        return "redirect:/admin/order";
+    }
+
+    @GetMapping("completed/{id}")
+    public String getCompleted(@PathVariable("id") Integer id) {
+        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        status_order statusOrder = status_orderDao.findById(1).orElseThrow(() -> new RuntimeException("Status not found"));
+        orders.setStatus_order(statusOrder);
+        System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
+        orderDaos.save(orders);
+        return "redirect:/admin/order";
+    }
+    
+	@GetMapping("unlock/{id}")
+	public String getUnlock(Model model, @PathVariable("id") String id) {
+		user users = UserDao.findById(id).get();
+		users.setSTATUS(true);
+		users.setUPDATE_AT(new Date());
+		UserDao.save(users);
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+		return "redirect:/admin/user";
+	}
 
 	@PostMapping("category/update")
 	public String updateCategory(@ModelAttribute("category") category category) {
@@ -425,6 +491,22 @@ public class AdminController {
 		categoryDao.delete(category);
 		return "redirect:/admin/category";
 	}
+    @ModelAttribute("confirmations")
+    List<order> getConfigmationOrder() {
+        return orderDaos.findAll();
+    }
+
+    @ModelAttribute("fillOrder")
+    public List<order> getListOrder() {
+        return orderDaos.findAll();
+    }
+
+    @GetMapping("order")
+    public String getQLDonHang(Model model) {
+        String page = "order.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
 
 	@GetMapping("ajax/getcategory/{id}")
 	@ResponseBody
@@ -938,10 +1020,9 @@ public class AdminController {
 
 		status_order status_orderUpdate = new status_order();
 		model.addAttribute("status_orderUpdate", status_orderUpdate);
-
 		return "/Admin/production/homeadmin";
 	}
-
+	
 	@PostMapping("status_order/create")
 	public String postMethodName(@ModelAttribute("status_order") status_order status_order) {
 		status_orderDao.save(status_order);
@@ -950,13 +1031,11 @@ public class AdminController {
 
 	@PostMapping("status_order/update")
 	public String updateStatus_order(@ModelAttribute("status_orderUpdate") status_order status_orderUpdate) {
-		status_orderDao.save(status_orderUpdate);
 		return "redirect:/admin/status_order";
 	}
 
 	@GetMapping("status_order/delete")
-	public String deletestatus_order(@Param("id") Integer id) {
-		status_order status_order = status_orderDao.getById(id);
+	public String deleteStatus_order(@ModelAttribute("status_order") status_order status_order) {
 		status_orderDao.delete(status_order);
 		return "redirect:/admin/status_order";
 	}
@@ -1059,32 +1138,31 @@ public class AdminController {
 
 	@GetMapping("statistical")
 	public String getStatistical(Model model) {
-		// Lấy ngày hiện tại
-		LocalDate now = LocalDate.now();
-
-		// Số ngày của tháng hiện tại
-		int numDays = now.lengthOfMonth();
-		int currentYear = now.getYear();
-		int currentMonth = now.getMonthValue();
-		// Tạo list chứa các số ngày
 		List<Integer> daysList = new ArrayList<>();
 		for (int i = 1; i <= numDays; i++) {
 			daysList.add(i);
 		}
 		List<Integer> hoursList = new ArrayList<>();
-		for (int i = 1; i <= 24; i++) {
+		for (int i = 0; i < 24; i++) {
 			hoursList.add(i);
 		}
 		List<Integer> monthsList = new ArrayList<>();
 		for (int i = 1; i <= 12; i++) {
 			monthsList.add(i);
 		}
+		
+		List<Object[]> getTop7Quantity = phoneDao.getTop7Phones();
 		List<Double> getTotalPricePerDay = invoiceDao.getTotalPricePerDay(currentYear, currentMonth);
+		List<Double> getTotalAmountPerHour = invoiceDao.getTotalAmountPerHour(currentYear, currentMonth, currentDay);
+		List<Double> getTotalPricePerMonth = invoiceDao.getTotalPricePerMonth(currentYear);
 		int countUsers = UserDao.countUsers();
 		long totalSumProducts = variantDao.totalSumProduct();
 		long sumRevenue = invoiceDao.sumRevenue();
 		long countOrder = orderDao.countOrder();
+		model.addAttribute("getTop7Quantity", getTop7Quantity);
 		model.addAttribute("getTotalPricePerDay", getTotalPricePerDay);
+		model.addAttribute("getTotalAmountPerHour", getTotalAmountPerHour);
+		model.addAttribute("getTotalPricePerMonth", getTotalPricePerMonth);
 		model.addAttribute("totalSumProducts", totalSumProducts);
 		model.addAttribute("sumRevenue", sumRevenue);
 		model.addAttribute("countOrder", countOrder);
@@ -1180,15 +1258,6 @@ public class AdminController {
 		return "redirect:/admin/user";
 	}
 
-	@GetMapping("unlock/{id}")
-	public String getUnlock(Model model, @PathVariable("id") String id) {
-		user users = UserDao.findById(id).get();
-		users.setSTATUS(true);
-		users.setUPDATE_AT(new Date());
-		UserDao.save(users);
-		String page = "qlnguoidung.jsp";
-		model.addAttribute("page", page);
-		return "redirect:/admin/user";
-	}
+	
 
 }

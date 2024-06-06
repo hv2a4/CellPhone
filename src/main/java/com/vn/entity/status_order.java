@@ -1,4 +1,5 @@
 package com.vn.entity;
+import java.io.Serializable;
 
 import java.util.List;
 
@@ -15,12 +16,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "STATUS_ORDER")
-public class status_order {
+public class status_order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
 	String STATUS;
-
 	@OneToMany(mappedBy = "status_order")
 	@JsonIgnore
 	List<order> orders;
