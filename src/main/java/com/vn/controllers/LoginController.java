@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -127,5 +128,9 @@ public class LoginController {
 	public String logOut() {
 		sessionService.remove("list");
 		 return "redirect:/shop";
+	}
+	@GetMapping("/404")
+	public String getError() {
+		 return "/views/404notfound";
 	}
 }

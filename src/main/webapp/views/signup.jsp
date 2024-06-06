@@ -40,21 +40,21 @@
             <div class="col-md-6 right-box pt-0">
                 <div class="row align-items-center">
                 <div class="input-group">
-                       <form:input id="userName" path="USERNAME" class=" form-control-lg fs-6 input"  placeholder=" " />
+                       <form:input path="USERNAME" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Tài khoản</label>
-                         <span class="mt-2">${message}</span>
+                         <span class="mt-2"><form:errors path="USERNAME"></form:errors>${messages}</span>
                     </div>
                     
                     <div class="input-group">
                         
                         <form:input id="fullName" path="FULLNAME" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label" for="full-name">Họ tên</label>
-                        <span class="mt-2"></span>
+                        <span class="mt-2"><form:errors path="FULLNAME"></form:errors></span>
                     </div>
                     <div class="input-group">
                          <form:input id="email" path="EMAIL" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Email</label>
-                         <span class="mt-2"></span>
+                         <span class="mt-2"><form:errors path="EMAIL"></form:errors></span>
                     </div>
                    <div class=" form-check mt-3">
     <div class="g-recaptcha" data-sitekey="6Ldic9opAAAAANQLYMn3UmCMdmET4chfi2qvRnkc"></div>
@@ -71,17 +71,17 @@
                     <div class="input-group">
                         <form:input id="phoneNumber" path="PHONE_NUMBER" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Số điện thoại</label>
-                         <span class="mt-2"></span>
+                         <span class="mt-2"><form:errors path="PHONE_NUMBER"></form:errors></span>
                     </div>
                     <div class="input-group">
                          <form:input id="password" path="PASSWORD" type="password" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Mật khẩu</label>
-                         <span class="mt-2"></span>
+                         <span class="mt-2"><form:errors path="PASSWORD"></form:errors></span>
                     </div>
                     <div class="input-group">
-                        <input id="renterPassWord" type="password" class=" form-control-lg fs-6 input" placeholder=" ">
+                        <form:input path="" id="password" name="renterPassWord" type="password" class=" form-control-lg fs-6 input" placeholder=" "/>
                         <label class="label">Nhập lại</label>
-                         <span class="mt-2"></span>
+                         <span class="mt-2">${message}</span>
                     </div>
                      <form:hidden path="rank.ID" />
                 </div>
@@ -99,122 +99,7 @@
     </div>
      </form:form>
        
-    <script>
-           let userName=document.getElementById('userName');
-           let fullName=document.getElementById('fullName');
-           let email=document.getElementById('email');
-           let phoneNumber=document.getElementById('phoneNumber');
-           let passWord=document.getElementById('password');
-           let renterPassWord=document.getElementById('renterPassWord');
-           
-           function checkNumber(){
-            let numberPhoneRegex = /^(032|033|034|035|036|037|038|039|096|097|098|086|083|084|085|081|082|088|091|094|070|079|077|076|078|090|093|089|056|058|092|059|099)[0-9]{7}$/;
-         
-            if(phoneNumber.value.trim()===""){
-           phoneNumber.style.border="1px solid red";
-           phoneNumber.parentElement.querySelector('span').textContent="không được đẻ trống";
-           return false;
-           }else if(!numberPhoneRegex.test(phoneNumber.value.trim())){
-            phoneNumber.style.border="1px solid red";
-            phoneNumber.parentElement.querySelector('span').textContent="Số điện thoại không đúng";
-            return false;
-           }else{
-            phoneNumber.style.border="1px solid black";
-            phoneNumber.parentElement.querySelector('span').textContent="";
-            return true;
-           }
-          }
-          function checkUserName(){
-            if(userName.value.trim()===""){
-              userName.style.border="1px solid red";
-              userName.parentElement.querySelector('span').textContent="không được đẻ trống";
-              return false;
-            }else if(userName.value.length<=5){
-              userName.style.border="1px solid red";
-              userName.parentElement.querySelector('span').textContent="không được dưới 5 kí tự";
-              return false;
-            }else{
-              userName.style.border="1px solid black";
-              userName.parentElement.querySelector('span').textContent="";
-              return true;
-            }
-          }
-          function checkFullName(){
-             if(fullName.value.trim()===""){
-              fullName.style.border="1px solid red";
-              fullName.parentElement.querySelector('span').textContent="không được đẻ trống"; 
-              return false;
-             }else if(!isNaN(fullName.value.trim())){
-                 fullName.style.border="1px solid red";
-                 fullName.parentElement.querySelector('span').textContent="tên chỉ nhập được chữ"; 
-                 return false;
-              }else{
-                 fullName.style.border="1px solid black";
-                 fullName.parentElement.querySelector('span').textContent="";
-              return true;
-             }
-          }
-          function checkEmail(){
-            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if(email.value.trim()===""){
-              email.style.border="1px solid red";
-              email.parentElement.querySelector('span').textContent="không được đẻ trống"; 
-              return false;
-            }else if(!emailPattern.test(email.value.trim())){
-              email.style.border="1px solid red";
-              email.parentElement.querySelector('span').textContent="không đúng định dạng"; 
-              return false;
-            }else{
-              email.style.border="1px solid black";
-              email.parentElement.querySelector('span').textContent=""; 
-              return true;
-            }
-          }
-          function checkPassWord(){
-           if(passWord.value.trim()===""){
-              passWord.style.border="1px solid red";
-              passWord.parentElement.querySelector('span').textContent="không được đẻ trống"; 
-              return false;
-           }else if(passWord.value.length<=6){
-               passWord.style.border="1px solid red";
-               passWord.parentElement.querySelector('span').textContent="phải lớn hơn 6 kí tự";
-               return false;
-            }else{
-              passWord.style.border="1px solid black";
-              passWord.parentElement.querySelector('span').textContent=""; 
-              return true;
-           }
-          }
-          function checkRenterPassWord(){
-            if(renterPassWord.value.trim()===""){
-              renterPassWord.style.border="1px solid red";
-              renterPassWord.parentElement.querySelector('span').textContent="không được đẻ trống";
-              return false;
-           }else if(renterPassWord.value.trim() != passWord.value.trim()){
-              renterPassWord.style.border="1px solid red";
-              renterPassWord.parentElement.querySelector('span').textContent="Mật khẩu nhập lại không trùng";
-              return false;
-           }else{
-            renterPassWord.style.border="1px solid black";
-              renterPassWord.parentElement.querySelector('span').textContent="";
-              return true;
-           }
-          }
-          document.getElementById('form').addEventListener('submit', (event) => {
-              let isValid = true;
-              if (!checkUserName()) isValid = false;
-              if (!checkFullName()) isValid = false
-              if (!checkEmail()) isValid = false;
-              if (!checkNumber()) isValid = false;
-              if (!checkPassWord()) isValid = false;
-              if (!checkRenterPassWord()) isValid = false;
-
-              // Prevent form submission if there are validation errors
-              if (!isValid) {
-                  event.preventDefault();
-              }
-          });
-        </script>
+    
     
 </body>
 </html>
