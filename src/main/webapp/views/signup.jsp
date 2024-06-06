@@ -42,7 +42,7 @@
                 <div class="input-group">
                        <form:input id="userName" path="USERNAME" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Tài khoản</label>
-                         <span class="mt-2"></span>
+                         <span class="mt-2">${message}</span>
                     </div>
                     
                     <div class="input-group">
@@ -74,7 +74,7 @@
                          <span class="mt-2"></span>
                     </div>
                     <div class="input-group">
-                         <form:input id="password" path="PASSWORD" class=" form-control-lg fs-6 input"  placeholder=" " />
+                         <form:input id="password" path="PASSWORD" type="password" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Mật khẩu</label>
                          <span class="mt-2"></span>
                     </div>
@@ -144,9 +144,13 @@
               fullName.style.border="1px solid red";
               fullName.parentElement.querySelector('span').textContent="không được đẻ trống"; 
               return false;
-             }else{
-              fullName.style.border="1px solid black";
-              fullName.parentElement.querySelector('span').textContent="";
+             }else if(!isNaN(fullName.value.trim())){
+                 fullName.style.border="1px solid red";
+                 fullName.parentElement.querySelector('span').textContent="tên chỉ nhập được chữ"; 
+                 return false;
+              }else{
+                 fullName.style.border="1px solid black";
+                 fullName.parentElement.querySelector('span').textContent="";
               return true;
              }
           }
@@ -171,7 +175,11 @@
               passWord.style.border="1px solid red";
               passWord.parentElement.querySelector('span').textContent="không được đẻ trống"; 
               return false;
-           }else{
+           }else if(passWord.value.length<=6){
+               passWord.style.border="1px solid red";
+               passWord.parentElement.querySelector('span').textContent="phải lớn hơn 6 kí tự";
+               return false;
+            }else{
               passWord.style.border="1px solid black";
               passWord.parentElement.querySelector('span').textContent=""; 
               return true;

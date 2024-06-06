@@ -14,7 +14,7 @@
               <li class="nav-item dropdown open" style="padding-left: 15px;">
                 <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown"
                   data-toggle="dropdown" aria-expanded="false">
-                  <img src="/Admin/production/images/img.jpg" alt="">John Doe
+                  <img src="/Admin/production/images/img.jpg" alt=""><span>${list.FULLNAME}</span>
                 </a>
                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="/admin/profile"> Profile</a>

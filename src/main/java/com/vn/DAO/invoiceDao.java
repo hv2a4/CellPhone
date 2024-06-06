@@ -9,7 +9,9 @@ import org.springframework.data.repository.query.Param;
 import com.vn.entity.color;
 import com.vn.entity.invoice;
 import com.vn.entity.system;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface invoiceDao extends JpaRepository<invoice, Integer> {
 	@Query("select sum(i.TOTAL_AMOUNT) from invoice i where i.status_invoice.ID = 1")
 	long sumRevenue();

@@ -1,4 +1,5 @@
 package com.vn.entity;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -14,7 +15,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "GRAPHICS_CHIP")
-public class graphics_chip {
+public class graphics_chip implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;

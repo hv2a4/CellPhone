@@ -1,10 +1,12 @@
 package com.vn.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.sound.midi.Soundbank;
 
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
+import org.eclipse.tags.shaded.org.apache.bcel.generic.NEW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
@@ -57,11 +59,22 @@ public class SignUpController {
 	    String param = "?secret=" + secret + "&response=" + captchaResponse;
 		ReCaptChaResponse  reCaptChaResponse=restTemplate.exchange(url+param,HttpMethod.POST, null, ReCaptChaResponse.class).getBody();
 		if(reCaptChaResponse.isSuccess()) {
-			 item.setROLE(false);
-			 item.setSTATUS(true);
-			 userDao.save(item);
-			return "redirect:/shop";
+			
+			
+			if(!userDao.existsById(item.getUSERNAME())) {
+				item.setROLE(false);
+				 item.setSTATUS(true);
+				 item.setGENDER("KHAC");
+				 userDao.save(item);
+				 return "redirect:/shop";
+			}else {
+				  model.addAttribute("item", new user());
+				model.addAttribute("message", "Tên tài khoản đã tồn tại");
+				 return "/views/signup";
+			}
+			 
 		}else {
+			
 			 rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
 		        item.setRank(defaultRank);
 		        model.addAttribute("item", item);

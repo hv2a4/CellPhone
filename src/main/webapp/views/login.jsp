@@ -14,7 +14,8 @@
 </head>
 
 <body>
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+<form action="/shop/login" method="post">
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-3 bg-white shadow box-area">
             <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box"
                 style="background: linear-gradient(45deg, #858383, #abbaab);">
@@ -26,20 +27,21 @@
                 <div class="row align-items-center">
                     <div class="header-text mb-4">
                         <h2>Đăng nhập</h2>
+                        <span class="mt-2 text-danger">${message}</span>
                     </div>
                     <div class="input-group">
-                        <input type="text" class=" form-control-lg fs-6 input"
-                            placeholder=" ">
+                        <input name="userName" type="text" class=" form-control-lg fs-6 input"
+                            placeholder=" "  value="${userCookie != null ? userCookie : ''}">
                         <label for="" class="label">Tài khoản</label>
                     </div>
                     <div class="input-group">
-                        <input type="password" class="form-control-lg fs-6 input"
+                        <input name="password" type="password" class="form-control-lg fs-6 input"
                             placeholder=" ">
                         <label for="" class="label">Mật khẩu</label>
                     </div>
                     <div class="input-group mb-2 d-flex justify-content-between">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="formCheck">
+                            <input type="checkbox" class="form-check-input" id="formCheck" name="rememberMe">
                             <label for="formCheck" class="form-check-label text-secondary"><small>Nhớ tôi</small></label>
                         </div>
                         <div class="forgot">
@@ -61,5 +63,7 @@
             </div>
         </div>
     </div>
+</form>
+    
 </body>
 </html>
