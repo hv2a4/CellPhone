@@ -3,9 +3,10 @@ package com.vn.entity;
 import java.io.Serializable;
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,9 +21,10 @@ public class color implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
+	Integer ID;
 	String NAME;
 
 	@OneToMany(mappedBy = "color")
+	@JsonIgnore
 	List<variant> variants;
 }

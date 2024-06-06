@@ -1,70 +1,77 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <body>
-	<div class="">
-		<div class="clearfix"></div>
-		<div class="row">
-			<div class="col-md-12 col-sm-12">
-				<div class="x_panel">
-					<div class="x_title">
-						<h2>Danh Sách</h2>
+	<div class="clearfix"></div>
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2>Danh Sách</h2>
 
-						<!-- Button trigger modal -->
-						<button type="button" class="btn btn-primary float-end mr-3 px-5"
-							data-bs-toggle="modal" data-bs-target="#them">Thêm</button>
-						<!-- Modal -->
-						<div div class="modal fade " id="them" tabindex="-1"
-							aria-labelledby="themLabel" aria-hidden="true">
-							<div class="modal-dialog modal-lg">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h1 class="modal-title fs-5" id="themLabel">Thêm</h1>
-										<button type="button" class="btn-close"
-											data-bs-dismiss="modal" aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										<form class="form-horizontal form-label-left">
-											<div class="form-group ">
-												<label class="control-label">Tên hệ điều hành</label> <input
-													type="text" class="form-control" placeholder="">
-											</div>
-										</form>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary"
-											data-bs-dismiss="modal">Close</button>
-										<button type="button" class="btn btn-primary">Create</button>
-									</div>
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary float-end mr-3 px-5"
+						data-bs-toggle="modal" data-bs-target="#them">Thêm</button>
+					<!-- Modal -->
+					<div div class="modal fade " id="them" tabindex="-1"
+						aria-labelledby="themLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5" id="themLabel">Thêm</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+
+									<form:form class="form-horizontal form-label-left"
+										method="POST" modelAttribute="system"
+										action="/admin/system/create">
+										<div class="form-group ">
+											<label class="control-label">Tên</label>
+											<form:input path="SYSTEM" cssClass="form-control"
+												placeholder="" />
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary"
+												data-bs-dismiss="modal">Close</button>
+											<button type="submit" class="btn btn-primary">Create</button>
+										</div>
+									</form:form>
 								</div>
 							</div>
 						</div>
-						<div class="clearfix"></div>
 					</div>
-					<div class="x_content">
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="card-box table-responsive">
-									<table id="datatable-responsive"
-										class="table table-striped table-bordered dt-responsive nowrap"
-										cellspacing="0" width="100%">
-										<thead>
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="card-box table-responsive">
+								<table id="datatable-responsive"
+									class="table table-striped table-bordered dt-responsive nowrap"
+									cellspacing="0" width="100%">
+									<thead>
+										<tr>
+											<th>Mã hãng</th>
+											<th>Tên</th>
+											<th class="text-center">Hoạt động</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="item" items="${list_system }">
 											<tr>
-												<th>Id</th>
-												<th>Tên hệ điều hành</th>
-												<th class="text-center">Hoạt động</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>001</td>
-												<td>iOS</td>
+												<td>${item.ID }</td>
+												<td>${item.SYSTEM }</td>
 												<td class="text-center"><i
 													class="fa-solid fa-pen-to-square fs-4 mr-3"
 													data-bs-toggle="modal" data-bs-target="#update"></i> <i
 													class="fa-solid fa-trash fs-4 " data-bs-toggle="modal"
-													data-bs-target="#delete"></i> <!-- Modal Update-->
+													data-bs-target="#delete${item.ID }"></i> <!-- Modal Update-->
 													<div class="modal fade" id="update" tabindex="-1"
 														aria-labelledby="updateLabel" aria-hidden="true">
 														<div class="modal-dialog">
@@ -83,9 +90,8 @@
 																					type="text" class="form-control">
 																			</div>
 																			<div class="form-group ">
-																				<label class="control-label">Tên hệ điều
-																					hành</label> <input type="text" class="form-control"
-																					placeholder="">
+																				<label class="control-label">Tên</label> <input
+																					type="text" class="form-control" placeholder="">
 																			</div>
 																		</div>
 																	</form>
@@ -98,7 +104,7 @@
 															</div>
 														</div>
 													</div> <!-- Modal Delete-->
-													<div class="modal fade" id="delete" tabindex="-1"
+													<div class="modal fade" id="delete${item.ID }" tabindex="-1"
 														aria-labelledby="deleteLabel" aria-hidden="true">
 														<div class="modal-dialog">
 															<div class="modal-content">
@@ -108,20 +114,20 @@
 																	<button type="button" class="btn-close"
 																		data-bs-dismiss="modal" aria-label="Close"></button>
 																</div>
-																<div class="modal-body text-left">Bạn có muốn xóa
-																</div>
+																<div class="modal-body text-left">Bạn có muốn xóa hãng ${item.SYSTEM }</div>
 																<div class="modal-footer">
 																	<button type="button" class="btn btn-secondary"
 																		data-bs-dismiss="modal">Close</button>
-																	<button type="button" class="btn btn-danger">Delete</button>
+																	<a href="/admin/system/delete?id=${item.ID }"
+																			class="btn btn-danger">Delete</a>
 																</div>
 															</div>
 														</div>
 													</div></td>
 											</tr>
-										</tbody>
-									</table>
-								</div>
+										</c:forEach>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>

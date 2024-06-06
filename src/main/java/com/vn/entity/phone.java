@@ -20,6 +20,7 @@ import lombok.Data;
 @Entity
 @Table(name = "PHONE")
 public class phone implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int ID;
@@ -45,15 +46,11 @@ public class phone implements Serializable {
 	battery_type battery_type;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_WP")
-	wp wp;
-
-	@ManyToOne
-	@JoinColumn(name = "ID_SCREEN_SESOLUTION")
+	@JoinColumn(name = "ID_SCREEN")
 	screen_resolution screen_resolution;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_GRAPHICS_CHIP")
+	@JoinColumn(name = "ID_GRAPHICS")
 	graphics_chip graphics_chip;
 
 	@ManyToOne
@@ -79,7 +76,7 @@ public class phone implements Serializable {
 	@JoinColumn(name = "UPDATE_AT")
 	Date UPDATE_AT;
 
-	Double LENGHT;
+	Double LENGTH;
 	Double WIDTH;
 	Double HEIGHT;
 	Double WEIGHT;
@@ -87,7 +84,7 @@ public class phone implements Serializable {
 	int MAXIMUM_BRIGHTNESS;
 	String VIDEO_RECORDING;
 	Double CPU_SPEED;
-	
+	String IMAGE;
 
 	@OneToMany(mappedBy = "phone")
 	List<variant> variants;

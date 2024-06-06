@@ -12,16 +12,23 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import lombok.NoArgsConstructor;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Data
+@NoArgsConstructor
 @Entity
-@Table(name = "USER")
-public class user implements Serializable{
+@Table(name = "[USER]")
+public class user implements Serializable {
+
 	@Id
 	String USERNAME;
-	
-	String PASSWORD; 
+
+	String PASSWORD;
 	String EMAIL;
 	Boolean ROLE;
 	Boolean STATUS;
@@ -29,28 +36,36 @@ public class user implements Serializable{
 	String FULLNAME;
 	String GENDER;
 	String PHONE_NUMBER;
-	
+	Integer INCORRECT_PASSWORD;
+
 	@Temporal(TemporalType.DATE)
-	@JoinColumn(name="CREATE_AT")
-	Date createDate;
-	
+	@JoinColumn(name = "CREATE_AT")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date CREATE_AT;
+
 	@Temporal(TemporalType.DATE)
 	@JoinColumn(name = "UPDATE_AT")
-	Date update_at;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date UPDATE_AT;
+
+	@Temporal(TemporalType.DATE)
+	@JoinColumn(name = "CLOCKDOWN_PERIOD")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	Date CLOCKDOWN_PERIOD;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_RANK")
 	rank rank;
-	
+
 	@OneToMany(mappedBy = "user")
 	List<cart> carts;
-	
+
 	@OneToMany(mappedBy = "user")
 	List<order> orders;
-	
+
 	@OneToMany(mappedBy = "user")
 	List<rating> ratings;
-	
+
 	@OneToMany(mappedBy = "user")
 	List<address> addresses;
 }

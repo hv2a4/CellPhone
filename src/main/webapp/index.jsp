@@ -35,7 +35,6 @@
 		<link type="text/css" rel="stylesheet" href="/css/style.css" />
 	</head>
 	<body>
-		
 		<jsp:include page="/views/header.jsp"></jsp:include>
 		<jsp:include page="/views/nav.jsp"></jsp:include>
 		<jsp:include page="/views/${page}"></jsp:include>

@@ -19,7 +19,8 @@ public class system implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int ID;
-	
+	String SYSTEM;
+
 	@OneToMany(mappedBy = "system")
 	List<phone> phones;
 }
