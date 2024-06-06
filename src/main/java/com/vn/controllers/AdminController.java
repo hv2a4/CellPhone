@@ -179,17 +179,7 @@ public class AdminController {
         return "redirect:/shop/login";
     }
 
-    @ModelAttribute("fillTableUser")
-    public List<user> getList() {
-        return userDao.findAll();
-    }
-
-	@GetMapping("order")
-	public String getQLDonHang(Model model) {
-		String page = "order.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
+	
 
 	@GetMapping("product")
 	public String getQLSanPham(Model model) {
@@ -411,17 +401,17 @@ public class AdminController {
         orderDaos.save(orders);
         return "redirect:/admin/order";
     }
-
-    @GetMapping("unlock/{id}")
-    public String getUnlock(Model model, @PathVariable("id") String id) {
-        user users = userDao.findById(id).get();
-        users.setSTATUS(true);
-        users.setUpdate_at(new Date());
-        userDao.save(users);
-        String page = "qlnguoidung.jsp";
-        model.addAttribute("page", page);
-        return "redirect:/admin/user";
-    }
+    
+	@GetMapping("unlock/{id}")
+	public String getUnlock(Model model, @PathVariable("id") String id) {
+		user users = UserDao.findById(id).get();
+		users.setSTATUS(true);
+		users.setUPDATE_AT(new Date());
+		UserDao.save(users);
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+		return "redirect:/admin/user";
+	}
 
 	@PostMapping("category/update")
 	public String updateCategory(@ModelAttribute("category") category category) {
@@ -1205,15 +1195,6 @@ public class AdminController {
 		return "redirect:/admin/user";
 	}
 
-	@GetMapping("unlock/{id}")
-	public String getUnlock(Model model, @PathVariable("id") String id) {
-		user users = UserDao.findById(id).get();
-		users.setSTATUS(true);
-		users.setUPDATE_AT(new Date());
-		UserDao.save(users);
-		String page = "qlnguoidung.jsp";
-		model.addAttribute("page", page);
-		return "redirect:/admin/user";
-	}
+
 
 }

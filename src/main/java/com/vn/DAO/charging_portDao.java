@@ -7,6 +7,6 @@ import com.vn.entity.color;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface charging_protDao extends JpaRepository<charging_port, Integer> {
+public interface charging_portDao extends JpaRepository<charging_port, Integer> {
 
 }

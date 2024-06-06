@@ -23,15 +23,40 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "[USER]")
 public class user implements Serializable {
+	@Id
+	String USERNAME;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_RANK")
+	rank rank;
 
-	@Temporal(TemporalType.DATE)
+    String AVATAR;
+    String FULLNAME;
+    String GENDER;
+    String PHONE_NUMBER;
+    String PASSWORD;
+    String EMAIL;
+    Integer INCORRECT_PASSWORD;
+    Boolean ROLE;
+    Boolean STATUS;
+
+    @Temporal(TemporalType.DATE)
+    @JoinColumn(name = "CREATE_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    Date CREATE_AT;
+    
+    @Temporal(TemporalType.DATE)
+    @JoinColumn(name = "UPDATE_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    Date UPDATE_AT;
+    
+    @Temporal(TemporalType.DATE)
 	@JoinColumn(name = "CLOCKDOWN_PERIOD")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	Date CLOCKDOWN_PERIOD;
 
-	@ManyToOne
-	@JoinColumn(name = "ID_RANK")
-	rank rank;
+    @OneToMany(mappedBy = "user")
+    List<address> addresses;
 
 	@OneToMany(mappedBy = "user")
 	List<cart> carts;
@@ -41,43 +66,4 @@ public class user implements Serializable {
 
 	@OneToMany(mappedBy = "user")
 	List<rating> ratings;
-
-    String AVATAR;
-
-    String FULLNAME;
-
-    String GENDER;
-    String PHONE_NUMBER;
-
-	@Temporal(TemporalType.DATE)
-    @JoinColumn(name = "CLOCKDOWN_PERIOD")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date CLOCKDOWN_PERIOD;
-
-    Integer INCORRECT_PASSWORD = 0;
-
-    @Temporal(TemporalType.DATE)
-    @JoinColumn(name = "CREATE_AT")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date CREATE_AT;
-
-    @JoinColumn(name = "UPDATE_AT")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date update_at;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_RANK")
-    rank rank;
-
-    @OneToMany(mappedBy = "user")
-    List<cart> carts;
-
-    @OneToMany(mappedBy = "user")
-    List<order> orders;
-
-    @OneToMany(mappedBy = "user")
-    List<rating> ratings;
-
-    @OneToMany(mappedBy = "user")
-    List<address> addresses;
 }

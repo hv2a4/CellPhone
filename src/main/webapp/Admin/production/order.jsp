@@ -180,7 +180,7 @@
                                                                     <a class="btn btn-dark"
                                                                        href="/admin/returns/${item.ID}"
                                                                        style="width: 100px;">
-                                                                        Trả hàng
+                                                                        Đã nhận
                                                                     </a>
                                                                 </c:when>
                                                             </c:choose>
@@ -603,7 +603,7 @@
                                                                 <a class="btn btn-dark"
                                                                    href="/admin/returns/${item.ID}"
                                                                    style="">
-                                                                    Trả hàng
+                                                                    Đã nhận
                                                                 </a>
                                                             </td>
                                                         </tr>

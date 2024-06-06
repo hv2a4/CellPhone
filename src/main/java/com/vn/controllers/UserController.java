@@ -17,6 +17,7 @@ import com.vn.entity.ProductStore;
 import com.vn.entity.category;
 import com.vn.entity.storage;
 import com.vn.entity.system;
+import com.vn.entity.user;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -35,6 +36,8 @@ public class UserController {
     userDao userDao;
     @Autowired
     systemDao systemDao;
+    @Autowired
+    categoryDao categoryDao;
 
     @GetMapping("forgotpass1")
     public String getForgotpass(Model model) {
@@ -123,6 +126,8 @@ public class UserController {
 
     @RequestMapping("store")
     public String getStore(Model model) {
+    	List<category> finByAllCategories = categoryDao.findAll();
+		model.addAttribute("finByAllCategories", finByAllCategories);
         String page = "store.jsp";
         model.addAttribute("page", page);
         return "index";

@@ -124,7 +124,7 @@
 					<!-- product -->
 					<c:forEach var="item" items="${finByAllCategories}">
 					<c:forEach var="phone" items="${item.phones}">
-					<c:if test="${phone.IS_DELETE }">
+					<c:if test="${!phone.IS_DELETE }">
 						<div class="col-md-4 col-xs-6">
 							<div class="product">
 								<div class="product-img">
