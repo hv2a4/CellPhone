@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <section id="breadcrumb-wrapper" class="breadcrumb-w-img">
             <div class="breadcrumb-overlay"></div>
             <div class="breadcrumb-content">
@@ -13,6 +14,9 @@
             </div>
         </section>
         <main>
+        <form method="post" name="UserProfile"
+                            id="fChangeProfile" class="form mt-5"
+                            enctype="multipart/form-data">
             <div class="container">
                 <div class="card mt-5">
                     <div class="card-body">
@@ -29,9 +33,7 @@
                         </div>
                         <!-- chỗ này hiển thị thông tin người dùng -->
         
-                        <form method="post" name="UserProfile"
-                            id="fChangeProfile" class="form mt-5"
-                            enctype="multipart/form-data">
+                        
                             <div class=" row">
                                 <div class="col-md-6" style="padding-right:25px ;">
                                     <div class="form-group row">
@@ -39,9 +41,9 @@
                                             for="fullName">Tài khoản: <span
                                                 class="text-fail">*</span></label>
                                         <div class="col-7">
-                                            <input type="text" name="fullName"
+                                            <input value="${list.USERNAME}" type="text" name="fullName"
                                                 class="input form-control"
-                                                maxlength="255">
+                                                maxlength="255" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -61,7 +63,7 @@
                                         <div class="col-7 date">
                                             <input type="text" name="birthday"
                                                 class="input form-control"
-                                                value ="${list.rank.NAME}" >
+                                                value ="${list.rank.NAME}" readonly>
                                         </div>
                                     </div>
                                     
@@ -72,19 +74,19 @@
                                                 class="text-fail">*</span></label>
                                         <div class="col-7 d-flex">
                                             <div class="radio">
-                                                <label><input type="radio"
+                                                <label><input value="${list.GENDER}" type="radio"
                                                         name="flexRadioDefault"
                                                         id="flexRadioDefault1" style="margin-left: -36px;">
                                                     Nam</label>
                                             </div>
                                             <div class="radio" style="margin-left: 10px;">
-                                                <label><input type="radio"
+                                                <label><input value="${list.GENDER}" type="radio"
                                                         name="flexRadioDefault"
                                                         id="flexRadioDefault2"
                                                         checked style="margin-left: -36px;"> Nữ</label>
                                             </div>
                                             <div class="radio" style="margin-left: 10px;">
-                                                <label><input type="radio"
+                                                <label><input value="${list.GENDER}" type="radio"
                                                         name="flexRadioDefault"
                                                         id="flexRadioDefault3"
                                                         checked style="margin-left: -36px;"> Khác</label>
@@ -110,7 +112,7 @@
                                             for="fullName">Số Điện Thoại: <span
                                                 class="text-fail">*</span></label>
                                         <div class="col-7">
-                                            <input type="number" name="fullName"
+                                            <input value="${list.PHONE_NUMBER}" type="number" name="fullName"
                                                 class="input form-control"
                                                 maxlength="255">
                                         </div>
@@ -120,14 +122,15 @@
                                             for="birthday">Quyền: <span
                                                 class="text-fail">*</span></label>
                                         <div class="col-7 date">
-                                            <input type="text" name="birthday"
+                                            <input value="${list.ROLE?'Quản Lí':'Khách Hàng'}" type="text" name="birthday"
                                                 class="input form-control"
-                                                value maxlength="10">
+                                                value maxlength="10" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group row mt-3">
                                         <label class="control-label">Địa chỉ mặc định:</label>
                                         <select name="" id="" class="form-select" style="height: 45px;">
+                                          
                                             <option value="">Địa chỉ 1</option>
                                             <option value="">Địa chỉ 2</option>
                                             <option value="">Địa chỉ 3</option ion>
@@ -141,8 +144,9 @@
                                     <a href="/shop" class="btn btn-default btn-rounded" style="border-radius: 10px;">Quay lại</a>
                                 </div>
                             </div>
-                        </form>
+                       
                     </div>
                 </div>
             </div>
+             </form>
         </main>
