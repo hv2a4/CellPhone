@@ -19,6 +19,7 @@
                         <option value="">Chọn tỉnh / thành</option>
                     </select>
                     <input type="hidden" name="cityName" id="cityName">
+                     <small style=" color: red;">${errors}</small>
                 </div>
                 <div class="form-group">
                     <label for="district" style="font-weight: 1">Thành phố</label>
@@ -26,6 +27,7 @@
                         <option value="">Chọn quận / huyện</option>
                     </select>
                     <input type="hidden" name="districtName" id="districtName">
+                     <small style=" color: red;">${errors}</small>
                 </div>
                 <div class="form-group">
                     <label for="ward" style="font-weight: 1">Phường</label>
@@ -33,11 +35,12 @@
                         <option value="">Chọn phường / xã</option>
                     </select>
                     <input type="hidden" name="wardName" id="wardName">
+                     <small style=" color: red;">${errors}</small>
                 </div>
                 <div class="order-notes">
     <label for="noteAddress" style="font-weight: 1">Địa chỉ cụ thể</label>
     <textarea name="noteAddress" class="input">${sub}</textarea>
-   <span>${errors}</span>
+     <small style=" color: red;">${errors}</small>
 </div>
                 <div class="form-group text-right" style="margin-top: 10px;">
                     <button formaction="/shop/create" formmethod="post" type="submit" class="btn btn-info">Thêm</button>

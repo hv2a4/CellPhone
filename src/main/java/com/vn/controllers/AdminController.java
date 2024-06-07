@@ -238,12 +238,7 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
-	@GetMapping("profile")
-	public String getProfile(Model model) {
-		String page = "profile.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
+	
     @RequestMapping("logout")
     public String logOut() {
         sessionService.remove("list");

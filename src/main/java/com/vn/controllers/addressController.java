@@ -63,12 +63,18 @@ public class addressController {
 	    String cityName = paramService.getString("cityName", "");
 	    String districtName = paramService.getString("districtName", "");
 	    String wardName = paramService.getString("wardName", "");
-	    if(noteAddress.isEmpty()) {
+	    if(noteAddress.isEmpty()||cityName.isEmpty()||districtName.isEmpty()||wardName.isEmpty()) {
 	         String page = "address.jsp";
 	         model.addAttribute("errors", "Bạn Chưa Nhập");
 	 	    model.addAttribute("page", page);
-	 	    return "redirect:/shop/address";
-	    }else {
+	 	   user userSession=sessionService.get("list");
+			Optional<user> defaultUser=userDao.findById(userSession.getUSERNAME());
+			item.setUser(defaultUser.get());
+			model.addAttribute("item",  item);
+			model.addAttribute("page", page);
+			
+			return "index";
+	    } else {
 	    	String addres=noteAddress+", "+wardName+", "+districtName+", "+cityName;
 	        item.setADDRESS(addres);
 	        addressDao.save(item);
@@ -78,6 +84,7 @@ public class addressController {
 	    }
 	    
 	}
+	
 	@RequestMapping("/delete/{id}")
 	public String deleteAddress(Model model,address item ,@PathVariable("id") Integer id) {
 		addressDao.deleteById(id);
