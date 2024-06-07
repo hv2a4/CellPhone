@@ -1,64 +1,64 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+         pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
 </head>
 <body>
 <!-- HEADER -->
-		<header>
-			<!-- TIÊU ĐỀ CHÍNH -->
-			<div id="header">
-				<!-- container -->
-				<div class="container">
-					<!-- row -->
-					<div class="row">
-						<!-- LOGO -->
-						<div class="col-md-3">
-							<div class="header-logo">
-								<a href="#" class="logo">
-									<img src="/img/logo.png" alt>
-								</a>
-							</div>
-						</div>
-						<!-- /LOGO -->
+<header>
+    <!-- TIÊU ĐỀ CHÍNH -->
+    <div id="header">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- LOGO -->
+                <div class="col-md-3">
+                    <div class="header-logo">
+                        <a href="#" class="logo">
+                            <img src="/img/logo.png" alt>
+                        </a>
+                    </div>
+                </div>
+                <!-- /LOGO -->
 
-						<!-- THANH TÌM KIẾM -->
-						<div class="col-md-6">
-							<div class="header-search">
-								<form>
-									<input class="input" placeholder="Tìm kiếm ở đây">
-									<button class="search-btn">Tìm kiếm</button>
-								</form>
-							</div>
-						</div>
-						<!-- /THANH TÌM KIẾM -->
+                <!-- THANH TÌM KIẾM -->
+                <div class="col-md-6">
+                    <div class="header-search">
+                        <form>
+                            <input class="input" placeholder="Tìm kiếm ở đây">
+                            <button class="search-btn">Tìm kiếm</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /THANH TÌM KIẾM -->
 
-						<!-- TÀI KHOẢN -->
-						<div class="col-md-3 clearfix">
-							<div class="header-ctn">
-								<!-- Giỏ hàng -->
-								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										<i class="fa fa-shopping-cart"></i>
-										<span>Giỏ hàng</span>
-										<div class="qty">3</div>
-									</a>
-									<div class="cart-dropdown">
-										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="/img/product01.png" alt>
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">tên sản phẩm ở đây</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
+                <!-- TÀI KHOẢN -->
+                <div class="col-md-3 clearfix">
+                    <div class="header-ctn">
+                        <!-- Giỏ hàng -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>Giỏ hàng</span>
+                                <div class="qty">3</div>
+                            </a>
+                            <div class="cart-dropdown">
+                                <div class="cart-list">
+                                    <div class="product-widget">
+                                        <div class="product-img">
+                                            <img src="/img/product01.png" alt>
+                                        </div>
+                                        <div class="product-body">
+                                            <h3 class="product-name"><a href="#">tên sản phẩm ở đây</a></h3>
+                                            <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
+                                        </div>
+                                        <button class="delete"><i class="fa fa-close"></i></button>
+                                    </div>
 
 											<div class="product-widget">
 												<div class="product-img">

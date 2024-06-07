@@ -17,15 +17,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import lombok.NoArgsConstructor;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "[USER]")
-public class user implements Serializable{
-	 private static final long serialVersionUID = 1L;
-	
+public class user implements Serializable {
 	@Id
 	@NotBlank(message = "Không Được để trống")
 	String USERNAME;
@@ -50,7 +51,7 @@ public class user implements Serializable{
 		        message = "Số điện thoại không hợp lệ"
 		    )
 	String PHONE_NUMBER;
-	int INCORRECT_PASSWORD;
+	Integer INCORRECT_PASSWORD;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name="CREATE_AT")
@@ -67,16 +68,16 @@ public class user implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "ID_RANK")
 	rank rank;
-	
+
+    @OneToMany(mappedBy = "user")
+    List<address> addresses;
+
 	@OneToMany(mappedBy = "user")
 	List<cart> carts;
-	
+
 	@OneToMany(mappedBy = "user")
 	List<order> orders;
-	
+
 	@OneToMany(mappedBy = "user")
 	List<rating> ratings;
-	
-	@OneToMany(mappedBy = "user")
-	List<address> addresses;
 }

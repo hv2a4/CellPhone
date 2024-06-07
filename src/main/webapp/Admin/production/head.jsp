@@ -70,6 +70,10 @@
 .custom-rounded {
 	border-radius: 20px;
 }
+
+.cochu {
+	font-size: 16px;
+}
 </style>
 </head>
 
