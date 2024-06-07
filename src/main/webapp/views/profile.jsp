@@ -61,7 +61,7 @@
                                         <div class="col-7 date">
                                             <input type="text" name="birthday"
                                                 class="input form-control"
-                                                value maxlength="10">
+                                                value ="${list.rank.NAME}" >
                                         </div>
                                     </div>
                                     
@@ -102,7 +102,7 @@
                                         <div class="col-7">
                                             <input type="email" name="email"
                                                 class="input form-control"
-                                                maxlength="255">
+                                                maxlength="255" value="${list.EMAIL }">
                                         </div>
                                     </div>
                                     <div class="form-group row mt-2">
@@ -138,7 +138,7 @@
                             <div class="row">
                                 <div class="col-sm-12 text-right">
                                     <button type="submit" class="btn btn-success btn-rounded" style="border-radius: 10px;">Lưu</button>
-                                    <a href="#" class="btn btn-default btn-rounded" style="border-radius: 10px;">Quay lại</a>
+                                    <a href="/shop" class="btn btn-default btn-rounded" style="border-radius: 10px;">Quay lại</a>
                                 </div>
                             </div>
                         </form>

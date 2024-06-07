@@ -1,5 +1,6 @@
 package com.vn.utils;
 
+import org.eclipse.tags.shaded.org.apache.xpath.operations.Minus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +39,9 @@ public class CookieService {
 		return null;
 	}
 
-	public Cookie add(String name, String value, int hours) {
+	public Cookie add(String name, String value, int minute, HttpServletResponse response) {
 		Cookie cookie = new Cookie(name, value);
-		cookie.setMaxAge(hours * 60 * 60);
+		cookie.setMaxAge(minute * 60 );
 		cookie.setPath("/");
 		response.addCookie(cookie);
 		return cookie;
