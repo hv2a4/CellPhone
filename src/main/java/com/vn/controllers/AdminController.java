@@ -159,7 +159,7 @@ public class AdminController {
 	@ModelAttribute("list_rank")
 	public List<rank> getListRank() {
 		return rankDao.findAll();
-	
+	}
 	@ModelAttribute("list_category")
 	public List<category> getListCategory() {
 		return categoryDao.findAll();

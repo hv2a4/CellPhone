@@ -119,8 +119,8 @@ public class UserController {
 
     @RequestMapping("store")
     public String getStore(Model model) {
-    	List<category> finByAllCategories = categoryDao.findAll();
-		model.addAttribute("finByAllCategories", finByAllCategories);
+    	List<phone> finByAllPhone = phonedao.findAll();
+		model.addAttribute("finByAllPhone", finByAllPhone);
         String page = "store.jsp";
         model.addAttribute("page", page);
         return "index";
@@ -194,8 +194,10 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("product")
-	public String getProduct(Model model) {
+	@RequestMapping("product/{id}")
+	public String getProduct(Model model, @PathVariable("id") Integer id) {
+		phone finByIdPhone = phonedao.findById(id).get();
+		model.addAttribute("finByIdPhone", finByIdPhone);
 		String page = "product.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -204,9 +206,9 @@ public class UserController {
 	//
 	@GetMapping("ajax/getGia/{id}")
 	@ResponseBody
-	public Optional<Double> getGia(Model model, @PathVariable("id") Integer id) {
-		Optional<variant> varia = variantdao.findById(id);
-		return Optional.of(varia.get().getPRICE());
+	public Optional<variant> getGia(@PathVariable("id") Integer id) {
+	    return variantdao.findById(id);
 	}
+
 
 }
