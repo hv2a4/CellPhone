@@ -238,7 +238,7 @@
 									<!-- product widget -->
 									<div class="product-widget">
 										<div class="product-img">
-											<img src="/images/${phone.IMAGE}" alt>
+											<img src="/images/${phone.IMAGE}" alt="">
 										</div>
 										<div class="product-body">
 											<p class="product-category">Category</p>
