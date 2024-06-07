@@ -67,7 +67,6 @@
 			<artifactId>mssql-jdbc</artifactId>
 		</dependency>
 		<dependency>
-
 			<groupId>jakarta.el</groupId>
 			<artifactId>jakarta.el-api</artifactId>
 			<version>6.0.0</version>
