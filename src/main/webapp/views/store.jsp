@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!-- SECTION -->
 <div class="section">
 	<!-- container -->
@@ -161,116 +163,7 @@
 							</div>
 						</div>
 					</c:forEach>
-
-					<!-- <div class="col-md-4 col-xs-6">
-                <div class="product">
-                  <div class="product-img">
-                    <img src="/img/product01.png" alt />
-                    <div class="product-label">
-                      <span class="sale">-30%</span>
-                      <span class="new">NEW</span>
-                    </div>
-                  </div>
-                  <div class="product-body">
-                    <p class="product-category">Mới</p>
-                    <h3 class="product-name">
-                      <a href="#">Iphone 15 pro max</a>
-                    </h3>
-                    <button type="button" class="btn btn-default">64GB</button>
-                    <button type="button" class="btn btn-default">258GB</button>
-                    <h4 class="product-price">
-                      30,000,000 đ<del class="product-old-price"
-                        >35,000,000 đ</del
-                      >
-                    </h4>
-                    <div class="product-rating">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                    </div>
-                    <div class="product-btns">
-                      <button class="quick-view">
-                        <a href="product.html?id=1"><i class="fa fa-eye"></i></a
-                        ><span class="tooltipp">quick view</span>
-                      </button>
-                      <button class="quick-view">
-                        <i class="fa fa-shopping-cart"></i
-                        ><span class="tooltipp">Thêm vào giỏ hàng</span>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="add-to-cart">
-                    <a href="checkout.html">
-                      <button class="add-to-cart-btn">
-                        <i
-                          class="fa-brands fa-bitcoin"
-                          style="font-size: 20px"
-                        ></i>
-                        Mua ngay
-                      </button></a
-                    >
-                  </div>
-                </div>
-              </div> -->
-
-					<!-- <div class="col-md-4 col-xs-6">
-                <div class="product">
-                  <div class="product-img">
-                    <img src="/img/product01.png" alt />
-                    <div class="product-label">
-                      <span class="sale">-30%</span>
-                      <span class="new">NEW</span>
-                    </div>
-                  </div>
-                  <div class="product-body">
-                    <p class="product-category">Mới</p>
-                    <h3 class="product-name">
-                      <a href="#">Iphone 15 pro max</a>
-                    </h3>
-                    <button type="button" class="btn btn-default">64GB</button>
-                    <button type="button" class="btn btn-default">258GB</button>
-                    <h4 class="product-price">
-                      30,000,000 đ<del class="product-old-price"
-                        >35,000,000 đ</del
-                      >
-                    </h4>
-                    <div class="product-rating">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                    </div>
-                    <div class="product-btns">
-                      <button class="quick-view">
-                        <a href="product.html?id=1"><i class="fa fa-eye"></i></a
-                        ><span class="tooltipp">quick view</span>
-                      </button>
-                      <button class="quick-view">
-                        <i class="fa fa-shopping-cart"></i
-                        ><span class="tooltipp">Thêm vào giỏ hàng</span>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="add-to-cart">
-                    <a href="checkout.html">
-                      <button class="add-to-cart-btn">
-                        <i
-                          class="fa-brands fa-bitcoin"
-                          style="font-size: 20px"
-                        ></i>
-                        Mua ngay
-                      </button></a
-                    >
-                  </div>
-                </div>
-              </div> -->
 				</div>
-				<!-- /store products -->
-
-				<!-- store bottom filter -->
 				<div class="store-filter clearfix">
 					<span class="store-qty">Showing 20-100 products</span>
 					<ul class="store-pagination">

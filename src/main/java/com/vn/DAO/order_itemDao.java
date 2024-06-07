@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import com.vn.entity.color;
 import com.vn.entity.order_item;
 import com.vn.entity.system;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface order_itemDao extends JpaRepository<order_item, Integer> {
 	
 }

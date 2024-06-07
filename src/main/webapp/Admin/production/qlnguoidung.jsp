@@ -161,24 +161,24 @@
                                             data-bs-target="#exampleModal_${stt.index + 1}">${stt.index + 1}</td>
                                         <td data-bs-toggle="modal"
                                             data-bs-target="#exampleModal_${stt.index + 1}">${item.FULLNAME}</td>
-                                        <td>${item.USERNAME}</td>
+                                        <td>${item.USERNAME} </td>
                                         <td>${item.EMAIL}</td>
                                         <td>${item.PHONE_NUMBER}</td>
                                         <td>${item.STATUS ? "Hoạt động" : "Đã khóa"}</td>
                                         <td class="text-center">
                                             <c:choose>
                                                 <c:when test="${!item.ROLE && item.STATUS}">
-                                                    <a class="btn btn-primary" style="width: 100px"
+                                                    <a class="btn btn-success" style="width: 100px"
                                                        href="/admin/authorize/${item.USERNAME}">Cấp quyền
                                                     </a>
                                                 </c:when>
                                                 <c:when test="${!item.STATUS}">
-                                                    <a class="btn btn-success" style="width: 100px"
+                                                    <a class="btn btn-warning" style="width: 100px"
                                                        href="/admin/unlock/${item.USERNAME}">Mở khóa
                                                     </a>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <button class="btn btn-danger" style="width: 100px"
+                                                    <button class="btn btn-primary" style="width: 100px"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#exampleModal_${stt.index + 1}">Chi tiết
                                                     </button>

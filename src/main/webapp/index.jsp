@@ -33,6 +33,7 @@
 
 		<!-- Custom stlylesheet -->
 		<link type="text/css" rel="stylesheet" href="/css/style.css" />
+		
 	</head>
 	<body>
 		<jsp:include page="/views/header.jsp"></jsp:include>
@@ -48,6 +49,7 @@
 		<script src="/js/nouislider.min.js"></script>
 		<script src="/js/jquery.zoom.min.js"></script>
 		<script src="/js/main.js"></script>
-
+        <script src="/js/address.js"></script>
+    
 	</body>
 </html>

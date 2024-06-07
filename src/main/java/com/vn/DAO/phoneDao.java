@@ -1,14 +1,13 @@
 package com.vn.DAO;
 
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.vn.entity.phone;
-
-@Repository
-public interface phoneDao extends JpaRepository<phone, Integer> {
-	// Lấy ra 1 cái list storage không trùng với ID của storage
-//	 @Query("SELECT s FROM storage s WHERE s.id NOT IN (SELECT p.storage.id FROM phone p)")
-//	 List<storage> findDistinctStorage();
+public interface phoneDao extends JpaRepository<phone, Integer> {	
+	@Query(value = "EXEC GetTop7Phones", nativeQuery = true)
+    List<Object[]> getTop7Phones();
+   
 }
