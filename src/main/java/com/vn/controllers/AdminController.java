@@ -153,21 +153,20 @@ public class AdminController {
     @Autowired
     imageDao imageDao;
 
-    LocalDate now = LocalDate.now();
-    int numDays = now.lengthOfMonth();
-    int currentYear = now.getYear();
-    int currentMonth = now.getMonthValue();
-    int currentDay = now.getDayOfMonth();
+	LocalDate now = LocalDate.now();
+	int numDays = now.lengthOfMonth();
+	int currentYear = now.getYear();
+	int currentMonth = now.getMonthValue();
+	int currentDay = now.getDayOfMonth();
+	@ModelAttribute("list_rank")
+	public List<rank> getListRank() {
+		return rankDao.findAll();
+	}
 
-    @ModelAttribute("list_rank")
-    public List<rank> getListRank() {
-        return rankDao.findAll();
-    }
-
-    @ModelAttribute("list_category")
-    public List<category> getListCategory() {
-        return categoryDao.findAll();
-    }
+	@ModelAttribute("list_category")
+	public List<category> getListCategory() {
+		return categoryDao.findAll();
+	}
 
     @ModelAttribute("list_brand")
     public List<brand> getListBrand() {
