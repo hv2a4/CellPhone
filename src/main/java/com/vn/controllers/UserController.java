@@ -3,14 +3,29 @@ package com.vn.controllers;
 import java.util.List;
 import java.util.Optional;
 
-import com.vn.DAO.*;
-import com.vn.entity.*;
-import com.vn.serviceimpl.MailerServiceImpl;
-import com.vn.utils.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vn.DAO.categoryDao;
+import com.vn.DAO.phoneDao;
+import com.vn.DAO.systemDao;
+import com.vn.DAO.userDao;
+import com.vn.DAO.variantDao;
+import com.vn.entity.category;
+import com.vn.entity.phone;
+import com.vn.entity.user;
+import com.vn.entity.variant;
+import com.vn.serviceimpl.MailerServiceImpl;
+import com.vn.utils.SessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -113,21 +128,14 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("store")
-	public String getStore(Model model) {
-		List<category> finByAllCategories = categoryDao.findAll();
-		model.addAttribute("finByAllCategories", finByAllCategories);
-		String page = "store.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
-
-	@RequestMapping("cart")
-	public String getCart(Model model) {
-		String page = "cart.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+    @RequestMapping("store")
+    public String getStore(Model model) {
+    	List<phone> finByAllPhone = phonedao.findAll();
+		model.addAttribute("finByAllPhone", finByAllPhone);
+        String page = "store.jsp";
+        model.addAttribute("page", page);
+        return "index";
+    }
 
 	@Autowired
 	phoneDao phonedao;
@@ -189,8 +197,10 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("product")
-	public String getProduct(Model model) {
+	@RequestMapping("product/{id}")
+	public String getProduct(Model model, @PathVariable("id") Integer id) {
+		phone finByIdPhone = phonedao.findById(id).get();
+		model.addAttribute("finByIdPhone", finByIdPhone);
 		String page = "product.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -199,9 +209,10 @@ public class UserController {
 	//
 	@GetMapping("ajax/getGia/{id}")
 	@ResponseBody
-	public Optional<Double> getGia(Model model, @PathVariable("id") Integer id) {
-		Optional<variant> varia = variantdao.findById(id);
-		return Optional.of(varia.get().getPRICE());
+	public Optional<Double> getGia(@PathVariable("id") Integer id) {
+		Optional<variant> variant = variantdao.findById(id);
+	    return Optional.of(variant.get().getPRICE());
 	}
+	
 
 }
