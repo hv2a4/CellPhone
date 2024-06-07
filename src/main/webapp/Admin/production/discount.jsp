@@ -147,7 +147,8 @@
 														<div class="row text-left">
 															<div class="col-md-6">
 
-																<form:input type="text" class="form-control" id="discount_codeId" path="ID" />
+																<form:input type="hidden" class="form-control"
+																	id="discount_codeId" path="ID" />
 
 																<div class="form-group">
 																	<label class="control-label">Mã giảm giá</label>
