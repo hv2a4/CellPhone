@@ -156,7 +156,7 @@
 
 									</c:forEach>
 								</div>
-								<div id="slick-nav-1" class="products-slick-nav"></div>
+<!-- 								<div id="slick-nav-1" class="products-slick-nav"></div> -->
 							</div>
 							<!-- /tab -->
 						</div>
@@ -226,9 +226,6 @@
 				<div class="col-md-4 col-xs-6">
 					<div class="section-title">
 						<h4 class="title">${item.NAME}</h4>
-						
-						
-				
 					</div>
 
 					<div class="products-widget-slick" data-nav="#slick-nav-3">
@@ -238,7 +235,7 @@
 									<!-- product widget -->
 									<div class="product-widget">
 										<div class="product-img">
-											<img src="/images/${phone.IMAGE}" alt>
+											<img src="/images/${phone.IMAGE}" alt="">
 										</div>
 										<div class="product-body">
 											<p class="product-category">Category</p>
