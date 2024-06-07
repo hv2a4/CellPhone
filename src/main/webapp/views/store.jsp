@@ -5,13 +5,9 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!-- SECTION -->
 <div class="section">
-	<!-- container -->
 	<div class="container">
-		<!-- row -->
 		<div class="row">
-			<!-- ASIDE -->
 			<div id="aside" class="col-md-3">
-				<!-- aside Widget -->
 				<div class="aside">
 					<h3 class="aside-title">Hệ điều hành</h3>
 					<div class="checkbox-filter">
@@ -34,9 +30,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- /aside Widget -->
 
-				<!-- aside Widget -->
 				<div class="aside">
 					<h3 class="aside-title">Giá</h3>
 					<div class="price-filter">
@@ -52,9 +46,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- /aside Widget -->
 
-				<!-- aside Widget -->
 				<div class="aside">
 					<h3 class="aside-title">Hãng</h3>
 					<div class="checkbox-filter">
@@ -90,15 +82,10 @@
 						</div>
 					</div>
 				</div>
-				<!-- /aside Widget -->
 
-				<!-- /aside Widget -->
 			</div>
-			<!-- /ASIDE -->
 
-			<!-- STORE -->
 			<div id="store" class="col-md-9">
-				<!-- store top filter -->
 				<div class="store-filter clearfix">
 					<div class="store-sort">
 						<label> Sắp xếp <select class="input-select">
@@ -112,12 +99,11 @@
 						</label>
 					</div>
 				</div>
-				<!-- /store top filter -->
-
-				<!-- store products -->
 
 				<c:set var="counter" value="0" />
 				<c:forEach var="phone" items="${finByAllPhone}">
+					<c:set value="${phone.variants[0]}" var="variantFirst"></c:set>
+					<c:set value="${variantFirst}" var="variantmd"></c:set>
 					<c:if test="${counter % 3 == 0}">
 						<div class="row">
 					</c:if>
@@ -126,7 +112,10 @@
 							<div class="product-img">
 								<img src="/images/${phone.IMAGE}" alt="">
 								<div class="product-label">
-									<span class="sale">-30%</span> <span class="new">${phone.category.NAME}</span>
+
+									<span id="sale${phone.ID}" class="sale"> <fmt:formatNumber>
+										${variantmd.discount_product.DISCOUNT_PERCENTAGE } </fmt:formatNumber> %
+									</span> <span class="new">${phone.category.NAME}</span>
 								</div>
 							</div>
 							<div class="product-body">
@@ -136,14 +125,8 @@
 								</h3>
 								<c:set var="idphone" value="${phone.ID}"></c:set>
 								<c:set var="a"></c:set>
-								<c:set var="price" value="${Double.MAX_VALUE}"></c:set>
 								<c:set var="phantram" value="0"></c:set>
 								<c:forEach var="variant" items="${phone.variants}">
-									<c:if test="${variant.PRICE < price}">
-										<c:set var="price" value="${variant.PRICE}"></c:set>
-										<c:set var="phantram"
-											value="${variant.discount_product.DISCOUNT_PERCENTAGE}"></c:set>
-									</c:if>
 									<c:if test="${a != variant.storage.GB}">
 										<button onclick="getGia(${idphone},${variant.ID})"
 											type="button" class="btn btn-default inline-button">${variant.storage.GB}
@@ -151,10 +134,21 @@
 										<c:set var="a" value="${variant.storage.GB}"></c:set>
 									</c:if>
 								</c:forEach>
-								<h4 id="gia${phone.ID}" class="product-price">
-									${price * (100 - phantram) / 100}
-									<del id="gia${phone.ID}" class="product-old-price">${price}</del>
-								</h4>
+								<div class="" style="display: flex; justify-content: center;">
+									<h4 id="gia${phone.ID}" class="product-price"
+										style="margin-right: 5px;">
+										<fmt:formatNumber pattern="###,###.###">
+											${variantmd.PRICE*(100-variantmd.discount_product.DISCOUNT_PERCENTAGE)/100}
+										</fmt:formatNumber>
+									</h4>
+									<span class=""> <del id="giagoc${phone.ID}"
+											class="product-old-price">
+											<fmt:formatNumber pattern="###,###.###">
+												${variantmd.PRICE}
+											</fmt:formatNumber>
+										</del>
+									</span>
+								</div>
 								<div class="product-rating">
 									<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 										class="fa fa-star"></i> <i class="fa fa-star"></i> <i
@@ -200,23 +194,28 @@
 				<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
 			</ul>
 		</div>
-		<!-- /store bottom filter -->
 	</div>
-	<!-- /STORE -->
 </div>
-<!-- /row -->
 </div>
-<!-- /container -->
 </div>
-<!-- /SECTION -->
 <script>
+function formatPrice(price) {
+    return price.toLocaleString("en-US");
+}
+
 function getGia(idPhone, idVariant) {
     $.ajax({
         type: "GET",
         url: "/shop/ajax/getGia/" + idVariant,
         success: function(response) {
-            // Giả sử 'response' là một đối tượng JSON chứa thuộc tính 'price'
-            $("#gia" + idPhone).text(response);
+            console.log(response);
+            // Giả sử 'response' là một đối tượng JSON chứa thuộc tính 'price' và 'discountPercentage'
+            var giaChuaGiam = response[0];
+            var giaGiam = giaChuaGiam * (100 - response[1]) / 100;
+
+            $("#gia" + idPhone).text(formatPrice(giaGiam));
+            $("#giagoc" + idPhone).text(formatPrice(giaChuaGiam));
+            $("#sale" + idPhone).text(response[1] + " %");
         },
         error: function(xhr, status, error) {
             console.log("Error: " + error);

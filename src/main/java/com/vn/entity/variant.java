@@ -3,6 +3,7 @@ package com.vn.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
@@ -44,9 +45,11 @@ public class variant implements Serializable {
 	discount_product discount_product;
 
 	@OneToMany(mappedBy = "variant")
+	@JsonIgnore
 	List<order_item> order_items;
 
 	@OneToMany(mappedBy = "variant")
+	@JsonIgnore
 	List<cart_item> cart_items;
 
 }

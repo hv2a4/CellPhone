@@ -1,5 +1,7 @@
 package com.vn.controllers;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -209,15 +211,23 @@ public class UserController {
 	//
 	@GetMapping("ajax/getGia/{id}")
 	@ResponseBody
-	public Optional<Double> getGia(@PathVariable("id") Integer id) {
+	public Optional<List<Double>> getGia(@PathVariable("id") Integer id) {
 		Optional<variant> variant = variantdao.findById(id);
-	    return Optional.of(variant.get().getPRICE());
+		List<Double> listDouble = new ArrayList<Double>();
+		listDouble.add(variant.get().getPRICE());
+		Date now = new Date();
+		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
+			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
+		}else {
+			listDouble.add(1, 0.0);
+		}
+	    return Optional.of(listDouble);
 	}
 	@GetMapping("ajax/getGia/{idvariant}/{idstorage}/{idcolor}")
 	@ResponseBody
 	public Optional<Double> getGiaProduct(@PathVariable("idvariant") Integer idvariant,@PathVariable("idstorage") Integer idstorage,@PathVariable("idcolor") Integer idcolor) {
 		variant variant = variantdao.variantById(idvariant, idstorage, idcolor);
-		System.out.println(variant.getPRICE());
+
 		return Optional.of(variant.getPRICE());
 	}
 	
