@@ -213,6 +213,13 @@ public class UserController {
 		Optional<variant> variant = variantdao.findById(id);
 	    return Optional.of(variant.get().getPRICE());
 	}
+	@GetMapping("ajax/getGia/{idvariant}/{idstorage}/{idcolor}")
+	@ResponseBody
+	public Optional<Double> getGiaProduct(@PathVariable("idvariant") Integer idvariant,@PathVariable("idstorage") Integer idstorage,@PathVariable("idcolor") Integer idcolor) {
+		variant variant = variantdao.variantById(idvariant, idstorage, idcolor);
+		System.out.println(variant.getPRICE());
+		return Optional.of(variant.getPRICE());
+	}
 	
 
 }

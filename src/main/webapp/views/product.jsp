@@ -46,38 +46,46 @@
 						</div>
 					</div>
 					<div>
-						<h3 class="product-price">
-							30.000.000đ
-							<del class="product-old-price">24.000.000đ</del>
+					
+						<c:set var="price" value=""></c:set>
+						<h3 id="productPrice" class="product-price">
+							${price *(100-20)/100}
+							<del class="product-old-price">${price }</del>
 						</h3>
 					</div>
-					<p><b>Mô tả sản phẩm:</b>  <br>
-						${finByIdPhone.DESCRIPTION}
+					<p>
+						<b>Mô tả sản phẩm:</b> <br> ${finByIdPhone.DESCRIPTION}
 					</p>
 
 					<div class="product-options">
-						<label> 
 						<c:set var="GB"></c:set>
-						<select class="input-select" style="width:10em;">
-						<c:forEach var="variant" items="${finByIdPhone.variants }">
-						<c:if test="${variant.storage.ID != GB}">
-								<option value="${variant.storage.ID}">${variant.storage.GB } GB</option>
-								<c:set var="GB" value="${variant.storage.ID }"></c:set>
-						</c:if>
-						</c:forEach>
-						</select>
-						</label> 
-						<label> 
-						<c:set var="color"></c:set>
-						<select class="input-select" style="width:10em;">
-						<c:forEach var="variant" items="${finByIdPhone.variants }">
-						<c:if test="${variant.color.ID != color }">
-								<option value="${variant.color.ID}">${variant.color.NAME }</option>
-								<c:set var="color" value="${variant.color.ID }"></c:set>
-						</c:if>
-						</c:forEach>
-						</select>
-						</label>
+						<c:set var="idphone" value="${finByIdPhone.ID }"></c:set>
+						<div class="row">
+								<c:forEach var="variant" items="${finByIdPhone.variants }">
+								<div class="col-md-3">
+									<c:if test="${variant.storage.ID != GB}">
+										<button onclick="getGia(${idphone},${variant.ID})"
+											type="button" class="btn btn-default inline-button">${variant.storage.GB}
+											GB</button>
+										<c:set var="GB" value="${variant.storage.ID }"></c:set>
+										<c:set var="price" value="${variant.PRICE }"></c:set>
+									</c:if>
+							</div>
+								</c:forEach>
+						</div>
+						<div class="row">
+							<c:set var="usedColors" />
+							<c:forEach var="variant" items="${finByIdPhone.variants}">
+								<div class="col-md-3">
+									<c:if test="${usedColors != variant.color.ID}">
+										<button onclick="getGia(${idphone},${variant.ID})"
+											type="button" class="btn btn-default inline-button">${variant.color.NAME}</button>
+										<c:set var="usedColors" value="${variant.color.ID}" />
+									</c:if>
+								</div>
+							</c:forEach>
+						</div>
+
 					</div>
 
 					<div class="add-to-cart">
@@ -295,13 +303,11 @@
 												<div class="stars">
 													<input id="star5" name="rating" value="5" type="radio" /><label
 														for="star5"></label> <input id="star4" name="rating"
-														value="4" type="radio" /><label
-														for="star4"></label> <input id="star3" name="rating"
-														value="3" type="radio" /><label
+														value="4" type="radio" /><label for="star4"></label> <input
+														id="star3" name="rating" value="3" type="radio" /><label
 														for="star3"></label> <input id="star2" name="rating"
-														value="2" type="radio" /><label
-														for="star2"></label> <input id="star1" name="rating"
-														value="1" type="radio" /><label
+														value="2" type="radio" /><label for="star2"></label> <input
+														id="star1" name="rating" value="1" type="radio" /><label
 														for="star1"></label>
 												</div>
 											</div>
@@ -529,3 +535,4 @@
 	<!-- /container -->
 </div>
 <!-- /Section -->
+

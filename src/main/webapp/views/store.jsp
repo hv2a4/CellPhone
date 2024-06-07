@@ -115,89 +115,98 @@
 				<!-- /store top filter -->
 
 				<!-- store products -->
-				<div class="row">
-					<c:forEach var="phone" items="${finByAllPhone}">
-						<div class="col-md-4">
-							<div class="product">
-								<div class="product-img">
-									<img src="/images/${phone.IMAGE}" alt="" >
-									<div class="product-label">
-										<span class="sale">-30%</span> <span class="new">${phone.category.NAME}</span>
-									</div>
-								</div>
-								<div class="product-body">
-									<p class="product-category">Mới</p>
-									<h3 class="product-name">
-										<a href="#">${phone.NAME}</a>
-									</h3>
 
-									<c:set var="idphone" value="${phone.ID }"></c:set>
-									<c:set var="a"></c:set>
-									<c:set var="price" value="${Double.MAX_VALUE}"></c:set>
-									<c:set var="phantram" value="0"></c:set>
-									<c:forEach var="variant" items="${phone.variants}">
-										<c:if test="${variant.PRICE < price}">
-											<c:set var="price" value="${variant.PRICE}"></c:set>
-											<c:set var="phantram"
-												value="${variant.discount_product.DISCOUNT_PERCENTAGE}"></c:set>
-										</c:if>
-										<c:if test="${a != variant.storage.GB}">
-											<button onclick="getGia(${idphone},${variant.ID})"
-												type="button" class="btn btn-default inline-button">${variant.storage.GB}
-												GB</button>
-											<c:set var="a" value="${variant.storage.GB}"></c:set>
-										</c:if>
-									</c:forEach>
-									<h4 id="gia${phone.ID }" class="product-price">${price *(100-phantram)/100 }
-
-										<del id="gia${phone.ID }" class="product-old-price">${price }</del>
-									</h4>
-									<div class="product-rating">
-										<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-											class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-											class="fa fa-star"></i>
-									</div>
-									<div class="product-btns">
-										<button class="quick-view">
-											<a href="/shop/product/${phone.ID}"><i class="fa fa-eye"></i></a><span
-												class="tooltipp">quick view</span>
-										</button>
-										<button class="quick-view">
-											<i class="fa fa-shopping-cart"></i><span class="tooltipp">Thêm
-												vào giỏ hàng</span>
-										</button>
-									</div>
-								</div>
-								<div class="add-to-cart">
-									<a href="/shop/checkout">
-										<button class="add-to-cart-btn">
-											<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
-											Mua ngay
-										</button>
-									</a>
+				<c:set var="counter" value="0" />
+				<c:forEach var="phone" items="${finByAllPhone}">
+					<c:if test="${counter % 3 == 0}">
+						<div class="row">
+					</c:if>
+					<div class="col-md-4">
+						<div class="product">
+							<div class="product-img">
+								<img src="/images/${phone.IMAGE}" alt="">
+								<div class="product-label">
+									<span class="sale">-30%</span> <span class="new">${phone.category.NAME}</span>
 								</div>
 							</div>
+							<div class="product-body">
+								<p class="product-category">Mới</p>
+								<h3 class="product-name">
+									<a href="#">${phone.NAME}</a>
+								</h3>
+								<c:set var="idphone" value="${phone.ID}"></c:set>
+								<c:set var="a"></c:set>
+								<c:set var="price" value="${Double.MAX_VALUE}"></c:set>
+								<c:set var="phantram" value="0"></c:set>
+								<c:forEach var="variant" items="${phone.variants}">
+									<c:if test="${variant.PRICE < price}">
+										<c:set var="price" value="${variant.PRICE}"></c:set>
+										<c:set var="phantram"
+											value="${variant.discount_product.DISCOUNT_PERCENTAGE}"></c:set>
+									</c:if>
+									<c:if test="${a != variant.storage.GB}">
+										<button onclick="getGia(${idphone},${variant.ID})"
+											type="button" class="btn btn-default inline-button">${variant.storage.GB}
+											GB</button>
+										<c:set var="a" value="${variant.storage.GB}"></c:set>
+									</c:if>
+								</c:forEach>
+								<h4 id="gia${phone.ID}" class="product-price">
+									${price * (100 - phantram) / 100}
+									<del id="gia${phone.ID}" class="product-old-price">${price}</del>
+								</h4>
+								<div class="product-rating">
+									<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+										class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+										class="fa fa-star"></i>
+								</div>
+								<div class="product-btns">
+									<button class="quick-view">
+										<a href="/shop/product/${phone.ID}"><i class="fa fa-eye"></i></a>
+										<span class="tooltipp">quick view</span>
+									</button>
+									<button class="quick-view">
+										<i class="fa fa-shopping-cart"></i> <span class="tooltipp">Thêm
+											vào giỏ hàng</span>
+									</button>
+								</div>
+							</div>
+							<div class="add-to-cart">
+								<a href="/shop/checkout">
+									<button class="add-to-cart-btn">
+										<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
+										Mua ngay
+									</button>
+								</a>
+							</div>
 						</div>
-					</c:forEach>
-
-				</div>
-				<div class="store-filter clearfix">
-					<span class="store-qty">Showing 20-100 products</span>
-					<ul class="store-pagination">
-						<li class="active">1</li>
-						<li><a href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-					</ul>
-				</div>
-				<!-- /store bottom filter -->
+					</div>
+					<c:if test="${counter % 3 == 2}">
 			</div>
-			<!-- /STORE -->
+			</c:if>
+			<c:set var="counter" value="${counter + 1}" />
+			</c:forEach>
+			<c:if test="${counter % 3 != 0}">
 		</div>
-		<!-- /row -->
+		</c:if>
+
+		<div class="store-filter clearfix">
+			<span class="store-qty">Showing 20-100 products</span>
+			<ul class="store-pagination">
+				<li class="active">1</li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+			</ul>
+		</div>
+		<!-- /store bottom filter -->
 	</div>
-	<!-- /container -->
+	<!-- /STORE -->
+</div>
+<!-- /row -->
+</div>
+<!-- /container -->
 </div>
 <!-- /SECTION -->
 <script>
