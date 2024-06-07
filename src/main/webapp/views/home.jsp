@@ -320,64 +320,57 @@
 <!-- /SECTION -->
 
 <!-- SECTION -->
+<!-- Sản Phẩm Bán Chạy Theo Hãng -->
 <div class="section">
 	<!-- container -->
 	<div class="container">
-		<!-- row -->
-		<c:forEach var="item" items="${list_category}">
-			<div class="row">
+		<div class="row">
+			<c:forEach begin="0" end="2" var="item" items="${list_category}">
 				<div class="col-md-4 col-xs-6">
 					<div class="section-title">
-						<h4 class="title">Sản Phẩm ${item.NAME}</h4>
-						<div class="section-nav">
-							<div id="slick-nav-3" class="products-slick-nav"></div>
-						</div>
+						<h4 class="title">${item.NAME}</h4>
+						
+						
+				
 					</div>
 
 					<div class="products-widget-slick" data-nav="#slick-nav-3">
-						<c:forEach var="phone" items="${item.phones}">
-							<div>
-								<!-- product widget -->
-								<div class="product-widget">
-									<div class="product-img">
-										<img src="/img/product07.png" alt>
-									</div>
-									<div class="product-body">
-										<p class="product-category">Category</p>
-										<h3 class="product-name">
-											<a href="#">${phone.NAME}</a>
-										</h3>
-										<c:set var="idphone" value="${phone.ID }"></c:set>
-										<c:set var="a"></c:set>
-										<c:set var="price" value="${Double.MAX_VALUE}"></c:set>
-										<c:set var="phantram" value="0"></c:set>
-										<c:forEach var="variant" items="${phone.variants}">
-											<c:if test="${variant.PRICE < price}">
-												<c:set var="price" value="${variant.PRICE}"></c:set>
-												<c:set var="phantram"
-													value="${variant.discount_product.DISCOUNT_PERCENTAGE}"></c:set>
-											</c:if>
-										</c:forEach>
-										<h4 id="gia${phone.ID }" class="product-price">${price *(100-phantram)/100 }
-											<del id="gia${phone.ID }" class="product-old-price">${price }</del>
-										</h4>
+						<c:forEach begin="0" end="2" var="phone" items="${item.phones}">
+							<c:if test="true">
+								<div>
+									<!-- product widget -->
+									<div class="product-widget">
+										<div class="product-img">
+											<img src="/images/${phone.IMAGE}" alt>
+										</div>
+										<div class="product-body">
+											<p class="product-category">Category</p>
+											<h3 class="product-name">
+												<a href="#">${phone.NAME}</a>
+											</h3>
+											<h4 class="product-price">
+												$980.00
+												<del class="product-old-price">$990.00</del>
+											</h4>
+										</div>
 									</div>
 								</div>
-								<!-- /product widget -->
-							</div>
+
+							</c:if>
+
 						</c:forEach>
 					</div>
 				</div>
-				<div class="clearfix visible-sm visible-xs"></div>
+			</c:forEach>
+			<div>
+				<!-- /row -->
 			</div>
-		</c:forEach>
-		<!-- /row -->
+			<!-- /container -->
+		</div>
 	</div>
-	<!-- /container -->
+</div>
 </div>
 <!-- /SECTION -->
-
-
 <script>
 	function getGia(idPhone,idVariant) {
 		$.ajax({
