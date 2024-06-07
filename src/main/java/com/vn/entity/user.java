@@ -51,7 +51,7 @@ public class user implements Serializable {
 		        message = "Số điện thoại không hợp lệ"
 		    )
 	String PHONE_NUMBER;
-	Integer INCORRECT_PASSWORD;
+	int INCORRECT_PASSWORD;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name="CREATE_AT")
