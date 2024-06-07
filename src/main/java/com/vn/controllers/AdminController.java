@@ -323,18 +323,15 @@ public class AdminController {
 	}
 
 	@GetMapping("product")
-	public String getQLSanPham(Model model) {
+	public String getQLSanPham(Model model,@ModelAttribute("phone") phone phone) {
 		String page = "product.jsp";
 		model.addAttribute("page", page);
 
-		List<discount_code> list_discount_code = discount_codeDao.findAll();
-		model.addAttribute("list_discount_code", list_discount_code);
+		List<phone> list_phone = phoneDao.findAll();
+		model.addAttribute("list_phone", list_phone);
 
-		discount_code discount_code = new discount_code();
-		model.addAttribute("discount_code", discount_code);
-
-		discount_code discount_codeUpdate = new discount_code();
-		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
+		phone phoneUpdate = new phone();
+		model.addAttribute("phoneUpdate", phoneUpdate);
 
 		return "/Admin/production/homeadmin";
 	}
@@ -354,6 +351,9 @@ public class AdminController {
 
 		discount_code discount_code = new discount_code();
 		model.addAttribute("discount_code", discount_code);
+		
+		discount_code discount_codeUpdate = new discount_code();
+		model.addAttribute("discount_codeUpdate", discount_codeUpdate);
 
 		return "/Admin/production/homeadmin";
 	}
