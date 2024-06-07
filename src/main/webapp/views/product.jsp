@@ -47,10 +47,10 @@
 					</div>
 					<div>
 					
-						<c:set var="price" value="0"></c:set>
+						<c:set var="price" value=""></c:set>
 						<h3 id="productPrice" class="product-price">
-							${price }
-							<del class="product-old-price">24.000.000đ</del>
+							${price *(100-20)/100}
+							<del class="product-old-price">${price }</del>
 						</h3>
 					</div>
 					<p>
@@ -73,22 +73,6 @@
 							</div>
 								</c:forEach>
 						</div>
-						<%-- <div class="row">
-							<div class="col-md-12">
-								<label> <c:set var="color"></c:set> 
-								<c:forEach
-										var="variant" items="${finByIdPhone.variants }">
-										<c:if test="${variant.color.ID != color }">
-											<button onclick="getGia(${idphone},${variant.ID})"
-												type="button" class="btn btn-default">${variant.color.NAME}
-											</button>
-											<c:set var="color" value="${variant.color.ID }"></c:set>
-										</c:if>
-									</c:forEach>
-
-								</label>
-							</div>
-						</div> --%>
 						<div class="row">
 							<c:set var="usedColors" />
 							<c:forEach var="variant" items="${finByIdPhone.variants}">
