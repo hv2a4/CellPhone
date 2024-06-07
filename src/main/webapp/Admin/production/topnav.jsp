@@ -18,6 +18,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="/admin/profile"> Profile</a>
+                  <a class="dropdown-item" href="/shop"> Trang bán hàng</a>
                   <a class="dropdown-item" href="/admin/logout"><i class="fa fa-sign-out pull-right"></i>
                     Log Out</a>
                 </div>
