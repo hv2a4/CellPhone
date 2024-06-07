@@ -751,10 +751,14 @@
     }
 
     // Thêm sự kiện click cho các nút
-    document.getElementById('btn-tab-1').addEventListener('click', () => changeTab(1));
-    document.getElementById('btn-tab-2').addEventListener('click', () => changeTab(2)); // Note: Index for "Đang vận chuyển"
-    document.getElementById('btn-tab-3').addEventListener('click', () => changeTab(3)); // Note: Index for "Hoàn thành"
-    document.getElementById('btn-tab-4').addEventListener('click', () => changeTab(5));
+    document.getElementById('home-tab').addEventListener('click', () => changeTab(0));
+    document.getElementById('profile-tab').addEventListener('click', () => changeTab(1));
+    document.getElementById('contact-tab').addEventListener('click', () => changeTab(2));
+    document.getElementById('dangvanchuyen-tab').addEventListener('click', () => changeTab(3));
+    document.getElementById('hoanthanh-tab').addEventListener('click', () => changeTab(4));
+    document.getElementById('trahang-tab').addEventListener('click', () => changeTab(5));
+    document.getElementById('dahuy-tab').addEventListener('click', () => changeTab(6));
+
     // Khi trang được tải lại, khôi phục trạng thái tab
     document.addEventListener('DOMContentLoaded', () => {
         const activeTab = localStorage.getItem('activeTab');
