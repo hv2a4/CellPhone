@@ -181,7 +181,7 @@
                                                                     <a class="btn btn-dark"
                                                                        href="/admin/returns/${item.ID}"
                                                                        style="width: 100px;">
-                                                                        Đã nhận
+                                                                        Trả hàng
                                                                     </a>
                                                                 </c:when>
                                                             </c:choose>
@@ -617,8 +617,8 @@
                                                             <td>
                                                                 <a class="btn btn-dark"
                                                                    href="/admin/returns/${item.ID}"
-                                                                   style="">
-                                                                    Đã nhận
+                                                                   style="" id="btn-tab-4">
+                                                                    Trả hàng
                                                                 </a>
                                                             </td>
                                                         </tr>
@@ -669,7 +669,7 @@
                                                             <td>DK<fmt:formatDate
                                                                     value="${item.UPDATE_AT}"
                                                                     pattern="yyyyMMdd"/>${loop.index +1}
-                                                             </td>
+                                                            </td>
                                                             <td>${item.user.FULLNAME}</td>
                                                             <td>${item.TOTAL_AMOUNT}</td>
                                                             <td>${item.CREATE_AT}</td>
