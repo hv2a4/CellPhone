@@ -375,7 +375,6 @@
 			</div>
 		</c:forEach>
 		<!-- /row -->
-
 	</div>
 	<!-- /container -->
 </div>
