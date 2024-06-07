@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!-- SECTION -->
 <div class="section">
 	<!-- container -->
@@ -50,26 +51,31 @@
 							<del class="product-old-price">24.000.000đ</del>
 						</h3>
 					</div>
-					<p>Mô tả sản phẩm
-						................................................................
-						........................................................................................................
-						........................................................................................................
-						........................................................................................................
-						........................................................................................................
-						........................................................................................................
+					<p><b>Mô tả sản phẩm:</b>  <br>
+						${finByIdPhone.DESCRIPTION}
 					</p>
 
 					<div class="product-options">
 						<label> 
-						<select class="input-select">
-						<c:forEach var="variant" items="${phone.variants }">
-								<option value="${variant.storage.GB }">${variant.storage.GB } GB</option>
+						<c:set var="GB"></c:set>
+						<select class="input-select" style="width:10em;">
+						<c:forEach var="variant" items="${finByIdPhone.variants }">
+						<c:if test="${variant.storage.ID != GB}">
+								<option value="${variant.storage.ID}">${variant.storage.GB } GB</option>
+								<c:set var="GB" value="${variant.storage.ID }"></c:set>
+						</c:if>
 						</c:forEach>
-								
 						</select>
 						</label> 
-						<label> <select class="input-select">
-								<option value="0">Đen</option>
+						<label> 
+						<c:set var="color"></c:set>
+						<select class="input-select" style="width:10em;">
+						<c:forEach var="variant" items="${finByIdPhone.variants }">
+						<c:if test="${variant.color.ID != color }">
+								<option value="${variant.color.ID}">${variant.color.NAME }</option>
+								<c:set var="color" value="${variant.color.ID }"></c:set>
+						</c:if>
+						</c:forEach>
 						</select>
 						</label>
 					</div>

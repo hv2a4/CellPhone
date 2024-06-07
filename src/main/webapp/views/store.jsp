@@ -205,16 +205,14 @@ function getGia(idPhone, idVariant) {
     $.ajax({
         type: "GET",
         url: "/shop/ajax/getGia/" + idVariant,
-        contentType: "application/json"
-        data: JSON.stringify({ idPhone: idPhone, idVariant: idVariant}),
-        success: function(variant) {
-            $("#gia" + idPhone).text(variant.PRICE);
+        success: function(response) {
+            // Giả sử 'response' là một đối tượng JSON chứa thuộc tính 'price'
+            $("#gia" + idPhone).text(response);
         },
         error: function(xhr, status, error) {
-            console.log("Lỗi: " + error);
+            console.log("Error: " + error);
         }
     });
 }
-
 
 </script>
