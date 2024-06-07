@@ -75,6 +75,7 @@
 	<!-- container -->
 	<div class="container">
 		<!-- row -->
+		<!-- Sản phẩm mới -->
 		<c:forEach var="item" items="${list_category}">
 			<div class="row">
 				<!-- section title -->
@@ -96,7 +97,7 @@
 									<c:forEach var="phone" items="${item.phones}">
 										<div class="product">
 											<div class="product-img">
-												<img src="/img/product01.png" alt>
+												<img src="/images/${phone.IMAGE}" alt>
 												<div class="product-label">
 													<span class="sale">-30%</span> <span class="new">NEW</span>
 												</div>
@@ -218,6 +219,7 @@
 <!-- /HOT DEAL SECTION -->
 
 <!-- SECTION -->
+<!-- Sản phẩm bán chạy -->
 <div class="section">
 	<!-- container -->
 	<div class="container">
@@ -428,6 +430,8 @@
 </div>
 <!-- /SECTION -->
 
+
+<!-- Slide Show Sản Phâm -->
 <!-- SECTION -->
 <div class="section">
 	<!-- container -->
