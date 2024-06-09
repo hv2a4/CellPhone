@@ -171,12 +171,12 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("address")
-	public String getAddress(Model model) {
-		String page = "address.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+//	@RequestMapping("address")
+//	public String getAddress(Model model) {
+//		String page = "address.jsp";
+//		model.addAttribute("page", page);
+//		return "index";
+//	}
 
 	@RequestMapping("invoice")
 	public String getInvoice(Model model) {
