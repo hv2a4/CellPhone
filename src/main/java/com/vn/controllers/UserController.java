@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.antlr.v4.runtime.misc.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,16 +17,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vn.DAO.cartDao;
+import com.vn.DAO.cart_itemDao;
 import com.vn.DAO.categoryDao;
 import com.vn.DAO.phoneDao;
 import com.vn.DAO.systemDao;
 import com.vn.DAO.userDao;
 import com.vn.DAO.variantDao;
+import com.vn.entity.cart;
+import com.vn.entity.cart_item;
 import com.vn.entity.category;
 import com.vn.entity.phone;
 import com.vn.entity.user;
 import com.vn.entity.variant;
 import com.vn.serviceimpl.MailerServiceImpl;
+import com.vn.utils.CookieService;
+import com.vn.utils.ParamService;
 import com.vn.utils.SessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,12 +49,19 @@ public class UserController {
 
 	@Autowired
 	SessionService sessionService;
+
 	@Autowired
 	userDao userDao;
+
 	@Autowired
 	systemDao systemDao;
 	@Autowired
 	categoryDao categoryDao;
+	@Autowired
+	cartDao cartdao;
+
+	@Autowired
+	cart_itemDao cart_itemdao;
 
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
@@ -122,21 +137,45 @@ public class UserController {
 		return "redirect:/shop/login";
 	}
 
+//	private void loadCart(Model model) {
+//	    user currentUser = (user) sessionService.get("currentUser");
+//	    if (currentUser != null) {
+//	        cart userCart = (cart) cartdao.findByUser(currentUser);
+//	        if (userCart != null) {
+//	            List<cart_item> cartItems = cart_itemdao.findByCart(userCart);
+//	            model.addAttribute("cartItems", cartItems);
+//
+//	            int totalItems = 0;
+//	            double totalPrice = 0.0;
+//	            for (cart_item cartItem : cartItems) {
+//	                totalItems += cartItem.getQUANTITY();
+//	                totalPrice += cartItem.getQUANTITY() * cartItem.getVariant().getPRICE();
+//	            }
+//
+//	            model.addAttribute("totalItems", totalItems);
+//	            model.addAttribute("totalPrice", totalPrice);
+//	        }
+//	    }
+//	}
+
 	@RequestMapping("")
 	public String getHome(Model model) {
+		Optional<user> users = userDao.findById("user1");
+		List<cart_item> cartItems = (List<cart_item>) users.get().getCarts().getFirst().getCart_items();
 		String page = "home.jsp";
 		model.addAttribute("page", page);
+		model.addAttribute("cartItems", cartItems);
 		return "index";
 	}
 
-    @RequestMapping("store")
-    public String getStore(Model model) {
-    	List<phone> finByAllPhone = phonedao.findAll();
+	@RequestMapping("store")
+	public String getStore(Model model) {
+		List<phone> finByAllPhone = phonedao.findAll();
 		model.addAttribute("finByAllPhone", finByAllPhone);
-        String page = "store.jsp";
-        model.addAttribute("page", page);
-        return "index";
-    }
+		String page = "store.jsp";
+		model.addAttribute("page", page);
+		return "index";
+	}
 
 	@Autowired
 	phoneDao phonedao;
@@ -243,6 +282,12 @@ public class UserController {
 		}
 		return Optional.of(listDouble);
 	}
-	
+
+	@RequestMapping("cart")
+	public String getShopCart(Model model) {
+		String page = "cart.jsp";
+		model.addAttribute("page", page);
+		return "index";
+	}
 
 }
