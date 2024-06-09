@@ -75,9 +75,11 @@
 							<c:set var="usedColors" />
 							<c:forEach var="variant" items="${finAllColor}">
 								<div class="col-md-3">
+								<c:if test="${variant.color.ID != usedColors}">
 										<button onclick="updateBuyNowButton(${idphone}, ${variant.ID})"
 											type="button" class="btn btn-default inline-button-color">${variant.color.NAME}</button>
 										<c:set var="usedColors" value="${variant.color.ID}" />
+										</c:if>
 								</div>
 							</c:forEach>
 						</div>
@@ -477,12 +479,20 @@ function updateBuyNowButton(idPhone, idVariant) {
     // Update the "Mua ngay" button's URL with the selected variant ID
     var quantity = document.getElementById('quantityInput') ? document.getElementById('quantityInput').value : 1;
     var buyNowButton = document.getElementById('buyNowButton');
-    var baseUrl = "/shop/checkout?&id_variant=" + idVariant+"&quantity="+quantity;
-    buyNowButton.href = baseUrl;
+    var baseUrl = "/shop/checkout?id_variant=" + idVariant + "&quantity=" + quantity;
+    buyNowButton.setAttribute('href', baseUrl);
 
     // Optionally, call the getGia function to update prices
     getGia(idPhone, idVariant);
 }
+
+// Đảm bảo rằng hàm này sẽ được gọi khi trang web được tải
+window.onload = function() {
+    // Sử dụng giá trị mặc định của biến thể và số lượng khi trang được tải
+    var defaultVariant = ${finByIdPhone.variants[0].ID}; // Thay đổi phù hợp với biến thể mặc định của bạn
+    var defaultQuantity = 1; // Số lượng mặc định
+    updateBuyNowButton(${idphone}, defaultVariant);
+};
 function getGia(idPhone, idVariant) {
     $.ajax({
         type: "GET",
