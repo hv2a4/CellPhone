@@ -12,10 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import lombok.NoArgsConstructor;
@@ -28,30 +25,33 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "[USER]")
 public class user implements Serializable {
 	@Id
-	@NotBlank(message = "Không Được để trống")
+	@NotBlank(message = "Không Được để trống tài khoản !")
 	String USERNAME;
 
-	@NotBlank(message = "Không Được để trống")
-	@Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự")
+	@NotBlank(message = "Không Được để trống !")
+	@Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự !")
 	String PASSWORD;
 
-	@NotBlank(message = "Không Được để trống")
-	@Email(message = "Không Đúng Định Dạng Email")
+	@NotBlank(message = "Không Được để trống !")
+	@Email(message = "Không Đúng Định Dạng Email !")
 	String EMAIL;
+	@NotNull(message = "Bạn cho chọn vai trò")
 	Boolean ROLE;
 	Boolean STATUS;
 	String AVATAR;
-	@NotBlank(message = "Không Được để trống")
+	@NotBlank(message = "Không Được để trống họ và tên !")
 	String FULLNAME;
+	@NotBlank(message = "Không được bỏ trông giới tính !")
 	String GENDER;
 
-	@NotBlank(message = "Không Được để trống")
+
+	@NotBlank(message = "Không Được để trống số điện thoại !")
 	@Pattern(
 			regexp = "^(032|033|034|035|036|037|038|039|096|097|098|086|083|084|085|081|082|088|091|094|070|079|077|076|078|090|093|089|056|058|092|059|099)[0-9]{7}$",
 			message = "Số điện thoại không hợp lệ"
 	)
 	String PHONE_NUMBER;
-	Integer INCORRECT_PASSWORD;
+	int INCORRECT_PASSWORD;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name="CREATE_AT")

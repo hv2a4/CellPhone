@@ -1,0 +1,278 @@
+[33mcommit e42b874d79d688e26ad5ddd1f9578b294882e946[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mvuCodeAdmin[m[33m, [m[1;31morigin/vuCodeAdmin[m[33m)[m
+Merge: bca03bd 8e82c25
+Author: hovu <vunhpc06500@fpt.edu.vn>
+Date:   Sun Jun 9 12:03:04 2024 +0700
+
+    Merge remote-tracking branch 'origin/vuCodeAdmin' into vuCodeAdmin
+    
+    # Conflicts:
+    #       src/main/java/com/vn/controllers/AdminController.java
+    #       src/main/java/com/vn/entity/user.java
+
+[33mcommit bca03bdc6feb432e9c44f944c25e2982d33fea24[m
+Author: hovu <vunhpc06500@fpt.edu.vn>
+Date:   Sun Jun 9 12:02:04 2024 +0700
+
+    admin chưa hoàn thành
+
+[33mcommit 8e82c258a899e15d4dd966896309e7d2d5f9555a[m
+Merge: b4724a2 60f3445
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 14:05:13 2024 +0700
+
+    Merge branch 'main' into vuCodeAdmin
+
+[33mcommit 60f3445d3a279a3139db7c59551b64853e81c980[m[33m ([m[1;31morigin/son[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 93ea066 cd27f06
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 14:01:13 2024 +0700
+
+    Merge branch 'son'
+
+[33mcommit 93ea06663ca7435c97b405edab9e067a861ecf17[m
+Merge: 1336130 2631b2d
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:56:06 2024 +0700
+
+    Merge branch 'son'
+
+[33mcommit cd27f06cefd1eab9bc3cf4aeca8e35a037f5ec58[m
+Author: sonphan28 <sonphhpc05883@fpt.edu.vn>
+Date:   Fri Jun 7 13:52:29 2024 +0700
+
+    Trang chủ Hoàn chỉnh (60%)
+    
+    còn nút tìm kiếm chưa xong
+
+[33mcommit 1336130899d57a7b99db1e0dbc4b00e1aa4839e8[m
+Merge: 7598d63 b4724a2
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:37:51 2024 +0700
+
+    Merge remote-tracking branch 'origin/vuCodeAdmin'
+
+[33mcommit 7598d63eb1b2a56041c7f48ff728e329eb52d2dc[m
+Merge: 5d4ddc5 9234871
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:36:52 2024 +0700
+
+    Merge branch 'phuoc'
+
+[33mcommit 9234871050fb088d9d9e541be9768f2a1713b5a9[m
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:36:19 2024 +0700
+
+    a
+
+[33mcommit 8676b0280f3e57ca844abe2956a4a67b38d246b3[m
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:35:14 2024 +0700
+
+    dinh dang so dien thoai
+
+[33mcommit 79df9653f28ac21444e3c465770c9e1ccd56acd0[m
+Merge: 71df390 5d4ddc5
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:31:13 2024 +0700
+
+    Merge branch 'main' into phuoc
+
+[33mcommit 5d4ddc507954ba6997169a940714c494e7c91aff[m
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:30:24 2024 +0700
+
+    Revert "dinh dang so dien thoai"
+    
+    This reverts commit 069f41777b4f81d77940eb9164ad72f8b2b70588.
+
+[33mcommit 58fbe4a6b28bef048413134f758dcc4a5697c61c[m
+Merge: 069f417 71df390
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:29:03 2024 +0700
+
+    Merge branch 'phuoc'
+
+[33mcommit 069f41777b4f81d77940eb9164ad72f8b2b70588[m
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:28:44 2024 +0700
+
+    dinh dang so dien thoai
+
+[33mcommit 73aa5f7f5534de5922b4c52fe6628012f0fa617c[m
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:20:20 2024 +0700
+
+    img
+
+[33mcommit b4724a27af17d7dd8fd996d86d6f9d6a3da1839e[m
+Author: hovu <vunhpc06500@fpt.edu.vn>
+Date:   Fri Jun 7 13:16:57 2024 +0700
+
+    fix đơn hàng
+
+[33mcommit 083d235cc21b73c03365b1d825ff42739c7c5ffc[m
+Merge: 06ccc53 e71761f
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:15:12 2024 +0700
+
+    Merge branch 'nghia'
+
+[33mcommit 06ccc53e5599d79074400d5cb166238d8f97d53c[m
+Merge: f2b5248 72190d8
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:14:35 2024 +0700
+
+    Merge branch 'khoi'
+
+[33mcommit f2b524825e7cb8b3a7efa78a846451c714d6c3de[m
+Merge: 582973d c035677
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 13:09:28 2024 +0700
+
+    Merge remote-tracking branch 'origin/son'
+
+[33mcommit 2631b2d6828c6c2b9920ef05bf9556a2b83662c6[m
+Author: sonphan28 <sonphhpc05883@fpt.edu.vn>
+Date:   Fri Jun 7 13:03:29 2024 +0700
+
+    Chưa hoàn thiện
+
+[33mcommit c0356771e463a363b4d03cedd4a3971f5ed35624[m
+Author: sonphan28 <sonphhpc05883@fpt.edu.vn>
+Date:   Fri Jun 7 12:31:15 2024 +0700
+
+    danh sach chua giam
+
+[33mcommit 7bdcb0bcea7759c132c74b46f485af3ac71d4276[m
+Merge: dbea31c d22e536
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 12:13:34 2024 +0700
+
+    Merge branch 'son' of https://github.com/hv2a4/CellPhone into son
+
+[33mcommit dbea31cf1a044d1653b7135e5267f4bc66e5c68d[m
+Merge: 9353ac0 582973d
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 12:12:34 2024 +0700
+
+    Merge branch 'main' into son
+
+[33mcommit d22e53647a719e198f029f984a8f42a7708ed694[m
+Author: sonphan28 <sonphhpc05883@fpt.edu.vn>
+Date:   Fri Jun 7 12:05:35 2024 +0700
+
+    keo code chinh ve
+
+[33mcommit 72190d80f4f406ed1588d31c12cce99eeec7a4a9[m
+Merge: af206ae c943884
+Author: anh le minh khoi dog <mjkkhoi1@gmail.com>
+Date:   Fri Jun 7 11:31:57 2024 +0700
+
+    product
+
+[33mcommit e71761f648d6fbc09fca4f464231e9c66cad2b0f[m[33m ([m[1;32mnghia[m[33m)[m
+Merge: 1e47491 582973d
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 11:28:59 2024 +0700
+
+    Merge branch 'main' into nghia
+
+[33mcommit 582973deb89e6b9229a280afd4394107ba383f9a[m[33m ([m[1;32mmain[m[33m)[m
+Author: hovu <vunhpc06500@fpt.edu.vn>
+Date:   Fri Jun 7 11:17:24 2024 +0700
+
+    update fix 1 số lỗi
+
+[33mcommit 637c00f05d07a5c0ef3797201b99743696722619[m
+Merge: ef0c613 1e47491
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 10:00:53 2024 +0700
+
+    Merge branch 'nghia'
+
+[33mcommit ef0c613c64f70d5034014f60ccb79e9bd9ca9f72[m
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 09:59:47 2024 +0700
+
+    loi
+
+[33mcommit b9871420fc8c8bab4815ce0e36f08e69f0140032[m
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 09:36:41 2024 +0700
+
+    Revert "Merge branch 'main' into vu1"
+    
+    This reverts commit 49c6e90737fd719120505790d8c9bfae0e1e9564, reversing
+    changes made to 8fb04ab7054700e8dcc2be7a3c82a3da35472708.
+
+[33mcommit 1e474915a5691d49dc1c2f5098e292a272692a43[m
+Merge: d786821 1e969cf
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 09:31:55 2024 +0700
+
+    Merge branch 'main' into nghia
+
+[33mcommit a688c7833dc82e1eb8cb30f167a884772bbf8f6b[m
+Merge: 1e969cf 49c6e90
+Author: hv2a4 <145729206+hv2a4@users.noreply.github.com>
+Date:   Fri Jun 7 09:31:22 2024 +0700
+
+    Merge pull request #2 from hv2a4/vu1
+    
+    Vu1
+
+[33mcommit 49c6e90737fd719120505790d8c9bfae0e1e9564[m
+Merge: 8fb04ab 1e969cf
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 09:28:47 2024 +0700
+
+    Merge branch 'main' into vu1
+
+[33mcommit 9353ac02997d033d6b7d690a80b293c142ed5c0f[m
+Author: sonphan28 <sonphhpc05883@fpt.edu.vn>
+Date:   Fri Jun 7 09:23:14 2024 +0700
+
+    còn dở dở
+
+[33mcommit 3c616038444376454ff9ddbaf2a3440f270cd176[m
+Merge: b708f8d 546a850
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 09:20:54 2024 +0700
+
+    Merge branch 'son' of https://github.com/hv2a4/CellPhone into son
+
+[33mcommit b708f8d97b2bbc1eb4f945e03e5501c9c9bce6fe[m
+Merge: 27a5105 1e969cf
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 09:19:07 2024 +0700
+
+    Merge branch 'main' into son
+
+[33mcommit 546a8504103229a3232febddd699a48794d065d1[m
+Author: sonphan28 <sonphhpc05883@fpt.edu.vn>
+Date:   Fri Jun 7 09:15:39 2024 +0700
+
+    Trang chủ còn chưa hoàn thiện lắm
+    
+    Huhuh
+
+[33mcommit 71df390e06cb963c8aa36f37d9905b541a1314cf[m
+Merge: 72a1436 1e969cf
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 09:03:25 2024 +0700
+
+    Merge branch 'main' into phuoc
+
+[33mcommit af206ae21840802eecfabf16592ce42b2d90467b[m
+Merge: eabb18e 1e969cf
+Author: anh le minh khoi dog <mjkkhoi1@gmail.com>
+Date:   Fri Jun 7 08:52:06 2024 +0700
+
+    k
+
+[33mcommit c9438848a1d4ed16eebfa7d3a70e0e46dea145d5[m
+Merge: b6cac48 1e969cf
+Author: SaChanPhuoc <phuocscpc06456@fpt.edu.vn>
+Date:   Fri Jun 7 08:50:06 2024 +0700
+
+    Me
