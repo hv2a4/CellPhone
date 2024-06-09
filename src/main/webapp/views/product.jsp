@@ -475,7 +475,7 @@
 
 function updateBuyNowButton(idPhone, idVariant) {
     // Update the "Mua ngay" button's URL with the selected variant ID
-    var quantity = document.getElementById('quantityInput').value;
+    var quantity = document.getElementById('quantityInput') ? document.getElementById('quantityInput').value : 1;
     var buyNowButton = document.getElementById('buyNowButton');
     var baseUrl = "/shop/checkout?&id_variant=" + idVariant+"&quantity="+quantity;
     buyNowButton.href = baseUrl;
