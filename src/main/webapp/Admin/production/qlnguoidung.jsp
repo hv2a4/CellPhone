@@ -29,107 +29,114 @@
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <%--@elvariable id="userItem" type="ch"--%>
-                                <form:form action="/admin/user" modelAttribute="userItem" method="post"
-                                           onsubmit="return validateForm()"
-                                           class="form-horizontal form-label-left" enctype="multipart/form-data">
+                                <form id="userForm" action="/admin/create-admin" method="post"
+                                      class="form-horizontal form-label-left" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <!-- Username -->
-                                            <div class="form-group ">
+                                            <div class="form-group">
                                                 <label class="control-label">Tài khoản</label>
-                                                <form:input path="USERNAME" id="USERNAME" class="form-control"
-                                                            placeholder=""/>
-                                                <div id="usernameError" style="color: red;"></div>
+                                                <input type="text" name="USERNAME" id="USERNAME" class="form-control"
+                                                       placeholder=""/>
+                                                <div class="text-danger" id="USERNAME_error"></div>
                                             </div>
-
                                             <!-- Phone -->
-                                            <div class="form-group ">
+                                            <div class="form-group">
                                                 <label class="control-label">Số điện thoại</label>
-                                                <form:input path="PHONE_NUMBER" id="PHONE_NUMBER" class="form-control"
-                                                            placeholder=""/>
-                                                <div id="phoneError" style="color: red;"></div>
+                                                <input type="text" name="PHONE_NUMBER" id="PHONE_NUMBER"
+                                                       class="form-control" placeholder=""/>
+                                                <div class="text-danger" id="PHONE_NUMBER_error"></div>
                                             </div>
                                             <!-- Password -->
-                                            <div class="form-group ">
+                                            <div class="form-group">
                                                 <label class="control-label">Mật khẩu</label>
-                                                <form:password path="PASSWORD" id="password" class="form-control"
-                                                               placeholder=""/>
-                                                <div id="passwordEmtypt" style="color: red;"></div>
+                                                <input type="password" name="PASSWORD" id="PASSWORD"
+                                                       class="form-control" placeholder=""/>
+                                                <div class="text-danger" id="PASSWORD_error"></div>
                                             </div>
                                             <!-- Confirm Password -->
-                                            <div class="form-group ">
-                                                <label class="control-label">Nhập lại</label>
+                                            <div class="form-group">
+                                                <label class="control-label">Nhập lại mật khẩu</label>
                                                 <input type="password" class="form-control" id="confirmPassword"
-                                                       placeholder="" name="config-password">
-                                                <div id="passwordError" style="color: red;"></div>
+                                                       placeholder="" name="config-password"/>
+                                                <div class="text-danger" id="passwordError"></div>
                                             </div>
-
-
                                             <!-- Giới tính -->
                                             <div class="form-group mb-3">
                                                 <label class="control-label">Giới tính</label>
                                                 <div class="ms-4 d-flex justify-content-between">
-                                                    <form:radiobuttons path="GENDER" id="gender" items="${gender}"
-                                                                       cssClass="form-check-input "
-                                                                       elementCssClass="form-check form-check-inline"/>
+                                                    <c:forEach items="${gender}" var="genderOption" varStatus="status">
+                                                        <label class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="GENDER"
+                                                                   value="${genderOption.key}"
+                                                                   <c:if test="${genderOption.key == userItem.GENDER}">checked</c:if>>
+                                                                ${genderOption.value}
+                                                        </label>
+                                                    </c:forEach>
                                                 </div>
-                                                <div id="genderError" style="color: red;"></div>
+                                                <div class="text-danger" id="GENDER_error"></div>
                                             </div>
+
                                         </div>
                                         <div class="col-md-6">
                                             <!-- Họ và tên -->
-                                            <div class="form-group ">
+                                            <div class="form-group">
                                                 <label class="control-label">Họ và tên</label>
-                                                <form:input path="FULLNAME" id="FULLNAME" class="form-control"
-                                                            placeholder=""/>
-                                                <div id="fullnameError" style="color: red;"></div>
+                                                <input type="text" name="FULLNAME" id="FULLNAME" class="form-control"
+                                                       placeholder=""/>
+                                                <div class="text-danger" id="FULLNAME_error"></div>
                                             </div>
                                             <!-- Email -->
-                                            <div class="form-group ">
+                                            <div class="form-group">
                                                 <label class="control-label">Email</label>
-                                                <form:input path="EMAIL" id="EMAIL" class="form-control"/>
-                                                <div id="emailError" style="color: red;"></div>
+                                                <input type="email" name="EMAIL" id="EMAIL" class="form-control"/>
+                                                <div class="text-danger" id="EMAIL_error"></div>
                                             </div>
-                                            <!-- Bậc-->
+                                            <!-- Bậc -->
                                             <div class="form-group">
                                                 <label class="control-label">Bậc</label>
-                                                <form:select path="rank.ID" id="rank" class="form-control">
-                                                    <form:option value="">Chọn bậc</form:option>
-                                                    <form:options items="${fillRank}"/>
-                                                </form:select>
-                                                <div id="rankError" style="color: red;"></div>
+                                                <select name="rank.ID" id="rank" class="form-control">
+                                                    <option value="">Chọn bậc</option>
+                                                    <c:forEach items="${fillRank}" var="rankOption" varStatus="status">
+                                                        <option value="${rankOption.key}" id="rank-validate"
+                                                                <c:if test="${rankOption.key == userItem.rank.ID}">selected</c:if>>
+                                                                ${rankOption.value}
+                                                        </option>
+                                                    </c:forEach>
+                                                </select>
+                                                <div class="text-danger" id="rank_error1"></div>
                                             </div>
 
                                             <!-- Hình ảnh -->
                                             <div class="form-group">
                                                 <label class="control-label">Hình ảnh</label>
-                                                <input type="file" class="form-control" aria-label="file example"
-                                                       name="photo_file" id="AVATAR">
-                                                <input name="AVATAR" type="hidden"/>
-                                                <div id="avatarError" style="color: red;"></div>
+                                                <input type="file" name="photo_file" id="AVATAR" class="form-control"
+                                                       aria-label="file example"/>
+                                                <div class="text-danger" id="AVATAR_error"></div>
                                             </div>
                                             <!-- Vai trò -->
                                             <div class="form-group">
                                                 <label class="control-label">Vai trò</label>
-                                                <form:select path="ROLE" id="ROLE" class="form-control">
-                                                    <form:option value="">Chọn vai trò</form:option>
-                                                    <form:options items="${fillRole}"/>
-                                                </form:select>
-                                                <div id="roleError" style="color: red;"></div>
+                                                <select name="ROLE" id="ROLE" class="form-control">
+                                                    <option value="">Chọn vai trò</option>
+                                                    <c:forEach var="items" items="${fillRole}">
+                                                        <option value="${items.key}">
+                                                            <c:if test="${items.key == userItem.rank.ID}">selected</c:if>
+                                                                ${items.value}
+                                                        </option>
+                                                    </c:forEach>
+                                                </select>
+                                                <div class="text-danger" id="ROLE_error"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                                         </button>
-                                        <button class="btn btn-primary" formaction="/admin/create-admin" type="submit">
-                                            Create
-                                        </button>
+                                        <button type="submit" class="btn btn-primary">Create</button>
                                     </div>
-                                </form:form>
+                                </form>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -221,8 +228,7 @@
                                                     <h2>Bậc: ${item.rank.NAME}</h2>
                                                     <h2>Quyền: ${item.ROLE ? "Admin":"User"}</h2>
                                                     <h2>Ngày tạo: ${item.CREATE_AT}</h2>
-                                                    <h2>Ngày cập nhật: <fmt:formatDate value="${item.UPDATE_AT}"
-                                                                                       pattern="yyyy-MM-dd"/></h2>
+                                                    <h2>Ngày cập nhật: ${item.UPDATE_AT}</h2>
                                                     <h2>Trạng thái: ${item.STATUS ? "Hoạt động": "Đã khóa"}</h2>
                                                 </div>
                                                 <div class="modal-footer">
@@ -243,134 +249,72 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function validatePassword() {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("confirmPassword").value;
-        var errorDiv = document.getElementById("passwordError");
-        var passwordEmtypt = document.getElementById("passwordEmtypt");
-        var passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    $(document).ready(function () {
+        $('#userForm').submit(function (event) {
+            event.preventDefault(); // Ngăn chặn việc gửi form thông thường
+            let formData = new FormData(this);
+            let username = $('#USERNAME').val();
 
-        // Reset errors
-        errorDiv.innerText = "";
-        passwordEmtypt.innerText = "";
+            // Kiểm tra sự tồn tại của tên người dùng
+            $.ajax({
+                type: 'GET',
+                url: '/admin/check-username',
+                data: {username: username},
+                success: function (exists) {
+                    if (exists) {
+                        $('#USERNAME_error').text('Tên người dùng đã tồn tại!');
 
-        if (password.trim() === "") {
-            passwordEmtypt.innerText = "Mật khẩu không được bỏ trống";
-            return false;
-        }
+                        // Kiểm tra mật khẩu có khớp hay không
+                        if ($.trim($('#PASSWORD').val()) !== $.trim($('#confirmPassword').val())) {
+                            $('#passwordError').text('Mật khẩu và xác nhận mật khẩu không khớp !');
+                            return; // Ngăn chặn việc tiếp tục nếu mật khẩu không khớp
+                        } else {
+                            $('#passwordError').text('');
+                        }
+                    } else {
+                        // Tên người dùng không tồn tại, tiếp tục gửi form
+                        $.ajax({
+                            type: 'POST',
+                            url: '/admin/create-admin',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                if (response.status === 'success') {
+                                    window.location.href = '/admin/user'; // Điều hướng tới trang danh sách người dùng
+                                }
+                            },
+                            error: function (response) {
+                                let errors = response.responseJSON;
+                                // Xóa các thông báo lỗi cũ
+                                $('.text-danger').text('');
+                                // Hiển thị các thông báo lỗi mới
+                                $.each(errors, function (key, value) {
+                                    // Kiểm tra xem người dùng đã chọn bậc chưa
+                                    if ($('#rank').val() === "") {
+                                        $('#rank_error1').text('Vui lòng chọn bậc !');
+                                    } else {
+                                        $('#rank_error1').text('');
+                                    }
+                                    // kiểm tra avatar có trống hay không
+                                    if ($('#AVATAR').val() === "") {
+                                        $('#AVATAR_error').text('Vui lòng chọn ảnh đại diện !');
+                                    } else {
+                                        $('#AVATAR_error').text('');
+                                    }
 
-        if (!passwordPattern.test(password)) {
-            passwordEmtypt.innerText = "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và chữ số";
-            return false;
-        }
-
-        if (confirmPassword !== password) {
-            errorDiv.innerText = "Mật khẩu xác nhận không khớp";
-            return false;
-        }
-
-        // If all validations pass
-        return true;
-    }
-
-    function validateForm() {
-        var isValid = true;
-
-        // Validate Username
-        var username = document.getElementById("USERNAME").value;
-        var usernameError = document.getElementById("usernameError");
-        if (username.trim() === "") {
-            usernameError.innerText = "Tên người dùng không được trống";
-            isValid = false;
-        } else {
-            usernameError.innerText = "";
-        }
-
-        // Validate Fullname
-        var fullname = document.getElementById("FULLNAME").value;
-        var fullnameError = document.getElementById("fullnameError");
-        if (fullname.trim() === "") {
-            fullnameError.innerText = "Họ và tên không được trống";
-            isValid = false;
-        } else {
-            fullnameError.innerText = "";
-        }
-
-        // Validate Email
-        var email = document.getElementById("EMAIL").value;
-        var emailError = document.getElementById("emailError");
-        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (email.trim() === "" || !emailPattern.test(email)) {
-            emailError.innerText = "Email không hợp lệ";
-            isValid = false;
-        } else {
-            emailError.innerText = "";
-        }
-
-        // Validate Phone Number
-        var phoneNumber = document.getElementById("PHONE_NUMBER").value;
-        var phoneError = document.getElementById("phoneError");
-        var phonePattern = /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-9]|9[0-9])[0-9]{7}$/;
-        if (phoneNumber.trim() === "" || !phonePattern.test(phoneNumber)) {
-            phoneError.innerText = "Số điện thoại không hợp lệ";
-            isValid = false;
-        } else {
-            phoneError.innerText = "";
-        }
-
-        // Validate Role
-        var role = document.getElementById("ROLE").value;
-        var roleError = document.getElementById("roleError");
-        if (role.trim() === "") {
-            roleError.innerText = "Vai trò không được trống";
-            isValid = false;
-        } else {
-            roleError.innerText = "";
-        }
-        //Validate rank
-        var rank = document.getElementById("rank").value;
-        var rankError = document.getElementById("rankError");
-        if (rank.trim() === "") {
-            rankError.innerText = "Bậc không được bỏ trống";
-            isValid = false;
-        } else {
-            rankError.innerText = "";
-        }
-        // Validate Avatar
-        var avatar = document.getElementById("AVATAR").value;
-        var avatarError = document.getElementById("avatarError");
-        if (avatar.trim() === "") {
-            avatarError.innerText = "Hình ảnh không được trống";
-            isValid = false;
-        } else {
-            avatarError.innerText = "";
-        }
-
-        // Validate Gender
-        var genderError = document.getElementById("genderError");
-        var genders = document.getElementsByName("GENDER");
-        var genderSelected = false;
-        for (var i = 0; i < genders.length; i++) {
-            if (genders[i].checked) {
-                genderSelected = true;
-                break;
-            }
-        }
-        if (!genderSelected) {
-            genderError.innerText = "Vui lòng chọn giới tính";
-            isValid = false;
-        } else {
-            genderError.innerText = "";
-        }
-
-        // Validate Password
-        if (!validatePassword()) {
-            isValid = false;
-        }
-
-        return isValid;
-    }
+                                    $('#' + key + '_error').text(value);
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
 </script>
+
 </body>
 </html>
