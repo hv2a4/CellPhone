@@ -111,7 +111,7 @@
 
 		down.on('click', function () {
 			var value = parseInt($input.val()) - 1;
-			value = value < 1 ? 1 : value;
+			value = value < 0 ? 0 : value;
 			$input.val(value);
 			$input.change();
 			updatePriceSlider($this , value)
@@ -150,12 +150,12 @@
 	var priceSlider = document.getElementById('price-slider');
 	if (priceSlider) {
 		noUiSlider.create(priceSlider, {
-			start: [1, 999],
+			start: [0, 50000000],
 			connect: true,
 			step: 1,
 			range: {
-				'min': 1,
-				'max': 999
+				'min': 0,
+				'max': 50000000
 			}
 		});
 
