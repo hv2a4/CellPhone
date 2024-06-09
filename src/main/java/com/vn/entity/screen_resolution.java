@@ -19,7 +19,7 @@ import lombok.Data;
 public class screen_resolution implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
+	Integer ID;
 	String NAME;
 	@OneToMany(mappedBy = "screen_resolution")
 	@JsonIgnore
