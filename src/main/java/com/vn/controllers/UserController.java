@@ -202,12 +202,7 @@ public class UserController {
 		return "/views/forgotpass3";
 	}
 
-	@RequestMapping("profile")
-	public String getProfile(Model model) {
-		String page = "profile.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+
 
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {

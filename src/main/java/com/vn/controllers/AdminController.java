@@ -249,6 +249,7 @@ public class AdminController {
         return "/Admin/production/homeadmin";
     }
 
+
     @RequestMapping("logout")
     public String logOut() {
         sessionService.remove("list");
