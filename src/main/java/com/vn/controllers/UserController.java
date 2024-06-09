@@ -1,5 +1,7 @@
 package com.vn.controllers;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vn.DAO.categoryDao;
 import com.vn.DAO.phoneDao;
 import com.vn.DAO.systemDao;
@@ -197,28 +198,50 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("product/{id}")
-	public String getProduct(Model model, @PathVariable("id") Integer id) {
+	@RequestMapping("product/{idphone}")
+	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv, @RequestParam("id_storage") Integer idGB) {
 		phone finByIdPhone = phonedao.findById(id).get();
+		List<variant> finAllColor = variantdao.variantByGBId(id, idGB);
+		List<phone> listPhone = phonedao.findAllBybrandIDEqual(finByIdPhone.getBrand().getID());
+		variant variant = variantdao.findById(idv).get();
 		model.addAttribute("finByIdPhone", finByIdPhone);
+		model.addAttribute("variant2", variant);
+		model.addAttribute("finAllColor", finAllColor);
+		model.addAttribute("listPhone", listPhone);
 		String page = "product.jsp";
 		model.addAttribute("page", page);
 		return "index";
 	}
 
-	//
+
 	@GetMapping("ajax/getGia/{id}")
 	@ResponseBody
-	public Optional<Double> getGia(@PathVariable("id") Integer id) {
+	public Optional<List<Double>> getGia(@PathVariable("id") Integer id) {
 		Optional<variant> variant = variantdao.findById(id);
-	    return Optional.of(variant.get().getPRICE());
+		List<Double> listDouble = new ArrayList<Double>();
+		listDouble.add(variant.get().getPRICE());
+		Date now = new Date();
+		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
+			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
+		}else {
+			listDouble.add(0.0);
+		}
+	    return Optional.of(listDouble);
 	}
-	@GetMapping("ajax/getGia/{idvariant}/{idstorage}/{idcolor}")
+	
+	@GetMapping("ajax/getGiaRelated/{id}")
 	@ResponseBody
-	public Optional<Double> getGiaProduct(@PathVariable("idvariant") Integer idvariant,@PathVariable("idstorage") Integer idstorage,@PathVariable("idcolor") Integer idcolor) {
-		variant variant = variantdao.variantById(idvariant, idstorage, idcolor);
-		System.out.println(variant.getPRICE());
-		return Optional.of(variant.getPRICE());
+	public Optional<List<Double>> getGiaRelated(@PathVariable("id") Integer id) {
+		Optional<variant> variant = variantdao.findById(id);
+		List<Double> listDouble = new ArrayList<Double>();
+		listDouble.add(variant.get().getPRICE());
+		Date now = new Date();
+		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
+			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
+		}else {
+			listDouble.add(0.0);
+		}
+		return Optional.of(listDouble);
 	}
 	
 

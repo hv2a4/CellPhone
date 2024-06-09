@@ -162,7 +162,7 @@
 								</div>
 								<div class="product-btns">
 									<button class="quick-view">
-										<a href="/shop/product/${phone.ID}"><i class="fa fa-eye"></i></a>
+										<a href="/shop/product/${idphone}?id_variant=${1}&id_storage=${2}"><i class="fa fa-eye"></i></a>
 										<span class="tooltipp">quick view</span>
 									</button>
 									<button class="quick-view">

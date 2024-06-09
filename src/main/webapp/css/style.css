@@ -2601,7 +2601,24 @@ body {
 	border-radius: 10px;
 }
 .inline-button {
-  
-   
+  border-radius: 6px;
+  border: 1px solid black;
+  margin-bottom: 5px;
+  width: 10em;
+}
+.inline-button:focus{
+  border-radius: 6px;
+  background: black;
+  color: white;
+}
+.inline-button-color{
+	border-radius: 6px;
+  border: 1px solid black;
+  width: 10em;
+}
+.inline-button-color:focus{
+  border-radius: 6px;
+  background: black;
+  color: white;
 }
 
