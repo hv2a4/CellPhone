@@ -265,7 +265,6 @@
                 success: function (exists) {
                     if (exists) {
                         $('#USERNAME_error').text('Tên người dùng đã tồn tại!');
-
                         // Kiểm tra mật khẩu có khớp hay không
                         if ($.trim($('#PASSWORD').val()) !== $.trim($('#confirmPassword').val())) {
                             $('#passwordError').text('Mật khẩu và xác nhận mật khẩu không khớp !');
@@ -283,7 +282,7 @@
                             processData: false,
                             success: function (response) {
                                 if (response.status === 'success') {
-                                    window.location.href = '/admin/user'; // Điều hướng tới trang danh sách người dùng
+                                    window.location.href = '/admin/user';
                                 }
                             },
                             error: function (response) {

@@ -18,7 +18,7 @@ public class phone implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
+	Integer ID;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_BRAND")

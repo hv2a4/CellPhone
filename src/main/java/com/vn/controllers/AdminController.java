@@ -25,6 +25,7 @@ import com.vn.entity.user;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -1197,8 +1198,22 @@ public class AdminController {
         return map;
     }
 
+    @GetMapping("/check-username")
+    public ResponseEntity<Boolean> checkUsernameExist(@RequestParam String username) {
+        Boolean exists = userDao.existsById(username);
+        return ResponseEntity.ok(exists);
+    }
+
     @PostMapping("create-admin")
-    public String create(Model model, @ModelAttribute("userItem") user users, @RequestParam("photo_file") MultipartFile img) throws IOException {
+    public ResponseEntity<Map<String, String>> create(Model model, @Validated @ModelAttribute("userItem") user users, BindingResult bindingResult, @RequestParam("photo_file") MultipartFile img) throws IOException {
+        Map<String, String> response = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            // Trả về lỗi xác thực
+            bindingResult.getFieldErrors().forEach(error ->
+                    response.put(error.getField(), error.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(response);
+        }
         if (!img.isEmpty()) {
             String filename = img.getOriginalFilename();
 
@@ -1226,7 +1241,8 @@ public class AdminController {
             // Lưu người dùng vào cơ sở dữ liệu
             userDao.save(users);
         }
-        return "redirect:/admin/user";
+        response.put("status", "success");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("user")
