@@ -13,4 +13,6 @@ public interface phoneDao extends JpaRepository<phone, Integer> {
 
 	@Query("SELECT p FROM phone p WHERE p.category.ID = ?1 AND p.brand.ID = ?2")
     List<phone> findProductsByCategoryAndBrand(int categoryId, int brandId);
+    @Query("select p from phone p where p.brand.ID = ?1")
+    List<phone> findAllBybrandIDEqual(Integer id);
 }
