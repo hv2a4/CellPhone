@@ -239,6 +239,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </c:forEach>
                                 </tbody>
                             </table>
