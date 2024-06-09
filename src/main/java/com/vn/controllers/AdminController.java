@@ -1,6 +1,5 @@
 package com.vn.controllers;
 
-import java.lang.reflect.Field;
 import java.text.ParseException;
 
 import java.time.LocalDate;
@@ -25,9 +24,7 @@ import com.vn.entity.rank;
 import com.vn.entity.user;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -156,8 +153,6 @@ public class AdminController {
     @Autowired
     imageDao imageDao;
 
-    @Autowired
-    ParamService service;
     LocalDate now = LocalDate.now();
     int numDays = now.lengthOfMonth();
     int currentYear = now.getYear();
@@ -170,80 +165,43 @@ public class AdminController {
     }
 
     @ModelAttribute("list_category")
-    public Map<Integer, String> getListCategory() {
-        Map<Integer, String> map = new HashMap<>();
-
-        List<category> list = categoryDao.findAll();
-        for (category category : list) {
-            map.put(category.getID(), category.getNAME());
-        }
-        return map;
+    public List<category> getListCategory() {
+        return categoryDao.findAll();
     }
 
     @ModelAttribute("list_brand")
-    public Map<Integer, String> getListBrand() {
-        Map<Integer, String> map = new HashMap<>();
-
-        List<brand> list = brandDao.findAll();
-        for (brand brands : list) {
-            map.put(brands.getID(), brands.getNAME());
-        }
-        return map;
+    public List<brand> getListBrand() {
+        return brandDao.findAll();
     }
 
     @ModelAttribute("list_system")
-    public Map<Integer, String> getListSystem() {
-        Map<Integer, String> map = new HashMap<>();
-
-        List<system> list = systemDao.findAll();
-        for (system systems : list) {
-            map.put(systems.getID(), systems.getSYSTEM());
-        }
-        return map;
+    public List<system> getListSystem() {
+        return systemDao.findAll();
     }
 
     @ModelAttribute("list_charging_port")
-    public Map<Integer, String> getListCharging() {
-        Map<Integer, String> map = new HashMap<>();
+    public List<charging_port> getList_charging_port() {
+        return charging_portDao.findAll();
+    }
 
-        List<charging_port> list = charging_portDao.findAll();
-        for (charging_port charging_ports : list) {
-            map.put(charging_ports.getID(), charging_ports.getNAME());
-        }
-        return map;
+    @ModelAttribute("list_headphone_jack")
+    public List<headphone_jack> getList_headphone_jack() {
+        return headphone_jackDao.findAll();
     }
 
     @ModelAttribute("list_battery_type")
-    public Map<Integer, String> getBattery() {
-        Map<Integer, String> map = new HashMap<>();
-
-        List<battery_type> battery_typeList = battery_typeDao.findAll();
-        for (battery_type battery_types : battery_typeList) {
-            map.put(battery_types.getID(), battery_types.getNAME());
-        }
-        return map;
+    public List<battery_type> getList_battery_type() {
+        return battery_typeDao.findAll();
     }
 
     @ModelAttribute("list_screen_resolution")
-    public Map<Integer, String> getScreenResolutions() {
-        Map<Integer, String> map = new HashMap<>();
-
-        List<screen_resolution> screenResolutions = screen_resolutionDao.findAll();
-        for (screen_resolution screen_resolutions : screenResolutions) {
-            map.put(screen_resolutions.getID(), screen_resolutions.getNAME());
-        }
-        return map;
+    public List<screen_resolution> getList_screen_resolution() {
+        return screen_resolutionDao.findAll();
     }
 
     @ModelAttribute("list_graphics_chip")
-    public Map<Integer, String> getGraphicsChip() {
-        Map<Integer, String> map = new HashMap<>();
-
-        List<graphics_chip> screenResolutions = graphics_chipDao.findAll();
-        for (graphics_chip screen_resolutions : screenResolutions) {
-            map.put(screen_resolutions.getID(), screen_resolutions.getNAME());
-        }
-        return map;
+    public List<graphics_chip> getList_graphics_chip() {
+        return graphics_chipDao.findAll();
     }
 
     @ModelAttribute("list_wireless_charging_technology")
@@ -296,134 +254,52 @@ public class AdminController {
         return "redirect:/shop/login";
     }
 
-    @PostMapping("/phone/create")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> createPhone(@Validated @ModelAttribute("phone") phone phone, BindingResult bindingResult, @RequestParam("anh") List<MultipartFile> images) {
-        Map<String, String> response = new HashMap<>();
-        // Kiểm tra lỗi xác thực
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
-            return ResponseEntity.badRequest().body(response);
-        }
-        try {
-            // Lấy dữ liệu từ service
-            String name = service.getString("NAME", "");
-            String brandId = service.getString("brand.ID", "");
-            String categoryId = service.getString("category.ID", "");
-            String systemId = service.getString("system.ID", "");
-            String chargingPortId = service.getString("charging_port.ID", "");
-            String headphoneJackId = service.getString("headphone_jack.ID", "");
-            String batteryTypeId = service.getString("battery_type.ID", "");
-            String screenResolutionId = service.getString("screen_resolution.ID", "");
-            String graphicsChipId = service.getString("graphics_chip.ID", "");
-            String processor = service.getString("PROCESSOR", "");
-            String videoRecording = service.getString("VIDEO_RECORDING", "");
-            String connection = service.getString("CONNECTION", "");
-            String description = service.getString("DESCRIPTION", "");
-            String screenResolutionKT = service.getString("SCREEN_RESOLUTIONKT", "");
-            Double screenSize = service.getDouble("SCREEN_SIZE", 0);
-            Double ram = service.getDouble("RAM", 0);
-            Integer selfieCamera = service.getInt("SELFIE_CAMERA", 0);
-            Integer mainCamera = service.getInt("MAIN_CAMERA", 0);
-            Integer batteryCapacity = service.getInt("BATTERY_CAPACITY", 0);
-            Double length = service.getDouble("LENGTH", 0);
-            Double width = service.getDouble("WIDTH", 0);
-            Double height = service.getDouble("HEIGHT", 0);
-            Double weight = service.getDouble("WEIGHT", 0);
-            Integer refreshRate = service.getInt("REFRESH_RATE", 0);
-            Integer maximumBrightness = service.getInt("MAXIMUM_BRIGHTNESS", 0);
-            Double cpuSpeed = service.getDouble("CPU_SPEED", 0);
+    @PostMapping("phone/create")
+    public String createPhone(@ModelAttribute("phone") phone phone, @RequestParam("anh") List<MultipartFile> images) {
 
-            // Thiết lập các thuộc tính cho phone
-            phone.setNAME(name);
-            phone.setPROCESSOR(processor);
-            phone.setVIDEO_RECORDING(videoRecording);
-            phone.setCONNECTION(connection);
-            phone.setDESCRIPTION(description);
-            phone.setSCREEN_RESOLUTIONKT(screenResolutionKT);
-            phone.setSCREEN_SIZE(screenSize);
-            phone.setRAM(ram);
-            phone.setSELFIE_CAMERA(selfieCamera);
-            phone.setMAIN_CAMERA(mainCamera);
-            phone.setBATTERY_CAPACITY(batteryCapacity);
-            phone.setLENGTH(length);
-            phone.setWIDTH(width);
-            phone.setHEIGHT(height);
-            phone.setWEIGHT(weight);
-            phone.setREFRESH_RATE(refreshRate);
-            phone.setMAXIMUM_BRIGHTNESS(maximumBrightness);
-            phone.setCPU_SPEED(cpuSpeed);
-            phone.setCREATE_AT(new Date());
-            phone.setIS_DELETE(false);
-            // Thiết lập các mối quan hệ
-            if (!brandId.isEmpty()) {
-                phone.setBrand(brandDao.findById(Integer.parseInt(brandId)).orElseThrow(() -> new Exception("Brand not found")));
-            }
-            if (!categoryId.isEmpty()) {
-                phone.setCategory(categoryDao.findById(Integer.parseInt(categoryId)).orElseThrow(() -> new Exception("Category not found")));
-            }
-            if (!systemId.isEmpty()) {
-                phone.setSystem(systemDao.findById(Integer.parseInt(systemId)).orElseThrow(() -> new Exception("System not found")));
-            }
-            if (!chargingPortId.isEmpty()) {
-                phone.setCharging_port(charging_portDao.findById(Integer.parseInt(chargingPortId)).orElseThrow(() -> new Exception("Charging port not found")));
-            }
-            if (!headphoneJackId.isEmpty()) {
-                phone.setHeadphone_jack(headphone_jackDao.findById(Integer.parseInt(headphoneJackId)).orElseThrow(() -> new Exception("Headphone jack not found")));
-            }
-            if (!batteryTypeId.isEmpty()) {
-                phone.setBattery_type(battery_typeDao.findById(Integer.parseInt(batteryTypeId)).orElseThrow(() -> new Exception("Battery type not found")));
-            }
-            if (!screenResolutionId.isEmpty()) {
-                phone.setScreen_resolution(screen_resolutionDao.findById(Integer.parseInt(screenResolutionId)).orElseThrow(() -> new Exception("Screen resolution not found")));
-            }
-            if (!graphicsChipId.isEmpty()) {
-                phone.setGraphics_chip(graphics_chipDao.findById(Integer.parseInt(graphicsChipId)).orElseThrow(() -> new Exception("Graphics chip not found")));
-            }
+        MultipartFile img = images.get(0);
+        String filename = img.getOriginalFilename();
 
-            // Xử lý upload ảnh
-            if (!images.isEmpty()) {
-                // Lưu trữ ảnh đầu tiên
-                MultipartFile firstImage = images.get(0);
-                String firstImageUrl = saveImageToDisk(firstImage, req);
-                phone.setIMAGE(firstImageUrl);
-
-                // Lưu trữ 4 ảnh còn lại
-                for (int i = 1; i < Math.min(images.size(), 5); i++) {
-                    MultipartFile imageFile = images.get(i);
-                    if (imageFile.isEmpty()) {
-                        continue;
-                    }
-                    String imageUrl = saveImageToDisk(imageFile, req);
-                    image image = new image();
-                    image.setIMAGE(imageUrl);
-                    image.setPhone(phone);
-                    phone.getImages().add(image);
-
-                }
-            }
-            // Lưu đối tượng phone vào cơ sở dữ liệu
-            phoneDao.save(phone);
-            response.put("status", "success");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
-
-    // Hàm lưu ảnh vào thư mục trên server
-    private String saveImageToDisk(MultipartFile image, HttpServletRequest req) throws IOException {
-        String filename = image.getOriginalFilename();
         String uploadDir = req.getServletContext().getRealPath("/images/");
         File uploadFolder = new File(uploadDir);
+
         if (!uploadFolder.exists()) {
             uploadFolder.mkdirs();
         }
         File destFile = new File(uploadFolder, filename);
-        image.transferTo(destFile);
-        return filename;
-    }
+        try {
+            img.transferTo(destFile);
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        phone.setIMAGE(filename);
+        phone.setCREATE_AT(new Date());
+        phone.setUPDATE_AT(new Date());
+        phone.setIS_DELETE(false);
+        phoneDao.save(phone);
 
+        for (int i = 1; i < images.size(); i++) {
+            if (!images.get(i).isEmpty()) {
+                MultipartFile imgimg = images.get(i);
+                String filenameimg = imgimg.getOriginalFilename();
+
+                // Tạo file trong thư mục images
+                File destFileimg = new File(uploadFolder, filenameimg);
+
+                // Lưu trữ file vào thư mục đã xác định
+                try {
+                    imgimg.transferTo(destFileimg);
+                } catch (IllegalStateException | IOException e) {
+                    e.printStackTrace();
+                }
+                image image = new image();
+                image.setPhone(phone);
+                image.setIMAGE(filenameimg);
+                imageDao.save(image);
+            }
+        }
+        return "redirect:/admin/product";
+    }
 
     @PostMapping("phone/update")
     public String updatePhone(@ModelAttribute("phoneUpdate") phone phoneUpdate) {
@@ -451,12 +327,10 @@ public class AdminController {
         String page = "product.jsp";
         model.addAttribute("page", page);
 
-        return "/Admin/production/homeadmin";
-    }
+        List<phone> list_phone = phoneDao.findAll();
+        model.addAttribute("list_phone", list_phone);
 
-    @ModelAttribute("list_phone")
-    public List<phone> getPhone() {
-        return phoneDao.findAll();
+        return "/Admin/production/homeadmin";
     }
 
     @ModelAttribute("fillTableUser")
@@ -517,7 +391,8 @@ public class AdminController {
     }
 
     @PostMapping("category/create")
-    public String postMethodName(Model model, @Validated @ModelAttribute("category") category category, BindingResult result) {
+    public String postMethodName(Model model, @Validated @ModelAttribute("category") category category,
+                                 BindingResult result) {
         if (result.hasErrors()) {
             String page = "category.jsp";
             model.addAttribute("page", page);
@@ -773,6 +648,9 @@ public class AdminController {
         String page = "battery_type.jsp";
         model.addAttribute("page", page);
 
+        List<battery_type> list_battery_type = battery_typeDao.findAll();
+        model.addAttribute("list_battery_type", list_battery_type);
+
         battery_type battery_type = new battery_type();
         model.addAttribute("battery_type", battery_type);
 
@@ -902,21 +780,16 @@ public class AdminController {
         String page = "headphone_jack.jsp";
         model.addAttribute("page", page);
 
+        List<headphone_jack> list_headphone_jack = headphone_jackDao.findAll();
+        model.addAttribute("list_headphone_jack", list_headphone_jack);
+
+        headphone_jack headphone_jack = new headphone_jack();
+        model.addAttribute("headphone_jack", headphone_jack);
+
         headphone_jack headphone_jackUpdate = new headphone_jack();
         model.addAttribute("headphone_jackUpdate", headphone_jackUpdate);
 
         return "/Admin/production/homeadmin";
-    }
-
-    @ModelAttribute("list_headphone_jack")
-    public Map<Integer, String> getHeadPhoneJack() {
-        Map<Integer, String> map = new HashMap<>();
-        List<headphone_jack> list_headphone_jack = headphone_jackDao.findAll();
-
-        for (headphone_jack headphone_jacks : list_headphone_jack) {
-            map.put(headphone_jacks.getID(), headphone_jacks.getNAME());
-        }
-        return map;
     }
 
     @PostMapping("headphone_jack/create")
@@ -995,7 +868,8 @@ public class AdminController {
         String page = "wireless_charging_technology.jsp";
         model.addAttribute("page", page);
 
-        List<wireless_charging_technology> list_wireless_charging_technology = wireless_charging_technologyDao.findAll();
+        List<wireless_charging_technology> list_wireless_charging_technology = wireless_charging_technologyDao
+                .findAll();
         model.addAttribute("list_wireless_charging_technology", list_wireless_charging_technology);
 
         wireless_charging_technology wireless_charging_technology = new wireless_charging_technology();
@@ -1008,13 +882,15 @@ public class AdminController {
     }
 
     @PostMapping("wireless_charging_technology/create")
-    public String postMethodName(@ModelAttribute("wireless_charging_technology") wireless_charging_technology wireless_charging_technology) {
+    public String postMethodName(
+            @ModelAttribute("wireless_charging_technology") wireless_charging_technology wireless_charging_technology) {
         wireless_charging_technologyDao.save(wireless_charging_technology);
         return "redirect:/admin/wireless_charging_technology";
     }
 
     @PostMapping("wireless_charging_technology/update")
-    public String updateƯireless_charging_technology(@ModelAttribute("wireless_charging_technologyUpdate") wireless_charging_technology wireless_charging_technologyUpdate) {
+    public String updateƯireless_charging_technology(
+            @ModelAttribute("wireless_charging_technologyUpdate") wireless_charging_technology wireless_charging_technologyUpdate) {
         wireless_charging_technologyDao.save(wireless_charging_technologyUpdate);
         return "redirect:/admin/wireless_charging_technology";
     }
@@ -1028,9 +904,12 @@ public class AdminController {
 
     @GetMapping("ajax/getwireless_charging_technology/{id}")
     @ResponseBody
-    public Optional<wireless_charging_technology> wireless_charging_technologyById(Model model, @PathVariable("id") Integer id) {
-        Optional<wireless_charging_technology> wireless_charging_technologyUpdate = wireless_charging_technologyDao.findById(id);
-        model.addAttribute("wireless_charging_technologyUpdate", wireless_charging_technologyUpdate.orElseGet(null).getClass());
+    public Optional<wireless_charging_technology> wireless_charging_technologyById(Model model,
+                                                                                   @PathVariable("id") Integer id) {
+        Optional<wireless_charging_technology> wireless_charging_technologyUpdate = wireless_charging_technologyDao
+                .findById(id);
+        model.addAttribute("wireless_charging_technologyUpdate",
+                wireless_charging_technologyUpdate.orElseGet(null).getClass());
         return wireless_charging_technologyUpdate;
     }
 
@@ -1058,7 +937,8 @@ public class AdminController {
     }
 
     @PostMapping("screen_resolution/update")
-    public String updateScreen_resolution(@ModelAttribute("screen_resolutionUpdate") screen_resolution screen_resolutionUpdate) {
+    public String updateScreen_resolution(
+            @ModelAttribute("screen_resolutionUpdate") screen_resolution screen_resolutionUpdate) {
         screen_resolutionDao.save(screen_resolutionUpdate);
         return "redirect:/admin/screen_resolution";
     }
@@ -1082,6 +962,10 @@ public class AdminController {
     public String getQLgraphics_chip(Model model) {
         String page = "graphics_chip.jsp";
         model.addAttribute("page", page);
+
+        List<graphics_chip> list_graphics_chip = graphics_chipDao.findAll();
+        model.addAttribute("list_graphics_chip", list_graphics_chip);
+
         graphics_chip graphics_chip = new graphics_chip();
         model.addAttribute("graphics_chip", graphics_chip);
 
@@ -1313,89 +1197,43 @@ public class AdminController {
         return map;
     }
 
-    @GetMapping("/check-username")
-    @ResponseBody
-    public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
-        boolean exists = userDao.existsById(username);
-        return ResponseEntity.ok(exists);
-    }
+    @PostMapping("create-admin")
+    public String create(Model model, @ModelAttribute("userItem") user users, @RequestParam("photo_file") MultipartFile img) throws IOException {
+        if (!img.isEmpty()) {
+            String filename = img.getOriginalFilename();
 
-    @PostMapping("/create-admin")
-    @ResponseBody
-    public ResponseEntity<Map<String, String>> createAdmin(@Validated @ModelAttribute("userItem") user user, BindingResult bindingResult, @RequestParam("photo_file") MultipartFile img, HttpServletRequest req) throws IOException {
-        Map<String, String> response = new HashMap<>();
+            // Sử dụng getServletContext().getRealPath() để lấy đường dẫn thư mục đúng
+            String uploadDir = req.getServletContext().getRealPath("/images-user/");
+            File uploadFolder = new File(uploadDir);
 
-        // Kiểm tra lỗi xác thực
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        try {
-            // Lấy dữ liệu từ service
-            String username = service.getString("USERNAME", "");
-            String phone_number = service.getString("PHONE_NUMBER", "");
-            String password = service.getString("PASSWORD", "");
-            String config_password = service.getString("config-password", "");
-            String gender = service.getString("GENDER", "");
-            String full_name = service.getString("FULLNAME", "");
-            String email = service.getString("EMAIL", "");
-            String rankID = service.getString("rank.ID", "");
-            String role = service.getString("ROLE", "");
-
-            // Gán giá trị cho đối tượng user
-            user.setUSERNAME(username);
-            user.setPHONE_NUMBER(phone_number);
-            user.setPASSWORD(password);
-            user.setGENDER(gender);
-            user.setFULLNAME(full_name);
-            user.setEMAIL(email);
-            user.setROLE(Boolean.parseBoolean(role));
-
-            // Xử lý rank nếu cần thiết
-            if (!rankID.isEmpty()) {
-                rank userRank = rankDao.findById(Integer.parseInt(rankID)).orElse(null);
-                user.setRank(userRank);
+            // Kiểm tra và tạo thư mục nếu nó không tồn tại
+            if (!uploadFolder.exists()) {
+                uploadFolder.mkdirs();
             }
 
-            // Xử lý tải lên file
-            if (!img.isEmpty()) {
-                String filename = img.getOriginalFilename();
-                String uploadDir = req.getServletContext().getRealPath("/images-user/");
-                File uploadFolder = new File(uploadDir);
-                if (!uploadFolder.exists()) {
-                    uploadFolder.mkdirs();
-                }
-                File destFile = new File(uploadFolder, filename);
-                img.transferTo(destFile);
-                user.setAVATAR(filename);
-            }
+            // Tạo file trong thư mục images
+            File destFile = new File(uploadFolder, filename);
 
-            // Thiết lập trạng thái và thời gian
-            user.setSTATUS(true);
-            user.setCREATE_AT(new Date());
-            user.setUPDATE_AT(new Date());
+            // Lưu trữ file vào thư mục đã xác định
+            img.transferTo(destFile);
 
-            // Lưu người dùng
-            userDao.save(user);
+            // Thiết lập các thuộc tính người dùng
+            users.setAVATAR(filename);
+            users.setSTATUS(true);
+            users.setCREATE_AT(new Date());
+            users.setUPDATE_AT(new Date());
 
-            response.put("status", "success");
-            return ResponseEntity.ok(response);
-
-        } catch (DataIntegrityViolationException e) {
-            // Bắt ngoại lệ vi phạm ràng buộc duy nhất
-            response.put("USERNAME", "Tên người dùng đã tồn tại!");
-            return ResponseEntity.badRequest().body(response);
+            // Lưu người dùng vào cơ sở dữ liệu
+            userDao.save(users);
         }
+        return "redirect:/admin/user";
     }
-
 
     @GetMapping("user")
     public String getQLNguoiDung(Model model, @ModelAttribute("userItem") user user) {
         model.addAttribute("userItem", user);
         String page = "qlnguoidung.jsp";
         model.addAttribute("page", page);
-        user s = sessionService.get("list");
         return "/Admin/production/homeadmin";
     }
 
