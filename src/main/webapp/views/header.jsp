@@ -49,43 +49,27 @@
 										hàng</span>
 									<div class="qty">3</div>
 								</a>
-
 								<div class="cart-dropdown">
-									<div class="cart-list">
-										<div class="product-widget">
-											<div class="product-img">
-												<img src="/img/product01.png" alt>
+									<c:forEach var="cartItem" items="${cartItems}">
+										<div class="cart-list">
+											<div class="product-widget">
+												<div class="product-img">
+													<img src="/images/${cartItem.variant.phone.IMAGE}" alt>
+												</div>
+												<div class="product-body">
+													<h3 class="product-name">
+														<a href="#">${cartItem.variant.phone.NAME}</a>
+													</h3>
+													<h4 class="product-price">
+														<span class="qty">${cartItem.QUANTITY}x</span>${cartItem.variant.PRICE}
+													</h4>
+												</div>
+												<button class="delete">
+													<i class="fa fa-close"></i>
+												</button>
 											</div>
-											<div class="product-body">
-												<h3 class="product-name">
-													<a href="#">tên sản phẩm ở đây</a>
-												</h3>
-												<h4 class="product-price">
-													<span class="qty">1x</span>$980.00
-												</h4>
-											</div>
-											<button class="delete">
-												<i class="fa fa-close"></i>
-											</button>
 										</div>
-
-										<div class="product-widget">
-											<div class="product-img">
-												<img src="/img/product02.png" alt>
-											</div>
-											<div class="product-body">
-												<h3 class="product-name">
-													<a href="#">tên sản phẩm ở đây</a>
-												</h3>
-												<h4 class="product-price">
-													<span class="qty">3x</span>$980.00
-												</h4>
-											</div>
-											<button class="delete">
-												<i class="fa fa-close"></i>
-											</button>
-										</div>
-									</div>
+									</c:forEach>
 									<div class="cart-summary">
 										<small>3 sản phẩm được chọn</small>
 										<h5>TỔNG CỘNG: $2940.00</h5>
