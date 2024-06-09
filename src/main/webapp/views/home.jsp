@@ -1,16 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!-- SECTION -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <div class="section">
-	<!-- container -->
+
 	<div class="container"
 		style="display: flex; justify-content: space-between;">
-		<!-- row -->
 		<div class="row">
-			<!-- shop -->
 			<div class="col-md-4">
-				<a href="store.html?brand=iphone">
+				<a href="/shop/store?brand=apple">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop01.png" alt>
@@ -19,17 +18,15 @@
 							<h3>
 								IPhone<br>Collection
 							</h3>
-							<a href="#" class="cta-btn">Shop now <i
+							<a href="/shop/store?brand=apple" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
 				</a>
 			</div>
-			<!-- /shop -->
 
-			<!-- shop -->
 			<div class="col-md-4">
-				<a href="store.html">
+				<a href="/shop/store?brand=samsung">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop02.png" alt>
@@ -38,16 +35,16 @@
 							<h3>
 								SamSung<br>Collection
 							</h3>
-							<a href="#" class="cta-btn">Shop now <i
-								class="fa fa-arrow-circle-right"></i></a>
+							<a href="/shop/store?brand=samsung" class="cta-btn">Shop now
+								<i class="fa fa-arrow-circle-right"></i>
+							</a>
 						</div>
 					</div>
 				</a>
 			</div>
-			<!-- /shop -->
-			<!-- shop -->
+
 			<div class="col-md-4">
-				<a href="store.html">
+				<a href="/shop/store?brand=nokia">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop03.png" alt>
@@ -56,36 +53,25 @@
 							<h3>
 								Realme<br>Collection
 							</h3>
-							<a href="#" class="cta-btn">Shop now <i
+							<a href="/shop/store?brand=nokia" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
 				</a>
 			</div>
-			<!-- /shop -->
 		</div>
-		<!-- /row -->
 	</div>
-	<!-- /container -->
 </div>
-<!-- /SECTION -->
 
-<!-- SECTION -->
 <div class="section">
-	<!-- container -->
 	<div class="container">
-		<!-- row -->
 		<c:forEach var="item" items="${list_category}">
 			<div class="row">
-				<!-- section title -->
 				<div class="col-md-12">
 					<div class="section-title">
 						<h3 class="title">Sản Phẩm ${item.NAME}</h3>
 					</div>
 				</div>
-				<!-- /section title -->
-
-				<!-- Products tab & slick -->
 				<div class="col-md-12">
 					<div class="row">
 						<div class="products-tabs">
@@ -94,88 +80,104 @@
 								<div class="products-slick" data-nav="#slick-nav-1">
 									<!-- product -->
 									<c:forEach var="phone" items="${item.phones}">
-										<div class="product">
-											<div class="product-img">
-												<img src="/images/${phone.IMAGE}" alt>
-												<div class="product-label">
-													<span class="sale">-30%</span> <span class="new">NEW</span>
-												</div>
-											</div>
-											<div class="product-body">
-												<p class="product-category">Mới</p>
-												<h3 class="product-name">
-													<a href="#">${phone.NAME}</a>
-												</h3>
+										<c:set value="${phone.variants[0]}" var="variantFirst"></c:set>
+										<c:set value="${variantFirst}" var="variantmd"></c:set>
+										<div class="col-md-4">
+											<div class="product">
+												<a
+													href="/shop/product/${phone.ID}?id_storage=${variantmd.storage.ID}">
+													<div class="product-img">
+														<img src="/images/${phone.IMAGE}" alt=""
+															style="padding-top: 10px;">
+														<div class="product-label">
 
-												<c:set var="idphone" value="${phone.ID }"></c:set>
-												<c:set var="a"></c:set>
-												<c:set var="price" value="${Double.MAX_VALUE}"></c:set>
-												<c:set var="phantram" value="0"></c:set>
-												<c:forEach var="variant" items="${phone.variants}">
-													<c:if test="${variant.PRICE < price}">
-														<c:set var="price" value="${variant.PRICE}"></c:set>
-														<c:set var="phantram"
-															value="${variant.discount_product.DISCOUNT_PERCENTAGE}"></c:set>
-													</c:if>
-													<c:if test="${a != variant.storage.GB}">
-														<button onclick="getGia(${idphone},${variant.ID})"
-															type="button" class="btn btn-default">${variant.storage.GB}
-															GB</button>
-														<c:set var="a" value="${variant.storage.GB}"></c:set>
-													</c:if>
-												</c:forEach>
-												<h4 id="gia${phone.ID }" class="product-price">${price *(100-phantram)/100 }
-
-													<del id="gia${phone.ID }" class="product-old-price">${price }</del>
-												</h4>
-												<div class="product-rating">
-													<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-														class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-														class="fa fa-star"></i>
-												</div>
-												<div class="product-btns">
-													<button class="quick-view">
-														<a href="/shop/product"><i class="fa fa-eye"></i></a><span
-															class="tooltipp">quick view</span>
-													</button>
-													<button class="quick-view">
-														<i class="fa fa-shopping-cart"></i><span class="tooltipp">Thêm
-															vào giỏ hàng</span>
-													</button>
-												</div>
-											</div>
-											<div class="add-to-cart">
-												<a href="/shop/checkout">
-													<button class="add-to-cart-btn">
-														<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
-														Mua ngay
-													</button>
+															<span id="sale${phone.ID}" class="sale"> <fmt:formatNumber>
+										${variantmd.discount_product.DISCOUNT_PERCENTAGE } </fmt:formatNumber> %
+															</span> <span class="new">${phone.category.NAME}</span>
+														</div>
+													</div>
 												</a>
+												<div class="product-body">
+													<p class="product-category">${phone.category.NAME}</p>
+													<h3 class="product-name">
+														<a href="/shop/product/${phone.ID}/?id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
+													</h3>
+													<c:set var="idphone" value="${phone.ID}"></c:set>
+													<c:set var="a"></c:set>
+													<c:set var="phantram" value="0"></c:set>
+													<c:forEach var="variant" items="${phone.variants}">
+														<c:if test="${a != variant.storage.GB}">
+															<button onclick="getGia(${idphone},${variant.ID})"
+																type="button" class="btn">
+																<c:if
+																	test="${2048>=variant.storage.GB&&variant.storage.GB>=1024}">
+																	1 TB
+																</c:if>
+																<c:if test="${1024>variant.storage.GB}">
+																	${variant.storage.GB} GB
+																</c:if>
+															</button>
+															<c:set var="a" value="${variant.storage.GB}"></c:set>
+														</c:if>
+													</c:forEach>
+													<div class=""
+														style="display: flex; justify-content: center;">
+														<h4 id="gia${phone.ID}" class="product-price"
+															style="margin-right: 5px;">
+															<fmt:formatNumber pattern="###,###.###">
+											${variantmd.PRICE*(100-variantmd.discount_product.DISCOUNT_PERCENTAGE)/100}
+										</fmt:formatNumber>
+														</h4>
+														<span class=""> <del id="giagoc${phone.ID}"
+																class="product-old-price">
+																<fmt:formatNumber pattern="###,###.###">
+												${variantmd.PRICE}
+											</fmt:formatNumber>
+															</del>
+														</span>
+													</div>
+													<div class="product-rating">
+														<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+															class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+															class="fa fa-star"></i>
+													</div>
+													<div class="product-btns">
+														<button class="quick-view">
+															<a
+																href="/shop/product/${phone.ID}?id_storage=${variantmd.storage.ID}"><i
+																class="fa fa-eye"></i></a> <span class="tooltipp">quick
+																view</span>
+														</button>
+														<button class="quick-view">
+															<i class="fa fa-shopping-cart"></i> <span
+																class="tooltipp">Thêm vào giỏ hàng</span>
+														</button>
+													</div>
+												</div>
+												<div class="add-to-cart">
+													<a href="/shop/checkout">
+														<button class="add-to-cart-btn">
+															<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
+															Mua ngay
+														</button>
+													</a>
+												</div>
 											</div>
 										</div>
 
 									</c:forEach>
 								</div>
-<!-- 								<div id="slick-nav-1" class="products-slick-nav"></div> -->
 							</div>
-							<!-- /tab -->
 						</div>
 					</div>
 				</div>
-				<!-- Products tab & slick -->
 			</div>
-			<!-- /row -->
 		</c:forEach>
 	</div>
-	<!-- /container -->
 </div>
-<!-- /SECTION -->
 
-<!-- HOT DEAL SECTION -->
 <div id="hot-deal" class="section">
-	<!-- container -->
 	<div class="container">
-		<!-- row -->
 		<div class="row">
 			<div class="col-md-12">
 				<div class="hot-deal">
@@ -211,15 +213,10 @@
 				</div>
 			</div>
 		</div>
-		<!-- /row -->
 	</div>
-	<!-- /container -->
 </div>
 
-<!-- SECTION -->
-<!-- Sản Phẩm Bán Chạy Theo Hãng -->
 <div class="section">
-	<!-- container -->
 	<div class="container">
 		<div class="row">
 			<c:forEach begin="0" end="2" var="item" items="${list_category}">
@@ -232,7 +229,6 @@
 						<c:forEach begin="0" end="2" var="phone" items="${item.phones}">
 							<c:if test="true">
 								<div>
-									<!-- product widget -->
 									<div class="product-widget">
 										<div class="product-img">
 											<img src="/images/${phone.IMAGE}" alt="">
@@ -256,27 +252,35 @@
 					</div>
 				</div>
 			</c:forEach>
-			<div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
 		</div>
 	</div>
 </div>
 </div>
-<!-- /SECTION -->
+
 <script>
-	function getGia(idPhone,idVariant) {
-		$.ajax({
-			type : "GET",
-			url : "/shop/ajax/getGia/" + idVariant,
-			success : function(Double) {
-				// Đổ dữ liệu vào form:form
-				$("#gia"+idPhone).text(Double);
-			},
-			error : function(xhr, status, error) {
-				console.log("Error: " + error);
-			}
-		});
-	}
+function formatPrice(price) {
+    return price.toLocaleString("en-US");
+}
+
+function getGia(idPhone, idVariant) {
+    $.ajax({
+        type: "GET",
+        url: "/shop/ajax/getGia/" + idVariant,
+        success: function(response) {
+            console.log(response);
+            // Giả sử 'response' là một đối tượng JSON chứa thuộc tính 'price' và 'discountPercentage'
+            var giaChuaGiam = response[0];
+            var giaGiam = giaChuaGiam * (100 - response[1]) / 100;
+
+            $("#gia" + idPhone).text(formatPrice(giaGiam));
+            $("#giagoc" + idPhone).text(formatPrice(giaChuaGiam));
+            $("#sale" + idPhone).text(response[1] + " %");
+        },
+        error: function(xhr, status, error) {
+            console.log("Error: " + error);
+        }
+    });
+}
+
 </script>
+
