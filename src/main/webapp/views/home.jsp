@@ -85,7 +85,7 @@
 										<div class="col-md-4">
 											<div class="product">
 												<a
-													href="/shop/product/${phone.ID}?id_storage=${variantmd.storage.ID}">
+													href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
 													<div class="product-img">
 														<img src="/images/${phone.IMAGE}" alt=""
 															style="padding-top: 10px;">
@@ -100,7 +100,7 @@
 												<div class="product-body">
 													<p class="product-category">${phone.category.NAME}</p>
 													<h3 class="product-name">
-														<a href="/shop/product/${phone.ID}/?id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
+														<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
 													</h3>
 													<c:set var="idphone" value="${phone.ID}"></c:set>
 													<c:set var="a"></c:set>
@@ -144,7 +144,7 @@
 													<div class="product-btns">
 														<button class="quick-view">
 															<a
-																href="/shop/product/${phone.ID}?id_storage=${variantmd.storage.ID}"><i
+																href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
 																class="fa fa-eye"></i></a> <span class="tooltipp">quick
 																view</span>
 														</button>

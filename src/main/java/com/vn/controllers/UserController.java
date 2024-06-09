@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.antlr.v4.runtime.misc.Utils;
 import org.eclipse.tags.shaded.org.apache.xpath.compiler.Keywords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,12 +27,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vn.DAO.cartDao;
+import com.vn.DAO.cart_itemDao;
 import com.vn.DAO.brandDao;
 import com.vn.DAO.categoryDao;
 import com.vn.DAO.phoneDao;
 import com.vn.DAO.systemDao;
 import com.vn.DAO.userDao;
 import com.vn.DAO.variantDao;
+import com.vn.entity.cart;
+import com.vn.entity.cart_item;
 import com.vn.entity.brand;
 import com.vn.entity.category;
 import com.vn.entity.phone;
@@ -39,6 +44,8 @@ import com.vn.entity.system;
 import com.vn.entity.user;
 import com.vn.entity.variant;
 import com.vn.serviceimpl.MailerServiceImpl;
+import com.vn.utils.CookieService;
+import com.vn.utils.ParamService;
 import com.vn.utils.SessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,12 +61,20 @@ public class UserController {
 
 	@Autowired
 	SessionService sessionService;
+
 	@Autowired
 	userDao userDao;
+
 	@Autowired
 	systemDao systemDao;
 	@Autowired
 	categoryDao categoryDao;
+	@Autowired
+	cartDao cartdao;
+
+	@Autowired
+	cart_itemDao cart_itemdao;
+	
 	@Autowired
 	brandDao brandDao;
 
@@ -137,10 +152,34 @@ public class UserController {
 		return "redirect:/shop/login";
 	}
 
+//	private void loadCart(Model model) {
+//	    user currentUser = (user) sessionService.get("currentUser");
+//	    if (currentUser != null) {
+//	        cart userCart = (cart) cartdao.findByUser(currentUser);
+//	        if (userCart != null) {
+//	            List<cart_item> cartItems = cart_itemdao.findByCart(userCart);
+//	            model.addAttribute("cartItems", cartItems);
+//
+//	            int totalItems = 0;
+//	            double totalPrice = 0.0;
+//	            for (cart_item cartItem : cartItems) {
+//	                totalItems += cartItem.getQUANTITY();
+//	                totalPrice += cartItem.getQUANTITY() * cartItem.getVariant().getPRICE();
+//	            }
+//
+//	            model.addAttribute("totalItems", totalItems);
+//	            model.addAttribute("totalPrice", totalPrice);
+//	        }
+//	    }
+//	}
+
 	@RequestMapping("")
 	public String getHome(Model model) {
+		Optional<user> users = userDao.findById("user1");
+		List<cart_item> cartItems = (List<cart_item>) users.get().getCarts().getFirst().getCart_items();
 		String page = "home.jsp";
 		model.addAttribute("page", page);
+		model.addAttribute("cartItems", cartItems);
 		return "index";
 	}
 
@@ -224,12 +263,7 @@ public class UserController {
 		return "/views/forgotpass3";
 	}
 
-	@RequestMapping("profile")
-	public String getProfile(Model model) {
-		String page = "profile.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+
 
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {
@@ -259,16 +293,22 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("product/{id}")
-	public String getProduct(Model model, @PathVariable("id") Integer id) {
+	@RequestMapping("product/{idphone}")
+	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv, @RequestParam("id_storage") Integer idGB) {
 		phone finByIdPhone = phonedao.findById(id).get();
+		List<variant> finAllColor = variantdao.variantByGBId(id, idGB);
+		List<phone> listPhone = phonedao.findAllBybrandIDEqual(finByIdPhone.getBrand().getID());
+		variant variant = variantdao.findById(idv).get();
 		model.addAttribute("finByIdPhone", finByIdPhone);
+		model.addAttribute("variant2", variant);
+		model.addAttribute("finAllColor", finAllColor);
+		model.addAttribute("listPhone", listPhone);
 		String page = "product.jsp";
 		model.addAttribute("page", page);
 		return "index";
 	}
 
-	//
+
 	@GetMapping("ajax/getGia/{id}")
 	@ResponseBody
 	public Optional<List<Double>> getGia(@PathVariable("id") Integer id) {
@@ -278,10 +318,32 @@ public class UserController {
 		Date now = new Date();
 		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
 			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
-		} else {
-			listDouble.add(1, 0.0);
+		}else {
+			listDouble.add(0.0);
+		}
+	    return Optional.of(listDouble);
+	}
+	
+	@GetMapping("ajax/getGiaRelated/{id}")
+	@ResponseBody
+	public Optional<List<Double>> getGiaRelated(@PathVariable("id") Integer id) {
+		Optional<variant> variant = variantdao.findById(id);
+		List<Double> listDouble = new ArrayList<Double>();
+		listDouble.add(variant.get().getPRICE());
+		Date now = new Date();
+		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
+			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
+		}else {
+			listDouble.add(0.0);
 		}
 		return Optional.of(listDouble);
+	}
+
+	@RequestMapping("cart")
+	public String getShopCart(Model model) {
+		String page = "cart.jsp";
+		model.addAttribute("page", page);
+		return "index";
 	}
 
 }
