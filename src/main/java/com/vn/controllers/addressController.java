@@ -84,7 +84,11 @@ public class addressController {
 	    }
 	    
 	}
-	
+	@GetMapping("newAddress")
+	public String newAddress(Model model,address item) {
+		
+		return "redirect:/shop/address";
+	}
 	@RequestMapping("/delete/{id}")
 	public String deleteAddress(Model model,address item ,@PathVariable("id") Integer id) {
 		addressDao.deleteById(id);
@@ -113,15 +117,21 @@ public class addressController {
 	
 	@RequestMapping("/edit/{id}")
 	public String editRequest(@PathVariable("id") Integer id,address item,Model model) {
-		
+		System.out.println(id);
 		address list=addressDao.findById(id).get();
         model.addAttribute("item", list);
-		 String sub =  list.getADDRESS().substring(0,  list.getADDRESS().indexOf(',')).trim();
-	      
+        System.out.println(list.getADDRESS());
+        //tên đường
+        String sub =  list.getADDRESS().substring(0,  list.getADDRESS().indexOf(',')).trim();
+   
 	        model.addAttribute("sub", sub);
+	        
 	        String page = "address.jsp";
 			model.addAttribute("page", page);
-			
+			  String address = "trần hưng đạo nối dài, Phường Lê Bình, Quận Cái Răng, Thành phố Cần Thơ";
+
+		      
+		       
 			return "index";
 	}
 	@ModelAttribute("listAddress")

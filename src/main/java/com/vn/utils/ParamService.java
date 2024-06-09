@@ -54,15 +54,16 @@ public class ParamService {
 		}
 	}
 
-	public File save(MultipartFile file, String path) {
+	public String save(MultipartFile file, String path) {
 		File dir = new File(request.getServletContext().getRealPath(path));
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
 		try {
+			String fileName=file.getOriginalFilename();
 			File saveFile = new File(dir, file.getOriginalFilename());
 			file.transferTo(saveFile);
-			return saveFile;
+			return fileName;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
