@@ -52,8 +52,6 @@
                         <button class="btn btn-lg btn-primary w-100 fs-6" >Đăng nhập</button>
                     </div>
                     <div class="input-group mb-3">
-                        <button class="btn btn-lg btn-light w-100 fs-6"><img src="/img/google.png" style="width:20px"
-                                class="me-2"><small>Đăng nhập với Google</small></button>
                     </div>
                     <div class="row">
                     

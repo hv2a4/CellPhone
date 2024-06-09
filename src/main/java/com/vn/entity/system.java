@@ -20,7 +20,7 @@ import lombok.Data;
 public class system implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
+	Integer ID;
 	String SYSTEM;
 
 	@OneToMany(mappedBy = "system")

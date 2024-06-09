@@ -19,7 +19,7 @@ import lombok.Data;
 public class brand implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
+	Integer ID;
  
 	String NAME;
 	
