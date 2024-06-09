@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vn.DAO.cartDao;
+import com.vn.DAO.cart_itemDao;
 import com.vn.DAO.categoryDao;
 import com.vn.DAO.phoneDao;
 import com.vn.DAO.systemDao;
 import com.vn.DAO.userDao;
 import com.vn.DAO.variantDao;
+import com.vn.entity.cart;
+import com.vn.entity.cart_item;
 import com.vn.entity.category;
 import com.vn.entity.phone;
 import com.vn.entity.user;
@@ -46,6 +50,11 @@ public class UserController {
 	systemDao systemDao;
 	@Autowired
 	categoryDao categoryDao;
+	@Autowired
+	cartDao cartdao;
+	
+	@Autowired
+	cart_itemDao cart_itemdao;
 
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
@@ -120,22 +129,44 @@ public class UserController {
 
 		return "redirect:/shop/login";
 	}
+	
+	private void loadCart(Model model) {
+	    user currentUser = (user) sessionService.get("currentUser");
+	    if (currentUser != null) {
+	        cart userCart = (cart) cartdao.findByUser(currentUser);
+	        if (userCart != null) {
+	            List<cart_item> cartItems = cart_itemdao.findByCart(userCart);
+	            model.addAttribute("cartItems", cartItems);
+
+	            int totalItems = 0;
+	            double totalPrice = 0.0;
+	            for (cart_item cartItem : cartItems) {
+	                totalItems += cartItem.getQUANTITY();
+	                totalPrice += cartItem.getQUANTITY() * cartItem.getVariant().getPRICE();
+	            }
+
+	            model.addAttribute("totalItems", totalItems);
+	            model.addAttribute("totalPrice", totalPrice);
+	        }
+	    }
+	}
 
 	@RequestMapping("")
 	public String getHome(Model model) {
+		loadCart(model);
 		String page = "home.jsp";
 		model.addAttribute("page", page);
 		return "index";
 	}
-
-    @RequestMapping("store")
-    public String getStore(Model model) {
-    	List<phone> finByAllPhone = phonedao.findAll();
+	
+	@RequestMapping("store")
+	public String getStore(Model model) {
+		List<phone> finByAllPhone = phonedao.findAll();
 		model.addAttribute("finByAllPhone", finByAllPhone);
-        String page = "store.jsp";
-        model.addAttribute("page", page);
-        return "index";
-    }
+		String page = "store.jsp";
+		model.addAttribute("page", page);
+		return "index";
+	}
 
 	@Autowired
 	phoneDao phonedao;
@@ -211,8 +242,14 @@ public class UserController {
 	@ResponseBody
 	public Optional<Double> getGia(@PathVariable("id") Integer id) {
 		Optional<variant> variant = variantdao.findById(id);
-	    return Optional.of(variant.get().getPRICE());
+		return Optional.of(variant.get().getPRICE());
 	}
-	
+
+	@RequestMapping("cart")
+	public String getShopCart(Model model) {
+		String page = "cart.jsp";
+		model.addAttribute("page", page);
+		return "index";
+	}
 
 }
