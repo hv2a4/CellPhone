@@ -9,7 +9,7 @@
 		style="display: flex; justify-content: space-between;">
 		<div class="row">
 			<div class="col-md-4">
-				<a href="/shop/store?brand=iphone">
+				<a href="/shop/store?brand=apple">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop01.png" alt>
@@ -18,7 +18,7 @@
 							<h3>
 								IPhone<br>Collection
 							</h3>
-							<a href="/shop/store?brand=iphone" class="cta-btn">Shop now <i
+							<a href="/shop/store?brand=apple" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
@@ -44,7 +44,7 @@
 			</div>
 
 			<div class="col-md-4">
-				<a href="/shop/store?brand=realme">
+				<a href="/shop/store?brand=nokia">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop03.png" alt>
@@ -53,7 +53,7 @@
 							<h3>
 								Realme<br>Collection
 							</h3>
-							<a href="/shop/store?brand=realme" class="cta-btn">Shop now <i
+							<a href="/shop/store?brand=nokia" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
@@ -84,19 +84,23 @@
 										<c:set value="${variantFirst}" var="variantmd"></c:set>
 										<div class="col-md-4">
 											<div class="product">
-												<div class="product-img">
-													<img src="/images/${phone.IMAGE}" alt="">
-													<div class="product-label">
+												<a
+													href="/shop/product/${phone.ID}?id_storage=${variantmd.storage.ID}">
+													<div class="product-img">
+														<img src="/images/${phone.IMAGE}" alt=""
+															style="padding-top: 10px;">
+														<div class="product-label">
 
-														<span id="sale${phone.ID}" class="sale"> <fmt:formatNumber>
+															<span id="sale${phone.ID}" class="sale"> <fmt:formatNumber>
 										${variantmd.discount_product.DISCOUNT_PERCENTAGE } </fmt:formatNumber> %
-														</span> <span class="new">${phone.category.NAME}</span>
+															</span> <span class="new">${phone.category.NAME}</span>
+														</div>
 													</div>
-												</div>
+												</a>
 												<div class="product-body">
-													<p class="product-category">Mới</p>
+													<p class="product-category">${phone.category.NAME}</p>
 													<h3 class="product-name">
-														<a href="#">${phone.NAME}</a>
+														<a href="/shop/product/${phone.ID}/?id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
 													</h3>
 													<c:set var="idphone" value="${phone.ID}"></c:set>
 													<c:set var="a"></c:set>
@@ -104,8 +108,15 @@
 													<c:forEach var="variant" items="${phone.variants}">
 														<c:if test="${a != variant.storage.GB}">
 															<button onclick="getGia(${idphone},${variant.ID})"
-																type="button" class="btn btn-default inline-button">${variant.storage.GB}
-																GB</button>
+																type="button" class="btn">
+																<c:if
+																	test="${2048>=variant.storage.GB&&variant.storage.GB>=1024}">
+																	1 TB
+																</c:if>
+																<c:if test="${1024>variant.storage.GB}">
+																	${variant.storage.GB} GB
+																</c:if>
+															</button>
 															<c:set var="a" value="${variant.storage.GB}"></c:set>
 														</c:if>
 													</c:forEach>
@@ -132,7 +143,8 @@
 													</div>
 													<div class="product-btns">
 														<button class="quick-view">
-															<a href="/shop/product/${phone.ID}"><i
+															<a
+																href="/shop/product/${phone.ID}?id_storage=${variantmd.storage.ID}"><i
 																class="fa fa-eye"></i></a> <span class="tooltipp">quick
 																view</span>
 														</button>
@@ -271,3 +283,4 @@ function getGia(idPhone, idVariant) {
 }
 
 </script>
+

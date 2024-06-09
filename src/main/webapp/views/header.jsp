@@ -29,9 +29,9 @@
                 <!-- THANH TÌM KIẾM -->
                 <div class="col-md-6">
                     <div class="header-search">
-                        <form>
-                            <input class="input" placeholder="Tìm kiếm ở đây">
-                            <button class="search-btn">Tìm kiếm</button>
+                        <form action="/shop/store">
+                            <input name="q" class="input" placeholder="Tìm kiếm ở đây">
+                            <button type="submit" class="search-btn">Tìm kiếm</button>
                         </form>
                     </div>
                 </div>
