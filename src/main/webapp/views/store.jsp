@@ -100,21 +100,27 @@
 						</c:if>
 						<div class="col-md-4">
 							<div class="product">
-								<div class="product-img">
-									<img src="/images/${phone.IMAGE}" alt="">
-									<div class="product-label">
+								<a
+									href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
+									<div class="product-img">
+										<img height="300px" width="100%" src="/images/${phone.IMAGE}"
+											alt="">
+										<div class="product-label">
 
-										<span id="sale${phone.ID}" class="sale"> <fmt:formatNumber>
+											<span id="sale${phone.ID}" class="sale"> <fmt:formatNumber>
 										${variantmd.discount_product.DISCOUNT_PERCENTAGE } </fmt:formatNumber> %
-										</span> <span class="new">${phone.category.NAME}</span>
+											</span> <span class="new">${phone.category.NAME}</span>
+										</div>
 									</div>
-								</div>
+								</a>
 								<div class="product-body">
 									<p class="product-category">${phone.category.NAME}</p>
-									<h3 class="product-name">
-										<a
-											href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
-									</h3>
+									<div class="ellipsis " style="text-align: center; width: 100%">
+										<h3 class="product-name">
+											<a
+												href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
+										</h3>
+									</div>
 									<c:set var="idphone" value="${phone.ID}"></c:set>
 									<c:set var="a"></c:set>
 									<c:set var="phantram" value="0"></c:set>
@@ -135,19 +141,20 @@
 									</c:forEach>
 									<div class="product-details"
 										style="display: flex; justify-content: center;">
-										<h4 id="gia${phone.ID}" class="product-price"
-											style="margin-right: 5px;">
-											<fmt:formatNumber pattern="###,###.###">
+										<div class="ellipsis">
+											<h4 id="gia${phone.ID}" class="product-price" 
+												style="margin-right: 5px;font-weight: bold;">
+												<fmt:formatNumber pattern="###,###.###">
 											${variantmd.PRICE*(100-variantmd.discount_product.DISCOUNT_PERCENTAGE)/100}
 										</fmt:formatNumber>
-										</h4>
-										<span class=""> <del id="giagoc${phone.ID}"
-												class="product-old-price">
-												<fmt:formatNumber pattern="###,###.###">
-												${variantmd.PRICE}
-											</fmt:formatNumber>
-											</del>
-										</span>
+											</h4>
+										</div>
+										<div class="ellipsis">
+											<h4 id="giagoc${phone.ID}" class=""
+												style="margin-right: 5px; text-decoration: line-through;">
+												<fmt:formatNumber pattern="###,###.###">${variantmd.PRICE}</fmt:formatNumber>
+											</h4>
+										</div>
 									</div>
 									<div class="product-rating">
 										<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i

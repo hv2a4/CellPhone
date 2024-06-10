@@ -173,15 +173,54 @@ public class UserController {
 //	        }
 //	    }
 //	}
-
 	@RequestMapping("")
 	public String getHome(Model model) {
-		Optional<user> users = userDao.findById("user1");
-		List<cart_item> cartItems = (List<cart_item>) users.get().getCarts().getFirst().getCart_items();
+		user user = getUser();
+		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+		Double totalCart = 0.0;
+		for (cart_item cart_item : cartItems) {
+			totalCart+= getGiaKhuyenMai(cart_item.getVariant())*cart_item.getQUANTITY();
+		}
 		String page = "home.jsp";
 		model.addAttribute("page", page);
+		model.addAttribute("totalCart", totalCart);
 		model.addAttribute("cartItems", cartItems);
 		return "index";
+	}
+
+	public Double getGiaKhuyenMai(variant variant) {
+		if (variant.getDiscount_product().getEXPIRY_DATE().after(new Date())) {
+			return variant.getPRICE() * (100 - variant.getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100;
+		} else {
+			return variant.getPRICE();
+		}
+	}
+
+	public user getUser() {
+		user userss = sessionService.get("list");
+		user user = userDao.getById(userss.getUSERNAME());
+		return user;
+	}
+
+	@RequestMapping("add_cart/{id}")
+	public String addCart(Model model, @PathVariable("id") Integer id) {
+		cart_item cart_item = new cart_item();
+		Optional<variant> variant = variantdao.findById(id);
+
+		List<cart_item> list_cart_item = getUser().getCarts().get(0).getCart_items();
+		for (cart_item item : list_cart_item) {
+			if (variant.get().getID() == item.getVariant().getID()) {
+				cart_item = item;
+				cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+				break;
+			} else {
+				cart_item.setCart(getUser().getCarts().get(0));
+				cart_item.setVariant(variant.get());
+				cart_item.setQUANTITY(1);
+			}
+		}
+		cart_itemdao.save(cart_item);
+		return "redirect:/shop";
 	}
 
 	@RequestMapping("store")
@@ -199,10 +238,10 @@ public class UserController {
 		Page<phone> allProductPage = phonedao.findAll(pageable);
 
 		if (!q.orElse("").isEmpty()) {
-			List<phone> listphone = phonedao.findAllByNAMELike("%"+q.get()+"%");
+			List<phone> listphone = phonedao.findAllByNAMELike("%" + q.get() + "%");
 			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
 		}
-		if (min.orElse(0.0)!=0 && 50000000 != max.orElse(50000000.0)) {
+		if (min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0)) {
 			List<phone> listphone = allProductPage.getContent().stream()
 					.filter(phone -> (phone.getVariants().get(0).getPRICE() >= min.orElse(0.0)
 							&& phone.getVariants().get(0).getPRICE() <= max.orElse(50000000.0)))
