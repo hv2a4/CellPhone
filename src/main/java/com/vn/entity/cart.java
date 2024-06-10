@@ -18,7 +18,7 @@ import lombok.Data;
 public class cart implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
+	Integer ID;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_USER")
