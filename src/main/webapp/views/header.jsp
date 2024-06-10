@@ -75,7 +75,7 @@
 										<h5>TỔNG CỘNG: $2940.00</h5>
 									</div>
 									<div class="cart-btns">
-										<a href="/shop/cart">Xem giỏ hàng</a> <a href="/shop/checkout">Thanh
+										<a href="/cartItem/item">Xem giỏ hàng</a> <a href="/shop/checkout">Thanh
 											toán <i class="fa fa-arrow-circle-right"></i>
 										</a>
 									</div>
