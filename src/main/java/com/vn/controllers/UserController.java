@@ -339,11 +339,11 @@ public class UserController {
 		return Optional.of(listDouble);
 	}
 
-	@RequestMapping("cart")
-	public String getShopCart(Model model) {
-		String page = "cart.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+//	@RequestMapping("cart")
+//	public String getShopCart(Model model) {
+//		String page = "cart.jsp";
+//		model.addAttribute("page", page);
+//		return "index";
+//	}
 
 }

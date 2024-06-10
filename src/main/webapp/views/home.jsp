@@ -100,7 +100,8 @@
 												<div class="product-body">
 													<p class="product-category">${phone.category.NAME}</p>
 													<h3 class="product-name">
-														<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
+														<a
+															href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
 													</h3>
 													<c:set var="idphone" value="${phone.ID}"></c:set>
 													<c:set var="a"></c:set>
@@ -149,8 +150,9 @@
 																view</span>
 														</button>
 														<button class="quick-view">
-															<i class="fa fa-shopping-cart"></i> <span
-																class="tooltipp">Thêm vào giỏ hàng</span>
+															<a href="/cartItem/create"><i
+																class="fa fa-shopping-cart"></i></a> <span class="tooltipp">Thêm
+																vào giỏ hàng</span>
 														</button>
 													</div>
 												</div>
