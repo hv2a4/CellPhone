@@ -3,6 +3,8 @@ package com.vn.DAO;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,7 +21,7 @@ public interface phoneDao extends JpaRepository<phone, Integer> {
     
     List<phone> findAllByNAMELike(String keywords);
     
-    List<phone> findBybrandNAMEIn(List<String> brandNames);
+    Page<phone> findBybrandNAMEIn(List<String> brandNames,Pageable pageable);
     
     List<phone> findBysystemSYSTEMIn(List<String> systemNames);
     

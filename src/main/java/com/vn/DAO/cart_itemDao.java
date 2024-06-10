@@ -13,5 +13,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface cart_itemDao extends JpaRepository<cart_item, Integer> {
 	List<cart_item> findByCart(cart cart);
-	
 }

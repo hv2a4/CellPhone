@@ -57,7 +57,9 @@
 						</c:forEach>
 					</tbody>
 				</table>
-				<span class="totalPrice pull-right">Tổng tiền: 43,600,000đ</span>
+				<span class="totalPrice pull-right">Tổng tiền: <c:out
+						value="${totalPrice}" />₫
+				</span>
 			</div>
 			<div class="cartLine"></div>
 			<div class="button-container">
@@ -74,6 +76,7 @@
 		</div>
 	</div>
 </div>
+
 <!-- SECTION -->
 <div class="section">
 	<!-- container -->
@@ -85,3 +88,44 @@
 	<!-- /container -->
 </div>
 <!-- /SECTION -->
+
+<script>
+	function updateTotal(input) {
+		let quantity = parseInt(input.value);
+		if (isNaN(quantity) || quantity < 1) {
+			input.value = 1;
+			quantity = 1;
+		}
+
+		let row = input.closest('tr');
+		let price = parseInt(row.querySelector('.itemPri.price').innerText
+				.replace(/₫|,/g, '').trim());
+		let total = quantity * price;
+
+		row.querySelector('.itemPrice.itemPri').innerText = new Intl.NumberFormat()
+				.format(total)
+				+ '₫';
+
+		updateCartTotal();
+	}
+
+	function updateCartTotal() {
+		let total = 0;
+		document.querySelectorAll('.itemPrice.itemPri').forEach(function(item) {
+			total += parseInt(item.innerText.replace(/₫|,/g, '').trim());
+		});
+
+		document.querySelector('.totalPrice').innerText = 'Tổng tiền: '
+				+ new Intl.NumberFormat().format(total) + '₫';
+	}
+
+	function updateQuantity(button, increment) {
+		let input = button.parentElement
+				.querySelector('input[name="quantity"]');
+		let quantity = parseInt(input.value) + increment;
+		if (quantity < 1)
+			quantity = 1;
+		input.value = quantity;
+		updateTotal(input);
+	}
+</script>
