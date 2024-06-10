@@ -19,7 +19,7 @@ public class order_item implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
 
-	double PRICE;
+	Double PRICE;
 	Integer QUANTITY;
 
 	@ManyToOne

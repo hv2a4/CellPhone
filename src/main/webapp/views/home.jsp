@@ -9,7 +9,7 @@
 		style="display: flex; justify-content: space-between;">
 		<div class="row">
 			<div class="col-md-4">
-				<a href="/shop/store?brand=apple">
+				<a href="/shop/store">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop01.png" alt>
@@ -18,7 +18,7 @@
 							<h3>
 								IPhone<br>Collection
 							</h3>
-							<a href="/shop/store?brand=apple" class="cta-btn">Shop now <i
+							<a href="/shop/store" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
@@ -26,7 +26,7 @@
 			</div>
 
 			<div class="col-md-4">
-				<a href="/shop/store?brand=samsung">
+				<a href="/shop/store">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop02.png" alt>
@@ -35,8 +35,8 @@
 							<h3>
 								SamSung<br>Collection
 							</h3>
-							<a href="/shop/store?brand=samsung" class="cta-btn">Shop now
-								<i class="fa fa-arrow-circle-right"></i>
+							<a href="/shop/store" class="cta-btn">Shop now <i
+								class="fa fa-arrow-circle-right"></i>
 							</a>
 						</div>
 					</div>
@@ -44,7 +44,7 @@
 			</div>
 
 			<div class="col-md-4">
-				<a href="/shop/store?brand=nokia">
+				<a href="/shop/store">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop03.png" alt>
@@ -53,7 +53,7 @@
 							<h3>
 								Realme<br>Collection
 							</h3>
-							<a href="/shop/store?brand=nokia" class="cta-btn">Shop now <i
+							<a href="/shop/store" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
@@ -87,7 +87,8 @@
 												<a
 													href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
 													<div class="product-img">
-														<img src="/images/${phone.IMAGE}" alt=""
+														<img height="300px" width="100%"
+															src="/images/${phone.IMAGE}" alt=""
 															style="padding-top: 10px;">
 														<div class="product-label">
 
@@ -98,7 +99,9 @@
 													</div>
 												</a>
 												<div class="product-body">
-													<p class="product-category">${phone.category.NAME}</p>
+													<p class="product-category">
+														<b style="font-weight: bold;">${phone.category.NAME}</b>
+													</p>
 													<h3 class="product-name">
 														<a
 															href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
@@ -121,21 +124,22 @@
 															<c:set var="a" value="${variant.storage.GB}"></c:set>
 														</c:if>
 													</c:forEach>
-													<div class=""
+													<div class="product-details"
 														style="display: flex; justify-content: center;">
-														<h4 id="gia${phone.ID}" class="product-price"
-															style="margin-right: 5px;">
-															<fmt:formatNumber pattern="###,###.###">
+														<div class="ellipsis">
+															<h4 id="gia${phone.ID}" class="product-price"
+																style="margin-right: 5px; font-weight: bold;">
+																<fmt:formatNumber pattern="###,###.###">
 											${variantmd.PRICE*(100-variantmd.discount_product.DISCOUNT_PERCENTAGE)/100}
 										</fmt:formatNumber>
-														</h4>
-														<span class=""> <del id="giagoc${phone.ID}"
-																class="product-old-price">
-																<fmt:formatNumber pattern="###,###.###">
-												${variantmd.PRICE}
-											</fmt:formatNumber>
-															</del>
-														</span>
+															</h4>
+														</div>
+														<div class="ellipsis">
+															<h4 id="giagoc${phone.ID}" class=""
+																style="margin-right: 5px; text-decoration: line-through;">
+																<fmt:formatNumber pattern="###,###.###">${variantmd.PRICE}</fmt:formatNumber>
+															</h4>
+														</div>
 													</div>
 													<div class="product-rating">
 														<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
@@ -144,20 +148,21 @@
 													</div>
 													<div class="product-btns">
 														<button class="quick-view">
-															<a
+															<a class="" style="color: black;"
 																href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
 																class="fa fa-eye"></i></a> <span class="tooltipp">quick
 																view</span>
 														</button>
-														<button class="quick-view">
-															<a href="/cartItem/create"><i
-																class="fa fa-shopping-cart"></i></a> <span class="tooltipp">Thêm
+														<button class="quick-view"
+															onclick="addCart(${variantmd.ID})">
+															<i class="fa fa-shopping-cart"></i><span class="tooltipp">Thêm
 																vào giỏ hàng</span>
 														</button>
 													</div>
 												</div>
 												<div class="add-to-cart">
-													<a href="/shop/checkout">
+													<a
+														href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
 														<button class="add-to-cart-btn">
 															<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
 															Mua ngay
@@ -283,6 +288,35 @@ function getGia(idPhone, idVariant) {
         }
     });
 }
+
+function addCart(id) {
+	  $.ajax({
+	    type: "GET",
+	    url: "/shop/cart/add/" + id,
+	    success: function() {
+	    	const Toast = Swal.mixin({
+	    		  toast: true,
+	    		  position: "top-end",
+	    		  showConfirmButton: false,
+	    		  timer: 1000,
+	    		  timerProgressBar: true,
+	    		  didOpen: (toast) => {
+	    		    toast.onmouseenter = Swal.stopTimer;
+	    		    toast.onmouseleave = Swal.resumeTimer;
+	    		  }
+	    		});
+	    		Toast.fire({
+	    		  icon: "success",
+	    		  title: "Đã thêm vào giỏ hàng"
+	    		}).then(function(){
+	    			location.reload();
+	    		});
+	    },
+	    error: function(xhr, status, error) {
+	      console.log("Error: " + error);
+	    }
+	  });
+	}
 
 </script>
 

@@ -37,7 +37,7 @@ public class profileController {
 	ParamService paramService;
 	@RequestMapping("profile")
 	public String getProfile(Model model,user item) {
-		 model.addAttribute("item", item);
+		model.addAttribute("item", item);
 		
 		String page = "profile.jsp";
 		model.addAttribute("page", page);
@@ -47,22 +47,23 @@ public class profileController {
 	@PostMapping("profile")
 	public String postProfile(@Validated @ModelAttribute("item") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
 		 if (bindingResult.hasErrors()) {
-		      
+		  System.out.println("hello");
 		        model.addAttribute("page", "profile.jsp");
 		        return "index";
 		    }
 		String photo=paramService.save(file,"/images/");
+		paramService.save(file, "/images/");
 		Optional<user> userS=userDao.findById(item.getUSERNAME());
-		if(userS.isPresent()) {
+
 			userS.get().setAVATAR(photo);
 			userS.get().setFULLNAME(item.getFULLNAME());
 			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
 			userS.get().setGENDER(item.getGENDER());
 			userS.get().setEMAIL(item.getEMAIL());
-			
+
 			userDao.save(userS.get());
 		    sessionService.set("list", userS.get());
-		}
+
 		 return "redirect:/shop/profile";
 	}
 	
