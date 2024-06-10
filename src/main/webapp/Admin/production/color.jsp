@@ -57,15 +57,15 @@
 									cellspacing="0" width="100%">
 									<thead>
 										<tr>
-											<th>Mã màu</th>
+											<th>Số thứ tự</th>
 											<th>Tên màu</th>
 											<th class="text-center">Hoạt động</th>
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="item" items="${list_color}">
+										<c:forEach var="item" items="${list_color}" varStatus="stt">
 											<tr>
-												<td>${item.ID }</td>
+												<td>${stt.index +1 }</td>
 												<td>${item.NAME }</td>
 												<td class="text-center">
 												<i onclick="getColorById(${item.ID })" class="fa-solid fa-pen-to-square fs-4 mr-3"> </i> 

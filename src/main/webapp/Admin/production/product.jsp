@@ -42,7 +42,7 @@
                                             <!-- Hãng -->
                                             <div class="form-group">
                                                 <label class="control-label">Hãng</label>
-                                                <select name="brand.ID" class="form-select">
+                                                <select name="brand.ID" id="brand" class="form-select">
                                                     <option value="">Chọn hãng sản phẩm</option>
                                                     <c:forEach items="${list_brand}" var="entry">
                                                         <option value="${entry.key}">
@@ -51,11 +51,11 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="brand_error" class="text-danger"></span>
+                                                <span id="brand_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Danh mục</label>
-                                                <select name="category.ID" class="form-select">
+                                                <select name="category.ID" id="category" class="form-select">
                                                     <option value="">Chọn danh mục</option>
                                                     <c:forEach items="${list_category}" var="entry">
                                                         <option value="${entry.key}">
@@ -64,11 +64,11 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="category_error" class="text-danger"></span>
+                                                <span id="category_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Hệ điều hành</label>
-                                                <select name="system.ID" class="form-select">
+                                                <select name="system.ID" id="system" class="form-select">
                                                     <option value="">Chọn hệ điều hành</option>
                                                     <c:forEach items="${list_system}" var="entry">
                                                         <option value="${entry.key}">
@@ -77,11 +77,11 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="system_error" class="text-danger"></span>
+                                                <span id="system_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Cổng sạc</label>
-                                                <select name="charging_port.ID" class="form-select">
+                                                <select name="charging_port.ID" id="charging_port" class="form-select">
                                                     <option value="">Chọn cổng sạc</option>
                                                     <c:forEach var="entry" items="${list_charging_port}">
                                                         <option value="${entry.key}">
@@ -90,11 +90,12 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="charging_port_error" class="text-danger"></span>
+                                                <span id="charging_port_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Cổng tai nghe</label>
-                                                <select name="headphone_jack.ID" class="form-select">
+                                                <select name="headphone_jack.ID" id="headphone_jack"
+                                                        class="form-select">
                                                     <option value="">Chọn cổng tai nghe</option>
                                                     <c:forEach var="entry" items="${list_headphone_jack}">
                                                         <option value="${entry.key}">
@@ -103,11 +104,11 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="headphone_jack_error" class="text-danger"></span>
+                                                <span id="headphone_jack_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Loại pin</label>
-                                                <select name="battery_type.ID" class="form-select">
+                                                <select name="battery_type.ID" id="battery_type" class="form-select">
                                                     <option value="">Chọn loại pin</option>
                                                     <c:forEach var="entry" items="${list_battery_type}">
                                                         <option value="${entry.key}">
@@ -116,11 +117,12 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="battery_type_error" class="text-danger"></span>
+                                                <span id="battery_type_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Độ phân giải màn hình</label>
-                                                <select name="screen_resolution.ID" class="form-select">
+                                                <select name="screen_resolution.ID" id="screen_resolution"
+                                                        class="form-select">
                                                     <option value="">Chọn độ phân giải</option>
                                                     <c:forEach var="entry" items="${list_screen_resolution}">
                                                         <option value="${entry.key}">
@@ -129,13 +131,12 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="screen_resolution_error" class="text-danger"></span>
+                                                <span id="screen_resolution_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Chip đồ họa</label>
-                                                <select name="graphics_chip.ID" class="form-select">
+                                                <select name="graphics_chip.ID" id="graphics_chip" class="form-select">
                                                     <option value="">Chọn chip đồ họa
-                                                        <giải></giải>
                                                     </option>
                                                     <c:forEach var="entry" items="${list_graphics_chip}">
                                                         <option value="${entry.key}">
@@ -144,7 +145,7 @@
                                                         </option>
                                                     </c:forEach>
                                                 </select>
-                                                <span id="graphics_chip_error" class="text-danger"></span>
+                                                <span id="graphics_chip_errors" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Chip</label>
@@ -181,71 +182,71 @@
                                         <div class="col-md-4">
                                             <div class="form-group ">
                                                 <label class="control-label">Chiều rộng</label>
-                                                <input name="WIDTH" type="number" class="form-control"/>
+                                                <input name="WIDTH" type="number" step="any" class="form-control"/>
                                                 <span id="WIDTH_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Chiều dài</label>
-                                                <input name="LENGTH" type="number"
+                                                <input name="LENGTH" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="LENGTH_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Chiều cao</label>
-                                                <input name="HEIGHT" type="number"
+                                                <input name="HEIGHT" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="HEIGHT_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Kích thước màng hình</label>
-                                                <input name="SCREEN_SIZE" type="number"
+                                                <input name="SCREEN_SIZE" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="SCREEN_SIZE_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Trọng lượng</label>
-                                                <input name="WEIGHT" type="number"
+                                                <input name="WEIGHT" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="WEIGHT_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Dung lượng</label>
-                                                <input name="BATTERY_CAPACITY" type="number"
+                                                <input name="BATTERY_CAPACITY" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="BATTERY_CAPACITY_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Ram</label>
-                                                <input name="RAM" type="number" class="form-control"/>
+                                                <input name="RAM" type="number" step="any" class="form-control"/>
                                                 <span id="RAM_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Tần số làm mới</label>
-                                                <input name="REFRESH_RATE" type="number"
+                                                <input name="REFRESH_RATE" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="REFRESH_RATE_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Độ sáng</label>
-                                                <input name="MAXIMUM_BRIGHTNESS" type="number"
+                                                <input name="MAXIMUM_BRIGHTNESS" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="MAXIMUM_BRIGHTNESS_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Tốc độ CPU</label>
-                                                <input name="CPU_SPEED" type="number"
+                                                <input name="CPU_SPEED" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="CPU_SPEED_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Camera trước</label>
-                                                <input name="SELFIE_CAMERA" type="number"
+                                                <input name="SELFIE_CAMERA" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="SELFIE_CAMERA_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group ">
                                                 <label class="control-label">Camera sau</label>
-                                                <input name="MAIN_CAMERA" type="number"
+                                                <input name="MAIN_CAMERA" type="number" step="any"
                                                        class="form-control"/>
                                                 <span id="MAIN_CAMERA_error" class="text-danger"></span>
                                             </div>
@@ -253,34 +254,44 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <img id="previewImg1" alt="" height="100px" width="100px"
-                                                     src=""> <label class="control-label">Ảnh 1</label> <input
-                                                    id="imageInput1" name="anh" type="file"
-                                                    class="form-control">
+                                                     src=""> <label class="control-label">Ảnh 1</label>
+                                                <input
+                                                        id="imageInput1" name="anh" type="file"
+                                                        class="form-control"
+                                                        onchange="previewImage(this, 'previewImg1')">
                                                 <span id="anh_error" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
                                                 <img id="previewImg2" alt="" height="100px" width="100px"
-                                                     src=""> <label class="control-label">Ảnh 2</label> <input
-                                                    id="imageInput2" name="anh" type="file"
-                                                    class="form-control">
+                                                     src=""> <label class="control-label">Ảnh2</label>
+                                                <input
+                                                        id="imageInput2" name="anh" type="file"
+                                                        class="form-control"
+                                                        onchange="previewImage(this, 'previewImg2')">
                                             </div>
                                             <div class="form-group">
                                                 <img id="previewImg3" alt="" height="100px" width="100px"
-                                                     src=""> <label class="control-label">Ảnh 3</label> <input
-                                                    id="imageInput3" name="anh" type="file"
-                                                    class="form-control">
+                                                     src=""> <label class="control-label">Ảnh 3</label>
+                                                <input
+                                                        id="imageInput3" name="anh" type="file"
+                                                        class="form-control"
+                                                        onchange="previewImage(this, 'previewImg3')">
                                             </div>
                                             <div class="form-group">
                                                 <img id="previewImg4" alt="" height="100px" width="100px"
-                                                     src=""> <label class="control-label">Ảnh 4</label> <input
-                                                    id="imageInput4" name="anh" type="file"
-                                                    class="form-control">
+                                                     src=""> <label class="control-label">Ảnh 4</label>
+                                                <input
+                                                        id="imageInput4" name="anh" type="file"
+                                                        class="form-control"
+                                                        onchange="previewImage(this, 'previewImg4')">
                                             </div>
                                             <div class="form-group">
                                                 <img id="previewImg5" alt="" height="100px" width="100px"
-                                                     src=""> <label class="control-label">Ảnh 5</label> <input
-                                                    id="imageInput5" name="anh" type="file"
-                                                    class="form-control">
+                                                     src=""> <label class="control-label">Ảnh 5</label>
+                                                <input
+                                                        id="imageInput5" name="anh" type="file"
+                                                        class="form-control"
+                                                        onchange="previewImage(this, 'previewImg5')">
                                             </div>
                                         </div>
                                     </div>
@@ -306,8 +317,8 @@
                                    class="table dt-responsive nowrap" cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
-                                    <th>Mã</th>
                                     <th>Ảnh</th>
+                                    <th>Mã</th>
                                     <th>Tên</th>
                                     <th>Hãng</th>
                                     <th>Ram</th>
@@ -317,11 +328,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${list_phone}" var="item">
+                                <c:forEach items="${list_phone}" var="item" varStatus="stt">
+
                                     <tr class="center">
-                                        <td class="pt-5">${item.ID }</td>
                                         <td><img src="/images/${item.IMAGE}" height="100px"
                                                  width="100px"></td>
+                                        <td class="pt-5 cochu">PD<fmt:formatDate
+                                                value="${item.CREATE_AT}"
+                                                pattern="yyyyMMdd"/>${stt.index +1 }</td>
                                         <td class="pt-5 cochu">${item.NAME}</td>
                                         <td class="pt-5 cochu">${item.brand.NAME}</td>
                                         <td class="pt-5 cochu">${item.RAM}</td>
@@ -329,14 +343,19 @@
                                         <td class="pt-5 cochu">${item.system.SYSTEM}</td>
                                         <td class="text-center pt-5"><i
                                                 class="fa-solid fa-pen-to-square mr-3"
-                                                data-bs-toggle="modal" data-bs-target="#updatephone"></i> <i
-                                                class="fa-solid fa-trash mr-3" data-bs-toggle="modal"
-                                                data-bs-target="#delete${item.ID }"></i> <i
-                                                class="fa-solid fa-mobile-screen-button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                                aria-controls="flush-collapseOne"></i> <!-- Modal updatephone-->
-                                            <div class="modal fade" id="updatephone" tabindex="-1"
+                                                data-bs-toggle="modal" data-bs-target="#updatephone${item.ID}"></i>
+                                            <i
+                                                    class="fa-solid fa-trash mr-3" data-bs-toggle="modal"
+                                                    data-bs-target="#delete${item.ID }"></i>
+                                            <i
+                                                    class="fa-solid fa-mobile-screen-button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#bien_the${item.ID}" aria-expanded="false"
+                                                    aria-controls="flush-collapseOne">
+
+                                            </i>
+                                            <!-- Modal updatephone-->
+                                            <div class="modal fade" id="updatephone${item.ID}" tabindex="-1"
                                                  aria-labelledby="updatephoneLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl">
                                                     <div class="modal-content">
@@ -344,277 +363,407 @@
                                                             <h1 class="modal-title fs-5" id="updatephoneLabel">Cập
                                                                 nhật</h1>
                                                             <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form class="form-horizontal form-label-left">
+                                                            <form class="form-horizontal form-label-left"
+                                                                  method="POST" id="updateForms"
+                                                                  action="/admin/phone/update/${item.ID}"
+                                                                  enctype="multipart/form-data">
                                                                 <div class="row text-left">
                                                                     <div class="col-md-4">
-                                                                        <div class="form-group ">
-                                                                            <label class="control-label">Id</label>
-                                                                            <input
-                                                                                    type="text" class="form-control">
-                                                                        </div>
+                                                                        <input type="hidden" name="ID"
+                                                                               value="${item.ID}"/>
+                                                                        <input type="hidden" name="IDC"
+                                                                               value="${item.ID}"/>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Tên</label>
-                                                                            <input
-                                                                                    type="text" class="form-control">
+                                                                            <input type="text" class="form-control"
+                                                                                   name="NAME"
+                                                                                   value="${item.NAME}"/>
+                                                                            <span id="NAME_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
-                                                                        <div class="form-group ">
+                                                                        <!-- Hãng -->
+                                                                        <div class="form-group">
                                                                             <label class="control-label">Hãng</label>
-                                                                            <select
-                                                                                    name="brand" class="form-select">
-                                                                                <option value="">Chọn hãng điện thoại
+                                                                            <select name="brand.ID" id="brands"
+                                                                                    class="form-select">
+                                                                                <option value="">Chọn hãng sản phẩm
                                                                                 </option>
-                                                                                <option value="apple">Apple</option>
-                                                                                <option value="samsung">Samsung</option>
-                                                                                <option value="huawei">Huawei</option>
-                                                                                <option value="xiaomi">Xiaomi</option>
-                                                                                <option value="google">Google</option>
-                                                                                <option value="oneplus">OnePlus</option>
+                                                                                <c:forEach items="${list_brand}"
+                                                                                           var="entry">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if test="${entry.key == item.brand.ID}">selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
                                                                             </select>
+                                                                            <span id="brand_errorss"
+                                                                                  class="text-danger"></span>
                                                                         </div>
-                                                                        <div class="form-group ">
+
+                                                                        <div class="form-group">
+                                                                            <label class="control-label">Danh
+                                                                                mục</label>
+                                                                            <select name="category.ID"
+                                                                                    id="categorys"
+                                                                                    class="form-select">
+                                                                                <option value="">Chọn danh mục
+                                                                                </option>
+                                                                                <c:forEach items="${list_category}"
+                                                                                           var="entry">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if test="${entry.key == item.category.ID}">selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                            <span id="category_errorss"
+                                                                                  class="text-danger"></span>
+                                                                        </div>
+                                                                        <div class="form-group">
                                                                             <label class="control-label">Hệ điều
-                                                                                hành</label> <select
-                                                                                name="" class="form-select">
-                                                                            <option value="">Chọn hệ điều hành</option>
-                                                                            <option value="ios">iOS</option>
-                                                                            <option value="android">Android</option>
-                                                                            <option value="windows">Windows</option>
-                                                                            <option value="blackberry">BlackBerry
-                                                                            </option>
-                                                                            <option value="kaios">KaiOS</option>
-                                                                        </select>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label class="control-label">Charging
-                                                                                port</label>
-                                                                            <select name="charging-port"
+                                                                                hành</label>
+                                                                            <select name="system.ID" id="systems"
                                                                                     class="form-select">
-                                                                                <option value="">Chọn charging port
+                                                                                <option value="">Chọn hệ điều hành
                                                                                 </option>
-                                                                                <option value="usb-c">USB-C</option>
-                                                                                <option value="lightning">Lightning
-                                                                                </option>
-                                                                                <option value="micro-usb">Micro USB
-                                                                                </option>
-                                                                                <option value="wireless">Wireless
-                                                                                </option>
-                                                                                <option value="proprietary">Cổng sạc đặc
-                                                                                    biệt
-                                                                                </option>
+                                                                                <c:forEach items="${list_system}"
+                                                                                           var="entry">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if test="${entry.key == item.system.ID}">selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
                                                                             </select>
+                                                                            <span id="system_errorss"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="control-label">Headphone
-                                                                                jack</label>
-                                                                            <select name="headphone-jack"
+                                                                            <label class="control-label">Cổng
+                                                                                sạc</label>
+                                                                            <select name="charging_port.ID"
+                                                                                    id="charging_ports"
                                                                                     class="form-select">
-                                                                                <option value="">Chọn headphone jack
+                                                                                <option value="">Chọn cổng sạc
                                                                                 </option>
-                                                                                <option value="3.5mm">3.5mm</option>
-                                                                                <option value="usb-c">USB-C</option>
-                                                                                <option value="lightning">Lightning
-                                                                                </option>
-                                                                                <option value="none">Không có</option>
+                                                                                <c:forEach var="entry"
+                                                                                           items="${list_charging_port}">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if test="${entry.key == item.charging_port.ID}">selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
                                                                             </select>
+                                                                            <span id="charging_port_errorss"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="control-label">Battery
-                                                                                type</label> <select
-                                                                                name="battery-type" class="form-select">
-                                                                            <option value="">Chọn loại pin</option>
-                                                                            <option value="lithium-ion">Lithium-ion
-                                                                            </option>
-                                                                            <option value="lithium-polymer">
-                                                                                Lithium-polymer
-                                                                            </option>
-                                                                            <option value="nickel-cadmium">
-                                                                                Nickel-cadmium
-                                                                            </option>
-                                                                            <option value="nickel-metal-hydride">
-                                                                                Nickel-metal
-                                                                                hydride
-                                                                            </option>
-                                                                            <option value="graphene">Graphene</option>
-                                                                        </select>
+                                                                            <label class="control-label">Cổng tai
+                                                                                nghe</label>
+                                                                            <select name="headphone_jack.ID"
+                                                                                    id="headphone_jacks"
+                                                                                    class="form-select">
+                                                                                <option value="">Chọn cổng tai nghe
+                                                                                </option>
+                                                                                <c:forEach var="entry"
+                                                                                           items="${list_headphone_jack}">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if test="${entry.key == item.headphone_jack.ID}">selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                            <span id="headphone_jack_errorss"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <label class="control-label">Độ phân giải
-                                                                                màn hình</label> <select
-                                                                                name="screen-resolution"
-                                                                                class="form-select">
-                                                                            <option value="">Chọn độ phân giải</option>
-                                                                            <option value="hd">HD (720p)</option>
-                                                                            <option value="full-hd">Full HD (1080p)
-                                                                            </option>
-                                                                            <option value="quad-hd">Quad HD (1440p)
-                                                                            </option>
-                                                                            <option value="ultra-hd">Ultra HD (4K)
-                                                                            </option>
-                                                                            <option value="other">Khác</option>
-                                                                        </select>
+                                                                            <label class="control-label">Loại
+                                                                                pin</label>
+                                                                            <select name="battery_type.ID"
+                                                                                    id="battery_types"
+                                                                                    class="form-select">
+                                                                                <option value="">Chọn loại pin
+                                                                                </option>
+                                                                                <c:forEach var="entry"
+                                                                                           items="${list_battery_type}">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if
+                                                                                                    test="${entry.key == item.battery_type.ID}">
+                                                                                                selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                            <span id="battery_type_errorss"
+                                                                                  class="text-danger"></span>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="control-label">Độ phân
+                                                                                giải
+                                                                                màn hình</label>
+                                                                            <select name="screen_resolution.ID"
+                                                                                    id="screen_resolutions"
+                                                                                    class="form-select">
+                                                                                <option value="">Chọn độ phân giải
+                                                                                </option>
+                                                                                <c:forEach var="entry"
+                                                                                           items="${list_screen_resolution}">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if test="${entry.key == item.screen_resolution.ID}">selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                            <span id="screen_resolution_errorss"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label class="control-label">Chip đồ
-                                                                                họa</label> <select
-                                                                                name="gpu" class="form-select">
-                                                                            <option value="">Chọn chip đồ họa</option>
-                                                                            <option value="adreno">Adreno</option>
-                                                                            <option value="mali">Mali</option>
-                                                                            <option value="power-vr">PowerVR</option>
-                                                                            <option value="apple-gpu">Apple GPU</option>
-                                                                            <option value="other">Khác</option>
-                                                                        </select>
+                                                                                họa</label>
+                                                                            <select name="graphics_chip.ID"
+                                                                                    id="graphics_chips"
+                                                                                    class="form-select">
+                                                                                <option value="">Chọn chip đồ họa
+                                                                                    giải
+                                                                                </option>
+                                                                                <c:forEach var="entry"
+                                                                                           items="${list_graphics_chip}">
+                                                                                    <option value="${entry.key}"
+                                                                                            <c:if test="${entry.key == item.graphics_chip.ID}">selected</c:if>>
+                                                                                            ${entry.value}
+                                                                                    </option>
+                                                                                </c:forEach>
+                                                                            </select>
+                                                                            <span id="graphics_chip_errorss"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Chip</label>
-                                                                            <input
-                                                                                    type="text" class="form-control">
+                                                                            <input name="PROCESSOR" type="text"
+                                                                                   class="form-control"
+                                                                                   value="${item.PROCESSOR}"/>
+                                                                            <span id="PROCESSOR_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
-                                                                            <label class="control-label">Camera
-                                                                                trước</label> <input
-                                                                                type="text" class="form-control">
+                                                                            <label class="control-label">Quay
+                                                                                video</label>
+                                                                            <input name="VIDEO_RECORDING"
+                                                                                   type="text"
+                                                                                   class="form-control"
+                                                                                   value="${item.VIDEO_RECORDING}"/>
+                                                                            <span id="VIDEO_RECORDING_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
-                                                                            <label class="control-label">Camera
-                                                                                sau</label> <input
-                                                                                type="text" class="form-control">
+                                                                            <label class="control-label">Kết
+                                                                                nối</label>
+                                                                            <input name="CONNECTION" type="text"
+                                                                                   class="form-control"
+                                                                                   value="${item.CONNECTION}"/>
+                                                                            <span id="CONNECTION_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
-                                                                        <div class="form-group">
-                                                                            <label class="control-label mb-3">Công nghệ
-                                                                                sạc</label><br> <input type="checkbox"
-                                                                                                       name="" id="">
-                                                                            Sạc nhanh <input type="checkbox" name=""
-                                                                                             id="">
-                                                                            Sạc không dây <input type="checkbox" name=""
-                                                                                                 id="">
-                                                                            Sạc USB-C <input type="checkbox" name=""
-                                                                                             id="">
-                                                                            Sạc Qi
+                                                                        <div class="form-group ">
+                                                                            <label class="control-label">Mô
+                                                                                tả</label>
+                                                                            <input name="DESCRIPTION" type="text"
+                                                                                   class="form-control"
+                                                                                   value="${item.DESCRIPTION}"/>
+                                                                            <span id="DESCRIPTION_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
+                                                                        <div class="form-group ">
+                                                                            <label class="control-label">Kích thước
+                                                                                độ
+                                                                                phân giải</label>
+                                                                            <input name="SCREEN_RESOLUTIONKT"
+                                                                                   type="text"
+                                                                                   class="form-control"
+                                                                                   value="${item.SCREEN_RESOLUTIONKT}"/>
+                                                                            <span id="SCREEN_RESOLUTIONKT_errors"
+                                                                                  class="text-danger"></span>
+                                                                        </div>
+
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Chiều
-                                                                                dài</label> <input
-                                                                                type="number" class="form-control">
+                                                                                rộng</label>
+                                                                            <input name="WIDTH" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.WIDTH}"/>
+                                                                            <span id="WIDTH_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Chiều
-                                                                                rộng</label> <input
-                                                                                type="number" class="form-control">
+                                                                                dài</label>
+                                                                            <input name="LENGTH" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.LENGTH}"/>
+                                                                            <span id="LENGTH_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Chiều
-                                                                                cao</label> <input
-                                                                                type="number" class="form-control">
+                                                                                cao</label>
+                                                                            <input name="HEIGHT" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.HEIGHT}"/>
+                                                                            <span id="HEIGHT_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Kích thước
-                                                                                màng hình</label> <input type="text"
-                                                                                                         class="form-control">
+                                                                                màng
+                                                                                hình</label>
+                                                                            <input name="SCREEN_SIZE" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.SCREEN_SIZE}"/>
+                                                                            <span id="SCREEN_SIZE_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Trọng
-                                                                                lượng</label> <input
-                                                                                type="number" class="form-control">
+                                                                                lượng</label>
+                                                                            <input name="WEIGHT" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.WEIGHT}"/>
+                                                                            <span id="WEIGHT_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
-                                                                            <label class="control-label">Dung lượng
-                                                                                pin</label>
-                                                                            <input type="number" class="form-control">
+                                                                            <label class="control-label">Dung
+                                                                                lượng</label>
+                                                                            <input name="BATTERY_CAPACITY"
+                                                                                   type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.BATTERY_CAPACITY}"/>
+                                                                            <span id="BATTERY_CAPACITY_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Ram</label>
-                                                                            <input
-                                                                                    type="number" step="0.1"
-                                                                                    class="form-control">
+                                                                            <input name="RAM" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.RAM}"/>
+                                                                            <span id="RAM_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Tần số làm
                                                                                 mới</label>
-                                                                            <input type="number" class="form-control"
-                                                                                   placeholder="120Hz">
+                                                                            <input name="REFRESH_RATE" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.REFRESH_RATE}"/>
+                                                                            <span id="REFRESH_RATE_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
-                                                                            <label class="control-label">Độ sáng</label>
-                                                                            <input
-                                                                                    type="number" class="form-control"
-                                                                                    placeholder="120Hz">
-                                                                        </div>
-                                                                        <div class="form-group ">
-                                                                            <label class="control-label">Quay
-                                                                                video</label> <input
-                                                                                type="text" class="form-control"
-                                                                                placeholder="120Hz">
+                                                                            <label class="control-label">Độ
+                                                                                sáng</label>
+                                                                            <input name="MAXIMUM_BRIGHTNESS"
+                                                                                   type="number" step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.MAXIMUM_BRIGHTNESS}"/>
+                                                                            <span id="MAXIMUM_BRIGHTNESS_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
                                                                             <label class="control-label">Tốc độ
-                                                                                CPU</label> <input
-                                                                                type="number" class="form-control"
-                                                                                placeholder="3.4Hz">
+                                                                                CPU</label>
+                                                                            <input name="CPU_SPEED" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.CPU_SPEED}"/>
+                                                                            <span id="CPU_SPEED_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
-                                                                            <label class="control-label">Kết nối</label>
-                                                                            <input
-                                                                                    type="text" class="form-control"
-                                                                                    placeholder="Wifi, 3G, 4G, 5G, Bluletooth">
+                                                                            <label class="control-label">Camera
+                                                                                trước</label>
+                                                                            <input name="SELFIE_CAMERA"
+                                                                                   type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.SELFIE_CAMERA}"/>
+                                                                            <span id="SELFIE_CAMERA_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                         <div class="form-group ">
-                                                                            <label class="control-label">Mô tả</label>
-                                                                            <input
-                                                                                    type="text" class="form-control">
+                                                                            <label class="control-label">Camera
+                                                                                sau</label>
+                                                                            <input name="MAIN_CAMERA" type="number"
+                                                                                   step="any"
+                                                                                   class="form-control"
+                                                                                   value="${item.MAIN_CAMERA}"/>
+                                                                            <span id="MAIN_CAMERA_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <div class="form-group ">
-                                                                            <label class="control-label">Ảnh 1</label>
-                                                                            <!-- <input name="IMAGE" type="hidden"> -->
-                                                                            <input name="anh1" type="file"
-                                                                                   class="form-control">
+                                                                        <input type="hidden" name="IMAGE"
+                                                                               value="${item.IMAGE}"/>
+                                                                        <div class="form-group">
+                                                                            <img id="previewImg1_${item.ID}" alt=""
+                                                                                 height="100px" width="100px"
+                                                                                 src="/images/${item.IMAGE}">
+                                                                            <label class="control-label">Ảnh
+                                                                                chính</label>
+                                                                            <input id="imageInput1_${item.ID}"
+                                                                                   name="anhUpdate"
+                                                                                   type="file"
+                                                                                   class="form-control mt-3"
+                                                                                   onchange="previewImage(this, 'previewImg1_${item.ID}')">
+                                                                            <span id="anh1_2_errors"
+                                                                                  class="text-danger"></span>
                                                                         </div>
-                                                                        <div class="form-group ">
-                                                                            <label class="control-label">Ảnh 2</label>
-                                                                            <input
-                                                                                    name="IMAGE2" type="hidden"> <input
-                                                                                name="anh2" type="file"
-                                                                                class="form-control">
-                                                                        </div>
-                                                                        <div class="form-group ">
-                                                                            <label class="control-label">Ảnh 3</label>
-                                                                            <input
-                                                                                    name="IMAGE3" type="hidden"> <input
-                                                                                name="anh3" type="file"
-                                                                                class="form-control">
-                                                                        </div>
-                                                                        <div class="form-group ">
-                                                                            <label class="control-label">Ảnh 4</label>
-                                                                            <input
-                                                                                    name="IMAGE4" type="hidden"> <input
-                                                                                name="anh4" type="file"
-                                                                                class="form-control">
-                                                                        </div>
-                                                                        <div class="form-group ">
-                                                                            <label class="control-label">Ảnh 5</label>
-                                                                            <input
-                                                                                    name="IMAGE5" type="hidden"> <input
-                                                                                name="anh5" type="file"
-                                                                                class="form-control">
-                                                                        </div>
+                                                                        <c:forEach var="image"
+                                                                                   items="${item.images}"
+                                                                                   varStatus="index" begin="1"
+                                                                                   end="5"
+                                                                                   step="1">
+                                                                            <div class="form-group">
+                                                                                <input type="hidden" name="image" value="${image.IMAGE}"/>
+                                                                                <img id="previewImg${index.index +1}_${item.ID}"
+                                                                                     alt=""
+                                                                                     height="100px" width="100px"
+                                                                                     src="/images/${image.IMAGE}">
+                                                                                <label class="control-label">Ảnh
+                                                                                        ${index.index+1}</label>
+                                                                                <input id="imageInput${index.index +1}_${item.ID}"
+                                                                                       name="anhUpdate"
+                                                                                       type="file"
+                                                                                       class="form-control mt-3"
+                                                                                       onchange="previewImage(this, 'previewImg${index.index +1}_${item.ID}')">
+                                                                            </div>
+                                                                        </c:forEach>
                                                                     </div>
 
+                                                                    <div class="modal-footer">
+                                                                        <button type="button"
+                                                                                class="btn btn-secondary"
+                                                                                data-bs-dismiss="modal">Close
+                                                                        </button>
+                                                                        <button type="submit"
+                                                                                class="btn btn-primary">
+                                                                            Update
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </form>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Close
-                                                            </button>
-                                                            <button type="button" class="btn btn-primary">Update
-                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -628,7 +777,8 @@
                                                             <h1 class="modal-title fs-5" id="deleteLabel">Xác
                                                                 nhận xóa</h1>
                                                             <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body text-left">Bạn có muốn xóa</div>
                                                         <div class="modal-footer">
@@ -643,14 +793,13 @@
                                             </div>
                                         </td>
                                     </tr>
-
                                     <tr class="" id="bienthe" tabindex="-1"
                                         aria-labelledby="bientheLabel" aria-hidden="true">
                                         <td colspan="8 row">
                                             <div class="accordion accordion-flush"
                                                  id="accordionFlushExample">
                                                 <div class="accordion-item">
-                                                    <div id="flush-collapseOne"
+                                                    <div id="bien_the${item.ID}"
                                                          class="accordion-collapse collapse"
                                                          data-bs-parent="#accordionFlushExample">
                                                         <div class="accordion-body">
@@ -670,583 +819,302 @@
                                                                     </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                    <tr>
-                                                                        <td>0001</td>
-                                                                        <td>001</td>
-                                                                        <td>Đen</td>
-                                                                        <td>256 GB</td>
-                                                                        <td>10%</td>
-                                                                        <td>100</td>
-                                                                        <td>30,000,000</td>
-                                                                        <td><i class="fa-solid fa-pen-to-square mr-3"
-                                                                               data-bs-toggle="modal"
-                                                                               data-bs-target="#updatebienthe"></i> <i
-                                                                                class="fa-solid fa-trash mr-3"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#deletebienthe"></i>
-                                                                        </td>
-                                                                        <!-- Modal updatebienthe-->
-                                                                        <div class="modal fade" id="updatebienthe"
-                                                                             tabindex="-1"
-                                                                             aria-labelledby="updatebientheLabel"
-                                                                             aria-hidden="true">
-                                                                            <div class="modal-dialog modal-lg">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h1 class="modal-title fs-5"
-                                                                                            id="updatebientheLabel">Cập
-                                                                                            nhật</h1>
-                                                                                        <button type="button"
-                                                                                                class="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"></button>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        <form class="form-horizontal form-label-left">
-                                                                                            <div class="row text-left">
 
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Mã
-                                                                                                        biến
-                                                                                                        thể</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Mã
-                                                                                                        phone</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Màu</label>
-                                                                                                    <select
-                                                                                                            name="brand"
-                                                                                                            class="form-select">
-                                                                                                        <option value="">
-                                                                                                            Chọn
-                                                                                                        </option>
-                                                                                                        <option value="apple">
-                                                                                                            Trắng
-                                                                                                        </option>
-                                                                                                        <option value="samsung">
-                                                                                                            Đen
-                                                                                                        </option>
-                                                                                                        <option value="huawei">
-                                                                                                            Xanh
-                                                                                                        </option>
-                                                                                                        <option value="xiaomi">
-                                                                                                            Đỏ
-                                                                                                        </option>
-                                                                                                        <option value="google">
-                                                                                                            Vàng
-                                                                                                        </option>
-                                                                                                        <option value="oneplus">
-                                                                                                            Tím
-                                                                                                        </option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Bộ
-                                                                                                        nhớ
-                                                                                                        trong</label>
-                                                                                                    <select name="brand"
-                                                                                                            class="form-select">
-                                                                                                        <option value="">
-                                                                                                            Chọn
-                                                                                                        </option>
-                                                                                                        <option value="apple">
-                                                                                                            32 GB
-                                                                                                        </option>
-                                                                                                        <option value="samsung">
-                                                                                                            64 GB
-                                                                                                        </option>
-                                                                                                        <option value="huawei">
-                                                                                                            128 GB
-                                                                                                        </option>
-                                                                                                        <option value="xiaomi">
-                                                                                                            256 GB
-                                                                                                        </option>
-                                                                                                        <option value="google">
-                                                                                                            512 GB
-                                                                                                        </option>
-                                                                                                        <option value="oneplus">
-                                                                                                            1 TB
-                                                                                                        </option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Phần
-                                                                                                        trăm
-                                                                                                        giảm</label>
-                                                                                                    <input type="number"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Ngày
-                                                                                                        bắt đầu</label>
-                                                                                                    <input type="date"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Ngày
-                                                                                                        kết thúc</label>
-                                                                                                    <input type="date"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Số
-                                                                                                        lương</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Giá</label>
-                                                                                                    <input
-                                                                                                            type="text"
-                                                                                                            class="form-control">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </form>
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button"
-                                                                                                class="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal">
-                                                                                            Close
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                                class="btn btn-primary">
-                                                                                            Update
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- Modal deletebienthe-->
-                                                                        <div class="modal fade" id="deletebienthe"
-                                                                             tabindex="-1"
-                                                                             aria-labelledby="deletebientheLabel"
-                                                                             aria-hidden="true">
-                                                                            <div class="modal-dialog">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h1 class="modal-title fs-5"
-                                                                                            id="deletebientheLabel">Xác
-                                                                                            nhận xóa biến
-                                                                                            thể</h1>
-                                                                                        <button type="button"
-                                                                                                class="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"></button>
-                                                                                    </div>
-                                                                                    <div class="modal-body text-left">
-                                                                                        Bạn có
-                                                                                        muốn xóa biến thể 0001
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button"
-                                                                                                class="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal">
-                                                                                            Close
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                                class="btn btn-danger">
-                                                                                            deletebienthe
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>0002</td>
-                                                                        <td>001</td>
-                                                                        <td>Đen</td>
-                                                                        <td>512 GB</td>
-                                                                        <td>10%</td>
-                                                                        <td>100</td>
-                                                                        <td>33,000,000</td>
-                                                                        <td><i class="fa-solid fa-pen-to-square mr-3"
-                                                                               data-bs-toggle="modal"
-                                                                               data-bs-target="#updatebienthe"></i> <i
-                                                                                class="fa-solid fa-trash mr-3"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#deletebienthe"></i>
-                                                                        </td>
-                                                                        <!-- Modal updatebienthe-->
-                                                                        <div class="modal fade" id="updatebienthe"
-                                                                             tabindex="-1"
-                                                                             aria-labelledby="updatebientheLabel"
-                                                                             aria-hidden="true">
-                                                                            <div class="modal-dialog modal-lg">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h1 class="modal-title fs-5"
-                                                                                            id="updatebientheLabel">Cập
-                                                                                            nhật</h1>
-                                                                                        <button type="button"
-                                                                                                class="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"></button>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        <form class="form-horizontal form-label-left">
-                                                                                            <div class="row text-left">
 
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Mã
-                                                                                                        biến
-                                                                                                        thể</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Mã
-                                                                                                        phone</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Màu</label>
-                                                                                                    <select
-                                                                                                            name="brand"
-                                                                                                            class="form-select">
-                                                                                                        <option value="">
-                                                                                                            Chọn
-                                                                                                        </option>
-                                                                                                        <option value="apple">
-                                                                                                            Trắng
-                                                                                                        </option>
-                                                                                                        <option value="samsung">
-                                                                                                            Đen
-                                                                                                        </option>
-                                                                                                        <option value="huawei">
-                                                                                                            Xanh
-                                                                                                        </option>
-                                                                                                        <option value="xiaomi">
-                                                                                                            Đỏ
-                                                                                                        </option>
-                                                                                                        <option value="google">
-                                                                                                            Vàng
-                                                                                                        </option>
-                                                                                                        <option value="oneplus">
-                                                                                                            Tím
-                                                                                                        </option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Bộ
-                                                                                                        nhớ
-                                                                                                        trong</label>
-                                                                                                    <select name="brand"
-                                                                                                            class="form-select">
-                                                                                                        <option value="">
-                                                                                                            Chọn
-                                                                                                        </option>
-                                                                                                        <option value="apple">
-                                                                                                            32 GB
-                                                                                                        </option>
-                                                                                                        <option value="samsung">
-                                                                                                            64 GB
-                                                                                                        </option>
-                                                                                                        <option value="huawei">
-                                                                                                            128 GB
-                                                                                                        </option>
-                                                                                                        <option value="xiaomi">
-                                                                                                            256 GB
-                                                                                                        </option>
-                                                                                                        <option value="google">
-                                                                                                            512 GB
-                                                                                                        </option>
-                                                                                                        <option value="oneplus">
-                                                                                                            1 TB
-                                                                                                        </option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Phần
-                                                                                                        trăm
-                                                                                                        giảm</label>
-                                                                                                    <input type="number"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Ngày
-                                                                                                        bắt đầu</label>
-                                                                                                    <input type="date"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Ngày
-                                                                                                        kết thúc</label>
-                                                                                                    <input type="date"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Số
-                                                                                                        lương</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Giá</label>
-                                                                                                    <input
-                                                                                                            type="text"
-                                                                                                            class="form-control">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </form>
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button"
-                                                                                                class="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal">
-                                                                                            Close
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                                class="btn btn-primary">
-                                                                                            Update
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- Modal deletebienthe-->
-                                                                        <div class="modal fade" id="deletebienthe"
-                                                                             tabindex="-1"
-                                                                             aria-labelledby="deletebientheLabel"
-                                                                             aria-hidden="true">
-                                                                            <div class="modal-dialog">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h1 class="modal-title fs-5"
-                                                                                            id="deletebientheLabel">Xác
-                                                                                            nhận xóa biến
-                                                                                            thể</h1>
-                                                                                        <button type="button"
-                                                                                                class="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"></button>
-                                                                                    </div>
-                                                                                    <div class="modal-body text-left">
-                                                                                        Bạn có
-                                                                                        muốn xóa biến thể 0001
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button"
-                                                                                                class="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal">
-                                                                                            Close
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                                class="btn btn-danger">
-                                                                                            deletebienthe
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>0002</td>
-                                                                        <td>001</td>
-                                                                        <td>Đen</td>
-                                                                        <td>1 TB</td>
-                                                                        <td>10%</td>
-                                                                        <td>100</td>
-                                                                        <td>35,000,000</td>
-                                                                        <td><i class="fa-solid fa-pen-to-square mr-3"
-                                                                               data-bs-toggle="modal"
-                                                                               data-bs-target="#updatebienthe"></i> <i
-                                                                                class="fa-solid fa-trash mr-3"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#deletebienthe"></i>
-                                                                        </td>
-                                                                        <!-- Modal updatebienthe-->
-                                                                        <div class="modal fade" id="updatebienthe"
-                                                                             tabindex="-1"
-                                                                             aria-labelledby="updatebientheLabel"
-                                                                             aria-hidden="true">
-                                                                            <div class="modal-dialog modal-lg">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h1 class="modal-title fs-5"
-                                                                                            id="updatebientheLabel">Cập
-                                                                                            nhật</h1>
-                                                                                        <button type="button"
-                                                                                                class="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"></button>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        <form class="form-horizontal form-label-left">
-                                                                                            <div class="row text-left">
+                                                                    <c:forEach var="variant"
+                                                                               items="${item.variants}"
+                                                                               varStatus="stt">
+                                                                        <tr>
+                                                                                <%-- Lấy ngày hiện tại và format thành chuỗi --%>
+                                                                            <jsp:useBean id="today"
+                                                                                         class="java.util.Date"
+                                                                                         scope="page"/>
+                                                                            <fmt:formatDate var="currentDate"
+                                                                                            value="${today}"
+                                                                                            pattern="yyyy-MM-dd"/>
+                                                                            <fmt:formatDate var="expiryDate"
+                                                                                            value="${variant.discount_product.EXPIRY_DATE}"
+                                                                                            pattern="yyyy-MM-dd"/>
+                                                                            <fmt:formatDate var="discount_product"
+                                                                                            value="${item.CREATE_AT}"
+                                                                                            pattern="yyyyMMdd"/>
+                                                                            <td>
+                                                                                BT${discount_product}${stt.index +1}</td>
+                                                                            <td>
+                                                                                PD${formattedCreateAt}${variant.phone.ID}</td>
+                                                                            <td>${variant.color.NAME}</td>
+                                                                            <td>
+                                                                                <c:choose>
+                                                                                    <c:when test="${variant.storage.GB == 32}">
+                                                                                        32 GB
+                                                                                    </c:when>
+                                                                                    <c:when test="${variant.storage.GB == 64}">
+                                                                                        64 GB
+                                                                                    </c:when>
+                                                                                    <c:when test="${variant.storage.GB == 128}">
+                                                                                        128 GB
+                                                                                    </c:when>
+                                                                                    <c:when test="${variant.storage.GB == 256}">
+                                                                                        256 GB
+                                                                                    </c:when>
+                                                                                    <c:when test="${variant.storage.GB == 512}">
+                                                                                        512 GB
+                                                                                    </c:when>
+                                                                                    <c:when test="${variant.storage.GB == 1024}">
+                                                                                        1024 T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>Đang cập nhật</c:otherwise>
+                                                                                </c:choose>
+                                                                            </td>
+                                                                            <td>
+                                                                                <c:choose>
+                                                                                    <c:when test="${expiryDate > currentDate}">
+                                                                                        ${variant.discount_product.DISCOUNT_PERCENTAGE} %
+                                                                                    </c:when>
+                                                                                    <c:otherwise>0 %</c:otherwise>
+                                                                                </c:choose>
+                                                                            </td>
+                                                                            <td><fmt:formatNumber pattern="###,###">
+                                                                                ${variant.QUANTITY }</fmt:formatNumber></td>
+                                                                            <td><fmt:formatNumber type="currency"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${variant.PRICE}"/></td>
+                                                                            <td>
+                                                                                <i class="fa-solid fa-pen-to-square mr-3"
+                                                                                   data-bs-toggle="modal"
+                                                                                   data-bs-target="#updatebienthe${variant.ID}"></i>
+                                                                                <i
+                                                                                        class="fa-solid fa-trash mr-3"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#deletebienthe${variant.ID}"></i>
+                                                                            </td>
+                                                                            <!-- Modal updatebienthe-->
+                                                                            <div class="modal fade"
+                                                                                 id="updatebienthe${variant.ID}"
+                                                                                 tabindex="-1"
+                                                                                 aria-labelledby="updatebientheLabel"
+                                                                                 aria-hidden="true">
+                                                                                <div class="modal-dialog modal-lg">
+                                                                                    <div class="modal-content">
+                                                                                        <div class="modal-header">
+                                                                                            <h1 class="modal-title fs-5"
+                                                                                                id="updatebientheLabel">
+                                                                                                Cập
+                                                                                                nhật</h1>
+                                                                                            <button type="button"
+                                                                                                    class="btn-close"
+                                                                                                    data-bs-dismiss="modal"
+                                                                                                    aria-label="Close"></button>
+                                                                                        </div>
+                                                                                        <div class="modal-body">
 
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Mã
-                                                                                                        biến
-                                                                                                        thể</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
+                                                                                            <form class="form-horizontal form-label-left"
+                                                                                                  action="/admin/variant/update"
+                                                                                                  method="post">
+                                                                                                <div class="row text-left">
+                                                                                                    <div class="form-group">
+                                                                                                        <input type="hidden"
+                                                                                                               name="phone.ID"
+                                                                                                               value="${item.ID}"/>
+                                                                                                        <input type="hidden"
+                                                                                                               name="ID"
+                                                                                                               value="${variant.ID}"/>
+                                                                                                        <fmt:formatDate
+                                                                                                                var="formattedCreateAt"
+                                                                                                                value="${item.CREATE_AT}"
+                                                                                                                pattern="yyyyMMdd"/>
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Mã
+                                                                                                                biến
+                                                                                                                thể</label>
+                                                                                                            <input type="text"
+                                                                                                                   class="form-control"
+                                                                                                                   disabled
+                                                                                                                   value="BT${formattedCreateAt}${variant.ID}">
+                                                                                                        </div>
+
+                                                                                                        <label class="control-label">Mã
+                                                                                                            phone</label>
+                                                                                                        <input type="text"
+                                                                                                               disabled
+                                                                                                               value="PD${formattedCreateAt}${item.ID}"
+                                                                                                               class="form-control">
+
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Màu</label>
+                                                                                                            <select name="color.ID"
+                                                                                                                    class="form-select">
+                                                                                                                <option value="">
+                                                                                                                    Chọn
+                                                                                                                    màu
+                                                                                                                </option>
+                                                                                                                <c:forEach
+                                                                                                                        items="${listColor}"
+                                                                                                                        var="color">
+                                                                                                                    <option value="${color.key}"
+                                                                                                                            <c:if test="${color.key == variant.color.ID}">selected</c:if>>
+                                                                                                                            ${color.value}
+                                                                                                                    </option>
+                                                                                                                </c:forEach>
+                                                                                                            </select>
+                                                                                                        </div>
+
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Bộ
+                                                                                                                nhớ
+                                                                                                                trong</label>
+                                                                                                            <select name="storage.ID"
+                                                                                                                    class="form-select">
+                                                                                                                <option value="">
+                                                                                                                    Chọn
+                                                                                                                    dung
+                                                                                                                    lượng
+                                                                                                                </option>
+                                                                                                                <c:forEach
+                                                                                                                        var="st"
+                                                                                                                        items="${listStorage}">
+                                                                                                                    <option value="${st.key}"
+                                                                                                                            <c:if test="${st.key == variant.storage.ID}">selected</c:if>>
+                                                                                                                            ${st.value}
+                                                                                                                        GB
+                                                                                                                    </option>
+                                                                                                                </c:forEach>
+                                                                                                            </select>
+                                                                                                        </div>
+
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Phần
+                                                                                                                trăm
+                                                                                                                giảm</label>
+                                                                                                            <select name="discount_product.ID"
+                                                                                                                    class="form-select">
+                                                                                                                <option value="">
+                                                                                                                    Chọn
+                                                                                                                    giảm
+                                                                                                                    giá
+                                                                                                                </option>
+                                                                                                                <c:forEach
+                                                                                                                        var="dp"
+                                                                                                                        items="${listDiscount}">
+                                                                                                                    <option value="${dp.key}"
+                                                                                                                            <c:if test="${dp.key == variant.discount_product.ID}">selected</c:if>>
+                                                                                                                            ${dp.value}%
+                                                                                                                    </option>
+                                                                                                                </c:forEach>
+                                                                                                            </select>
+                                                                                                        </div>
+
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Ngày
+                                                                                                                bắt
+                                                                                                                đầu</label>
+                                                                                                            <input type="date"
+                                                                                                                   name="START_DATE"
+                                                                                                                   class="form-control"
+                                                                                                                   value="${variant.discount_product.START_DATE}">
+                                                                                                        </div>
+
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Ngày
+                                                                                                                kết
+                                                                                                                thúc</label>
+                                                                                                            <input type="date"
+                                                                                                                   name="EXPIRY_DATE"
+                                                                                                                   class="form-control"
+                                                                                                                   value="${variant.discount_product.EXPIRY_DATE}">
+                                                                                                        </div>
+
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Số
+                                                                                                                lượng</label>
+                                                                                                            <input type="number"
+                                                                                                                   name="QUANTITY"
+                                                                                                                   class="form-control"
+                                                                                                                   value="${variant.QUANTITY}">
+                                                                                                        </div>
+
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="control-label">Giá</label>
+                                                                                                            <input type="number"
+                                                                                                                   step="any"
+                                                                                                                   name="PRICE"
+                                                                                                                   class="form-control"
+                                                                                                                   value="${variant.PRICE}">
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Mã
-                                                                                                        phone</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
+                                                                                                <div class="modal-footer">
+                                                                                                    <button type="button"
+                                                                                                            class="btn btn-secondary"
+                                                                                                            data-bs-dismiss="modal">
+                                                                                                        Close
+                                                                                                    </button>
+                                                                                                    <button type="submit"
+                                                                                                            class="btn btn-primary">
+                                                                                                        Update
+                                                                                                    </button>
                                                                                                 </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Màu</label>
-                                                                                                    <select
-                                                                                                            name="brand"
-                                                                                                            class="form-select">
-                                                                                                        <option value="">
-                                                                                                            Chọn
-                                                                                                        </option>
-                                                                                                        <option value="apple">
-                                                                                                            Trắng
-                                                                                                        </option>
-                                                                                                        <option value="samsung">
-                                                                                                            Đen
-                                                                                                        </option>
-                                                                                                        <option value="huawei">
-                                                                                                            Xanh
-                                                                                                        </option>
-                                                                                                        <option value="xiaomi">
-                                                                                                            Đỏ
-                                                                                                        </option>
-                                                                                                        <option value="google">
-                                                                                                            Vàng
-                                                                                                        </option>
-                                                                                                        <option value="oneplus">
-                                                                                                            Tím
-                                                                                                        </option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Bộ
-                                                                                                        nhớ
-                                                                                                        trong</label>
-                                                                                                    <select name="brand"
-                                                                                                            class="form-select">
-                                                                                                        <option value="">
-                                                                                                            Chọn
-                                                                                                        </option>
-                                                                                                        <option value="apple">
-                                                                                                            32 GB
-                                                                                                        </option>
-                                                                                                        <option value="samsung">
-                                                                                                            64 GB
-                                                                                                        </option>
-                                                                                                        <option value="huawei">
-                                                                                                            128 GB
-                                                                                                        </option>
-                                                                                                        <option value="xiaomi">
-                                                                                                            256 GB
-                                                                                                        </option>
-                                                                                                        <option value="google">
-                                                                                                            512 GB
-                                                                                                        </option>
-                                                                                                        <option value="oneplus">
-                                                                                                            1 TB
-                                                                                                        </option>
-                                                                                                    </select>
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Phần
-                                                                                                        trăm
-                                                                                                        giảm</label>
-                                                                                                    <input type="number"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Ngày
-                                                                                                        bắt đầu</label>
-                                                                                                    <input type="date"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Ngày
-                                                                                                        kết thúc</label>
-                                                                                                    <input type="date"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Số
-                                                                                                        lương</label>
-                                                                                                    <input type="text"
-                                                                                                           class="form-control">
-                                                                                                </div>
-                                                                                                <div class="form-group ">
-                                                                                                    <label class="control-label">Giá</label>
-                                                                                                    <input
-                                                                                                            type="text"
-                                                                                                            class="form-control">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </form>
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button"
-                                                                                                class="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal">
-                                                                                            Close
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                                class="btn btn-primary">
-                                                                                            Update
-                                                                                        </button>
+                                                                                            </form>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <!-- Modal deletebienthe-->
-                                                                        <div class="modal fade" id="deletebienthe"
-                                                                             tabindex="-1"
-                                                                             aria-labelledby="deletebientheLabel"
-                                                                             aria-hidden="true">
-                                                                            <div class="modal-dialog">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h1 class="modal-title fs-5"
-                                                                                            id="deletebientheLabel">Xác
-                                                                                            nhận xóa biến
-                                                                                            thể</h1>
-                                                                                        <button type="button"
-                                                                                                class="btn-close"
-                                                                                                data-bs-dismiss="modal"
-                                                                                                aria-label="Close"></button>
-                                                                                    </div>
-                                                                                    <div class="modal-body text-left">
-                                                                                        Bạn có
-                                                                                        muốn xóa biến thể 0001
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button"
-                                                                                                class="btn btn-secondary"
-                                                                                                data-bs-dismiss="modal">
-                                                                                            Close
-                                                                                        </button>
-                                                                                        <button type="button"
-                                                                                                class="btn btn-danger">
-                                                                                            deletebienthe
-                                                                                        </button>
+                                                                            <!-- Modal deletebienthe-->
+                                                                            <div class="modal fade"
+                                                                                 id="deletebienthe${variant.ID}"
+                                                                                 tabindex="-1"
+                                                                                 aria-labelledby="deletebientheLabel"
+                                                                                 aria-hidden="true">
+                                                                                <div class="modal-dialog">
+                                                                                    <div class="modal-content">
+                                                                                        <div class="modal-header">
+                                                                                            <h1 class="modal-title fs-5"
+                                                                                                id="deletebientheLabel">
+                                                                                                Xác
+                                                                                                nhận xóa biến
+                                                                                                thể</h1>
+                                                                                            <button type="button"
+                                                                                                    class="btn-close"
+                                                                                                    data-bs-dismiss="modal"
+                                                                                                    aria-label="Close"></button>
+                                                                                        </div>
+                                                                                        <div class="modal-body text-left">
+                                                                                            <fmt:formatDate
+                                                                                                    var="formattedCreateAt"
+                                                                                                    value="${item.CREATE_AT}"
+                                                                                                    pattern="yyyyMMdd"/>
+                                                                                            Bạn có
+                                                                                            muốn xóa biến thể
+                                                                                            BT${formattedCreateAt}${variant.ID}
+                                                                                        </div>
+                                                                                        <div class="modal-footer">
+                                                                                            <button type="button"
+                                                                                                    class="btn btn-secondary"
+                                                                                                    data-bs-dismiss="modal">
+                                                                                                Close
+                                                                                            </button>
+                                                                                            <a href="/admin/variant/detele/${variant.ID}"
+                                                                                               class="btn btn-danger">
+                                                                                                Delete
+                                                                                            </a>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </tr>
+                                                                        </tr>
+                                                                    </c:forEach>
                                                                     </tbody>
                                                                 </table>
                                                                 <button type="button" class="btn btn-primary"
                                                                         data-bs-toggle="modal"
-                                                                        data-bs-target="#thembienthe">Thêm
+                                                                        data-bs-target="#thembienthe${item.ID}">Thêm
                                                                     biến thể mới
                                                                 </button>
                                                                 <!-- Modal Thêm biến thể -->
-                                                                <div div class="modal fade" id="thembienthe"
-                                                                     tabindex="-1" aria-labelledby="thembientheLabel"
+                                                                <div div class="modal fade"
+                                                                     id="thembienthe${item.ID}"
+                                                                     tabindex="-1"
+                                                                     aria-labelledby="thembientheLabel"
                                                                      aria-hidden="true">
                                                                     <div class="modal-dialog modal-lg">
                                                                         <div class="modal-content">
@@ -1254,86 +1122,101 @@
                                                                                 <h1 class="modal-title fs-5"
                                                                                     id="thembientheLabel">
                                                                                     Thêm biến thể</h1>
-                                                                                <button type="button" class="btn-close"
+                                                                                <button type="button"
+                                                                                        class="btn-close"
                                                                                         data-bs-dismiss="modal"
                                                                                         aria-label="Close"></button>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <form class="form-horizontal form-label-left">
+                                                                                <form class="form-horizontal form-label-left"
+                                                                                      action="/admin/variant/create"
+                                                                                      method="post">
                                                                                     <div class="row text-left">
                                                                                         <div class="form-group ">
+                                                                                            <input type="hidden"
+                                                                                                   name="phone.ID"
+                                                                                                   value="${item.ID}"/>
                                                                                             <label class="control-label">Mã
-                                                                                                phone</label> <input
-                                                                                                type="text"
-                                                                                                class="form-control">
+                                                                                                phone</label>
+                                                                                            <fmt:formatDate
+                                                                                                    var="formattedCreateAt"
+                                                                                                    value="${item.CREATE_AT}"
+                                                                                                    pattern="yyyyMMdd"/>
+                                                                                            <input
+                                                                                                    type="text"
+                                                                                                    disabled
+                                                                                                    value="PD${formattedCreateAt}${item.ID}"
+                                                                                                    class="form-control">
                                                                                         </div>
                                                                                         <div class="form-group ">
                                                                                             <label class="control-label">Màu</label>
                                                                                             <select
-                                                                                                    name="brand"
+                                                                                                    name="color.ID"
                                                                                                     class="form-select">
-                                                                                                <option value="">Chọn
+                                                                                                <option value="">
+                                                                                                    Chọn
+                                                                                                    màu
                                                                                                 </option>
-                                                                                                <option value="apple">
-                                                                                                    Trắng
-                                                                                                </option>
-                                                                                                <option value="samsung">
-                                                                                                    Đen
-                                                                                                </option>
-                                                                                                <option value="huawei">
-                                                                                                    Xanh
-                                                                                                </option>
-                                                                                                <option value="xiaomi">
-                                                                                                    Đỏ
-                                                                                                </option>
-                                                                                                <option value="google">
-                                                                                                    Vàng
-                                                                                                </option>
-                                                                                                <option value="oneplus">
-                                                                                                    Tím
-                                                                                                </option>
+                                                                                                <c:forEach
+                                                                                                        items="${listColor}"
+                                                                                                        var="color">
+                                                                                                    <option value="${color.key}"
+                                                                                                            id="color-validate"
+                                                                                                            <c:if test="${color.key == ObjectVariant.color.ID}">selected</c:if>>
+                                                                                                            ${color.value}
+                                                                                                    </option>
+                                                                                                </c:forEach>
+
                                                                                             </select>
                                                                                         </div>
                                                                                         <div class="form-group ">
                                                                                             <label class="control-label">Bộ
                                                                                                 nhớ
-                                                                                                trong</label> <select
-                                                                                                name="brand"
-                                                                                                class="form-select">
-                                                                                            <option value="">Chọn
-                                                                                            </option>
-                                                                                            <option value="apple">32
-                                                                                                GB
-                                                                                            </option>
-                                                                                            <option value="samsung">64
-                                                                                                GB
-                                                                                            </option>
-                                                                                            <option value="huawei">128
-                                                                                                GB
-                                                                                            </option>
-                                                                                            <option value="xiaomi">256
-                                                                                                GB
-                                                                                            </option>
-                                                                                            <option value="google">512
-                                                                                                GB
-                                                                                            </option>
-                                                                                            <option value="oneplus">1
-                                                                                                TB
-                                                                                            </option>
-                                                                                        </select>
+                                                                                                trong</label>
+                                                                                            <select
+                                                                                                    name="storage.ID"
+                                                                                                    class="form-select">
+                                                                                                <option value="">
+                                                                                                    Chọn
+                                                                                                    dung lượng
+                                                                                                </option>
+                                                                                                <c:forEach var="st"
+                                                                                                           items="${listStorage}">
+                                                                                                    <option value="${st.key}"
+                                                                                                            id="color-validate"
+                                                                                                            <c:if test="${st.key == ObjectVariant.storage.ID}">selected</c:if>>
+                                                                                                            ${st.value}
+                                                                                                        GB
+                                                                                                    </option>
+                                                                                                </c:forEach>
+                                                                                            </select>
                                                                                         </div>
                                                                                         <div class="form-group ">
                                                                                             <label class="control-label">Phần
                                                                                                 trăm
-                                                                                                giảm</label> <input
-                                                                                                type="number"
-                                                                                                class="form-control">
+                                                                                                giảm</label>
+                                                                                            <select
+                                                                                                    name="discount_product.ID"
+                                                                                                    class="form-select">
+                                                                                                <option value="">
+                                                                                                    Chọn giảm giá
+                                                                                                </option>
+                                                                                                <c:forEach var="st"
+                                                                                                           items="${listDiscount}">
+                                                                                                    <option value="${st.key}"
+                                                                                                            id="color-validate"
+                                                                                                            <c:if test="${st.key == ObjectVariant.discount_product.DISCOUNT_PERCENTAGE}">selected</c:if>>
+                                                                                                            ${st.value}%
+                                                                                                    </option>
+                                                                                                </c:forEach>
+                                                                                            </select>
                                                                                         </div>
                                                                                         <div class="form-group ">
                                                                                             <label class="control-label">Ngày
                                                                                                 bắt
                                                                                                 đầu</label> <input
                                                                                                 type="date"
+                                                                                                name="START_DATE"
                                                                                                 class="form-control">
                                                                                         </div>
                                                                                         <div class="form-group ">
@@ -1341,32 +1224,37 @@
                                                                                                 kết
                                                                                                 thúc</label> <input
                                                                                                 type="date"
+                                                                                                name="EXPIRY_DATE"
                                                                                                 class="form-control">
                                                                                         </div>
                                                                                         <div class="form-group ">
                                                                                             <label class="control-label">Số
                                                                                                 lương</label> <input
-                                                                                                type="text"
+                                                                                                type="number"
+                                                                                                name="QUANTITY"
                                                                                                 class="form-control">
                                                                                         </div>
                                                                                         <div class="form-group ">
                                                                                             <label class="control-label">Giá</label>
                                                                                             <input
-                                                                                                    type="text"
+                                                                                                    type="number"
+                                                                                                    step="any"
+                                                                                                    name="PRICE"
                                                                                                     class="form-control">
                                                                                         </div>
                                                                                     </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button"
+                                                                                                class="btn btn-secondary"
+                                                                                                data-bs-dismiss="modal">
+                                                                                            Close
+                                                                                        </button>
+                                                                                        <button type="submit"
+                                                                                                class="btn btn-primary">
+                                                                                            Create
+                                                                                        </button>
+                                                                                    </div>
                                                                                 </form>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button"
-                                                                                        class="btn btn-secondary"
-                                                                                        data-bs-dismiss="modal">Close
-                                                                                </button>
-                                                                                <button type="button"
-                                                                                        class="btn btn-primary">
-                                                                                    Create
-                                                                                </button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1390,11 +1278,24 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    function previewImage(input, imgId) {
+        console.log("previewImage called for", imgId); // Log kiểm tra
+        let imgElement = document.getElementById(imgId);
+        console.log("input files:", input.files); // Kiểm tra file đầu vào
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                console.log("File loaded:", e.target.result); // Log kết quả load file
+                imgElement.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     $(document).ready(function () {
         $('#form').submit(function (event) {
             event.preventDefault(); // Ngăn chặn việc submit form mặc định
             let formData = new FormData(this);
-
             $.ajax({
                 type: 'POST',
                 url: '/admin/phone/create',
@@ -1409,13 +1310,66 @@
                 error: function (response) {
                     let errors = response.responseJSON;
                     $.each(errors, function (key, value) {
+                        if ($('#brand').val() === "") {
+                            $('#brand_errors').text("Vui lòng chọn hãng điện thoại !");
+                        } else {
+                            $('#brand_errors').text('');
+                        }
+
+                        if ($('#category').val() === "") {
+                            $('#category_errors').text('Vui lòng chọn danh mục !');
+                        } else {
+                            $('#category_errors').text('');
+                        }
+
+                        if ($('#system').val() === "") {
+                            $('#system_errors').text('Vui lòng chọn hệ điều hành !');
+                        } else {
+                            $('#system_errors').text('');
+                        }
+
+                        if ($('#charging_port').val() === "") {
+                            $('#charging_port_errors').text('Vui lòng chọn cổng sạc !');
+                        } else {
+                            $('#charging_port_errors').text('');
+                        }
+
+                        if ($('#headphone_jack').val() === "") {
+                            $('#headphone_jack_errors').text('Vui lòng chọn cổng tai nghe !');
+                        } else {
+                            $('#headphone_jack_errors').text('');
+                        }
+
+                        if ($('#battery_type').val() === "") {
+                            $('#battery_type_errors').text('Vui lòng chọn loại pin !');
+                        } else {
+                            $('#battery_type_errors').text('');
+                        }
+
+                        if ($('#screen_resolution').val() === "") {
+                            $('#screen_resolution_errors').text('Vui lòng chọn độ phân giải màn hình !');
+                        } else {
+                            $('#screen_resolution_errors').text('');
+                        }
+
+                        if ($('#graphics_chip').val() === "") {
+                            $('#graphics_chip_errors').text('Vui lòng chọn chip đồ họa !');
+                        } else {
+                            $('#graphics_chip_errors').text('');
+                        }
+
+                        if ($('#imageInput1').val() === "") {
+                            $('#anh_error').text('Vui lòng chọn ảnh !');
+                        } else {
+                            $('#anh_error').text('');
+                        }
+
                         $('#' + key + '_error').text(value); // Hiển thị lỗi trong thẻ span
                     });
                 }
             });
         });
     });
-
 </script>
 </body>
 </html>

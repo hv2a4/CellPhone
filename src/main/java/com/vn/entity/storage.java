@@ -20,8 +20,8 @@ public class storage implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
-	int GB;
+	Integer ID;
+	Integer GB;
 
 	@OneToMany(mappedBy = "storage")
 	@JsonIgnore
