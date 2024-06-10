@@ -63,14 +63,14 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="item" items="${list_graphics_chip}">
+										<c:forEach var="item" items="${list_graphics_chip}" varStatus="s">
 											<tr>
-												<td>${item.ID }</td>
-												<td>${item.NAME }</td>
+												<td>${s.index +1 }</td>
+												<td>${item.value }</td>
 												<td class="text-center"><i
-													onclick="getgraphics_chipById(${item.ID })"
+													onclick="getgraphics_chipById(${item.key })"
 													class="fa-solid fa-pen-to-square fs-4 mr-3"></i> <i
-													onclick="modelDelete(${item.ID })"
+													onclick="modelDelete(${item.key })"
 													class="fa-solid fa-trash fs-4 "></i></td>
 											</tr>
 										</c:forEach>
