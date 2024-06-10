@@ -157,7 +157,7 @@
 													</div>
 												</div>
 												<div class="add-to-cart">
-													<a href="/shop/checkout">
+													<a href="/shop/10?id_variant=18&id_storage=4">
 														<button class="add-to-cart-btn">
 															<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
 															Mua ngay

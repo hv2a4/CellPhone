@@ -11,9 +11,12 @@
 
 		<div class="row">
 			<!-- Product main img -->
-			
+
 			<div class="col-md-5 col-md-push-2">
 				<div id="product-main-img">
+					<div class="product-preview">
+						<img src="/images/${finByIdPhone.IMAGE }" alt />
+					</div>
 					<c:forEach var="images" items="${finByIdPhone.images}">
 						<div class="product-preview">
 							<img src="/images/${images.IMAGE }" alt />
@@ -44,63 +47,74 @@
 					</div>
 					<div>
 						<c:set var="price" value="${variant2.PRICE }" />
-						<c:set var="discount" value="${variant2.discount_product.DISCOUNT_PERCENTAGE }" />
+						<c:set var="discount"
+							value="${variant2.discount_product.DISCOUNT_PERCENTAGE }" />
 						<h3 id="giav${finByIdPhone.ID}" class="product-price">
-							<fmt:formatNumber pattern="###,###" value=" ${price *(100-discount)/100}"></fmt:formatNumber>
+							<fmt:formatNumber pattern="###,###"
+								value=" ${price *(100-discount)/100}"></fmt:formatNumber>
 						</h3>
-						<del id="discount${finByIdPhone.ID}" class="product-old-price" style="font-size: 18px">
-						<fmt:formatNumber pattern="###,###" value="${price}"></fmt:formatNumber></del>
+						<del id="discount${finByIdPhone.ID}" class="product-old-price"
+							style="font-size: 18px">
+							<fmt:formatNumber pattern="###,###" value="${price}"></fmt:formatNumber>
+						</del>
 					</div>
 					<p>
 						<b>Mô tả sản phẩm:</b> <br> ${finByIdPhone.DESCRIPTION}
 					</p>
+					<form id="checkoutForm" action="/shop/checkout" method="get">
+						<div class="product-options">
+							<c:set var="GB" />
+							<c:set var="idphone" value="${finByIdPhone.ID}" />
 
-					<div class="product-options">
-						<c:set var="GB" />
-						<c:set var="idphone" value="${finByIdPhone.ID}" />
-
-						<div class="row">
-							<c:forEach var="variant" items="${finByIdPhone.variants }">
-								<div class="col-md-3">
-									<c:if test="${variant.storage.ID != GB}">
-											<a href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"><button type="button" class="btn btn-default inline-button">${variant.storage.GB}
-												GB</button></a>
-										<c:set var="GB" value="${variant.storage.ID }"></c:set>
-										<c:set var="price" value="${variant.PRICE }"></c:set>
-									</c:if>
+							<div class="row">
+								<c:forEach var="variant" items="${finByIdPhone.variants }">
+									<div class="col-md-3">
+										<c:if test="${variant.storage.ID != GB}">
+											<a
+												href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"><button
+													type="button" class="btn btn-default inline-button">${variant.storage.GB}
+													GB</button></a>
+											<c:set var="GB" value="${variant.storage.ID }"></c:set>
+											<c:set var="price" value="${variant.PRICE }"></c:set>
+										</c:if>
+									</div>
+								</c:forEach>
+							</div>
+							<div class="row" style="margin-top: 10px; margin-left: 1px;">
+								<c:set var="usedColors" />
+								<div class="btn-group" data-toggle="buttons">
+									<c:forEach var="variant" items="${finAllColor}">
+										<c:if test="${variant.color.ID != usedColors}">
+											<label
+												onclick="updateBuyNowButton(${idphone}, ${variant.ID})"
+												class="btn btn-default"> <input type="radio"
+												name="color" value="${variant.color.ID}" id="option2">
+												${variant.color.NAME}
+											</label>
+											<c:set var="usedColors" value="${variant.color.ID}" />
+										</c:if>
+									</c:forEach>
 								</div>
-							</c:forEach>
-						</div>
-						<div class="row">
-							<c:set var="usedColors" />
-							<c:forEach var="variant" items="${finAllColor}">
-								<div class="col-md-3">
-										<button onclick="updateBuyNowButton(${idphone}, ${variant.ID})"
-											type="button" class="btn btn-default inline-button-color">${variant.color.NAME}</button>
-										<c:set var="usedColors" value="${variant.color.ID}" />
-								</div>
-							</c:forEach>
+							</div>
+
 						</div>
 
-					</div>
-
-					<div class="add-to-cart">
-						<div class="qty-label">
-							<div class="input-number">
-								<input type="number" id="quantityInput" value="1" min="1"/> <span class="qty-up">+</span>
-								<span class="qty-down">-</span>
+						<div class="add-to-cart">
+							<div class="qty-label">
+									<input class="updateCart" value="1" type="number"
+									name="quantity" min="1" max="${quantity }" style="width: 6em; height: 3em; text-align: center;"/>
 							</div>
 						</div>
-					</div>
-					<div class="add-to-cart">
-						<a id="buyNowButton"><button class="add-to-cart-btn">
+						<div class="add-to-cart">
+							<button class="add-to-cart-btn" type="submit">
 								<i class="fa-brands fa-bitcoin" style="font-size: 20px"></i> Mua
 								ngay
-							</button></a> <a href="/shop/cart"><button class="add-to-cart-btn">
-								<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
-							</button></a>
-
-					</div>
+							</button>
+							<a href="/shop/cart"><button class="add-to-cart-btn">
+									<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
+								</button></a>
+						</div>
+					</form>
 				</div>
 			</div>
 			<!-- /Product details -->
@@ -141,7 +155,7 @@
 													<tbody>
 														<tr>
 															<td>Màn hình</td>
-															<td>${finByIdPhone.SCREEN_SIZE}inch,IPS LCD, HD,
+															<td>${finByIdPhone.SCREEN_SIZE}inch,IPSLCD,HD,
 																${finByIdPhone.SCREEN_RESOLUTIONKT } Pixels</td>
 														</tr>
 														<tr>
@@ -154,7 +168,7 @@
 														</tr>
 														<tr>
 															<td>RAM</td>
-															<td>${finByIdPhone.RAM} GB</td>
+															<td>${finByIdPhone.RAM}GB</td>
 														</tr>
 														<tr>
 															<td>Kết nối</td>
@@ -162,7 +176,7 @@
 														</tr>
 														<tr>
 															<td>Tốc độ CPU</td>
-															<td>${finByIdPhone.CPU_SPEED } GHz</td>
+															<td>${finByIdPhone.CPU_SPEED }GHz</td>
 														</tr>
 														<tr>
 															<td>Dung lượng pin</td>
@@ -382,7 +396,7 @@
 			<c:forEach var="phone" items="${listPhone}">
 				<c:set value="${phone.variants[0]}" var="variantFirst"></c:set>
 				<c:set value="${variantFirst}" var="variantmd"></c:set>
-				<c:if test="${counter % 3 == 0}">
+				<c:if test="${counter % 4 == 0}">
 					<div class="row">
 				</c:if>
 				<div class="col-md-3">
@@ -390,10 +404,10 @@
 						<div class="product-img">
 							<img src="/images/${phone.IMAGE}" alt="">
 							<div class="product-label">
-								<span id="sale${phone.ID}" class="sale">
-									<fmt:formatNumber value="${variantmd.discount_product.DISCOUNT_PERCENTAGE}" /> %
-								</span>
-								<span class="new">${phone.category.NAME}</span>
+								<span id="sale${phone.ID}" class="sale"> <fmt:formatNumber
+										value="${variantmd.discount_product.DISCOUNT_PERCENTAGE}" />
+									%
+								</span> <span class="new">${phone.category.NAME}</span>
 							</div>
 						</div>
 						<div class="product-body">
@@ -406,8 +420,10 @@
 							<c:set var="phantram" value="0"></c:set>
 							<c:forEach var="variant" items="${phone.variants}">
 								<c:if test="${a != variant.storage.GB}">
-									<button onclick="getGiaRelated(${idphone},${variant.ID})" type="button" class="btn btn-default">
-										<c:if test="${2048 >= variant.storage.GB && variant.storage.GB >= 1024}">
+									<button onclick="getGiaRelated(${idphone},${variant.ID})"
+										type="button" class="btn btn-default">
+										<c:if
+											test="${2048 >= variant.storage.GB && variant.storage.GB >= 1024}">
 											1 TB
 										</c:if>
 										<c:if test="${1024 > variant.storage.GB}">
@@ -418,32 +434,33 @@
 								</c:if>
 							</c:forEach>
 							<div class="" style="display: flex; justify-content: center;">
-								<h4 id="gia${phone.ID}" class="product-price" style="margin-right: 5px;">
-									<fmt:formatNumber value="${variantmd.PRICE * (100 - variantmd.discount_product.DISCOUNT_PERCENTAGE) / 100}" pattern="###,###.###" />
+								<h4 id="gia${phone.ID}" class="product-price"
+									style="margin-right: 5px;">
+									<fmt:formatNumber
+										value="${variantmd.PRICE * (100 - variantmd.discount_product.DISCOUNT_PERCENTAGE) / 100}"
+										pattern="###,###.###" />
 								</h4>
-								<span class="">
-									<del id="giagoc${phone.ID}" class="product-old-price">
-										<fmt:formatNumber value="${variantmd.PRICE}" pattern="###,###.###" />
+								<span class=""> <del id="giagoc${phone.ID}"
+										class="product-old-price">
+										<fmt:formatNumber value="${variantmd.PRICE}"
+											pattern="###,###.###" />
 									</del>
 								</span>
 							</div>
 							<div class="product-rating">
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star"></i>
-								<i class="fa fa-star"></i>
+								<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+									class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+									class="fa fa-star"></i>
 							</div>
 							<div class="product-btns">
 								<button class="quick-view">
-									<a href="/shop/product/${phone.ID}/?id_storage=${variantmd.storage.ID}">
+									<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
 										<i class="fa fa-eye"></i>
-									</a>
-									<span class="tooltipp">quick view</span>
+									</a> <span class="tooltipp">quick view</span>
 								</button>
 								<button class="quick-view">
-									<i class="fa fa-shopping-cart"></i>
-									<span class="tooltipp">Thêm vào giỏ hàng</span>
+									<i class="fa fa-shopping-cart"></i> <span class="tooltipp">Thêm
+										vào giỏ hàng</span>
 								</button>
 							</div>
 						</div>
@@ -457,32 +474,41 @@
 						</div>
 					</div>
 				</div>
-				<c:if test="${counter % 3 == 2}">
-					</div>
-				</c:if>
-				<c:set var="counter" value="${counter + 1}" />
-			</c:forEach>
-			<c:if test="${counter % 3 != 0}">
-				</div>
-			</c:if>
+				<c:if test="${counter % 4 == 3}">
 		</div>
-		<!-- /row -->
+		</c:if>
+		<c:set var="counter" value="${counter + 1}" />
+		</c:forEach>
+		<c:if test="${counter % 4 != 0}">
 	</div>
-	<!-- /container -->
+	</c:if>
+</div>
+<!-- /row -->
+</div>
+<!-- /container -->
 </div>
 <!-- /Section -->
 <script>
-
 function updateBuyNowButton(idPhone, idVariant) {
+	var form = document.getElementById('checkoutForm');
+    form.action = "/shop/muangay/" + idVariant;
     // Update the "Mua ngay" button's URL with the selected variant ID
-    var quantity = document.getElementById('quantityInput').value;
+    var quantity = document.getElementsByName('quantity')[0].value;
     var buyNowButton = document.getElementById('buyNowButton');
-    var baseUrl = "/shop/checkout?&id_variant=" + idVariant+"&quantity="+quantity;
-    buyNowButton.href = baseUrl;
+    var baseUrl = "/shop/checkout?id_variant=" + idVariant + "&quantity=" + quantity;
+    buyNowButton.setAttribute('href', baseUrl);
 
     // Optionally, call the getGia function to update prices
     getGia(idPhone, idVariant);
 }
+
+// Đảm bảo rằng hàm này sẽ được gọi khi trang web được tải
+window.onload = function() {
+    // Sử dụng giá trị mặc định của biến thể và số lượng khi trang được tải
+    var defaultVariant = ${finByIdPhone.variants[0].ID}; // Thay đổi phù hợp với biến thể mặc định của bạn
+    var defaultQuantity = 1; // Số lượng mặc định
+    updateBuyNowButton(${idphone}, defaultVariant);
+};
 function getGia(idPhone, idVariant) {
     $.ajax({
         type: "GET",

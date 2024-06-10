@@ -153,9 +153,8 @@
 											class="fa fa-star"></i>
 									</div>
 									<div class="product-btns">
-										<button type="button" class="quick-view">
-											<a
-												href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
+										<button  type="button" class="quick-view">
+											<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
 												class="fa fa-eye"></i></a> <span class="tooltipp">quick
 												view</span>
 										</button>
