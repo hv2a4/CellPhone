@@ -74,7 +74,7 @@ public class UserController {
 
 	@Autowired
 	cart_itemDao cart_itemdao;
-	
+
 	@Autowired
 	brandDao brandDao;
 
@@ -152,31 +152,10 @@ public class UserController {
 		return "redirect:/shop/login";
 	}
 
-//	private void loadCart(Model model) {
-//	    user currentUser = (user) sessionService.get("currentUser");
-//	    if (currentUser != null) {
-//	        cart userCart = (cart) cartdao.findByUser(currentUser);
-//	        if (userCart != null) {
-//	            List<cart_item> cartItems = cart_itemdao.findByCart(userCart);
-//	            model.addAttribute("cartItems", cartItems);
-//
-//	            int totalItems = 0;
-//	            double totalPrice = 0.0;
-//	            for (cart_item cartItem : cartItems) {
-//	                totalItems += cartItem.getQUANTITY();
-//	                totalPrice += cartItem.getQUANTITY() * cartItem.getVariant().getPRICE();
-//	            }
-//
-//	            model.addAttribute("totalItems", totalItems);
-//	            model.addAttribute("totalPrice", totalPrice);
-//	        }
-//	    }
-//	}
-
 	@RequestMapping("")
 	public String getHome(Model model) {
 		Optional<user> users = userDao.findById("user1");
-		List<cart_item> cartItems = (List<cart_item>) users.get().getCarts().getFirst().getCart_items();
+		List<cart_item> cartItems = (List<cart_item>) users.get().getCarts().get(0).getCart_items();
 		String page = "home.jsp";
 		model.addAttribute("page", page);
 		model.addAttribute("cartItems", cartItems);
@@ -184,40 +163,40 @@ public class UserController {
 	}
 
 	@RequestMapping("store")
-	public String getStore(
-			Model model, 
-			@RequestParam("q") Optional<String> q,
+	public String getStore(Model model, @RequestParam("q") Optional<String> q,
 			@RequestParam(name = "brand") Optional<List<String>> brands,
 			@RequestParam(name = "system") Optional<List<String>> systems,
 			@RequestParam(name = "min", defaultValue = "0") Optional<Double> min,
 			@RequestParam(name = "max", defaultValue = "50000000") Optional<Double> max,
-			@RequestParam(name = "sorts") Optional<String> sorts,
-			@RequestParam(value = "dirs") Optional<String> dirs,
+			@RequestParam(name = "sorts") Optional<String> sorts, @RequestParam(value = "dirs") Optional<String> dirs,
 			@RequestParam(name = "sizes") Optional<Integer> sizes,
 			@RequestParam(name = "pages") Optional<Integer> pages) {
 
 		Sort.Direction direction = Sort.Direction.fromString(dirs.orElse("DESC"));
-
 		Sort sort = Sort.by(direction, sorts.orElse("NAME"));
-		
-		Pageable pageable = PageRequest.of(pages.orElse(1)-1, sizes.orElse(15), sort);
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, sizes.orElse(15), sort);
 		Page<phone> productPage = phonedao.findAll(pageable);
-		
+
 		List<phone> listphone = productPage.getContent();
+
 		listphone = listphone.stream()
-				.filter(phone -> (phone.getVariants().get(0).getPRICE() >= min.orElse(0.0)
-						&& phone.getVariants().get(0).getPRICE() <= max.orElse(50000000.0)))
+				.filter(phone -> !phone.getVariants().isEmpty()
+						&& phone.getVariants().get(0).getPRICE() >= min.orElse(0.0)
+						&& phone.getVariants().get(0).getPRICE() <= max.orElse(50000000.0))
 				.collect(Collectors.toList());
-		if (!q.isEmpty()) {
-			listphone = listphone.stream().filter(phone -> phone.getNAME().contains(q.orElse("")))
+
+		if (q.isPresent() && !q.get().isEmpty()) {
+			listphone = listphone.stream().filter(phone -> phone.getNAME().contains(q.get()))
 					.collect(Collectors.toList());
 		}
-		if (brands != null && !brands.isEmpty()) {
-			listphone = listphone.stream().filter(phone -> brands.orElse(null).contains(phone.getBrand().getNAME()))
+
+		if (brands.isPresent() && !brands.get().isEmpty()) {
+			listphone = listphone.stream().filter(phone -> brands.get().contains(phone.getBrand().getNAME()))
 					.collect(Collectors.toList());
 		}
-		if (systems != null && !systems.isEmpty()) {
-			listphone = listphone.stream().filter(phone -> systems.orElse(null).contains(phone.getSystem().getSYSTEM()))
+
+		if (systems.isPresent() && !systems.get().isEmpty()) {
+			listphone = listphone.stream().filter(phone -> systems.get().contains(phone.getSystem().getSYSTEM()))
 					.collect(Collectors.toList());
 		}
 
@@ -263,8 +242,6 @@ public class UserController {
 		return "/views/forgotpass3";
 	}
 
-
-
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {
 		String page = "checkout.jsp";
@@ -289,7 +266,8 @@ public class UserController {
 	
 
 	@RequestMapping("product/{idphone}")
-	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv, @RequestParam("id_storage") Integer idGB) {
+	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv,
+			@RequestParam("id_storage") Integer idGB) {
 		phone finByIdPhone = phonedao.findById(id).get();
 		List<variant> finAllColor = variantdao.variantByGBId(id, idGB);
 		List<phone> listPhone = phonedao.findAllBybrandIDEqual(finByIdPhone.getBrand().getID());
@@ -303,7 +281,6 @@ public class UserController {
 		return "index";
 	}
 
-
 	@GetMapping("ajax/getGia/{id}")
 	@ResponseBody
 	public Optional<List<Double>> getGia(@PathVariable("id") Integer id) {
@@ -313,12 +290,12 @@ public class UserController {
 		Date now = new Date();
 		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
 			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
-		}else {
+		} else {
 			listDouble.add(0.0);
 		}
-	    return Optional.of(listDouble);
+		return Optional.of(listDouble);
 	}
-	
+
 	@GetMapping("ajax/getGiaRelated/{id}")
 	@ResponseBody
 	public Optional<List<Double>> getGiaRelated(@PathVariable("id") Integer id) {
@@ -328,7 +305,7 @@ public class UserController {
 		Date now = new Date();
 		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
 			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
-		}else {
+		} else {
 			listDouble.add(0.0);
 		}
 		return Optional.of(listDouble);
@@ -340,5 +317,18 @@ public class UserController {
 //		model.addAttribute("page", page);
 //		return "index";
 //	}
+
+	@ModelAttribute("ListUser")
+	public List<cart_item> getListCartItem() {
+		user user = getUser();
+		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+		return cartItems;
+	}
+
+	public user getUser() {
+		user userss = sessionService.get("list");
+		user user = userDao.getById(userss.getUSERNAME());
+		return user;
+	}
 
 }

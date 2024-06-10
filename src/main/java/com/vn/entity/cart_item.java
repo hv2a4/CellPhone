@@ -29,6 +29,6 @@ public class cart_item implements Serializable {
 	@JoinColumn(name = "ID_CART")
 	cart cart;
 
-	int QUANTITY;
+	Integer QUANTITY;
 
 }
