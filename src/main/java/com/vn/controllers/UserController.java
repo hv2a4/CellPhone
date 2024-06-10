@@ -153,39 +153,26 @@ public class UserController {
 		return "redirect:/shop/login";
 	}
 
-//	private void loadCart(Model model) {
-//	    user currentUser = (user) sessionService.get("currentUser");
-//	    if (currentUser != null) {
-//	        cart userCart = (cart) cartdao.findByUser(currentUser);
-//	        if (userCart != null) {
-//	            List<cart_item> cartItems = cart_itemdao.findByCart(userCart);
-//	            model.addAttribute("cartItems", cartItems);
-//
-//	            int totalItems = 0;
-//	            double totalPrice = 0.0;
-//	            for (cart_item cartItem : cartItems) {
-//	                totalItems += cartItem.getQUANTITY();
-//	                totalPrice += cartItem.getQUANTITY() * cartItem.getVariant().getPRICE();
-//	            }
-//
-//	            model.addAttribute("totalItems", totalItems);
-//	            model.addAttribute("totalPrice", totalPrice);
-//	        }
-//	    }
-//	}
 	@RequestMapping("")
 	public String getHome(Model model) {
+		String page = "home.jsp";
+		model.addAttribute("page", page);
+		return "index";
+	}
+	
+	@ModelAttribute("cartItems")
+	public List<cart_item> getListCartItem(Model model){
 		user user = getUser();
 		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
 		Double totalCart = 0.0;
+		int totalquantity = 0;
 		for (cart_item cart_item : cartItems) {
 			totalCart+= getGiaKhuyenMai(cart_item.getVariant())*cart_item.getQUANTITY();
+			totalquantity+= cart_item.getQUANTITY();
 		}
-		String page = "home.jsp";
-		model.addAttribute("page", page);
+		model.addAttribute("totalquantity", totalquantity);
 		model.addAttribute("totalCart", totalCart);
-		model.addAttribute("cartItems", cartItems);
-		return "index";
+		return cartItems;
 	}
 
 	public Double getGiaKhuyenMai(variant variant) {
@@ -202,24 +189,33 @@ public class UserController {
 		return user;
 	}
 
-	@RequestMapping("add_cart/{id}")
+	@RequestMapping("cart/add/{id}")
+	@ResponseBody
 	public String addCart(Model model, @PathVariable("id") Integer id) {
-		cart_item cart_item = new cart_item();
 		Optional<variant> variant = variantdao.findById(id);
-
+		
+		cart_item cart_item = new cart_item();
+		cart_item.setCart(getUser().getCarts().get(0));
+		cart_item.setQUANTITY(1);
+		cart_item.setVariant(variant.get());
+		
 		List<cart_item> list_cart_item = getUser().getCarts().get(0).getCart_items();
 		for (cart_item item : list_cart_item) {
 			if (variant.get().getID() == item.getVariant().getID()) {
 				cart_item = item;
 				cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
 				break;
-			} else {
-				cart_item.setCart(getUser().getCarts().get(0));
-				cart_item.setVariant(variant.get());
-				cart_item.setQUANTITY(1);
-			}
+			} 
 		}
 		cart_itemdao.save(cart_item);
+		return "redirect:/shop";
+	}
+	
+	@RequestMapping("cart/delete/{id}")
+	@ResponseBody
+	public String deleteCart(Model model, @PathVariable("id") Integer id) {
+		cart_item cart_item = cart_itemdao.findById(id).get();
+		cart_itemdao.delete(cart_item);
 		return "redirect:/shop";
 	}
 
@@ -260,7 +256,7 @@ public class UserController {
 			allProductPage = new PageImpl<phone>(listphone, pageable, listphone.size());
 		}
 		List<phone> listphone = allProductPage.getContent();
-
+		
 		model.addAttribute("productPage", allProductPage);
 		model.addAttribute("listphone", listphone);
 		String page = "store.jsp";

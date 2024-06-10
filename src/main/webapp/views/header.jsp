@@ -31,8 +31,9 @@
 						<div class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown"
 								aria-expanded="true"> <i class="fa fa-shopping-cart"></i> <span>Giỏ
-									hàng</span>
-								<div class="qty">3</div>
+									hàng</span> <c:if test="${cartItems.size()>0}">
+									<div class="qty">${totalquantity}</div>
+								</c:if>
 							</a>
 							<div class="cart-dropdown">
 
@@ -47,10 +48,13 @@
 													<a href="#">${cartItem.variant.phone.NAME}</a>
 												</h3>
 												<h4 class="product-price">
-													<span class="qty">${cartItem.QUANTITY}x</span>${cartItem.variant.PRICE}
+													<span class="qty"> ${cartItem.QUANTITY}x</span>
+													<fmt:formatNumber pattern="##,###,###">
+									${cartItem.variant.PRICE}</fmt:formatNumber>
+													vnđ
 												</h4>
 											</div>
-											<button class="delete" onclick="">
+											<button class="delete" onclick="deleteCart(${cartItem.ID})">
 												<i class="fa fa-close"></i>
 											</button>
 										</div>
@@ -58,7 +62,7 @@
 								</div>
 
 								<div class="cart-summary">
-									<small>3 sản phẩm được chọn</small>
+									<small>${cartItems.size()} sản phẩm được chọn</small>
 									<h5>
 										Tổng cộng: <b><fmt:formatNumber pattern="##,###,###">
 									${totalCart}</fmt:formatNumber> vnđ</b>
@@ -119,3 +123,25 @@
 		</div>
 	</div>
 </header>
+<script>
+function deleteCart(id) {
+	  $.ajax({
+	    type: "GET",
+	    url: "/shop/cart/delete/" + id,
+	    success: function() {
+	      location.reload();
+	    },
+	    error: function(xhr, status, error) {
+	      console.log("Error: " + error);
+	    }
+	  });
+	}
+</script>
+
+
+
+
+
+
+
+

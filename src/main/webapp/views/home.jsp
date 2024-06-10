@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <div class="section">
-	
+
 	<div class="container"
 		style="display: flex; justify-content: space-between;">
 		<div class="row">
@@ -99,7 +99,9 @@
 													</div>
 												</a>
 												<div class="product-body">
-													<p class="product-category"><b style="font-weight: bold;">${phone.category.NAME}</b></p>
+													<p class="product-category">
+														<b style="font-weight: bold;">${phone.category.NAME}</b>
+													</p>
 													<h3 class="product-name">
 														<a
 															href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">${phone.NAME}</a>
@@ -146,19 +148,21 @@
 													</div>
 													<div class="product-btns">
 														<button class="quick-view">
-															<a class="" style="color: black;" href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
+															<a class="" style="color: black;"
+																href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
 																class="fa fa-eye"></i></a> <span class="tooltipp">quick
 																view</span>
 														</button>
-														<button class="quick-view">
-															<a style="color: black;" href="/shop/add_cart/${variantmd.ID}">
-															<i class="fa fa-shopping-cart"></i></a> <span
-																class="tooltipp">Thêm vào giỏ hàng</span>
+														<button class="quick-view"
+															onclick="addCart(${variantmd.ID})">
+															<i class="fa fa-shopping-cart"></i><span class="tooltipp">Thêm
+																vào giỏ hàng</span>
 														</button>
 													</div>
 												</div>
 												<div class="add-to-cart">
-													<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
+													<a
+														href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
 														<button class="add-to-cart-btn">
 															<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
 															Mua ngay
@@ -284,6 +288,35 @@ function getGia(idPhone, idVariant) {
         }
     });
 }
+
+function addCart(id) {
+	  $.ajax({
+	    type: "GET",
+	    url: "/shop/cart/add/" + id,
+	    success: function() {
+	    	const Toast = Swal.mixin({
+	    		  toast: true,
+	    		  position: "top-end",
+	    		  showConfirmButton: false,
+	    		  timer: 1000,
+	    		  timerProgressBar: true,
+	    		  didOpen: (toast) => {
+	    		    toast.onmouseenter = Swal.stopTimer;
+	    		    toast.onmouseleave = Swal.resumeTimer;
+	    		  }
+	    		});
+	    		Toast.fire({
+	    		  icon: "success",
+	    		  title: "Đã thêm vào giỏ hàng"
+	    		}).then(function(){
+	    			location.reload();
+	    		});
+	    },
+	    error: function(xhr, status, error) {
+	      console.log("Error: " + error);
+	    }
+	  });
+	}
 
 </script>
 
