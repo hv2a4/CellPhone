@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.misc.Utils;
@@ -74,7 +75,7 @@ public class UserController {
 
 	@Autowired
 	cart_itemDao cart_itemdao;
-	
+
 	@Autowired
 	brandDao brandDao;
 
@@ -184,44 +185,44 @@ public class UserController {
 	}
 
 	@RequestMapping("store")
-	public String getStore(
-			Model model, 
-			@RequestParam("q") Optional<String> q,
-			@RequestParam(name = "brand") Optional<List<String>> brands,
+	public String getStore(Model model, @RequestParam("q") Optional<String> q,
+			@RequestParam(name = "brand") Optional<List<String>> brand,
 			@RequestParam(name = "system") Optional<List<String>> systems,
-			@RequestParam(name = "min", defaultValue = "0") Optional<Double> min,
-			@RequestParam(name = "max", defaultValue = "50000000") Optional<Double> max,
-			@RequestParam(name = "sorts") Optional<String> sorts,
-			@RequestParam(value = "dirs") Optional<String> dirs,
+			@RequestParam(name = "min") Optional<Double> min, @RequestParam(name = "max") Optional<Double> max,
+			@RequestParam(name = "sorts") Optional<String> sorts, @RequestParam(value = "dirs") Optional<String> dirs,
 			@RequestParam(name = "sizes") Optional<Integer> sizes,
-			@RequestParam(name = "pages") Optional<Integer> pages) {
+			@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
 
 		Sort.Direction direction = Sort.Direction.fromString(dirs.orElse("DESC"));
-
 		Sort sort = Sort.by(direction, sorts.orElse("NAME"));
-		
-		Pageable pageable = PageRequest.of(pages.orElse(1)-1, sizes.orElse(15), sort);
-		Page<phone> productPage = phonedao.findAll(pageable);
-		
-		List<phone> listphone = productPage.getContent();
-		listphone = listphone.stream()
-				.filter(phone -> (phone.getVariants().get(0).getPRICE() >= min.orElse(0.0)
-						&& phone.getVariants().get(0).getPRICE() <= max.orElse(50000000.0)))
-				.collect(Collectors.toList());
-		if (!q.isEmpty()) {
-			listphone = listphone.stream().filter(phone -> phone.getNAME().contains(q.orElse("")))
-					.collect(Collectors.toList());
-		}
-		if (brands != null && !brands.isEmpty()) {
-			listphone = listphone.stream().filter(phone -> brands.orElse(null).contains(phone.getBrand().getNAME()))
-					.collect(Collectors.toList());
-		}
-		if (systems != null && !systems.isEmpty()) {
-			listphone = listphone.stream().filter(phone -> systems.orElse(null).contains(phone.getSystem().getSYSTEM()))
-					.collect(Collectors.toList());
-		}
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, sizes.orElse(12), sort);
+		Page<phone> allProductPage = phonedao.findAll(pageable);
 
-		model.addAttribute("productPage", productPage);
+		if (!q.orElse("").isEmpty()) {
+			List<phone> listphone = phonedao.findAllByNAMELike("%"+q.get()+"%");
+			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+		}
+		if (min.orElse(0.0)!=0 && 50000000 != max.orElse(50000000.0)) {
+			List<phone> listphone = allProductPage.getContent().stream()
+					.filter(phone -> (phone.getVariants().get(0).getPRICE() >= min.orElse(0.0)
+							&& phone.getVariants().get(0).getPRICE() <= max.orElse(50000000.0)))
+					.collect(Collectors.toList());
+			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+		}
+		if (brand.isPresent() && !brand.get().isEmpty()) {
+			List<phone> listphone = allProductPage.getContent().stream()
+					.filter(p -> brand.get().contains(p.getBrand().getNAME())).collect(Collectors.toList());
+			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+		}
+		if (systems.isPresent() && !systems.get().isEmpty()) {
+			List<phone> listphone = allProductPage.getContent().stream()
+					.filter(phone -> systems.get().contains(phone.getSystem().getSYSTEM()))
+					.collect(Collectors.toList());
+			allProductPage = new PageImpl<phone>(listphone, pageable, listphone.size());
+		}
+		List<phone> listphone = allProductPage.getContent();
+
+		model.addAttribute("productPage", allProductPage);
 		model.addAttribute("listphone", listphone);
 		String page = "store.jsp";
 		model.addAttribute("page", page);
@@ -263,8 +264,6 @@ public class UserController {
 		return "/views/forgotpass3";
 	}
 
-
-
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {
 		String page = "checkout.jsp";
@@ -294,7 +293,8 @@ public class UserController {
 	}
 
 	@RequestMapping("product/{idphone}")
-	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv, @RequestParam("id_storage") Integer idGB) {
+	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv,
+			@RequestParam("id_storage") Integer idGB) {
 		phone finByIdPhone = phonedao.findById(id).get();
 		List<variant> finAllColor = variantdao.variantByGBId(id, idGB);
 		List<phone> listPhone = phonedao.findAllBybrandIDEqual(finByIdPhone.getBrand().getID());
@@ -308,7 +308,6 @@ public class UserController {
 		return "index";
 	}
 
-
 	@GetMapping("ajax/getGia/{id}")
 	@ResponseBody
 	public Optional<List<Double>> getGia(@PathVariable("id") Integer id) {
@@ -318,12 +317,12 @@ public class UserController {
 		Date now = new Date();
 		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
 			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
-		}else {
+		} else {
 			listDouble.add(0.0);
 		}
-	    return Optional.of(listDouble);
+		return Optional.of(listDouble);
 	}
-	
+
 	@GetMapping("ajax/getGiaRelated/{id}")
 	@ResponseBody
 	public Optional<List<Double>> getGiaRelated(@PathVariable("id") Integer id) {
@@ -333,7 +332,7 @@ public class UserController {
 		Date now = new Date();
 		if (variant.get().getDiscount_product().getEXPIRY_DATE().compareTo(now) > 0) {
 			listDouble.add(variant.get().getDiscount_product().getDISCOUNT_PERCENTAGE());
-		}else {
+		} else {
 			listDouble.add(0.0);
 		}
 		return Optional.of(listDouble);

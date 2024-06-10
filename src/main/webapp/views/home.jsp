@@ -9,7 +9,7 @@
 		style="display: flex; justify-content: space-between;">
 		<div class="row">
 			<div class="col-md-4">
-				<a href="/shop/store?brand=apple">
+				<a href="/shop/store">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop01.png" alt>
@@ -18,7 +18,7 @@
 							<h3>
 								IPhone<br>Collection
 							</h3>
-							<a href="/shop/store?brand=apple" class="cta-btn">Shop now <i
+							<a href="/shop/store" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>
@@ -26,7 +26,7 @@
 			</div>
 
 			<div class="col-md-4">
-				<a href="/shop/store?brand=samsung">
+				<a href="/shop/store">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop02.png" alt>
@@ -35,7 +35,7 @@
 							<h3>
 								SamSung<br>Collection
 							</h3>
-							<a href="/shop/store?brand=samsung" class="cta-btn">Shop now
+							<a href="/shop/store" class="cta-btn">Shop now
 								<i class="fa fa-arrow-circle-right"></i>
 							</a>
 						</div>
@@ -44,7 +44,7 @@
 			</div>
 
 			<div class="col-md-4">
-				<a href="/shop/store?brand=nokia">
+				<a href="/shop/store">
 					<div class="shop">
 						<div class="shop-img">
 							<img src="/img/shop03.png" alt>
@@ -53,7 +53,7 @@
 							<h3>
 								Realme<br>Collection
 							</h3>
-							<a href="/shop/store?brand=nokia" class="cta-btn">Shop now <i
+							<a href="/shop/store" class="cta-btn">Shop now <i
 								class="fa fa-arrow-circle-right"></i></a>
 						</div>
 					</div>

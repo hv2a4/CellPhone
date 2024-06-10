@@ -81,10 +81,11 @@
 							</select>
 							</label> <label> Hiện: <select name="sizes" class="input-select"
 								onchange="submitFormAndSaveState()">
+									<option value="12">Hiện</option>
+									<option value="12">12</option>
 									<option value="15">15</option>
 									<option value="30">30</option>
 									<option value="50">50</option>
-									<option value="100">100</option>
 							</select>
 							</label>
 						</div>
@@ -132,7 +133,8 @@
 											<c:set var="a" value="${variant.storage.GB}"></c:set>
 										</c:if>
 									</c:forEach>
-									<div class="product-details" style="display: flex; justify-content: center;">
+									<div class="product-details"
+										style="display: flex; justify-content: center;">
 										<h4 id="gia${phone.ID}" class="product-price"
 											style="margin-right: 5px;">
 											<fmt:formatNumber pattern="###,###.###">
@@ -185,12 +187,13 @@
 			</div>
 			</c:if>
 
+
 			<div class="store-filter clearfix text-right">
-				<c:forEach var="item" begin="1" end="${productPage.totalPages }"
+				<input type="hidden" name="pages" id="pages"
+					value="${productPage.number + 1}">
+				<c:forEach var="item" begin="1" end="${productPage.totalPages}"
 					step="1">
-					<button type="button" class="btn">
-						<a class="text-light" href="/shop/store?pages=${item}">${item}</a>
-					</button>
+					<button type="button" class="btn" onclick="changePage(${item})">${item}</button>
 				</c:forEach>
 			</div>
 		</form>
@@ -199,7 +202,12 @@
 </div>
 </div>
 
-
+<script>
+    function changePage(page) {
+        document.getElementById("pages").value = page;
+        document.getElementById("filterForm").submit();
+    }
+</script>
 <script>
 function formatPrice(price) {
     return price.toLocaleString("en-US");

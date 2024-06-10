@@ -23,7 +23,7 @@
                     <div class="card-body">
                         <div class="img row">
                             <div class="col-12" id="imageContainer">
-                                <img  id="imagePreview" src="/images/${list.AVATAR}" alt="">
+                                <img  id="imagePreview" src="/images/${item.AVATAR}" alt="">
                               
                             </div>
                             
@@ -109,7 +109,7 @@
                                                 class="text-fail">*</span></label>
                                         <div class="col-7">
                                            
-                                          <form:input path="PHONE_NUMBER" class="input form-control" value="${list.PHONE_NUMBER}" placeholder=" "  />
+                                          <form:input path="PHONE_NUMBER" class="input form-control" value="${item.PHONE_NUMBER}" placeholder=" "  />
                                        <small style=" color: red;"><form:errors path="PHONE_NUMBER"></form:errors></small> 
                                         </div>
                                     </div>

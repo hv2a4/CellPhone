@@ -3,20 +3,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 	<!-- HEADER -->
 	<header>
-		<!-- TIÊU ĐỀ CHÍNH -->
 		<div id="header">
-			<!-- container -->
 			<div class="container">
-				<!-- row -->
 				<div class="row">
 					<!-- LOGO -->
 					<div class="col-md-3">
@@ -25,21 +15,16 @@
 							</a>
 						</div>
 					</div>
-					<!-- /LOGO -->
-
-                <!-- THANH TÌM KIẾM -->
+					
                 <div class="col-md-6">
                     <div class="header-search">
-                        <form action="/shop/store">
+                        <form action="/shop/store" method="get">
                             <input name="q" class="input" placeholder="Tìm kiếm ở đây">
                             <button type="submit" class="search-btn">Tìm kiếm</button>
                         </form>
                     </div>
                 </div>
-                <!-- /THANH TÌM KIẾM -->
-
-
-					<!-- TÀI KHOẢN & GIỎ HÀNG -->
+                
 					<div class="col-md-3 clearfix">
 						<div class="header-ctn">
 							<!-- Giỏ hàng -->
@@ -123,16 +108,9 @@
 								<a href="#"> <i class="fa fa-bars"></i> <span>Menu</span>
 								</a>
 							</div>
-							<!-- /Nút menu -->
 						</div>
 					</div>
 				</div>
-				<!-- row -->
 			</div>
-			<!-- container -->
 		</div>
-		<!-- /TIÊU ĐỀ CHÍNH -->
 	</header>
-	<!-- /HEADER -->
-</body>
-</html>
