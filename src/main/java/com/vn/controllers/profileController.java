@@ -47,7 +47,7 @@ public class profileController {
 	@PostMapping("profile")
 	public String postProfile(@Validated @ModelAttribute("item") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
 		 if (bindingResult.hasErrors()) {
-		      
+		  System.out.println("hello");
 		        model.addAttribute("page", "profile.jsp");
 		        return "index";
 		    }

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.misc.Utils;
 import org.eclipse.tags.shaded.org.apache.xpath.compiler.Keywords;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,35 +20,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vn.DAO.cartDao;
-import com.vn.DAO.cart_itemDao;
-import com.vn.DAO.brandDao;
-import com.vn.DAO.categoryDao;
-import com.vn.DAO.phoneDao;
-import com.vn.DAO.systemDao;
-import com.vn.DAO.userDao;
-import com.vn.DAO.variantDao;
-import com.vn.entity.cart;
-import com.vn.entity.cart_item;
-import com.vn.entity.brand;
-import com.vn.entity.category;
-import com.vn.entity.phone;
-import com.vn.entity.system;
-import com.vn.entity.user;
-import com.vn.entity.variant;
+import com.vn.DAO.*;
+import com.vn.entity.*;
 import com.vn.serviceimpl.MailerServiceImpl;
-import com.vn.utils.CookieService;
-import com.vn.utils.ParamService;
-import com.vn.utils.SessionService;
+import com.vn.utils.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -65,6 +45,8 @@ public class UserController {
 
 	@Autowired
 	userDao userDao;
+	@Autowired
+	status_orderDao status_orderDao;
 
 	@Autowired
 	systemDao systemDao;
@@ -75,9 +57,21 @@ public class UserController {
 
 	@Autowired
 	cart_itemDao cart_itemdao;
+	@Autowired
+	variantDao variantDao;
 
 	@Autowired
 	brandDao brandDao;
+	@Autowired
+	orderDao orderDao;
+	@Autowired
+	order_itemDao order_itemDao;
+	@Autowired
+	payment_methodDao payment_methodDao;
+	@Autowired
+	addressDao addressDao;
+	@Autowired
+	discount_codeDao discount_codeDao;
 
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
@@ -155,6 +149,8 @@ public class UserController {
 
 	@RequestMapping("")
 	public String getHome(Model model) {
+		Optional<user> users = userDao.findById("user1");
+		List<cart_item> cartItems = (List<cart_item>) users.get().getCarts().get(0).getCart_items();
 		String page = "home.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -301,13 +297,100 @@ public class UserController {
 
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {
+		
+		order order = orderDao.getOrderMoi();
+		double totalAmount = 0;
+		double totalDiscount = 0;
+		List<order_item> listItem = order.getOrder_items();
+		for (order_item oi : listItem) {
+			totalAmount += oi.getPRICE() * oi.getQUANTITY();
+			totalDiscount += oi.getPRICE() * ((oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
+		}
+		order.setTOTAL_AMOUNT(totalAmount);
+		order.setTOTAL_DISCOUNT(totalDiscount);
+		orderDao.save(order);
+		user us = sessionService.get("list");
+		user user = userDao.findById(us.getUSERNAME()).get();
+		List<payment_method> listPay = payment_methodDao.findAll();
+		model.addAttribute("pays", listPay);
+		
+		model.addAttribute("user", user);
+		model.addAttribute("order", order);
+		model.addAttribute("totalOrder", totalAmount);
+		
 		String page = "checkout.jsp";
 		model.addAttribute("page", page);
 		return "index";
 	}
 
+	@RequestMapping("muangay/{id}")
+	public String muaNgay(Model model, @PathVariable("id") Integer id,
+			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+		user us = sessionService.get("list");
+		user user = userDao.findById(us.getUSERNAME()).get();		
+		order or = new order();
+		or.setUser(user);
+		or.setCREATE_AT(new Date());
+		or.setUPDATE_AT(new Date());
+		or.setAddress(user.getAddresses().get(0));	
+		orderDao.save(or);
+
+		order order = orderDao.findById(or.getID()).get();
+		Optional<variant> variant = variantDao.findById(id);
+		order_item order_item = new order_item();
+		order_item.setOrder(order);
+		order_item.setVariant(variant.get());
+		order_item.setPRICE(getPriceVariant(variant.get()));
+		order_item.setQUANTITY(quantity);
+		
+		order_itemDao.save(order_item);
+		return "redirect:/shop/checkout";
+	}
+
+
+	public Double getPriceVariant(variant variant) {
+		if (variant.getDiscount_product().getEXPIRY_DATE().after(new Date())) {
+			return variant.getPRICE() * ((100 - variant.getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
+		} else {
+			return variant.getPRICE();
+		}
+	}
+
+	@RequestMapping("ordersuccess")
+	public String getOrderSuccess(Model model,
+			@RequestParam("id_order") Integer idOrder,
+			@RequestParam("id_pay") Integer idPay,
+			@RequestParam("id_address") Integer idAddress,
+			@RequestParam("discount") Optional<Integer> discount) {
+		order order = orderDao.findById(idOrder).get();
+		address adr = addressDao.findById(idAddress).get();
+		payment_method pay = payment_methodDao.findById(idPay).get();
+		discount_code discount_code;
+		if (discount.isPresent()) {
+		    discount_code = discount_codeDao.findById(discount.get()).orElse(null);
+		} else {
+		    discount_code = null;
+		}
+
+		order.setAddress(adr);
+		order.setPayment_method(pay);
+		order.setStatus_order(status_orderDao.findById(2).get());
+		order.setDiscount_code(discount_code);
+		orderDao.save(order);
+		List<order_item> listOrderItem = order_itemDao.finByAllOrder(order.getID());
+		for (order_item oi : listOrderItem) {
+			variant v = variantdao.findById(oi.getVariant().getID()).get();
+			v.setQUANTITY(v.getQUANTITY() - oi.getQUANTITY());
+			variantDao.save(v);
+		}
+		model.addAttribute("order", order);
+		model.addAttribute("adr", adr.getADDRESS());
+		model.addAttribute("pay", pay.getNAME());
+		return "/views/ordersuccess";
+	}
 	@RequestMapping("address")
 	public String getAddress(Model model) {
+		
 		String page = "address.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -320,12 +403,7 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("order")
-	public String getOrder(Model model) {
-		String page = "order.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+	
 
 	@RequestMapping("product/{idphone}")
 	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv,
@@ -335,6 +413,7 @@ public class UserController {
 		List<phone> listPhone = phonedao.findAllBybrandIDEqual(finByIdPhone.getBrand().getID());
 		variant variant = variantdao.findById(idv).get();
 		model.addAttribute("finByIdPhone", finByIdPhone);
+		model.addAttribute("quantity", variant.getQUANTITY());
 		model.addAttribute("variant2", variant);
 		model.addAttribute("finAllColor", finAllColor);
 		model.addAttribute("listPhone", listPhone);
@@ -373,11 +452,24 @@ public class UserController {
 		return Optional.of(listDouble);
 	}
 
-	@RequestMapping("cart")
-	public String getShopCart(Model model) {
-		String page = "cart.jsp";
-		model.addAttribute("page", page);
-		return "index";
+//	@RequestMapping("cart")
+//	public String getShopCart(Model model) {
+//		String page = "cart.jsp";
+//		model.addAttribute("page", page);
+//		return "index";
+//	}
+
+	@ModelAttribute("ListUser")
+	public List<cart_item> getListCartItem() {
+		user user = getUser();
+		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+		return cartItems;
+	}
+
+	public user getUser() {
+		user userss = sessionService.get("list");
+		user user = userDao.getById(userss.getUSERNAME());
+		return user;
 	}
 
 }

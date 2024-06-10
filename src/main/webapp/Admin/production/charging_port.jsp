@@ -65,12 +65,12 @@
 									<tbody>
 										<c:forEach var="item" items="${list_charging_port}">
 											<tr>
-												<td>${item.ID }</td>
-												<td>${item.NAME }</td>
+												<td>${item.key }</td>
+												<td>${item.value }</td>
 												<td class="text-center"><i
-													onclick="getcharging_portById(${item.ID })"
+													onclick="getcharging_portById(${item.key })"
 													class="fa-solid fa-pen-to-square fs-4 mr-3"></i> <i
-													onclick="modelDelete(${item.ID })"
+													onclick="modelDelete(${item.key })"
 													class="fa-solid fa-trash fs-4 "></i></td>
 											</tr>
 										</c:forEach>
