@@ -36,6 +36,8 @@
                         <!-- chỗ này hiển thị thông tin người dùng -->
                                  <form:hidden path="PASSWORD" value="${list.PASSWORD}"/>
                         <small style=" color: red;"><form:errors path="PASSWORD"></form:errors></small>
+                                 <form:hidden path="ROLE" value="false"/>
+                        <small style=" color: red;"><form:errors path="ROLE"></form:errors></small>
                             <div class=" row">
                                 <div class="col-md-6" style="padding-right:25px ;">
                                     <div class="form-group row">
@@ -85,6 +87,7 @@
                                             <div class="radio" style="margin-left: 10px;">
                         <label> <form:radiobutton path="GENDER" id="flexRadioDefault1" value="KHAC" style="margin-left: -36px;" 
                        checked="${list.GENDER eq 'KHAC'? true:'' }"  /> Khác</label>
+                       <small style=" color: red;"><form:errors path="GENDER"></form:errors></small>
                                             </div>
                                         </div>
                                         

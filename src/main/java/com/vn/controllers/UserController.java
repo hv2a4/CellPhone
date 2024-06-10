@@ -272,12 +272,12 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("address")
-	public String getAddress(Model model) {
-		String page = "address.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+//	@RequestMapping("address")
+//	public String getAddress(Model model) {
+//		String page = "address.jsp";
+//		model.addAttribute("page", page);
+//		return "index";
+//	}
 
 	@RequestMapping("invoice")
 	public String getInvoice(Model model) {
@@ -286,12 +286,7 @@ public class UserController {
 		return "index";
 	}
 
-	@RequestMapping("order")
-	public String getOrder(Model model) {
-		String page = "order.jsp";
-		model.addAttribute("page", page);
-		return "index";
-	}
+	
 
 	@RequestMapping("product/{idphone}")
 	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv, @RequestParam("id_storage") Integer idGB) {
