@@ -23,10 +23,10 @@ public class variant implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
+	Integer ID;
 	
-	int QUANTITY;
-	double PRICE;
+	Integer QUANTITY;
+	Double PRICE;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_PHONE")

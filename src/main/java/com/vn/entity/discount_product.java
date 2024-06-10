@@ -21,8 +21,8 @@ public class discount_product implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int ID;
-	double DISCOUNT_PERCENTAGE;
+	Integer ID;
+	Double DISCOUNT_PERCENTAGE;
 	
 	@Temporal(TemporalType.DATE)
 	Date START_DATE;

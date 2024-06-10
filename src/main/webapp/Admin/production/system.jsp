@@ -66,12 +66,12 @@
 									<tbody>
 										<c:forEach var="item" items="${list_system}">
 											<tr>
-												<td>${item.ID }</td>
-												<td>${item.SYSTEM }</td>
+												<td>${item.key }</td>
+												<td>${item.value }</td>
 												<td class="text-center"><i
-													onclick="getsystemById(${item.ID })"
+													onclick="getsystemById(${item.key })"
 													class="fa-solid fa-pen-to-square fs-4 mr-3"></i> <i
-													onclick="modelDelete(${item.ID })"
+													onclick="modelDelete(${item.key })"
 													class="fa-solid fa-trash fs-4 "></i></td>
 											</tr>
 										</c:forEach>

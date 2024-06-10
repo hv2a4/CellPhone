@@ -153,6 +153,8 @@ public class AdminController {
     SessionService sessionService;
     @Autowired
     imageDao imageDao;
+    @Autowired
+    ParamService service;
 
     LocalDate now = LocalDate.now();
     int numDays = now.lengthOfMonth();
@@ -165,44 +167,60 @@ public class AdminController {
         return rankDao.findAll();
     }
 
-    @ModelAttribute("list_category")
-    public List<category> getListCategory() {
-        return categoryDao.findAll();
-    }
-
     @ModelAttribute("list_brand")
-    public List<brand> getListBrand() {
-        return brandDao.findAll();
-    }
+    public Map<Integer, String> getBarnd() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
 
-    @ModelAttribute("list_system")
-    public List<system> getListSystem() {
-        return systemDao.findAll();
-    }
-
-    @ModelAttribute("list_charging_port")
-    public List<charging_port> getList_charging_port() {
-        return charging_portDao.findAll();
+        List<brand> listBarnd = brandDao.findAll();
+        for (brand brands : listBarnd) {
+            map.put(brands.getID(), brands.getNAME());
+        }
+        return map;
     }
 
     @ModelAttribute("list_headphone_jack")
-    public List<headphone_jack> getList_headphone_jack() {
-        return headphone_jackDao.findAll();
+    public Map<Integer, String> getList_headphone_jack() {
+
+        Map<Integer, String> map = new HashMap<Integer, String>();
+
+        List<headphone_jack> listBattery = headphone_jackDao.findAll();
+        for (headphone_jack battery_type : listBattery) {
+            map.put(battery_type.getID(), battery_type.getNAME());
+        }
+        return map;
     }
 
     @ModelAttribute("list_battery_type")
-    public List<battery_type> getList_battery_type() {
-        return battery_typeDao.findAll();
+    public Map<Integer, String> getList_battery_type() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
+
+        List<battery_type> listBattery = battery_typeDao.findAll();
+        for (battery_type battery_type : listBattery) {
+            map.put(battery_type.getID(), battery_type.getNAME());
+        }
+        return map;
     }
 
     @ModelAttribute("list_screen_resolution")
-    public List<screen_resolution> getList_screen_resolution() {
-        return screen_resolutionDao.findAll();
+    public Map<Integer, String> getList_screen_resolution() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
+
+        List<screen_resolution> listBattery = screen_resolutionDao.findAll();
+        for (screen_resolution screen_resolution : listBattery) {
+            map.put(screen_resolution.getID(), screen_resolution.getNAME());
+        }
+        return map;
     }
 
     @ModelAttribute("list_graphics_chip")
-    public List<graphics_chip> getList_graphics_chip() {
-        return graphics_chipDao.findAll();
+    public Map<Integer, String> getList_graphics_chip() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
+
+        List<graphics_chip> listBattery = graphics_chipDao.findAll();
+        for (graphics_chip screen_resolution : listBattery) {
+            map.put(screen_resolution.getID(), screen_resolution.getNAME());
+        }
+        return map;
     }
 
     @ModelAttribute("list_wireless_charging_technology")
@@ -249,65 +267,127 @@ public class AdminController {
         return "/Admin/production/homeadmin";
     }
 
-
     @RequestMapping("logout")
     public String logOut() {
         sessionService.remove("list");
         return "redirect:/shop/login";
     }
 
-    @PostMapping("phone/create")
-    public String createPhone(@ModelAttribute("phone") phone phone, @RequestParam("anh") List<MultipartFile> images) {
+    @PostMapping("/phone/create")
+    public ResponseEntity<Map<String, String>> createPhone(@Validated @ModelAttribute("phone") phone phone,
+                                                           BindingResult bindingResult, @RequestParam("anh") List<MultipartFile> images) {
 
-        MultipartFile img = images.get(0);
-        String filename = img.getOriginalFilename();
+        Map<String, String> response = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            // Trả về lỗi xác thực
+            bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(response);
+        }
 
-        String uploadDir = req.getServletContext().getRealPath("/images/");
+        try {
+            // Khởi tạo danh sách hình ảnh nếu chưa có
+            if (phone.getImages() == null) {
+                phone.setImages(new ArrayList<>());
+            }
+
+            // Xử lý upload ảnh
+            if (!images.isEmpty()) {
+                // Lưu trữ ảnh đầu tiên
+                MultipartFile firstImage = images.get(0);
+                String firstImageUrl = saveImageToDisk(firstImage, req);
+                phone.setIMAGE(firstImageUrl);
+
+                // Lưu trữ 4 ảnh còn lại
+                for (int i = 1; i < Math.min(images.size(), 5); i++) {
+                    MultipartFile imageFile = images.get(i);
+                    if (imageFile.isEmpty()) {
+                        continue;
+                    }
+                    String imageUrl = saveImageToDisk(imageFile, req);
+                    image image = new image();
+                    image.setIMAGE(imageUrl);
+                    image.setPhone(phone);
+                    phone.getImages().add(image);
+                }
+            }
+
+            phone.setCREATE_AT(new Date());
+            phone.setIS_DELETE(false);
+            phoneDao.save(phone);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", e.getMessage());
+        }
+
+        response.put("status", "success");
+        return ResponseEntity.ok(response);
+    }
+
+
+    private String saveImageToDisk(MultipartFile image, HttpServletRequest req) throws IOException {
+        String filename = image.getOriginalFilename();
+        String uploadDir = req.getServletContext().getRealPath("/images/"); // Lấy đường dẫn tuyệt đối đến thư mục /images
         File uploadFolder = new File(uploadDir);
-
         if (!uploadFolder.exists()) {
             uploadFolder.mkdirs();
         }
-        File destFile = new File(uploadFolder, filename);
+        File destFile = new File(uploadFolder, filename); // Tạo đối tượng File với đường dẫn và tên tệp tin đích
+        image.transferTo(destFile); // Chuyển tệp tin vào đích
+        return filename; // Trả về tên tệp tin đã lưu
+    }
+
+
+    @PostMapping("phone/update/{id}")
+    public String updatePhone(@ModelAttribute("phoneUpdate") phone phoneUpdate,
+                              @PathVariable("id") Integer id, Model model, @RequestParam("anhUpdate") List<MultipartFile> images) {
         try {
-            img.transferTo(destFile);
-        } catch (IllegalStateException | IOException e) {
-            e.printStackTrace();
-        }
-        phone.setIMAGE(filename);
-        phone.setCREATE_AT(new Date());
-        phone.setUPDATE_AT(new Date());
-        phone.setIS_DELETE(false);
-        phoneDao.save(phone);
-
-        for (int i = 1; i < images.size(); i++) {
-            if (!images.get(i).isEmpty()) {
-                MultipartFile imgimg = images.get(i);
-                String filenameimg = imgimg.getOriginalFilename();
-
-                // Tạo file trong thư mục images
-                File destFileimg = new File(uploadFolder, filenameimg);
-
-                // Lưu trữ file vào thư mục đã xác định
-                try {
-                    imgimg.transferTo(destFileimg);
-                } catch (IllegalStateException | IOException e) {
-                    e.printStackTrace();
-                }
-                image image = new image();
-                image.setPhone(phone);
-                image.setIMAGE(filenameimg);
-                imageDao.save(image);
+            // Kiểm tra và khởi tạo danh sách images nếu nó null
+            if (phoneUpdate.getImages() == null) {
+                phoneUpdate.setImages(new ArrayList<>());
+            } else {
+                phoneUpdate.getImages().clear(); // Xóa các ảnh cũ
             }
+
+            // Lưu trữ ảnh mới
+            List<image> newImages = new ArrayList<>();
+
+            // Xử lý upload ảnh
+            if (!images.isEmpty()) {
+                // Lưu trữ ảnh đầu tiên
+                MultipartFile firstImage = images.get(0);
+                if (!firstImage.isEmpty()) {
+                    String firstImageUrl = saveImageToDisk(firstImage, req);
+                    phoneUpdate.setIMAGE(firstImageUrl);
+                }
+
+                // Lưu trữ các ảnh còn lại
+                for (int i = 1; i < Math.min(images.size(), 5); i++) {
+                    MultipartFile imageFile = images.get(i);
+                    if (!imageFile.isEmpty()) {
+                        String imageUrl = saveImageToDisk(imageFile, req);
+                        image image = new image();
+                        image.setIMAGE(imageUrl);
+                        image.setPhone(phoneUpdate);
+                        newImages.add(image);
+                    }
+                }
+            }
+
+            // Cập nhật danh sách ảnh
+            phoneUpdate.getImages().addAll(newImages); // Thêm các ảnh mới
+
+            // Lưu đối tượng phone vào database
+            phoneDao.save(phoneUpdate);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin/product?error";
         }
+
         return "redirect:/admin/product";
     }
 
-    @PostMapping("phone/update")
-    public String updatePhone(@ModelAttribute("phoneUpdate") phone phoneUpdate) {
-        phoneDao.save(phoneUpdate);
-        return "redirect:/admin/product";
-    }
 
     @GetMapping("phone/delete")
     public String deletePhone(@Param("id") Integer id) {
@@ -325,14 +405,18 @@ public class AdminController {
     }
 
     @GetMapping("product")
-    public String getQLSanPham(Model model, @ModelAttribute("phone") phone phone, @ModelAttribute("phoneUpdate") phone phoneUpdate) {
+    public String getQLSanPham(Model model, @ModelAttribute("phone") phone phone,
+                               @ModelAttribute("phoneUpdate") phone phoneUpdate
+            , @ModelAttribute("ObjectVariant") variant variant) {
         String page = "product.jsp";
         model.addAttribute("page", page);
 
-        List<phone> list_phone = phoneDao.findAll();
-        model.addAttribute("list_phone", list_phone);
-
         return "/Admin/production/homeadmin";
+    }
+
+    @ModelAttribute("list_phone")
+    List<phone> list_phone() {
+        return phoneDao.findAll();
     }
 
     @ModelAttribute("fillTableUser")
@@ -341,7 +425,8 @@ public class AdminController {
     }
 
     @GetMapping("discount")
-    public String getQLMaGiamGia(Model model, @ModelAttribute("discount_code") discount_code discount_code, @ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate) {
+    public String getQLMaGiamGia(Model model, @ModelAttribute("discount_code") discount_code discount_code,
+                                 @ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate) {
         String page = "discount.jsp";
         model.addAttribute("page", page);
 
@@ -383,13 +468,21 @@ public class AdminController {
         String page = "category.jsp";
         model.addAttribute("page", page);
 
-        List<category> list_category = categoryDao.findAll();
-        model.addAttribute("list_category", list_category);
-
         category categoryUpdate = new category();
         model.addAttribute("categoryUpdate", categoryUpdate);
 
         return "/Admin/production/homeadmin";
+    }
+
+    @ModelAttribute("list_category")
+    public Map<Integer, String> getCategorys() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
+
+        List<category> list_category = categoryDao.findAll();
+        for (category categorys : list_category) {
+            map.put(categorys.getID(), categorys.getNAME());
+        }
+        return map;
     }
 
     @PostMapping("category/create")
@@ -398,9 +491,6 @@ public class AdminController {
         if (result.hasErrors()) {
             String page = "category.jsp";
             model.addAttribute("page", page);
-
-            List<category> list_category = categoryDao.findAll();
-            model.addAttribute("list_category", list_category);
 
             category categoryUpdate = new category();
             model.addAttribute("categoryUpdate", categoryUpdate);
@@ -415,28 +505,44 @@ public class AdminController {
         }
     }
 
-    //trả hàng
+    // trả hàng
     @GetMapping("returns/{id}")
     public String getReturns(Model model, @PathVariable("id") Integer id) {
-        // Tìm đối tượng order theo ID
-        order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        try {
+            // Tìm đối tượng order theo ID
+            order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
-        status_order returnStatus = status_orderDao.findById(6).orElseThrow(() -> new RuntimeException("Status not found"));
+            // Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
+            status_order returnStatus = status_orderDao.findById(6)
+                    .orElseThrow(() -> new RuntimeException("Status not found"));
 
-        // Cập nhật trạng thái trả hàng cho đối tượng order
-        orders.setStatus_order(returnStatus);
+            // Cập nhật trạng thái trả hàng cho đối tượng order
+            orders.setStatus_order(returnStatus);
 
-        // Lưu lại đối tượng order
-        orderDaos.save(orders);
+            // Cập nhật số lượng cho từng sản phẩm trong đơn hàng
+            List<order_item> listOrder_Item = orders.getOrder_items();
+            for (order_item order_item : listOrder_Item) {
+                variant variants = order_item.getVariant();
+                variants.setQUANTITY(variants.getQUANTITY() + order_item.getQUANTITY());
+                variantDao.save(variants);
+            }
+
+            // Lưu lại đối tượng order
+            orderDaos.save(orders);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin/order?error";
+        }
 
         return "redirect:/admin/order";
     }
 
+
     @GetMapping("confirmation/{id}")
     public String getConfirmation(Model model, @PathVariable("id") Integer id) {
         order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
-        status_order returnStatus = status_orderDao.findById(3).orElseThrow(() -> new RuntimeException("Status not found"));
+        status_order returnStatus = status_orderDao.findById(3)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
         orders.setStatus_order(returnStatus);
         System.out.println("Order ID: " + id + " updated to status: " + returnStatus.getSTATUS());
         orderDaos.save(orders);
@@ -446,7 +552,8 @@ public class AdminController {
     @GetMapping("delivery/{id}")
     public String getDelivery(@PathVariable("id") Integer id) {
         order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
-        status_order statusOrder = status_orderDao.findById(4).orElseThrow(() -> new RuntimeException("Status not found"));
+        status_order statusOrder = status_orderDao.findById(4)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
         orders.setStatus_order(statusOrder);
         System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
         orderDaos.save(orders);
@@ -456,13 +563,13 @@ public class AdminController {
     @GetMapping("completed/{id}")
     public String getCompleted(@PathVariable("id") Integer id) {
         order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
-        status_order statusOrder = status_orderDao.findById(1).orElseThrow(() -> new RuntimeException("Status not found"));
+        status_order statusOrder = status_orderDao.findById(1)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
         orders.setStatus_order(statusOrder);
         System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
         orderDaos.save(orders);
         return "redirect:/admin/order";
     }
-
 
     @GetMapping("unlock/{id}")
     public String getUnlock(Model model, @PathVariable("id") String id) {
@@ -481,9 +588,9 @@ public class AdminController {
         return "redirect:/admin/category";
     }
 
-    @GetMapping("category/delete")
-    public String deletecategory(@Param("id") Integer id) {
-        category category = categoryDao.getById(id);
+    @GetMapping("category/delete/{id}")
+    public String deletecategory(@PathVariable("id") Integer id) {
+        category category = categoryDao.findById(id).get();
         categoryDao.delete(category);
         return "redirect:/admin/category";
     }
@@ -606,9 +713,6 @@ public class AdminController {
         String page = "brand.jsp";
         model.addAttribute("page", page);
 
-        List<brand> list_brand = brandDao.findAll();
-        model.addAttribute("list_brand", list_brand);
-
         brand brand = new brand();
         model.addAttribute("brand", brand);
 
@@ -694,9 +798,6 @@ public class AdminController {
         String page = "system.jsp";
         model.addAttribute("page", page);
 
-        List<system> list_system = systemDao.findAll();
-        model.addAttribute("list_system", list_system);
-
         system system = new system();
         model.addAttribute("system", system);
 
@@ -704,6 +805,17 @@ public class AdminController {
         model.addAttribute("systemUpdate", systemUpdate);
 
         return "/Admin/production/homeadmin";
+    }
+
+    @ModelAttribute("list_system")
+    public Map<Integer, String> getSystem() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
+
+        List<system> list_system = systemDao.findAll();
+        for (system system : list_system) {
+            map.put(system.getID(), system.getSYSTEM());
+        }
+        return map;
     }
 
     @PostMapping("system/create")
@@ -782,9 +894,6 @@ public class AdminController {
         String page = "headphone_jack.jsp";
         model.addAttribute("page", page);
 
-        List<headphone_jack> list_headphone_jack = headphone_jackDao.findAll();
-        model.addAttribute("list_headphone_jack", list_headphone_jack);
-
         headphone_jack headphone_jack = new headphone_jack();
         model.addAttribute("headphone_jack", headphone_jack);
 
@@ -826,9 +935,6 @@ public class AdminController {
         String page = "charging_port.jsp";
         model.addAttribute("page", page);
 
-        List<charging_port> list_charging_port = charging_portDao.findAll();
-        model.addAttribute("list_charging_port", list_charging_port);
-
         charging_port charging_port = new charging_port();
         model.addAttribute("charging_port", charging_port);
 
@@ -836,6 +942,17 @@ public class AdminController {
         model.addAttribute("charging_portUpdate", charging_portUpdate);
 
         return "/Admin/production/homeadmin";
+    }
+
+    @ModelAttribute("list_charging_port")
+    public Map<Integer, String> getListCharingPort() {
+        Map<Integer, String> map = new HashMap<Integer, String>();
+
+        List<charging_port> list_charging_port = charging_portDao.findAll();
+        for (charging_port charging_port : list_charging_port) {
+            map.put(charging_port.getID(), charging_port.getNAME());
+        }
+        return map;
     }
 
     @PostMapping("charging_port/create")
@@ -920,9 +1037,6 @@ public class AdminController {
         String page = "screen_resolution.jsp";
         model.addAttribute("page", page);
 
-        List<screen_resolution> list_screen_resolution = screen_resolutionDao.findAll();
-        model.addAttribute("list_screen_resolution", list_screen_resolution);
-
         screen_resolution screen_resolution = new screen_resolution();
         model.addAttribute("screen_resolution", screen_resolution);
 
@@ -964,9 +1078,6 @@ public class AdminController {
     public String getQLgraphics_chip(Model model) {
         String page = "graphics_chip.jsp";
         model.addAttribute("page", page);
-
-        List<graphics_chip> list_graphics_chip = graphics_chipDao.findAll();
-        model.addAttribute("list_graphics_chip", list_graphics_chip);
 
         graphics_chip graphics_chip = new graphics_chip();
         model.addAttribute("graphics_chip", graphics_chip);
@@ -1206,13 +1317,12 @@ public class AdminController {
     }
 
     @PostMapping("create-admin")
-    public ResponseEntity<Map<String, String>> create(Model model, @Validated @ModelAttribute("userItem") user users, BindingResult bindingResult, @RequestParam("photo_file") MultipartFile img) throws IOException {
+    public ResponseEntity<Map<String, String>> create(Model model, @Validated @ModelAttribute("userItem") user users,
+                                                      BindingResult bindingResult, @RequestParam("photo_file") MultipartFile img) throws IOException {
         Map<String, String> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
             // Trả về lỗi xác thực
-            bindingResult.getFieldErrors().forEach(error ->
-                    response.put(error.getField(), error.getDefaultMessage())
-            );
+            bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
             return ResponseEntity.badRequest().body(response);
         }
         if (!img.isEmpty()) {
@@ -1266,5 +1376,56 @@ public class AdminController {
         String page = "qlnguoidung.jsp";
         model.addAttribute("page", page);
         return "redirect:/admin/user";
+    }
+
+    @PostMapping("/variant/create")
+    public String createVariant(Model model, @ModelAttribute("ObjectVariant") variant variant) {
+        variantDao.save(variant);
+        return "redirect:/admin/product";
+    }
+
+    @PostMapping("variant/update")
+    public String updateVariant(@ModelAttribute("ObjectVariant") variant variant) {
+        variantDao.save(variant);
+        return "redirect:/admin/product";
+    }
+
+    @GetMapping("variant/detele/{id}")
+    public String deleteVariant(@PathVariable("id") Integer id) {
+        variantDao.deleteById(id);
+        return "redirect:/admin/product";
+    }
+
+    @ModelAttribute("listColor")
+    public Map<Integer, String> getColor() {
+        Map<Integer, String> map = new HashMap<>();
+        List<color> listColor = colorDao.findAll();
+        for (color color : listColor) {
+            map.put(color.getID(), color.getNAME());
+        }
+        return map;
+    }
+
+    @ModelAttribute("listStorage")
+    public Map<Integer, Integer> getStorage() {
+        Map<Integer, Integer> map = new HashMap<>();
+        List<storage> listColor = storageDao.findAll();
+        for (storage color : listColor) {
+            map.put(color.getID(), color.getGB());
+        }
+        return map;
+    }
+
+    @Autowired
+    discount_productDao discount_productDao;
+
+    @ModelAttribute("listDiscount")
+    public Map<Integer, Double> getDiscount() {
+        Map<Integer, Double> map = new HashMap<>();
+        List<discount_product> list = discount_productDao.findAll();
+        for (discount_product color : list) {
+            map.put(color.getID(), color.getDISCOUNT_PERCENTAGE());
+        }
+        return map;
     }
 }
