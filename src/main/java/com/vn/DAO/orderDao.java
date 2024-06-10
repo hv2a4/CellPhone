@@ -10,5 +10,9 @@ import org.springframework.stereotype.Repository;
 public interface orderDao extends JpaRepository<order, Integer> {
 	@Query("select count(o) from order o")
 	long countOrder();
-
+	
+	@Query("SELECT o FROM order o WHERE o.ID = (SELECT MAX(o2.ID) FROM order o2)")
+    order getOrderMoi();
+	@Query("SELECT MAX(o2.ID) as ID FROM order o2")
+	Integer maOrder();
 }

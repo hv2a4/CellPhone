@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html lang="vi-VN" data-nhanh.vn-template="T0321">
 
@@ -226,9 +229,9 @@
                     <!--            <img width="320" height="120" src="/Content/mobile/images/V4/pic-success.png">-->
                     <img width="320" height="120"
                         src="https://pos.nvncdn.com/26be7c-108267/store/20211001_drDdKcUKHoG0paeW6h9xKvP7.png">
-                    <div class="notistatus"><i class="iconnoti iconsuccess"></i>Đặt hàng thành công</div>
+                    <div class="notistatus"><i class="iconnoti iconsuccess"></i>Hóa đơn của bạn</div>
                 </div>
-                <div class="thank">Cảm ơn <b>d</b> đã cho chúng tôi cơ hội được phục vụ.
+                <div class="thank">Cảm ơn <b>${list.FULLNAME}</b> đã cho chúng tôi cơ hội được phục vụ.
                     Trong thời gian nhất, nhân viên chúng tôi sẽ gửi tin nhắn hoặc gọi điện xác nhận giao hàng cho Qúy
                     Khách
                 </div>
@@ -236,13 +239,15 @@
 
                 <div class="titlebill">Thông tin đặt hàng:</div>
                 <div class="infoorder">
-                    <div>Mã đơn hàng: <b>383365059</b></div>
-                    <div>Địa chỉ nhận hàng: <b>d</b></div>
-                    <div><b>Thanh toán online</b></div>
-                    <div>Tổng tiền: <strong class="red">1.915.000₫</strong></div>
+                    <div>Mã đơn hàng: <b>${order.ID }</b></div>
+                    <div>Địa chỉ nhận hàng: <b>${adr}</b></div>
+                    <div><b>${pay}</b></div>
+                    <div>Tổng tiền: <strong class="red">
+                    <fmt:formatNumber value="${order.TOTAL_AMOUNT }"
+											pattern="###,###.###" /></strong></div>
                 </div>
                 <div class="callship">
-                    Trước khi giao nhân viên sẽ gọi cho Qúy khách <b>d</b>
+                    Trước khi giao nhân viên sẽ gọi cho Qúy khách <b>${list.FULLNAME}</b>
                     để xác nhận. Khi cần hỗ trợ vui lòng gọi
                     <a href="tel:19002812">19002812</a> hoặc
                     <a href="tel:"></a>
