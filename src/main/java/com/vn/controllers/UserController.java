@@ -39,27 +39,22 @@ public class UserController {
 
 	@Autowired
 	MailerServiceImpl mailer;
-
 	@Autowired
 	SessionService sessionService;
-
 	@Autowired
 	userDao userDao;
 	@Autowired
 	status_orderDao status_orderDao;
-
 	@Autowired
 	systemDao systemDao;
 	@Autowired
 	categoryDao categoryDao;
 	@Autowired
 	cartDao cartdao;
-
 	@Autowired
 	cart_itemDao cart_itemdao;
 	@Autowired
 	variantDao variantDao;
-
 	@Autowired
 	brandDao brandDao;
 	@Autowired
@@ -72,7 +67,11 @@ public class UserController {
 	addressDao addressDao;
 	@Autowired
 	discount_codeDao discount_codeDao;
-
+	@Autowired
+	phoneDao phonedao;
+	@Autowired
+	variantDao variantdao;
+	
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
 		return "/views/forgotpass1";
@@ -129,21 +128,16 @@ public class UserController {
 			model.addAttribute("otp", otp);
 			return "/views/forgotpass3";
 		}
-
 		List<user> listUser = sessionService.get("listUserSession");
-
 		if (listUser == null || listUser.isEmpty()) {
 			model.addAttribute("error", "Không tìm thấy người dùng. Vui lòng thử lại");
 			return "/views/forgotpass1";
 		}
-
 		user userToUpdate = listUser.get(0);
 		userToUpdate.setPASSWORD(password);
 		userDao.save(userToUpdate);
-
 		sessionService.remove("listUserSession");
 		sessionService.remove("email");
-
 		return "redirect:/shop/login";
 	}
 
@@ -155,21 +149,22 @@ public class UserController {
 		model.addAttribute("page", page);
 		return "index";
 	}
-	
-	@ModelAttribute("cartItems")
-	public List<cart_item> getListCartItem(Model model){
-		user user = getUser();
-		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
-		Double totalCart = 0.0;
-		int totalquantity = 0;
-		for (cart_item cart_item : cartItems) {
-			totalCart+= getGiaKhuyenMai(cart_item.getVariant())*cart_item.getQUANTITY();
-			totalquantity+= cart_item.getQUANTITY();
-		}
-		model.addAttribute("totalquantity", totalquantity);
-		model.addAttribute("totalCart", totalCart);
-		return cartItems;
-	}
+
+//	@ModelAttribute("cartItems")
+//	public List<cart_item> getListCartItem(Model model){
+//		user userss = sessionService.get("list");
+//		user user = userDao.getById(userss.getUSERNAME());
+//		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+//		Double totalCart = 0.0;
+//		int totalquantity = 0;
+//		for (cart_item cart_item : cartItems) {
+//			totalCart+= getGiaKhuyenMai(cart_item.getVariant())*cart_item.getQUANTITY();
+//			totalquantity+= cart_item.getQUANTITY();
+//		}
+//		model.addAttribute("totalquantity", totalquantity);
+//		model.addAttribute("totalCart", totalCart);
+//		return cartItems;
+//	}
 
 	public Double getGiaKhuyenMai(variant variant) {
 		if (variant.getDiscount_product().getEXPIRY_DATE().after(new Date())) {
@@ -179,34 +174,35 @@ public class UserController {
 		}
 	}
 
-	public user getUser() {
-		user userss = sessionService.get("list");
-		user user = userDao.getById(userss.getUSERNAME());
-		return user;
-	}
+//	public user getUser() {
+//		user userss = sessionService.get("list");
+//		user user = userDao.getById(userss.getUSERNAME());
+//		return user;
+//	}
 
 	@RequestMapping("cart/add/{id}")
 	@ResponseBody
 	public String addCart(Model model, @PathVariable("id") Integer id) {
 		Optional<variant> variant = variantdao.findById(id);
-		
+		user userss = sessionService.get("list");
+		user user = userDao.getById(userss.getUSERNAME());
 		cart_item cart_item = new cart_item();
-		cart_item.setCart(getUser().getCarts().get(0));
+		cart_item.setCart(user.getCarts().get(0));
 		cart_item.setQUANTITY(1);
 		cart_item.setVariant(variant.get());
-		
-		List<cart_item> list_cart_item = getUser().getCarts().get(0).getCart_items();
+
+		List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
 		for (cart_item item : list_cart_item) {
 			if (variant.get().getID() == item.getVariant().getID()) {
 				cart_item = item;
 				cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
 				break;
-			} 
+			}
 		}
 		cart_itemdao.save(cart_item);
 		return "redirect:/shop";
 	}
-	
+
 	@RequestMapping("cart/delete/{id}")
 	@ResponseBody
 	public String deleteCart(Model model, @PathVariable("id") Integer id) {
@@ -252,7 +248,7 @@ public class UserController {
 			allProductPage = new PageImpl<phone>(listphone, pageable, listphone.size());
 		}
 		List<phone> listphone = allProductPage.getContent();
-		
+
 		model.addAttribute("productPage", allProductPage);
 		model.addAttribute("listphone", listphone);
 		String page = "store.jsp";
@@ -269,11 +265,6 @@ public class UserController {
 	public List<system> getListSystem() {
 		return systemDao.findAll();
 	}
-
-	@Autowired
-	phoneDao phonedao;
-	@Autowired
-	variantDao variantdao;
 
 	@ModelAttribute("list_category")
 	public List<category> getList() {
@@ -297,7 +288,7 @@ public class UserController {
 
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {
-		
+
 		order order = orderDao.getOrderMoi();
 		double totalAmount = 0;
 		double totalDiscount = 0;
@@ -313,11 +304,11 @@ public class UserController {
 		user user = userDao.findById(us.getUSERNAME()).get();
 		List<payment_method> listPay = payment_methodDao.findAll();
 		model.addAttribute("pays", listPay);
-		
+
 		model.addAttribute("user", user);
 		model.addAttribute("order", order);
 		model.addAttribute("totalOrder", totalAmount);
-		
+
 		String page = "checkout.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -327,12 +318,12 @@ public class UserController {
 	public String muaNgay(Model model, @PathVariable("id") Integer id,
 			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
 		user us = sessionService.get("list");
-		user user = userDao.findById(us.getUSERNAME()).get();		
+		user user = userDao.findById(us.getUSERNAME()).get();
 		order or = new order();
 		or.setUser(user);
 		or.setCREATE_AT(new Date());
 		or.setUPDATE_AT(new Date());
-		or.setAddress(user.getAddresses().get(0));	
+		or.setAddress(user.getAddresses().get(0));
 		orderDao.save(or);
 
 		order order = orderDao.findById(or.getID()).get();
@@ -342,11 +333,10 @@ public class UserController {
 		order_item.setVariant(variant.get());
 		order_item.setPRICE(getPriceVariant(variant.get()));
 		order_item.setQUANTITY(quantity);
-		
+
 		order_itemDao.save(order_item);
 		return "redirect:/shop/checkout";
 	}
-
 
 	public Double getPriceVariant(variant variant) {
 		if (variant.getDiscount_product().getEXPIRY_DATE().after(new Date())) {
@@ -357,19 +347,17 @@ public class UserController {
 	}
 
 	@RequestMapping("ordersuccess")
-	public String getOrderSuccess(Model model,
-			@RequestParam("id_order") Integer idOrder,
-			@RequestParam("id_pay") Integer idPay,
-			@RequestParam("id_address") Integer idAddress,
+	public String getOrderSuccess(Model model, @RequestParam("id_order") Integer idOrder,
+			@RequestParam("id_pay") Integer idPay, @RequestParam("id_address") Integer idAddress,
 			@RequestParam("discount") Optional<Integer> discount) {
 		order order = orderDao.findById(idOrder).get();
 		address adr = addressDao.findById(idAddress).get();
 		payment_method pay = payment_methodDao.findById(idPay).get();
 		discount_code discount_code;
 		if (discount.isPresent()) {
-		    discount_code = discount_codeDao.findById(discount.get()).orElse(null);
+			discount_code = discount_codeDao.findById(discount.get()).orElse(null);
 		} else {
-		    discount_code = null;
+			discount_code = null;
 		}
 
 		order.setAddress(adr);
@@ -388,9 +376,9 @@ public class UserController {
 		model.addAttribute("pay", pay.getNAME());
 		return "/views/ordersuccess";
 	}
+
 	@RequestMapping("address")
 	public String getAddress(Model model) {
-		
 		String page = "address.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -402,8 +390,6 @@ public class UserController {
 		model.addAttribute("page", page);
 		return "index";
 	}
-
-	
 
 	@RequestMapping("product/{idphone}")
 	public String getProduct(Model model, @PathVariable("idphone") Integer id, @RequestParam("id_variant") Integer idv,
@@ -452,24 +438,12 @@ public class UserController {
 		return Optional.of(listDouble);
 	}
 
-//	@RequestMapping("cart")
-//	public String getShopCart(Model model) {
-//		String page = "cart.jsp";
-//		model.addAttribute("page", page);
-//		return "index";
+//	@ModelAttribute("ListUser")
+//	public List<cart_item> getListCartItem() {
+//		user userss = sessionService.get("list");
+//		user user = userDao.getById(userss.getUSERNAME());
+//		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+//		return cartItems;
 //	}
-
-	@ModelAttribute("ListUser")
-	public List<cart_item> getListCartItem() {
-		user user = getUser();
-		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
-		return cartItems;
-	}
-
-	public user getUser() {
-		user userss = sessionService.get("list");
-		user user = userDao.getById(userss.getUSERNAME());
-		return user;
-	}
 
 }
