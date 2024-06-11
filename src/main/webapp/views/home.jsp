@@ -131,13 +131,13 @@
 																style="margin-right: 5px; font-weight: bold;">
 																<fmt:formatNumber pattern="###,###.###">
 											${variantmd.PRICE*(100-variantmd.discount_product.DISCOUNT_PERCENTAGE)/100}
-										</fmt:formatNumber>
+										</fmt:formatNumber> đ
 															</h4>
 														</div>
 														<div class="ellipsis">
 															<h4 id="giagoc${phone.ID}" class=""
 																style="margin-right: 5px; text-decoration: line-through;">
-																<fmt:formatNumber pattern="###,###.###">${variantmd.PRICE}</fmt:formatNumber>
+																<fmt:formatNumber pattern="###,###.###">${variantmd.PRICE}</fmt:formatNumber> đ
 															</h4>
 														</div>
 													</div>
