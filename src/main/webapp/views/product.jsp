@@ -101,19 +101,21 @@
 
 						<div class="add-to-cart">
 							<div class="qty-label">
-									<input class="updateCart" value="1" type="number"
-									name="quantity" min="1" max="${quantity }" style="width: 6em; height: 3em; text-align: center;"/>
+								<input class="updateCart" value="1" type="number"
+									name="quantity" min="1" max="${quantity }"
+									style="width: 6em; height: 3em; text-align: center;" />
 							</div>
 						</div>
 						<div class="add-to-cart">
-							<button class="add-to-cart-btn"  id="buyNowButton">
+							<button class="add-to-cart-btn" id="buyNowButton">
 								<i class="fa-brands fa-bitcoin" style="font-size: 20px"></i> Mua
 								ngay
 							</button>
-							<button class="add-to-cart-btn" type="submit" id="addToCartButton">
+							<button class="add-to-cart-btn" type="submit"
+								id="addToCartButton">
 								<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
 							</button>
-						<!-- 	<a href="/shop/cart"><button class="add-to-cart-btn">
+							<!-- 	<a href="/shop/cart"><button class="add-to-cart-btn">
 									<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
 								</button></a> -->
 						</div>
@@ -457,12 +459,13 @@
 							</div>
 							<div class="product-btns">
 								<button class="quick-view">
-									<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
+									<a
+										href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
 										<i class="fa fa-eye"></i>
 									</a> <span class="tooltipp">quick view</span>
 								</button>
-								<button class="quick-view">
-									<i class="fa fa-shopping-cart"></i> <span class="tooltipp">Thêm
+								<button class="quick-view" onclick="addCart(${variantmd.ID})">
+									<i class="fa fa-shopping-cart"></i><span class="tooltipp">Thêm
 										vào giỏ hàng</span>
 								</button>
 							</div>
@@ -559,5 +562,33 @@ function getGiaRelated(idPhone, idVariant) {
 function formatPrice(price) {
     return price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
+function addCart(id) {
+	  $.ajax({
+	    type: "GET",
+	    url: "/shop/cart/add/" + id,
+	    success: function() {
+	    	const Toast = Swal.mixin({
+	    		  toast: true,
+	    		  position: "top-end",
+	    		  showConfirmButton: false,
+	    		  timer: 1000,
+	    		  timerProgressBar: true,
+	    		  didOpen: (toast) => {
+	    		    toast.onmouseenter = Swal.stopTimer;
+	    		    toast.onmouseleave = Swal.resumeTimer;
+	    		  }
+	    		});
+	    		Toast.fire({
+	    		  icon: "success",
+	    		  title: "Đã thêm vào giỏ hàng"
+	    		}).then(function(){
+	    			location.reload();
+	    		});
+	    },
+	    error: function(xhr, status, error) {
+	      console.log("Error: " + error);
+	    }
+	  });
+	}
 </script>
 
