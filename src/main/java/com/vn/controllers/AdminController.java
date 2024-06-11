@@ -31,12 +31,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.vn.DAO.ColorDao;
 
 import com.vn.DAO.battery_typeDao;
@@ -76,7 +70,6 @@ import com.vn.DAO.orderDao;
 import com.vn.DAO.userDao;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -261,10 +254,35 @@ public class AdminController {
     }
 
     @GetMapping("profile")
-    public String getProfile(Model model) {
+    public String getProfile(Model model,user item) {
+    	model.addAttribute("item", item);
+    	
         String page = "profile.jsp";
         model.addAttribute("page", page);
         return "/Admin/production/homeadmin";
+    }
+    @PostMapping("profile")
+    public String postProfile(@Validated @ModelAttribute("item") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
+    	 if (bindingResult.hasErrors()) {
+   		  System.out.println("hello");
+   		        model.addAttribute("page", "profile.jsp");
+   		        return "index";
+   		    }
+   		String photo=service.save(file,"/images/");
+   		
+   		Optional<user> userS=userDao.findById(item.getUSERNAME());
+
+   			userS.get().setAVATAR(photo);
+   			userS.get().setFULLNAME(item.getFULLNAME());
+   			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+   			userS.get().setGENDER(item.getGENDER());
+   			userS.get().setEMAIL(item.getEMAIL());
+
+   			userDao.save(userS.get());
+   		    sessionService.set("list", userS.get());
+    	
+        
+   		 return "redirect:/admin/profile";
     }
 
     @RequestMapping("logout")

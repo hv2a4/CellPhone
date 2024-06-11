@@ -21,15 +21,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach var="item" items="${ListUser}">					
+						<%-- <c:forEach var="item" items="${ListUser}">	 --%>				
 								<tr class="cartItem cartItem_14340887">
 									<td class="hidden-xs"><a href=""> <img
 											data-sizes="auto"
 											class="lazyautosizes ls-is-cached lazyloaded"
-											data-src="/images/${item.variant.phone.IMAGE}"
+											data-src="/images/"
 											alt="MÀN HÌNH LG 24MK430H-B 24''" sizes="100px"
-											src="/images/${item.variant.phone.IMAGE}"></a></td>
-									<td><a class="itemName" href="">${item.variant.phone.NAME}</a>
+											src="/images/"></a></td>
+									<td><a class="itemName" href=""></a>
 										<div class="att attcode">Code:</div>
 										<div class="att itemPri visible-xs">
 											<i>Giá</i>: 12,000,000đ
@@ -54,7 +54,7 @@
 									<td class="text-center hidden-xs"><i
 										class="removeCartItem fa fa-trash-o" aria-hidden="true"></i></td>
 								</tr>
-						</c:forEach>
+						<%-- </c:forEach> --%>
 					</tbody>
 				</table>
 				<span class="totalPrice pull-right">Tổng tiền: <c:out
