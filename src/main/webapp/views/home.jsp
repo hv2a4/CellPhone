@@ -131,13 +131,13 @@
 																style="margin-right: 5px; font-weight: bold;">
 																<fmt:formatNumber pattern="###,###.###">
 											${variantmd.PRICE*(100-variantmd.discount_product.DISCOUNT_PERCENTAGE)/100}
-										</fmt:formatNumber>
+										</fmt:formatNumber> đ
 															</h4>
 														</div>
 														<div class="ellipsis">
 															<h4 id="giagoc${phone.ID}" class=""
 																style="margin-right: 5px; text-decoration: line-through;">
-																<fmt:formatNumber pattern="###,###.###">${variantmd.PRICE}</fmt:formatNumber>
+																<fmt:formatNumber pattern="###,###.###">${variantmd.PRICE}</fmt:formatNumber> đ
 															</h4>
 														</div>
 													</div>
@@ -288,32 +288,44 @@ function getGia(idPhone, idVariant) {
         }
     });
 }
-
 function addCart(id) {
 	  $.ajax({
 	    type: "GET",
 	    url: "/shop/cart/add/" + id,
 	    success: function() {
-	    	const Toast = Swal.mixin({
-	    		  toast: true,
-	    		  position: "top-end",
-	    		  showConfirmButton: false,
-	    		  timer: 1000,
-	    		  timerProgressBar: true,
-	    		  didOpen: (toast) => {
-	    		    toast.onmouseenter = Swal.stopTimer;
-	    		    toast.onmouseleave = Swal.resumeTimer;
-	    		  }
-	    		});
-	    		Toast.fire({
-	    		  icon: "success",
-	    		  title: "Đã thêm vào giỏ hàng"
-	    		}).then(function(){
-	    			location.reload();
-	    		});
+	      const Toast = Swal.mixin({
+	        toast: true,
+	        position: "top-end",
+	        showConfirmButton: false,
+	        timer: 1000,
+	        timerProgressBar: true,
+	        didOpen: (toast) => {
+	          toast.onmouseenter = Swal.stopTimer;
+	          toast.onmouseleave = Swal.resumeTimer;
+	        }
+	      });
+	      Toast.fire({
+	        icon: "success",
+	        title: "Đã thêm vào giỏ hàng"
+	      }).then(function(){
+	        location.reload();
+	      });
 	    },
 	    error: function(xhr, status, error) {
 	      console.log("Error: " + error);
+	      Swal.fire({
+	        title: "Bạn chưa đăng nhập?",
+	        text: "",
+	        icon: "error",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Đăng nhập"
+	      }).then((result) => {
+	        if (result.isConfirmed) {
+	          window.location.href = "/shop/login";
+	        }
+	      });
 	    }
 	  });
 	}

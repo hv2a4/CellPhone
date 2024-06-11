@@ -25,6 +25,7 @@ import com.vn.entity.user;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -293,7 +294,9 @@ public class AdminController {
 
     @PostMapping("/phone/create")
     public ResponseEntity<Map<String, String>> createPhone(@Validated @ModelAttribute("phone") phone phone,
-                                                           BindingResult bindingResult, @RequestParam("anh") List<MultipartFile> images) {
+                                                           BindingResult bindingResult,
+                                                           @RequestParam("anh") List<MultipartFile> images,
+                                                           HttpServletRequest req) {
 
         Map<String, String> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
@@ -332,28 +335,39 @@ public class AdminController {
             phone.setCREATE_AT(new Date());
             phone.setIS_DELETE(false);
             phoneDao.save(phone);
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.put("status", "error");
+            response.put("message", "Failed to save image to disk: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
             response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
         response.put("status", "success");
         return ResponseEntity.ok(response);
     }
 
-
     private String saveImageToDisk(MultipartFile image, HttpServletRequest req) throws IOException {
         String filename = image.getOriginalFilename();
-        String uploadDir = req.getServletContext().getRealPath("/images/"); // Lấy đường dẫn tuyệt đối đến thư mục /images
-        File uploadFolder = new File(uploadDir);
+        File uploadFolder = new File(req.getServletContext().getRealPath("/images/"));
         if (!uploadFolder.exists()) {
-            uploadFolder.mkdirs();
+            if (!uploadFolder.mkdirs()) {
+                throw new IOException("Failed to create directory: " + uploadFolder.getAbsolutePath());
+            }
         }
         File destFile = new File(uploadFolder, filename); // Tạo đối tượng File với đường dẫn và tên tệp tin đích
-        image.transferTo(destFile); // Chuyển tệp tin vào đích
+        try {
+            image.transferTo(destFile); // Chuyển tệp tin vào đích
+        } catch (IOException e) {
+            throw new IOException("Failed to transfer file to: " + destFile.getAbsolutePath(), e);
+        }
         return filename; // Trả về tên tệp tin đã lưu
     }
+
 
 
     @PostMapping("phone/update/{id}")
@@ -584,6 +598,10 @@ public class AdminController {
         status_order statusOrder = status_orderDao.findById(1)
                 .orElseThrow(() -> new RuntimeException("Status not found"));
         orders.setStatus_order(statusOrder);
+        status_invoice s = status_invoiceDao.findById(1).get();
+        invoice invoice = orders.getInvoices().get(0);
+        invoice.setStatus_invoice(s);
+        invoiceDao.save(invoice);
         System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
         orderDaos.save(orders);
         return "redirect:/admin/order";
