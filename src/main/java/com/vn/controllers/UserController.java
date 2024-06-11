@@ -212,7 +212,7 @@ public class UserController {
 		cart_itemdao.delete(cart_item);
 		return "redirect:/shop";
 	}
-
+	
 	@RequestMapping("store")
 	public String getStore(Model model, @RequestParam("q") Optional<String> q,
 			@RequestParam(name = "brand") Optional<List<String>> brand,
@@ -221,7 +221,7 @@ public class UserController {
 			@RequestParam(name = "sorts") Optional<String> sorts, @RequestParam(value = "dirs") Optional<String> dirs,
 			@RequestParam(name = "sizes") Optional<Integer> sizes,
 			@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
-
+		
 		Sort.Direction direction = Sort.Direction.fromString(dirs.orElse("DESC"));
 		Sort sort = Sort.by(direction, sorts.orElse("NAME"));
 		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, sizes.orElse(12), sort);
@@ -248,8 +248,9 @@ public class UserController {
 		// TEN VA HANG
 		// TEN VA HE THONG
 		// GIA VA HANG
-		if ((brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
-			allProductPage = phonedao.findBybrandInAndsystemIn(brand.get(), systems.get(), pageable);
+		if ((min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0))
+				&& (brand.isPresent() && !brand.get().isEmpty())) {
+			allProductPage = phonedao.findByPRICEBetweenAndBrandIn(min.get(), max.get(), brand.get(), pageable);
 		}
 		// GIA VA HE THONG
 		if ((min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0))
@@ -267,11 +268,25 @@ public class UserController {
 			allProductPage = phonedao.findByPriceSystemBrand(min.get(), max.get(), systems.get(), brand.get(),
 					pageable);
 		}
+		// LOC THEO 4 DK
+		if ((!q.orElse("").isEmpty()) && (min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0))
+				&& (brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findByNamePriceSystemBrand(min.get(), max.get(), systems.get(), brand.get(),
+					q.get(), pageable);
+		}
 
 		List<phone> listphone = allProductPage.getContent();
-
+		List<variant> listvariant = variantdao.findAll();
+		Double maxPrice = 0.0;
+		for (variant variant : listvariant) {
+			if (variant.getPRICE()> maxPrice) {
+				maxPrice = variant.getPRICE();
+			}
+		}
+		
 		model.addAttribute("productPage", allProductPage);
 		model.addAttribute("listphone", listphone);
+		model.addAttribute("maxPrice", maxPrice);
 		String page = "store.jsp";
 		model.addAttribute("page", page);
 		return "index";

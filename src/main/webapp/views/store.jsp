@@ -279,8 +279,8 @@ function getGia(idPhone, idVariant) {
         $("#price-range").slider({
             range: true,
             min: 0,
-            max: 50000000,
-            values: [0, 50000000],
+            max: ${maxPrice},
+            values: [0, ${maxPrice}],
             slide: function(event, ui) {
                 $("#min-price").val(ui.values[0]);
                 $("#max-price").val(ui.values[1]);

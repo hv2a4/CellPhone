@@ -42,10 +42,17 @@ public interface phoneDao extends JpaRepository<phone, Integer> {
 	Page<phone> findByPRICEBetweenAndsystemIn(Double min, Double max, List<String> systemSystems, Pageable pageable);
 	
 	// Lọc theo 3 điều kiện
+	// GIA - HANG - HE THONG
 	@Query("SELECT p FROM phone p JOIN p.variants v WHERE v.PRICE BETWEEN ?1 AND ?2 AND p.system.SYSTEM IN ?3 AND p.brand.NAME IN ?4")
 	Page<phone> findByPriceSystemBrand(Double min, Double max, List<String> systemSystems, List<String> brandNames, Pageable pageable);
 	
-
+	
+	// Lọc theo 4 điều kiện
+	// GIA - HANG - HE THONG - NAME
+	@Query("SELECT p FROM phone p JOIN p.variants v WHERE v.PRICE BETWEEN ?1 AND ?2 AND p.system.SYSTEM IN ?3 AND p.brand.NAME IN ?4 AND p.NAME LIKE ?5")
+	Page<phone> findByNamePriceSystemBrand(Double min, Double max, List<String> systemSystems, List<String> brandNames, String keywords, Pageable pageable);
+	
+	
 
 
 
