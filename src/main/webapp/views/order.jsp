@@ -81,7 +81,7 @@
                                                     
                                                     <c:choose>
                                                        <c:when test="${item.status_order.STATUS == 'Chờ xác nhận'}">
-                                                      <td>   <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#myModal-${item.ID+1}">Hủy</button></td>
+                                                      <td>   <button type="button" class="btn btn-danger " style=" width: 100px;" data-toggle="modal" data-target="#myModal-${item.ID+1}">Hủy</button></td>
                                                     	    <!-- Modal -->
             <div id="myModal-${item.ID+1}" class="modal fade" role="dialog">
                 <div class="modal-dialog">
@@ -136,7 +136,7 @@
 													</div>
                                                        </c:when>
                                                        <c:when test="${item.status_order.STATUS == 'Trả hàng'}">
-                                                       <td><button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#myModal${item.ID+2}">Lý do</button></td>
+                                                       <td><button type="button" class="btn btn-primary" style=" width: 100px;" data-toggle="modal" data-target="#myModal${item.ID+2}">Lý do</button></td>
                                                             <!-- Modal -->
 <div id="myModal${item.ID+2}" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -204,7 +204,7 @@
                                                     <td>${item.TOTAL_AMOUNT }</td>
                                                     <td><fmt:formatDate value="${item.CREATE_AT}" pattern="yyyy-MM-dd"/></td>
                                                     <td>${item.status_order.STATUS }</td>
-                                                    <td>   <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal-${item.ID}">Hủy</button>
+                                                    <td>   <button type="button" class="btn btn-danger" style=" width: 100px;" data-toggle="modal" data-target="#myModal-${item.ID}">Hủy</button>
                                                     
                                                     </td>
 							    <!-- Modal -->
@@ -319,7 +319,7 @@
                                                     <td>${item.TOTAL_AMOUNT }</td>
                                                     <td><fmt:formatDate value="${item.CREATE_AT}" pattern="yyyy-MM-dd"/></td>
                                                     <td>${item.status_order.STATUS }</td>
-                                                    <td> <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#myModal-${item.ID}">Trả Hàng</button> </td>
+                                                    <td> <button type="button" class="btn btn-warning "  style=" width: 100px;" data-toggle="modal" data-target="#myModal-${item.ID}">Trả Hàng</button> </td>
 													<!-- Modal -->
 													<div id="myModal-${item.ID}" class="modal fade"
 														role="dialog">
@@ -390,7 +390,8 @@
                                                     <td>${item.TOTAL_AMOUNT }</td>
                                                     <td><fmt:formatDate value="${item.CREATE_AT}" pattern="yyyy-MM-dd"/></td>
                                                     <td>${item.status_order.STATUS }</td>
-                                                    <td><button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal${item.ID}">Lý do</button> </td>
+                                                    <td><button type="button" class="btn btn-primary " data-toggle="modal" data-target="#myModal${item.ID}"
+                                                    style=" width: 100px;">Lý do</button> </td>
                                                      <!-- Modal -->
 <div id="myModal${item.ID}" class="modal fade" role="dialog">
   <div class="modal-dialog">

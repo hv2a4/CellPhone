@@ -58,7 +58,7 @@ public class user implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "UPDATE_AT")
-	Date UPDATE_AT;
+	Date UPDATE_AT=new Date();;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "CLOCKDOWN_PERIOD")
