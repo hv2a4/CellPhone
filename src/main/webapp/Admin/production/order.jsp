@@ -181,7 +181,7 @@
                                                                     <a class="btn btn-dark"
                                                                        href="/admin/returns/${item.ID}"
                                                                        style="width: 100px;">
-                                                                        Trả hàng
+                                                                       Đã nhận
                                                                     </a>
                                                                 </c:when>
                                                             </c:choose>
@@ -302,7 +302,7 @@
                                                                     pattern="yyyyMMdd"/>${loop.index +1}
                                                             </td>
                                                             <td>${item.user.FULLNAME}</td>
-                                                            <td>${item.user.PHONE_NUMBER}</td>
+                                                            <td>${item.TOTAL_AMOUNT}</td>
                                                             <td>${item.CREATE_AT}</td>
                                                             <td>
                                                                 <span class="badge rounded-pill"
@@ -606,7 +606,7 @@
                                                                     pattern="yyyyMMdd"/>${loop.index +1}
                                                             </td>
                                                             <td>${item.user.FULLNAME}</td>
-                                                            <td>${item.user.PHONE_NUMBER}</td>
+                                                            <td>${item.TOTAL_AMOUNT}</td>
                                                             <td>${item.CREATE_AT}</td>
                                                             <td>
                                                                   <span class="badge rounded-pill"
@@ -618,7 +618,7 @@
                                                                 <a class="btn btn-dark"
                                                                    href="/admin/returns/${item.ID}"
                                                                    style="" id="btn-tab-4">
-                                                                    Trả hàng
+                                                                    Đã nhận
                                                                 </a>
                                                             </td>
                                                         </tr>
