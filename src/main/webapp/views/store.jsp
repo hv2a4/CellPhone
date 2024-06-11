@@ -175,8 +175,8 @@
 									</div>
 								</div>
 								<div class="add-to-cart">
-									<a href="/shop/checkout">
-										<button ty class="add-to-cart-btn">
+									<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
+										<button class="add-to-cart-btn" type="button">
 											<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
 											Mua ngay
 										</button>

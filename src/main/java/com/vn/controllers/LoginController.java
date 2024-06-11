@@ -74,16 +74,13 @@ public class LoginController {
 		        // Now, check the updated STATUS after potential unlocking
 		         if (list.get().getSTATUS()) {
 		            sessionService.set("list", list.get());
-		            System.out.println(remember);
 		             if(remember) {
-		            	 System.out.println("cookie");
 		            	 cookieService.add("userCookie",userName,30,response);
 		             }
 		            if (list.get().getROLE()) {
 		                list.get().setINCORRECT_PASSWORD(0);
 		                userDao.save(list.get());
 		                sessionService.set("list", list.get());
-		                System.out.println("Redirecting to admin");
 		                return "redirect:/admin";
 		            } else {
 		                list.get().setINCORRECT_PASSWORD(0);
@@ -103,7 +100,6 @@ public class LoginController {
 			   if(list.get().getINCORRECT_PASSWORD()>=5) {   // set thời gian khóa trong bao lâu
 				   list.get().setSTATUS(false);
 				   cal.add(Calendar.MINUTE, 30);
-				   System.out.println("Thời gian khóa: "+cal.getTime());
 				   list.get().setCLOCKDOWN_PERIOD(cal.getTime());
 				   userDao.save(list.get());
 				   model.addAttribute("message", "Tài Khoản Không Còn Hoạt Động");

@@ -40,7 +40,7 @@
 						data-bs-toggle="tab" data-bs-target="#dangvanchuyen" type="button"
 						role="tab" aria-controls="dangvanchuyen" aria-selected="false"
 						style="width: 150px">
-						<span style="font-size: 15px;">Đang vận chuyển</span>
+						<span style="font-size: 15px;">Đang giao</span>
 					</button>
 				</li>
 				<li class="nav-item" role="presentation">
@@ -102,11 +102,8 @@
 																<td>DK<fmt:formatDate value="${item.UPDATE_AT}"
 																		pattern="yyyyMMdd" />${loop.index +1}</td>
 																<td>${item.user.FULLNAME}</td>
-																<td>
-																<fmt:formatNumber type="currency" currencyCode="VND" value="${item.TOTAL_AMOUNT}" />
-																
-																
-																</td>
+																<td><fmt:formatNumber type="currency"
+																		currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																<td>${item.CREATE_AT}</td>
 																<td><c:choose>
 																		<c:when
@@ -145,7 +142,7 @@
 																				Trả hàng </span>
 																		</c:when>
 																	</c:choose></td>
-																<td><c:choose>
+																<td class="text-center"><c:choose>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Hoàn thành'}">
 																			<button type="button" class="btn"
@@ -241,8 +238,7 @@
 																				data-bs-dismiss="modal" aria-label="Close"></button>
 																		</div>
 																		<div class="modal-body">
-																			<h2>${item.user.USERNAME} -
-																				${item.user.FULLNAME}</h2>
+																			<h2>${item.user.USERNAME}- ${item.user.FULLNAME}</h2>
 																			<br>
 																			<p>${item.REASON}</p>
 																		</div>
@@ -302,14 +298,13 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td>
-																	<fmt:formatNumber type="currency"
-																						currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+																	<td><fmt:formatNumber type="currency"
+																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.CREATE_AT}</td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #ffeb3b; color: black; font-size: 15px;">
 																			Chờ xác nhận </span></td>
-																	<td><a class="btn"
+																	<td class="text-center"><a class="btn"
 																		href="/admin/confirmation/${item.ID}"
 																		style="background-color: #ffc107; color: black;"
 																		id="btn-tab-1"> Xác Nhận </a></td>
@@ -365,13 +360,14 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency" currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+																	<td><fmt:formatNumber type="currency"
+																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.CREATE_AT}</td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #2196f3; color: white; font-size: 15px;">
 																			Đã xác nhận </span></td>
-																	<td><a type="button" class="btn"
-																		href="/admin/delivery/${item.ID}"
+																	<td class="text-center"><a type="button"
+																		class="btn" href="/admin/delivery/${item.ID}"
 																		style="background-color: #17a2b8; color: whitesmoke;"
 																		id="btn-tab-2"> Giao Hàng </a></td>
 																</tr>
@@ -424,12 +420,13 @@
 																	<td>DK<fmt:formatDate value="${item.UPDATE_AT}"
 																			pattern="yyyyMMdd" />${loop.index +1}</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency" currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+																	<td><fmt:formatNumber type="currency"
+																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.CREATE_AT}</td>
 																	<td><span class="badge rounded-pill"
-																		style="width: 100px; background-color: #ff9800; color: white; font-size: 15px;">
+																		style="width: 100px; background-color: #007bff; color: white; font-size: 15px;">
 																			Giao hàng </span></td>
-																	<td><a class="btn"
+																	<td class="text-center"><a class="btn"
 																		href="/admin/completed/${item.ID}"
 																		style="background-color: #007bff; color: white; font-size: 15px;"
 																		id="btn-tab-3"> Hoàn Thành </a></td>
@@ -485,12 +482,12 @@
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
 																	<td><fmt:formatNumber type="currency"
-																						currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.CREATE_AT}</td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #4caf50; color: white; font-size: 15px;">
 																			Hoàn thành </span></td>
-																	<td>
+																	<td class="text-center">
 																		<button type="button" class="btn"
 																			data-bs-toggle="modal"
 																			data-bs-target="#exampleModals_${loop.index + 1}"
@@ -586,12 +583,13 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency" currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+																	<td><fmt:formatNumber type="currency"
+																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.CREATE_AT}</td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #9e9e9e; color: white; font-size: 15px;">
 																			Trả hàng </span></td>
-																	<td><a class="btn btn-dark"
+																	<td class="text-center"><a class="btn btn-dark"
 																		href="/admin/returns/${item.ID}" style=""
 																		id="btn-tab-4"> Đã nhận </a></td>
 																</tr>
@@ -644,12 +642,13 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency" currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+																	<td><fmt:formatNumber type="currency"
+																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.CREATE_AT}</td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #f44336; color: white; font-size: 15px;">
 																			Hủy </span></td>
-																	<td>
+																	<td class="text-center">
 																		<button type="button" class="btn"
 																			data-bs-toggle="modal"
 																			data-bs-target="#xemlydos_${loop.index + 1}"
@@ -671,7 +670,7 @@
 																					data-bs-dismiss="modal" aria-label="Close"></button>
 																			</div>
 																			<div class="modal-body">
-																				<h2>${item.user.USERNAME} -
+																				<h2>${item.user.USERNAME}-
 																					${item.user.FULLNAME}</h2>
 																				<br>
 																				<p>${item.REASON}</p>
