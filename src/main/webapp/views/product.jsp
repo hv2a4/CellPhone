@@ -106,13 +106,16 @@
 							</div>
 						</div>
 						<div class="add-to-cart">
-							<button class="add-to-cart-btn" type="submit">
+							<button class="add-to-cart-btn"  id="buyNowButton">
 								<i class="fa-brands fa-bitcoin" style="font-size: 20px"></i> Mua
 								ngay
 							</button>
-							<a href="/shop/cart"><button class="add-to-cart-btn">
+							<button class="add-to-cart-btn" type="submit" id="addToCartButton">
+								<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
+							</button>
+						<!-- 	<a href="/shop/cart"><button class="add-to-cart-btn">
 									<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
-								</button></a>
+								</button></a> -->
 						</div>
 					</form>
 				</div>
@@ -490,14 +493,18 @@
 <!-- /Section -->
 <script>
 function updateBuyNowButton(idPhone, idVariant) {
-	var form = document.getElementById('checkoutForm');
-    form.action = "/shop/muangay/" + idVariant;
+	/* var form = document.getElementById('checkoutForm');
+    form.action = "/shop/muangay/" + idVariant; */
     // Update the "Mua ngay" button's URL with the selected variant ID
     var quantity = document.getElementsByName('quantity')[0].value;
     var buyNowButton = document.getElementById('buyNowButton');
-    var baseUrl = "/shop/checkout?id_variant=" + idVariant + "&quantity=" + quantity;
-    buyNowButton.setAttribute('href', baseUrl);
-
+    /* var baseUrl = "/shop/checkout?id_variant=" + idVariant + "&quantity=" + quantity;
+    buyNowButton.setAttribute('href', baseUrl); */
+    buyNowButton.onclick = function() {
+        window.location.href = "/shop/muangay/" + idVariant + "?quantity=" + quantity;
+    };
+    var addToCartButton = document.getElementById('addToCartButton');
+    addToCartButton.formAction = "/shop/addcart/" + idVariant + "?quantity=" + quantity;
     // Optionally, call the getGia function to update prices
     getGia(idPhone, idVariant);
 }
