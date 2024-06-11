@@ -43,22 +43,19 @@ public class user implements Serializable {
 	String FULLNAME;
 	@NotBlank(message = "Không được bỏ trông giới tính !")
 	String GENDER;
- 
+
 	@NotBlank(message = "Không Được để trống số điện thoại !")
-	@Pattern(
-			regexp = "^(032|033|034|035|036|037|038|039|096|097|098|086|083|084|085|081|082|088|091|094|070|079|077|076|078|090|093|089|056|058|092|059|099)[0-9]{7}$",
-			message = "Số điện thoại không hợp lệ"
-	)
+	@Pattern(regexp = "^(0[0-9]{9})$", message = "Số điện thoại không hợp lệ")
 	String PHONE_NUMBER;
 	int INCORRECT_PASSWORD;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@JoinColumn(name="CREATE_AT")
-	Date CREATE_AT=new Date();
+	@JoinColumn(name = "CREATE_AT")
+	Date CREATE_AT = new Date();
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "UPDATE_AT")
-	Date UPDATE_AT=new Date();;
+	Date UPDATE_AT = new Date();;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "CLOCKDOWN_PERIOD")
@@ -68,8 +65,8 @@ public class user implements Serializable {
 	@JoinColumn(name = "ID_RANK")
 	rank rank;
 
-    @OneToMany(mappedBy = "user")
-    List<address> addresses;
+	@OneToMany(mappedBy = "user")
+	List<address> addresses;
 
 	@OneToMany(mappedBy = "user")
 	List<cart> carts;
