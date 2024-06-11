@@ -2,6 +2,9 @@ package com.vn.entity;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +24,7 @@ public class cart implements Serializable {
 	Integer ID;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "ID_USER")
 	user user;
 

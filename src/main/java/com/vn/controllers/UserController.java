@@ -71,7 +71,7 @@ public class UserController {
 	phoneDao phonedao;
 	@Autowired
 	variantDao variantdao;
-	
+
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
 		return "/views/forgotpass1";
@@ -150,21 +150,28 @@ public class UserController {
 		return "index";
 	}
 
-//	@ModelAttribute("cartItems")
-//	public List<cart_item> getListCartItem(Model model){
-//		user userss = sessionService.get("list");
-//		user user = userDao.getById(userss.getUSERNAME());
-//		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
-//		Double totalCart = 0.0;
-//		int totalquantity = 0;
-//		for (cart_item cart_item : cartItems) {
-//			totalCart+= getGiaKhuyenMai(cart_item.getVariant())*cart_item.getQUANTITY();
-//			totalquantity+= cart_item.getQUANTITY();
-//		}
-//		model.addAttribute("totalquantity", totalquantity);
-//		model.addAttribute("totalCart", totalCart);
-//		return cartItems;
-//	}
+	@ModelAttribute("cartItems")
+	public List<cart_item> getListCartItem(Model model) {
+		user userss = sessionService.get("list");
+
+		if (userss != null) {
+			user user = userDao.getById(userss.getUSERNAME());
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+			Double totalCart = 0.0;
+			int totalquantity = 0;
+			for (cart_item cart_item : cartItems) {
+				totalCart += getGiaKhuyenMai(cart_item.getVariant()) * cart_item.getQUANTITY();
+				totalquantity += cart_item.getQUANTITY();
+			}
+			model.addAttribute("totalquantity", totalquantity);
+			model.addAttribute("totalCart", totalCart);
+			return cartItems;
+		} else {
+			List<cart_item> list = new ArrayList<cart_item>();
+			return list;
+		}
+
+	}
 
 	public Double getGiaKhuyenMai(variant variant) {
 		if (variant.getDiscount_product().getEXPIRY_DATE().after(new Date())) {
@@ -174,11 +181,11 @@ public class UserController {
 		}
 	}
 
-//	public user getUser() {
-//		user userss = sessionService.get("list");
-//		user user = userDao.getById(userss.getUSERNAME());
-//		return user;
-//	}
+	public user getUser() {
+		user userss = sessionService.get("list");
+		user user = userDao.getById(userss.getUSERNAME());
+		return user;
+	}
 
 	@RequestMapping("cart/add/{id}")
 	@ResponseBody
@@ -195,20 +202,78 @@ public class UserController {
 		for (cart_item item : list_cart_item) {
 			if (variant.get().getID() == item.getVariant().getID()) {
 				cart_item = item;
-				cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+				if (cart_item.getQUANTITY() <= variant.get().getQUANTITY()) {
+					cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+				}
 				break;
 			}
 		}
 		cart_itemdao.save(cart_item);
-		return "redirect:/shop";
+		return "redirect:/shop/cart";
+	}
+
+	@RequestMapping("cart")
+	public String cart(Model model, @RequestParam("id_cart") Optional<Integer> id) {
+		user us = sessionService.get("list");
+		if (us != null) {
+			user user = userDao.findById(us.getUSERNAME()).get();
+			List<cart_item> cart_items = user.getCarts().getFirst().getCart_items();
+			double totalPrice = 0;
+			for (cart_item item : cart_items) {
+				totalPrice += item.getVariant().getPRICE() * item.getQUANTITY();
+			}
+
+			String page = "cart.jsp";
+			model.addAttribute("totalPrice", totalPrice);
+			model.addAttribute("page", page);
+			return "index";
+		} else {
+			return "redirect:/shop/login";
+		}
+
+	}
+
+	@RequestMapping("updateQuantity")
+	public String updateQuantity(Model model, @RequestParam("id") Integer id, @RequestParam("quantity") int quantity) {
+		cart_item cart_item = cart_itemdao.findById(id).get();
+		cart_item.setQUANTITY(quantity);
+		cart_itemdao.save(cart_item);
+		return "redirect:/shop/cart";
+	}
+
+	@RequestMapping("addcart/{id}")
+	public String addCartProduct(Model model, @PathVariable("id") Integer id,
+			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+		user us = sessionService.get("list");
+		if (us != null) {
+			Optional<variant> variant = variantdao.findById(id);
+			user userss = sessionService.get("list");
+			user user = userDao.getById(userss.getUSERNAME());
+			cart_item cart_item = new cart_item();
+			cart_item.setCart(user.getCarts().get(0));
+			cart_item.setQUANTITY(quantity);
+			cart_item.setVariant(variant.get());
+
+			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
+			for (cart_item item : list_cart_item) {
+				if (variant.get().getID() == item.getVariant().getID()) {
+					cart_item = item;
+					cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+					break;
+				}
+			}
+			cart_itemdao.save(cart_item);
+			return "redirect:/shop/cart";
+		}else {
+			return "redirect:/shop/login";
+		}
 	}
 
 	@RequestMapping("cart/delete/{id}")
-	@ResponseBody
 	public String deleteCart(Model model, @PathVariable("id") Integer id) {
 		cart_item cart_item = cart_itemdao.findById(id).get();
 		cart_itemdao.delete(cart_item);
-		return "redirect:/shop";
+		return "redirect:/shop/cart";
 	}
 
 	@RequestMapping("store")
@@ -220,37 +285,71 @@ public class UserController {
 			@RequestParam(name = "sizes") Optional<Integer> sizes,
 			@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
 
+		List<variant> listvariant = variantdao.findAll();
+		Double maxPrice = 0.0;
+		for (variant variant : listvariant) {
+			if (variant.getPRICE() > maxPrice) {
+				maxPrice = variant.getPRICE();
+			}
+		}
 		Sort.Direction direction = Sort.Direction.fromString(dirs.orElse("DESC"));
 		Sort sort = Sort.by(direction, sorts.orElse("NAME"));
 		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, sizes.orElse(12), sort);
 		Page<phone> allProductPage = phonedao.findAll(pageable);
 
+		// LOC THEO 1 DK
 		if (!q.orElse("").isEmpty()) {
-			List<phone> listphone = phonedao.findAllByNAMELike("%" + q.get() + "%");
-			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+			allProductPage = phonedao.findAllByNAMELike("%" + q.get() + "%", pageable);
 		}
-		if (min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0)) {
-			List<phone> listphone = allProductPage.getContent().stream()
-					.filter(phone -> (phone.getVariants().get(0).getPRICE() >= min.orElse(0.0)
-							&& phone.getVariants().get(0).getPRICE() <= max.orElse(50000000.0)))
-					.collect(Collectors.toList());
-			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+		if (min.orElse(0.0) != 0 || maxPrice != max.orElse(maxPrice)) {
+			allProductPage = phonedao.findByPRICEBetween(min.get(), max.get(), pageable);
 		}
 		if (brand.isPresent() && !brand.get().isEmpty()) {
-			List<phone> listphone = allProductPage.getContent().stream()
-					.filter(p -> brand.get().contains(p.getBrand().getNAME())).collect(Collectors.toList());
-			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+			allProductPage = phonedao.findBybrandNAMEIn(brand.get(), pageable);
 		}
 		if (systems.isPresent() && !systems.get().isEmpty()) {
-			List<phone> listphone = allProductPage.getContent().stream()
-					.filter(phone -> systems.get().contains(phone.getSystem().getSYSTEM()))
-					.collect(Collectors.toList());
-			allProductPage = new PageImpl<phone>(listphone, pageable, listphone.size());
+			allProductPage = phonedao.findBysystemSYSTEMIn(systems.get(), pageable);
 		}
+		if (brand.isPresent() && !brand.get().isEmpty()) {
+			allProductPage = phonedao.findBybrandNAMEIn(brand.get(), pageable);
+		}
+		// LOC THEO 2 DK
+		// TEN VA GIA
+		// TEN VA HANG
+		// TEN VA HE THONG
+		// GIA VA HANG
+		if ((min.orElse(0.0) != 0 || maxPrice != max.orElse(maxPrice))
+				&& (brand.isPresent() && !brand.get().isEmpty())) {
+			allProductPage = phonedao.findByPRICEBetweenAndBrandIn(min.get(), max.get(), brand.get(), pageable);
+		}
+		// GIA VA HE THONG
+		if ((min.orElse(0.0) != 0 || maxPrice != max.orElse(maxPrice))
+				&& (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findByPRICEBetweenAndsystemIn(min.get(), max.get(), systems.get(), pageable);
+		}
+		// HANG VA HE THONG
+		if ((brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findBybrandInAndsystemIn(brand.get(), systems.get(), pageable);
+		}
+
+		// LOC THEO 3 DK
+		if ((min.orElse(0.0) != 0 || maxPrice != max.orElse(maxPrice)) && (brand.isPresent() && !brand.get().isEmpty())
+				&& (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findByPriceSystemBrand(min.get(), max.get(), systems.get(), brand.get(),
+					pageable);
+		}
+		// LOC THEO 4 DK
+		if ((!q.orElse("").isEmpty()) && (min.orElse(0.0) != 0 || maxPrice != max.orElse(maxPrice))
+				&& (brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findByNamePriceSystemBrand(min.get(), max.get(), systems.get(), brand.get(),
+					q.get(), pageable);
+		}
+
 		List<phone> listphone = allProductPage.getContent();
 
 		model.addAttribute("productPage", allProductPage);
 		model.addAttribute("listphone", listphone);
+		model.addAttribute("maxPrice", maxPrice);
 		String page = "store.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -288,54 +387,86 @@ public class UserController {
 
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {
-
-		order order = orderDao.getOrderMoi();
-		double totalAmount = 0;
-		double totalDiscount = 0;
-		List<order_item> listItem = order.getOrder_items();
-		for (order_item oi : listItem) {
-			totalAmount += oi.getPRICE() * oi.getQUANTITY();
-			totalDiscount += oi.getPRICE() * ((oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
-		}
-		order.setTOTAL_AMOUNT(totalAmount);
-		order.setTOTAL_DISCOUNT(totalDiscount);
-		orderDao.save(order);
 		user us = sessionService.get("list");
-		user user = userDao.findById(us.getUSERNAME()).get();
-		List<payment_method> listPay = payment_methodDao.findAll();
-		model.addAttribute("pays", listPay);
+		if (us != null) {
+			order order = orderDao.getOrderMoi();
+			double totalAmount = 0;
+			double totalDiscount = 0;
+			List<order_item> listItem = order.getOrder_items();
+			for (order_item oi : listItem) {
+				totalAmount += oi.getPRICE() * oi.getQUANTITY();
+				totalDiscount += oi.getPRICE()
+						* ((oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
+			}
+			order.setTOTAL_AMOUNT(totalAmount);
+			order.setTOTAL_DISCOUNT(totalDiscount);
+			orderDao.save(order);
+			user user = userDao.findById(us.getUSERNAME()).get();
+			List<payment_method> listPay = payment_methodDao.findAll();
+			model.addAttribute("pays", listPay);
 
-		model.addAttribute("user", user);
-		model.addAttribute("order", order);
-		model.addAttribute("totalOrder", totalAmount);
+			model.addAttribute("user", user);
+			model.addAttribute("order", order);
+			model.addAttribute("totalOrder", totalAmount);
 
-		String page = "checkout.jsp";
-		model.addAttribute("page", page);
-		return "index";
+			String page = "checkout.jsp";
+			model.addAttribute("page", page);
+			return "index";
+		} else {
+			return "redirect:/shop/login";
+		}
 	}
 
 	@RequestMapping("muangay/{id}")
 	public String muaNgay(Model model, @PathVariable("id") Integer id,
 			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
 		user us = sessionService.get("list");
-		user user = userDao.findById(us.getUSERNAME()).get();
-		order or = new order();
-		or.setUser(user);
-		or.setCREATE_AT(new Date());
-		or.setUPDATE_AT(new Date());
-		or.setAddress(user.getAddresses().get(0));
-		orderDao.save(or);
+		if (us != null) {
+			user user = userDao.findById(us.getUSERNAME()).get();
+			order or = new order();
+			or.setUser(user);
+			or.setCREATE_AT(new Date());
+			or.setUPDATE_AT(new Date());
+			or.setAddress(user.getAddresses().get(0));
+			orderDao.save(or);
 
-		order order = orderDao.findById(or.getID()).get();
-		Optional<variant> variant = variantDao.findById(id);
-		order_item order_item = new order_item();
-		order_item.setOrder(order);
-		order_item.setVariant(variant.get());
-		order_item.setPRICE(getPriceVariant(variant.get()));
-		order_item.setQUANTITY(quantity);
+			order order = orderDao.findById(or.getID()).get();
+			Optional<variant> variant = variantDao.findById(id);
+			order_item order_item = new order_item();
+			order_item.setOrder(order);
+			order_item.setVariant(variant.get());
+			order_item.setPRICE(getPriceVariant(variant.get()));
+			order_item.setQUANTITY(quantity);
 
-		order_itemDao.save(order_item);
-		return "redirect:/shop/checkout";
+			order_itemDao.save(order_item);
+			return "redirect:/shop/checkout";
+		}
+		return "redirect:/shop/login";
+	}
+
+	@RequestMapping("addorder")
+	public String addorder(Model model) {
+		user us = sessionService.get("list");
+		if (us != null) {
+			user user = userDao.findById(us.getUSERNAME()).get();
+			cart cart = user.getCarts().get(0);
+			order or = new order();
+			or.setUser(user);
+			or.setCREATE_AT(new Date());
+			or.setUPDATE_AT(new Date());
+			or.setAddress(user.getAddresses().get(0));
+			orderDao.save(or);
+			for (cart_item citem : cart.getCart_items()) {
+				order_item order_item = new order_item();
+				order_item.setOrder(or);
+				order_item.setPRICE(citem.getVariant().getPRICE());
+				order_item.setQUANTITY(citem.getQUANTITY());
+				order_item.setVariant(citem.getVariant());
+				order_itemDao.save(order_item);
+			}
+			return "redirect:/shop/checkout";
+		}
+		return "redirect:/shop/login";
 	}
 
 	public Double getPriceVariant(variant variant) {
@@ -370,6 +501,12 @@ public class UserController {
 			variant v = variantdao.findById(oi.getVariant().getID()).get();
 			v.setQUANTITY(v.getQUANTITY() - oi.getQUANTITY());
 			variantDao.save(v);
+		}
+		user us = sessionService.get("list");
+		user user = userDao.findById(us.getUSERNAME()).get();
+		cart cart = user.getCarts().get(0);
+		for (cart_item cart_item : cart.getCart_items()) {
+			cart_itemdao.delete(cart_item);
 		}
 		model.addAttribute("order", order);
 		model.addAttribute("adr", adr.getADDRESS());
@@ -436,6 +573,20 @@ public class UserController {
 			listDouble.add(0.0);
 		}
 		return Optional.of(listDouble);
+	}
+
+	@ModelAttribute("listCartItems")
+	public List<cart_item> getListCartItem() {
+		user userss = sessionService.get("list");
+		if (userss != null) {
+			user user = userDao.getById(userss.getUSERNAME());
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+			return cartItems;
+		} else {
+			List<cart_item> cartItems = new ArrayList<cart_item>();
+			return cartItems;
+		}
+
 	}
 
 }
