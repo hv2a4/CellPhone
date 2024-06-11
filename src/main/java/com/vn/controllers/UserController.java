@@ -151,17 +151,17 @@ public class UserController {
 	}
 
 	@ModelAttribute("cartItems")
-	public List<cart_item> getListCartItem(Model model){
+	public List<cart_item> getListCartItem(Model model) {
 		user userss = sessionService.get("list");
-		
+
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
 			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
 			Double totalCart = 0.0;
 			int totalquantity = 0;
 			for (cart_item cart_item : cartItems) {
-				totalCart+= getGiaKhuyenMai(cart_item.getVariant())*cart_item.getQUANTITY();
-				totalquantity+= cart_item.getQUANTITY();
+				totalCart += getGiaKhuyenMai(cart_item.getVariant()) * cart_item.getQUANTITY();
+				totalquantity += cart_item.getQUANTITY();
 			}
 			model.addAttribute("totalquantity", totalquantity);
 			model.addAttribute("totalCart", totalCart);
@@ -170,8 +170,7 @@ public class UserController {
 			List<cart_item> list = new ArrayList<cart_item>();
 			return list;
 		}
-		
-		
+
 	}
 
 	public Double getGiaKhuyenMai(variant variant) {
@@ -212,8 +211,9 @@ public class UserController {
 		cart_itemdao.save(cart_item);
 		return "redirect:/shop/cart";
 	}
+
 	@RequestMapping("cart")
-	public String cart(Model model,@RequestParam("id_cart") Optional<Integer> id) {
+	public String cart(Model model, @RequestParam("id_cart") Optional<Integer> id) {
 		user us = sessionService.get("list");
 		if (us != null) {
 			user user = userDao.findById(us.getUSERNAME()).get();
@@ -222,45 +222,51 @@ public class UserController {
 			for (cart_item item : cart_items) {
 				totalPrice += item.getVariant().getPRICE() * item.getQUANTITY();
 			}
-			
+
 			String page = "cart.jsp";
 			model.addAttribute("totalPrice", totalPrice);
-			model.addAttribute("page",page);
+			model.addAttribute("page", page);
 			return "index";
 		} else {
 			return "redirect:/shop/login";
 		}
-		
+
 	}
+
 	@RequestMapping("updateQuantity")
-	public String updateQuantity(Model model,@RequestParam("id") Integer id,@RequestParam("quantity") int quantity) {
+	public String updateQuantity(Model model, @RequestParam("id") Integer id, @RequestParam("quantity") int quantity) {
 		cart_item cart_item = cart_itemdao.findById(id).get();
 		cart_item.setQUANTITY(quantity);
 		cart_itemdao.save(cart_item);
 		return "redirect:/shop/cart";
 	}
-	
-	@RequestMapping("/addcart/{id}")
+
+	@RequestMapping("addcart/{id}")
 	public String addCartProduct(Model model, @PathVariable("id") Integer id,
 			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
-		Optional<variant> variant = variantdao.findById(id);
-		user userss = sessionService.get("list");
-		user user = userDao.getById(userss.getUSERNAME());
-		cart_item cart_item = new cart_item();
-		cart_item.setCart(user.getCarts().get(0));
-		cart_item.setQUANTITY(quantity);
-		cart_item.setVariant(variant.get());
-		
-		List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
-		for (cart_item item : list_cart_item) {
-			if (variant.get().getID() == item.getVariant().getID()) {
-				cart_item = item;
-				cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
-				break;
+		user us = sessionService.get("list");
+		if (us != null) {
+			Optional<variant> variant = variantdao.findById(id);
+			user userss = sessionService.get("list");
+			user user = userDao.getById(userss.getUSERNAME());
+			cart_item cart_item = new cart_item();
+			cart_item.setCart(user.getCarts().get(0));
+			cart_item.setQUANTITY(quantity);
+			cart_item.setVariant(variant.get());
+
+			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
+			for (cart_item item : list_cart_item) {
+				if (variant.get().getID() == item.getVariant().getID()) {
+					cart_item = item;
+					cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+					break;
+				}
 			}
+			cart_itemdao.save(cart_item);
+			return "redirect:/shop/cart";
+		}else {
+			return "redirect:/shop/login";
 		}
-		cart_itemdao.save(cart_item);
-		return "redirect:/shop/cart";
 	}
 
 	@RequestMapping("cart/delete/{id}")
@@ -327,8 +333,8 @@ public class UserController {
 		}
 
 		// LOC THEO 3 DK
-		if ((min.orElse(0.0) != 0 || maxPrice != max.orElse(maxPrice))
-				&& (brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
+		if ((min.orElse(0.0) != 0 || maxPrice != max.orElse(maxPrice)) && (brand.isPresent() && !brand.get().isEmpty())
+				&& (systems.isPresent() && !systems.get().isEmpty())) {
 			allProductPage = phonedao.findByPriceSystemBrand(min.get(), max.get(), systems.get(), brand.get(),
 					pageable);
 		}
@@ -381,30 +387,34 @@ public class UserController {
 
 	@RequestMapping("checkout")
 	public String getCheckout(Model model) {
-
-		order order = orderDao.getOrderMoi();
-		double totalAmount = 0;
-		double totalDiscount = 0;
-		List<order_item> listItem = order.getOrder_items();
-		for (order_item oi : listItem) {
-			totalAmount += oi.getPRICE() * oi.getQUANTITY();
-			totalDiscount += oi.getPRICE() * ((oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
-		}
-		order.setTOTAL_AMOUNT(totalAmount);
-		order.setTOTAL_DISCOUNT(totalDiscount);
-		orderDao.save(order);
 		user us = sessionService.get("list");
-		user user = userDao.findById(us.getUSERNAME()).get();
-		List<payment_method> listPay = payment_methodDao.findAll();
-		model.addAttribute("pays", listPay);
+		if (us != null) {
+			order order = orderDao.getOrderMoi();
+			double totalAmount = 0;
+			double totalDiscount = 0;
+			List<order_item> listItem = order.getOrder_items();
+			for (order_item oi : listItem) {
+				totalAmount += oi.getPRICE() * oi.getQUANTITY();
+				totalDiscount += oi.getPRICE()
+						* ((oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
+			}
+			order.setTOTAL_AMOUNT(totalAmount);
+			order.setTOTAL_DISCOUNT(totalDiscount);
+			orderDao.save(order);
+			user user = userDao.findById(us.getUSERNAME()).get();
+			List<payment_method> listPay = payment_methodDao.findAll();
+			model.addAttribute("pays", listPay);
 
-		model.addAttribute("user", user);
-		model.addAttribute("order", order);
-		model.addAttribute("totalOrder", totalAmount);
+			model.addAttribute("user", user);
+			model.addAttribute("order", order);
+			model.addAttribute("totalOrder", totalAmount);
 
-		String page = "checkout.jsp";
-		model.addAttribute("page", page);
-		return "index";
+			String page = "checkout.jsp";
+			model.addAttribute("page", page);
+			return "index";
+		} else {
+			return "redirect:/shop/login";
+		}
 	}
 
 	@RequestMapping("muangay/{id}")
@@ -430,15 +440,16 @@ public class UserController {
 
 			order_itemDao.save(order_item);
 			return "redirect:/shop/checkout";
-		} 
+		}
 		return "redirect:/shop/login";
 	}
+
 	@RequestMapping("addorder")
 	public String addorder(Model model) {
 		user us = sessionService.get("list");
 		if (us != null) {
 			user user = userDao.findById(us.getUSERNAME()).get();
-			cart cart =  user.getCarts().get(0);
+			cart cart = user.getCarts().get(0);
 			order or = new order();
 			or.setUser(user);
 			or.setCREATE_AT(new Date());
@@ -454,7 +465,7 @@ public class UserController {
 				order_itemDao.save(order_item);
 			}
 			return "redirect:/shop/checkout";
-		} 
+		}
 		return "redirect:/shop/login";
 	}
 
@@ -493,7 +504,7 @@ public class UserController {
 		}
 		user us = sessionService.get("list");
 		user user = userDao.findById(us.getUSERNAME()).get();
-		cart cart =  user.getCarts().get(0);
+		cart cart = user.getCarts().get(0);
 		for (cart_item cart_item : cart.getCart_items()) {
 			cart_itemdao.delete(cart_item);
 		}
@@ -569,13 +580,13 @@ public class UserController {
 		user userss = sessionService.get("list");
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-		    List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
-		    return cartItems;
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+			return cartItems;
 		} else {
 			List<cart_item> cartItems = new ArrayList<cart_item>();
 			return cartItems;
 		}
-		
+
 	}
 
 }
