@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <jsp:include page="/Admin/production/head.jsp"></jsp:include>
@@ -14,16 +17,19 @@
 </head>
 <body>
 	<div class="container">
+	<form:form method="post"  modelAttribute="item" name="UserProfile"
+                             class="form mt-5"
+                            action="/admin/profile"   enctype="multipart/form-data">
 		<h2 class="mt-4">Profile</h2>
 		<div class="row mt-4">
 			<div class="row mt-4">
 				<div class="col-md-12 text-center">
 					<div class="d-flex flex-column align-items-center">
-						<img id="avatar" src="/Admin/production/images/prod-3.jpg"
+						<img id="imagePreview" src="/images/${list.AVATAR}"
 							class="img-fluid img-thumbnail avatar-rounded" alt="Avatar">
 						<div class="mt-2">
-							<input type="file" class="form-control"
-								style="width: 86px; margin-left: auto; margin-right: auto;">
+							<input  id="imageUpload" type="file" class="form-control"
+							name="photo_file" 	style="width: 86px; margin-left: auto; margin-right: auto;">
 						</div>
 					</div>
 				</div>
@@ -38,38 +44,51 @@
 				<tr>
 					<th>Tên:</th>
 					<td>
-						<input value="Nguyễn Văn A" class="form-control">
+						 <form:input path="FULLNAME" class="input form-control" value="${list.FULLNAME}" placeholder=" "  />
+                         <small style=" color: red;"><form:errors path="FULLNAME"></form:errors></small>  
 					</td>
 				</tr>
 				<tr>
 					<th>Email:</th>
 					<td>
-						<input value="a@gmail.com" class="form-control">
+						 <form:input path="EMAIL" class="input form-control" value="${list.EMAIL}" placeholder=" "  />
+                         <small style=" color: red;"><form:errors path="EMAIL"></form:errors></small> 
 					</td>
 				</tr>
 				<tr>
 					<th>Số điện thoại:</th>
 					<td>
-						<input value="0987654321" class="form-control">
+						    <form:input path="PHONE_NUMBER" class="input form-control" value="${list.PHONE_NUMBER}" placeholder=" "  />
+                            <small style=" color: red;"><form:errors path="PHONE_NUMBER"></form:errors></small>
 					</td>
 				</tr>
 				<tr>
 					<th>Quyền:</th>
-					<td>User</td>
+					<td>${list.ROLE==true?'Admin':'user'}</td>
 				</tr>
 				<tr>
 					<th>Ngày tạo:</th>
-					<td>21/05/2024</td>
+					<td><fmt:formatDate value="${list.CREATE_AT}" pattern="yyyy-MM-dd"/></td>
 				</tr>
 				<tr>
 					<th>Ngày cập nhật gần nhất:</th>
-					<td>22/05/2024</td>
+					<td><fmt:formatDate value="${list.CREATE_AT}" pattern="yyyy-MM-dd"/></td>
 				</tr>
 			</table>
+			 <form:hidden path="PASSWORD" value="${list.PASSWORD}"/>
+              <small style=" color: red;"><form:errors path="PASSWORD"></form:errors></small>
+               <form:hidden path="ROLE" value="${list.ROLE}"/>
+              <small style=" color: red;"><form:errors path="ROLE"></form:errors></small>
+               <form:hidden path="GENDER" value="${list.GENDER}"/>
+              <small style=" color: red;"><form:errors path="GENDER"></form:errors></small>
+               <form:hidden path="USERNAME" value="${list.USERNAME}"/>
+              <small style=" color: red;"><form:errors path="USERNAME"></form:errors></small>
 			<div>
 			<button class="btn btn-primary d-inline float-right">Cập nhật</button>
 			</div>
 		</div>
+		</form:form>
 	</div>
+	<script src="/js/imgUpload.js"></script>
 </body>
 </html>

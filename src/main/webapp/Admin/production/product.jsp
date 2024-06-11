@@ -1277,6 +1277,7 @@
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function previewImage(input, imgId) {
         console.log("previewImage called for", imgId); // Log kiểm tra
@@ -1304,7 +1305,16 @@
                 processData: false,
                 success: function (response) {
                     if (response.status === 'success') {
-                        window.location.href = '/admin/product'; // Điều hướng tới trang danh sách người dùng
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thêm sản phẩm thành công',
+                            showConfirmButton: false,
+                            timer: 1050
+                        });
+
+                        setTimeout(function() {
+                            window.location.href = '/admin/product'; // Điều hướng tới trang danh sách người dùng
+                        }, 1600);
                     }
                 },
                 error: function (response) {
