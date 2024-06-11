@@ -41,7 +41,7 @@
 										<div class="cartqty">
 											<button type="button" class="qtyminus" type="submit">-</button>
 											<input value="${item.QUANTITY}" name="quantity" min="1"
-												max="5000" class="updateCart" type="text"
+												max="${item.variant.QUANTITY }" class="updateCart" type="text"
 												onblur="this.form.submit()">
 											<button type="button" class="qtyplus" type="submit">+</button>
 										</div>
