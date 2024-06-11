@@ -36,7 +36,6 @@
 
 					<div class="aside">
 						<h3 class="aside-title">Hãng</h3>
-
 						<c:forEach var="item" items="${list_brand}">
 							<div class="checkbox-filter">
 								<div class="input-checkbox">
@@ -162,12 +161,14 @@
 											class="fa fa-star"></i>
 									</div>
 									<div class="product-btns">
-										<button  type="button" class="quick-view">
-											<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
+										<button type="button" class="quick-view">
+											<a
+												href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}"><i
 												class="fa fa-eye"></i></a> <span class="tooltipp">quick
 												view</span>
 										</button>
-										<button type="button" class="quick-view" onclick="addCart(${variantmd.ID})">
+										<button type="button" class="quick-view"
+											onclick="addCart(${variantmd.ID})">
 											<i class="fa fa-shopping-cart"></i> <span class="tooltipp">Thêm
 												vào giỏ hàng</span>
 										</button>
@@ -323,32 +324,44 @@ function formatNumber(input) {
 	
 	input.value = formattedValue;
 }
-
 function addCart(id) {
 	  $.ajax({
 	    type: "GET",
 	    url: "/shop/cart/add/" + id,
 	    success: function() {
-	    	const Toast = Swal.mixin({
-	    		  toast: true,
-	    		  position: "top-end",
-	    		  showConfirmButton: false,
-	    		  timer: 1000,
-	    		  timerProgressBar: true,
-	    		  didOpen: (toast) => {
-	    		    toast.onmouseenter = Swal.stopTimer;
-	    		    toast.onmouseleave = Swal.resumeTimer;
-	    		  }
-	    		});
-	    		Toast.fire({
-	    		  icon: "success",
-	    		  title: "Đã thêm vào giỏ hàng"
-	    		}).then(function(){
-	    			location.reload();
-	    		});
+	      const Toast = Swal.mixin({
+	        toast: true,
+	        position: "top-end",
+	        showConfirmButton: false,
+	        timer: 1000,
+	        timerProgressBar: true,
+	        didOpen: (toast) => {
+	          toast.onmouseenter = Swal.stopTimer;
+	          toast.onmouseleave = Swal.resumeTimer;
+	        }
+	      });
+	      Toast.fire({
+	        icon: "success",
+	        title: "Đã thêm vào giỏ hàng"
+	      }).then(function(){
+	        location.reload();
+	      });
 	    },
 	    error: function(xhr, status, error) {
 	      console.log("Error: " + error);
+	      Swal.fire({
+	        title: "Bạn chưa đăng nhập?",
+	        text: "",
+	        icon: "error",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Đăng nhập"
+	      }).then((result) => {
+	        if (result.isConfirmed) {
+	          window.location.href = "/shop/login";
+	        }
+	      });
 	    }
 	  });
 	}

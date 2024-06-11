@@ -71,7 +71,7 @@ public class UserController {
 	phoneDao phonedao;
 	@Autowired
 	variantDao variantdao;
-	
+
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
 		return "/views/forgotpass1";
@@ -195,7 +195,9 @@ public class UserController {
 		for (cart_item item : list_cart_item) {
 			if (variant.get().getID() == item.getVariant().getID()) {
 				cart_item = item;
-				cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+				if (cart_item.getQUANTITY() <= variant.get().getQUANTITY()) {
+					cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+				}
 				break;
 			}
 		}
@@ -225,28 +227,47 @@ public class UserController {
 		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, sizes.orElse(12), sort);
 		Page<phone> allProductPage = phonedao.findAll(pageable);
 
+		// LOC THEO 1 DK
 		if (!q.orElse("").isEmpty()) {
-			List<phone> listphone = phonedao.findAllByNAMELike("%" + q.get() + "%");
-			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+			allProductPage = phonedao.findAllByNAMELike("%" + q.get() + "%", pageable);
 		}
 		if (min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0)) {
-			List<phone> listphone = allProductPage.getContent().stream()
-					.filter(phone -> (phone.getVariants().get(0).getPRICE() >= min.orElse(0.0)
-							&& phone.getVariants().get(0).getPRICE() <= max.orElse(50000000.0)))
-					.collect(Collectors.toList());
-			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+			allProductPage = phonedao.findByPRICEBetween(min.get(), max.get(), pageable);
 		}
 		if (brand.isPresent() && !brand.get().isEmpty()) {
-			List<phone> listphone = allProductPage.getContent().stream()
-					.filter(p -> brand.get().contains(p.getBrand().getNAME())).collect(Collectors.toList());
-			allProductPage = new PageImpl<>(listphone, pageable, listphone.size());
+			allProductPage = phonedao.findBybrandNAMEIn(brand.get(), pageable);
 		}
 		if (systems.isPresent() && !systems.get().isEmpty()) {
-			List<phone> listphone = allProductPage.getContent().stream()
-					.filter(phone -> systems.get().contains(phone.getSystem().getSYSTEM()))
-					.collect(Collectors.toList());
-			allProductPage = new PageImpl<phone>(listphone, pageable, listphone.size());
+			allProductPage = phonedao.findBysystemSYSTEMIn(systems.get(), pageable);
 		}
+		if (brand.isPresent() && !brand.get().isEmpty()) {
+			allProductPage = phonedao.findBybrandNAMEIn(brand.get(), pageable);
+		}
+		// LOC THEO 2 DK
+		// TEN VA GIA
+		// TEN VA HANG
+		// TEN VA HE THONG
+		// GIA VA HANG
+		if ((brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findBybrandInAndsystemIn(brand.get(), systems.get(), pageable);
+		}
+		// GIA VA HE THONG
+		if ((min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0))
+				&& (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findByPRICEBetweenAndsystemIn(min.get(), max.get(), systems.get(), pageable);
+		}
+		// HANG VA HE THONG
+		if ((brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findBybrandInAndsystemIn(brand.get(), systems.get(), pageable);
+		}
+
+		// LOC THEO 3 DK
+		if ((min.orElse(0.0) != 0 || 50000000 != max.orElse(50000000.0))
+				&& (brand.isPresent() && !brand.get().isEmpty()) && (systems.isPresent() && !systems.get().isEmpty())) {
+			allProductPage = phonedao.findByPriceSystemBrand(min.get(), max.get(), systems.get(), brand.get(),
+					pageable);
+		}
+
 		List<phone> listphone = allProductPage.getContent();
 
 		model.addAttribute("productPage", allProductPage);
