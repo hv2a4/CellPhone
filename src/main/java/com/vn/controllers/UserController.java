@@ -20,7 +20,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -193,23 +196,57 @@ public class UserController {
 		Optional<variant> variant = variantdao.findById(id);
 		user userss = sessionService.get("list");
 		user user = userDao.getById(userss.getUSERNAME());
-		cart_item cart_item = new cart_item();
-		cart_item.setCart(user.getCarts().get(0));
-		cart_item.setQUANTITY(1);
-		cart_item.setVariant(variant.get());
+		if (user.getCarts().get(0) != null) {
+			cart_item cart_item = new cart_item();
+			cart_item.setCart(user.getCarts().get(0));
 
-		List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
-		for (cart_item item : list_cart_item) {
-			if (variant.get().getID() == item.getVariant().getID()) {
-				cart_item = item;
-				if (cart_item.getQUANTITY() <= variant.get().getQUANTITY()) {
-					cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+			cart_item.setQUANTITY(1);
+			cart_item.setVariant(variant.get());
+
+			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
+			for (cart_item item : list_cart_item) {
+				if (variant.get().getID() == item.getVariant().getID()) {
+					cart_item = item;
+					if (cart_item.getQUANTITY() <= variant.get().getQUANTITY()) {
+						if (cart_item.getQUANTITY() >= variant.get().getQUANTITY()) {
+							cart_item.setQUANTITY(variant.get().getQUANTITY());
+						} else {
+							cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+						}
+					}
+					break;
 				}
-				break;
 			}
+			cart_itemdao.save(cart_item);
+			return "redirect:/shop/cart";
+		} else {
+			cart cart = new cart();
+			cart.setUser(user);
+			cartdao.save(cart);
+			cart_item cart_item = new cart_item();
+			cart_item.setCart(user.getCarts().get(0));
+
+			cart_item.setQUANTITY(1);
+			cart_item.setVariant(variant.get());
+
+			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
+			for (cart_item item : list_cart_item) {
+				if (variant.get().getID() == item.getVariant().getID()) {
+					cart_item = item;
+					if (cart_item.getQUANTITY() <= variant.get().getQUANTITY()) {
+						if (cart_item.getQUANTITY() >= variant.get().getQUANTITY()) {
+							cart_item.setQUANTITY(variant.get().getQUANTITY());
+						} else {
+							cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+						}
+					}
+					break;
+				}
+			}
+			cart_itemdao.save(cart_item);
+			return "redirect:/shop/cart";
 		}
-		cart_itemdao.save(cart_item);
-		return "redirect:/shop/cart";
+
 	}
 
 	@RequestMapping("cart")
@@ -264,7 +301,7 @@ public class UserController {
 			}
 			cart_itemdao.save(cart_item);
 			return "redirect:/shop/cart";
-		}else {
+		} else {
 			return "redirect:/shop/login";
 		}
 	}
@@ -390,6 +427,7 @@ public class UserController {
 		user us = sessionService.get("list");
 		if (us != null) {
 			order order = orderDao.getOrderMoi();
+
 			double totalAmount = 0;
 			double totalDiscount = 0;
 			List<order_item> listItem = order.getOrder_items();
@@ -430,7 +468,8 @@ public class UserController {
 			or.setAddress(user.getAddresses().get(0));
 			orderDao.save(or);
 
-			order order = orderDao.findById(or.getID()).get();
+			order order = orderDao.getOrderMoi();
+
 			Optional<variant> variant = variantDao.findById(id);
 			order_item order_item = new order_item();
 			order_item.setOrder(order);
@@ -454,7 +493,12 @@ public class UserController {
 			or.setUser(user);
 			or.setCREATE_AT(new Date());
 			or.setUPDATE_AT(new Date());
-			or.setAddress(user.getAddresses().get(0));
+			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
+				or.setAddress(user.getAddresses().get(0));
+			} else {
+				return "redirect:/shop/address";
+			}
+
 			orderDao.save(or);
 			for (cart_item citem : cart.getCart_items()) {
 				order_item order_item = new order_item();
@@ -587,6 +631,148 @@ public class UserController {
 			return cartItems;
 		}
 
+	}
+
+	ParamService paramService;
+
+	@RequestMapping("profile")
+	public String getProfile(Model model, user item) {
+		model.addAttribute("item", item);
+
+		String page = "profile.jsp";
+		model.addAttribute("page", page);
+		return "index";
+	}
+
+	@PostMapping("profile")
+	public String postProfile(@Validated @ModelAttribute("item") user item, BindingResult bindingResult, Model model,
+			@RequestPart("photo_file") MultipartFile file) {
+		if (bindingResult.hasErrors()) {
+			System.out.println("hello");
+			model.addAttribute("page", "profile.jsp");
+			return "index";
+		}
+		String photo = paramService.save(file, "/images/");
+		Optional<user> userS = userDao.findById(item.getUSERNAME());
+
+		userS.get().setAVATAR(photo);
+		userS.get().setFULLNAME(item.getFULLNAME());
+		userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+		userS.get().setGENDER(item.getGENDER());
+		userS.get().setEMAIL(item.getEMAIL());
+
+		userDao.save(userS.get());
+		sessionService.set("list", userS.get());
+
+		return "redirect:/shop/profile";
+	}
+
+	@GetMapping("address")
+	public String getAddress(Model model, address item) {
+		user userSession = sessionService.get("list");
+
+		Optional<user> defaultUser = userDao.findById(userSession.getUSERNAME());
+		item.setUser(defaultUser.get());
+		model.addAttribute("item", item);
+		String page = "address.jsp";
+		model.addAttribute("page", page);
+
+		return "index";
+	}
+
+//		@PostMapping("address")
+//		public String postAddress(Model model) {
+//		 rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
+//	    item.setRank(defaultRank);
+//	    model.addAttribute("item", item);
+//			String page = "address.jsp";
+//			model.addAttribute("page", page);
+//			return "index";
+//		}
+	@PostMapping("create")
+	public String createAddress(Model model, address item) {
+		String noteAddress = paramService.getString("noteAddress", "");
+		String cityName = paramService.getString("cityName", "");
+		String districtName = paramService.getString("districtName", "");
+		String wardName = paramService.getString("wardName", "");
+		if (noteAddress.isEmpty() || cityName.isEmpty() || districtName.isEmpty() || wardName.isEmpty()) {
+			String page = "address.jsp";
+			model.addAttribute("errors", "Bạn Chưa Nhập");
+			model.addAttribute("page", page);
+			user userSession = sessionService.get("list");
+			Optional<user> defaultUser = userDao.findById(userSession.getUSERNAME());
+			item.setUser(defaultUser.get());
+			model.addAttribute("item", item);
+			model.addAttribute("page", page);
+
+			return "index";
+		} else {
+			String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + cityName;
+			item.setADDRESS(addres);
+			addressDao.save(item);
+			String page = "address.jsp";
+			model.addAttribute("page", page);
+			return "redirect:/shop/address";
+		}
+
+	}
+
+	@GetMapping("newAddress")
+	public String newAddress(Model model, address item) {
+
+		return "redirect:/shop/address";
+	}
+
+	@RequestMapping("/delete/{id}")
+	public String deleteAddress(Model model, address item, @PathVariable("id") Integer id) {
+		addressDao.deleteById(id);
+		user userSession = sessionService.get("list");
+
+		Optional<user> defaultUser = userDao.findById(userSession.getUSERNAME());
+		item.setUser(defaultUser.get());
+		model.addAttribute("item", item);
+		String page = "address.jsp";
+		model.addAttribute("page", page);
+
+		return "redirect:/shop/address";
+	}
+
+	@PostMapping("update/{id}")
+	public String postUpdate(address item, Model model, @PathVariable("id") Integer id) {
+		System.out.println(id);
+		String noteAddress = paramService.getString("noteAddress", "");
+		String cityName = paramService.getString("cityName", "");
+		String districtName = paramService.getString("districtName", "");
+		String wardName = paramService.getString("wardName", "");
+		String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + cityName;
+		item.setADDRESS(addres);
+		addressDao.save(item);
+		return "redirect:/shop/address";
+	}
+
+	@RequestMapping("/edit/{id}")
+	public String editRequest(@PathVariable("id") Integer id, address item, Model model) {
+		System.out.println(id);
+		address list = addressDao.findById(id).get();
+		model.addAttribute("item", list);
+		System.out.println(list.getADDRESS());
+		// tên đường
+		String sub = list.getADDRESS().substring(0, list.getADDRESS().indexOf(',')).trim();
+
+		model.addAttribute("sub", sub);
+
+		String page = "address.jsp";
+		model.addAttribute("page", page);
+		String address = "trần hưng đạo nối dài, Phường Lê Bình, Quận Cái Răng, Thành phố Cần Thơ";
+
+		return "index";
+	}
+
+	@ModelAttribute("listAddress")
+	public List<address> getAddresses(Model model, address item) {
+		model.addAttribute("item", item);
+		List<address> listAddresses = addressDao.findAll();
+		return listAddresses;
 	}
 
 }

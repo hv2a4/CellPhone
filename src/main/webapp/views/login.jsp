@@ -55,7 +55,7 @@
                     </div>
                     <div class="row">
                     
-                        <small>Chưa có tài khoản? <a href="/shop/signup">Đăng ký</a></small>
+                        <small>Chưa có tài khoản? <a href="/shop/register">Đăng ký</a></small>
                     </div>
                 </div>
             </div>

@@ -501,11 +501,8 @@ function updateBuyNowButton(idPhone, idVariant) {
     // Update the "Mua ngay" button's URL with the selected variant ID
     var quantity = document.getElementsByName('quantity')[0].value;
     var buyNowButton = document.getElementById('buyNowButton');
-    /* var baseUrl = "/shop/checkout?id_variant=" + idVariant + "&quantity=" + quantity;
-    buyNowButton.setAttribute('href', baseUrl); */
-    buyNowButton.onclick = function() {
-        window.location.href = "/shop/muangay/" + idVariant + "?quantity=" + quantity;
-    };
+    buyNowButton.formAction ="/shop/muangay/" + idVariant + "?quantity=" + quantity;
+ 
     var addToCartButton = document.getElementById('addToCartButton');
     addToCartButton.formAction = "/shop/addcart/" + idVariant + "?quantity=" + quantity;
     // Optionally, call the getGia function to update prices

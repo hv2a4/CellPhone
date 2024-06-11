@@ -1,5 +1,6 @@
 package com.vn.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import com.vn.DAO.cartDao;
 import com.vn.DAO.rankDao;
 import com.vn.DAO.userDao;
 import com.vn.entity.ReCaptChaResponse;
+import com.vn.entity.cart;
 import com.vn.entity.rank;
 import com.vn.entity.user;
 import com.vn.utils.ParamService;
@@ -42,6 +45,8 @@ public class SignUpController {
 	userDao userDao;
 	@Autowired
 	rankDao rankDao;
+	@Autowired
+	cartDao cartDao;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -85,7 +90,14 @@ public class SignUpController {
 	            item.setROLE(false);
 	            item.setSTATUS(true);
 	            item.setGENDER("KHAC");
+	            
+	           
+
 	            userDao.save(item);
+	            
+	            cart cart = new cart();
+	            cart.setUser(item);
+	            cartDao.save(cart);
 	            return "redirect:/shop/login";
 	        }
 			 

@@ -95,7 +95,10 @@
             
             
         </div>
-        
+         <form:hidden path="ROLE" value="false"/>
+              <small style=" color: red;"><form:errors path="ROLE"></form:errors></small>
+               <form:hidden path="GENDER" value="NAM"/>
+              <small style=" color: red;"><form:errors path="GENDER"></form:errors></small>
     </div>
      </form:form>
        
