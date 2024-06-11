@@ -288,32 +288,44 @@ function getGia(idPhone, idVariant) {
         }
     });
 }
-
 function addCart(id) {
 	  $.ajax({
 	    type: "GET",
 	    url: "/shop/cart/add/" + id,
 	    success: function() {
-	    	const Toast = Swal.mixin({
-	    		  toast: true,
-	    		  position: "top-end",
-	    		  showConfirmButton: false,
-	    		  timer: 1000,
-	    		  timerProgressBar: true,
-	    		  didOpen: (toast) => {
-	    		    toast.onmouseenter = Swal.stopTimer;
-	    		    toast.onmouseleave = Swal.resumeTimer;
-	    		  }
-	    		});
-	    		Toast.fire({
-	    		  icon: "success",
-	    		  title: "Đã thêm vào giỏ hàng"
-	    		}).then(function(){
-	    			location.reload();
-	    		});
+	      const Toast = Swal.mixin({
+	        toast: true,
+	        position: "top-end",
+	        showConfirmButton: false,
+	        timer: 1000,
+	        timerProgressBar: true,
+	        didOpen: (toast) => {
+	          toast.onmouseenter = Swal.stopTimer;
+	          toast.onmouseleave = Swal.resumeTimer;
+	        }
+	      });
+	      Toast.fire({
+	        icon: "success",
+	        title: "Đã thêm vào giỏ hàng"
+	      }).then(function(){
+	        location.reload();
+	      });
 	    },
 	    error: function(xhr, status, error) {
 	      console.log("Error: " + error);
+	      Swal.fire({
+	        title: "Bạn chưa đăng nhập?",
+	        text: "",
+	        icon: "error",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Đăng nhập"
+	      }).then((result) => {
+	        if (result.isConfirmed) {
+	          window.location.href = "/shop/login";
+	        }
+	      });
 	    }
 	  });
 	}
