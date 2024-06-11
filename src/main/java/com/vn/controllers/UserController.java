@@ -438,12 +438,4 @@ public class UserController {
 		return Optional.of(listDouble);
 	}
 
-//	@ModelAttribute("ListUser")
-//	public List<cart_item> getListCartItem() {
-//		user userss = sessionService.get("list");
-//		user user = userDao.getById(userss.getUSERNAME());
-//		List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
-//		return cartItems;
-//	}
-
 }

@@ -251,6 +251,7 @@
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
         $('#userForm').submit(function (event) {
@@ -283,7 +284,15 @@
                             processData: false,
                             success: function (response) {
                                 if (response.status === 'success') {
-                                    window.location.href = '/admin/user';
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thêm người dùng thành công',
+                                        showConfirmButton: false,
+                                        timer: 1050
+                                    });
+                                    setTimeout(function() {
+                                        window.location.href = '/admin/user';
+                                    }, 1600);
                                 }
                             },
                             error: function (response) {
