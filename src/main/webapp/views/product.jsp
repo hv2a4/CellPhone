@@ -70,10 +70,19 @@
 								<c:forEach var="variant" items="${finByIdPhone.variants }">
 									<div class="col-md-3">
 										<c:if test="${variant.storage.ID != GB}">
-											<a
-												href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"><button
-													type="button" class="btn btn-default inline-button">${variant.storage.GB}
-													GB</button></a>
+											<c:if
+													test="${2048>=variant.storage.GB&&variant.storage.GB>=1024}">
+												<a
+														href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"><button
+															type="button" class="btn btn-default inline-button">1 TB</button></a>
+											</c:if>
+												<c:if test="${1024>variant.storage.GB}">
+												<a
+														href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"><button
+															type="button" class="btn btn-default inline-button">${variant.storage.GB}
+															GB</button></a>
+											</c:if>
+
 											<c:set var="GB" value="${variant.storage.ID }"></c:set>
 											<c:set var="price" value="${variant.PRICE }"></c:set>
 										</c:if>
@@ -559,7 +568,7 @@ function getGiaRelated(idPhone, idVariant) {
 function formatPrice(price) {
     return price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
-function addCart(id) {
+/* function addCart(id) {
 	  $.ajax({
 	    type: "GET",
 	    url: "/shop/cart/add/" + id,
@@ -586,6 +595,6 @@ function addCart(id) {
 	      console.log("Error: " + error);
 	    }
 	  });
-	}
+	} */
 </script>
 
