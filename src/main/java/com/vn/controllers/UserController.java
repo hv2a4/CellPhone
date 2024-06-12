@@ -39,7 +39,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserController {
 	@Autowired
 	HttpServletRequest req;
-
+	@Autowired
+	ParamService paramService;
+	@Autowired
+	CookieService cookieService;
 	@Autowired
 	MailerServiceImpl mailer;
 	@Autowired
@@ -632,8 +635,6 @@ public class UserController {
 		}
 
 	}
-
-	ParamService paramService;
 
 	@RequestMapping("profile")
 	public String getProfile(Model model, user item) {
