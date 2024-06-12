@@ -113,21 +113,7 @@
                                                 <input type="file" name="photo_file" id="AVATAR" class="form-control"
                                                        aria-label="file example"/>
                                                 <div class="text-danger" id="AVATAR_error"></div>
-                                            </div>
-                                            <!-- Vai trò -->
-                                            <div class="form-group">
-                                                <label class="control-label">Vai trò</label>
-                                                <select name="ROLE" id="ROLE" class="form-control">
-                                                    <option value="">Chọn vai trò</option>
-                                                    <c:forEach var="items" items="${fillRole}">
-                                                        <option value="${items.key}">
-                                                            <c:if test="${items.key == userItem.rank.ID}">selected</c:if>
-                                                                ${items.value}
-                                                        </option>
-                                                    </c:forEach>
-                                                </select>
-                                                <div class="text-danger" id="ROLE_error"></div>
-                                            </div>
+                                            </div>             
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -173,26 +159,18 @@
                                         <td>${item.PHONE_NUMBER}</td>
                                         <td>${item.STATUS ? "Hoạt động" : "Đã khóa"}</td>
                                         <td class="text-center">
-                                            <c:choose>
-                                                <c:when test="${!item.ROLE && item.STATUS}">
-                                                    <a class="btn btn-success" style="width: 100px"
-                                                       href="/admin/authorize/${item.USERNAME}">Cấp quyền
-                                                    </a>
-                                                </c:when>
-                                                <c:when test="${!item.STATUS}">
-                                                    <a class="btn btn-warning" style="width: 100px"
-                                                       href="/admin/unlock/${item.USERNAME}">Mở khóa
-                                                    </a>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <button class="btn btn-primary" style="width: 100px"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal_${stt.index + 1}">Chi tiết
-                                                    </button>
-                                                </c:otherwise>
-                                            </c:choose>
+                                             <c:choose>
+									           <c:when test="${!item.ROLE && item.STATUS}">
+												    <a class="btn btn-success khoa-btn" onclick="xacNhanKhoaMoKhoa('khoa', '${item.USERNAME}')" style="width: 100px;color:#fff;">Khóa</a>
+												</c:when>
+												<c:when test="${!item.ROLE && !item.STATUS}">
+												    <a class="btn btn-warning moKhoa-btn" onclick="xacNhanKhoaMoKhoa('moKhoa', '${item.USERNAME}')" style="width: 100px;color:#fff;">Mở khóa</a>
+												</c:when>
+									            <c:otherwise>
+									                <button class="btn btn-primary" style="width: 100px" data-bs-toggle="modal" data-bs-target="#exampleModal_${stt.index + 1}">Chi tiết</button>
+									            </c:otherwise>
+									        </c:choose>
                                         </td>
-
                                     </tr>
                                     <!-- Modal -->
                                     <div class="modal fade" id="exampleModal_${stt.index + 1}" tabindex="-1"
@@ -253,6 +231,60 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+function xacNhanKhoaMoKhoa(hanhDong, tenTaiKhoan) {
+    Swal.fire({
+        title: "Bạn có chắc chắn không?",
+        text: "Bạn sẽ không thể hoàn tác hành động này!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: hanhDong === "khoa" ? "Có, khóa nó!" : "Có, mở khóa nó!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Gửi yêu cầu đến máy chủ để thực hiện khóa hoặc mở khóa tùy theo hành động
+            $.ajax({
+                type: "GET",
+                url: hanhDong === "khoa" ? "/admin/authorize/" + tenTaiKhoan : "/admin/unlock/" + tenTaiKhoan,
+                success: function (response) {
+                    if (response.status !== 'success') {
+                        Swal.fire({
+                            title: "Thành công!",
+                            text: "Người dùng đã được " + (hanhDong === "khoa" ? "khóa." : "mở khóa."),
+                            icon: "success"
+                        }).then(() => {
+                            location.reload();
+                        });
+                        // Thực hiện cập nhật giao diện hoặc các thao tác khác sau khi thực hiện thành công
+                    } 
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 404) {
+                        Swal.fire({
+                            title: "Lỗi!",
+                            text: "Không tìm thấy trang yêu cầu.",
+                            icon: "error"
+                        });
+                    } else if (xhr.status === 500) {
+                        Swal.fire({
+                            title: "Lỗi!",
+                            text: "Lỗi máy chủ nội bộ.",
+                            icon: "error"
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Lỗi!",
+                            text: "Có lỗi xảy ra: " + error,
+                            icon: "error"
+                        });
+                    }
+                }
+
+            });
+        }
+    });
+}
+
     $(document).ready(function () {
         $('#userForm').submit(function (event) {
             event.preventDefault(); // Ngăn chặn việc gửi form thông thường
@@ -283,17 +315,17 @@
                             contentType: false,
                             processData: false,
                             success: function (response) {
-                                if (response.status === 'success') {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Thêm người dùng thành công',
-                                        showConfirmButton: false,
-                                        timer: 1050
-                                    });
-                                    setTimeout(function() {
-                                        window.location.href = '/admin/user';
-                                    }, 1600);
-                                }
+                            	 if (response.status === 'success') {
+                                     Swal.fire({
+                                         icon: 'success',
+                                         title: 'Thêm người dùng thành công',
+                                         showConfirmButton: false,
+                                         timer: 1050
+                                     });
+                                     setTimeout(function() {
+                                         window.location.href = '/admin/user';
+                                     }, 1600);
+                                 }
                             },
                             error: function (response) {
                                 let errors = response.responseJSON;
@@ -323,6 +355,7 @@
             });
         });
     });
+
 </script>
 
 </body>
