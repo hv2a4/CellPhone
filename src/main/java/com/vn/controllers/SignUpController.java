@@ -75,8 +75,6 @@ public class SignUpController {
 			
 			
 			if (userDao.existsById(item.getUSERNAME())) {
-	            rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
-	            item.setRank(defaultRank);
 	            model.addAttribute("item", new user());
 	            model.addAttribute("messages", "Tên tài khoản đã tồn tại");
 	            return "/views/signup";
