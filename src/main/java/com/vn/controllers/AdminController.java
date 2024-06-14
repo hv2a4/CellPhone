@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,9 @@ import java.util.Optional;
 import com.vn.DAO.rankDao;
 
 import jakarta.servlet.ServletContext;
+
+import org.apache.catalina.connector.Response;
+import org.hibernate.boot.model.source.spi.Orderable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -57,6 +62,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -442,30 +448,98 @@ public class AdminController {
 			@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate) {
 		String page = "discount.jsp";
 		model.addAttribute("page", page);
-
 		List<discount_code> list_discount_code = discount_codeDao.findAll();
 		model.addAttribute("list_discount_code", list_discount_code);
 
 		return "/Admin/production/homeadmin";
 	}
 
-	@PostMapping("discount_code/create")
-	public String createDiscount_code(@ModelAttribute("discount_code") discount_code discount_code) {
-		discount_codeDao.save(discount_code);
-		return "redirect:/admin/discount";
-	}
+//	@PostMapping("discount_code/create")
+//	public String createDiscount_code(Model model,
+//			@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate,
+//			@ModelAttribute("discount_code") discount_code discount_code) {
+//
+//		String page = "discount.jsp";
+//		model.addAttribute("page", page);
+//
+//		List<discount_code> list_discount_code = discount_codeDao.findAll();
+//		model.addAttribute("list_discount_code", list_discount_code);
+//		model.addAttribute("thongbao", checkDiscountCode(discount_code));
+//		discount_codeDao.save(discount_code);
+//		return "/Admin/production/homeadmin";
+//
+//	}
 
-	@PostMapping("discount_code/update")
-	public String updateDiscount_code(@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate) {
-		discount_codeDao.save(discount_codeUpdate);
-		return "redirect:/admin/discount";
-	}
+	@PostMapping("/discount_code/create")
+	public ResponseEntity<Map<String, String>> createDiscountCode(
+			@Validated @ModelAttribute("discount_code") discount_code discount_code, BindingResult bindingResult,
+			HttpServletRequest req) {
 
+		Map<String, String> response = new HashMap<>();
+		if (bindingResult.hasErrors()) {
+			// Trả về lỗi xác thực
+			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		try {
+			List<discount_code> discount_codes = discount_codeDao.findAll();
+			for (discount_code item : discount_codes) {
+				if (item.getCODE().equalsIgnoreCase(discount_code.getCODE())) {
+					response.put("status", "error");
+					return ResponseEntity.ok(response);
+				}
+			}
+			discount_codeDao.save(discount_code);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		response.put("status", "success");
+		return ResponseEntity.ok(response);
+	}
+	
+	@PostMapping("/discount_code/update")
+	public ResponseEntity<Map<String, String>> updateDiscountCode(
+			@Validated @ModelAttribute("discount_code") discount_code discount_code, BindingResult bindingResult) {
+
+		Map<String, String> response = new HashMap<>();
+		if (bindingResult.hasErrors()) {
+			// Trả về lỗi xác thực
+			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		try {
+			discount_codeDao.save(discount_code);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		response.put("status", "success");
+		return ResponseEntity.ok(response);
+	}
+	
 	@GetMapping("discount_code/delete")
-	public String deleteDiscount_code(@Param("id") Integer id) {
-		discount_code discount_code = discount_codeDao.getById(id);
-		discount_codeDao.delete(discount_code);
-		return "redirect:/admin/discount";
+	public String deleteDiscount_code(Model model, @Param("id") Integer id) {
+		try {
+			discount_code discount_code = discount_codeDao.getById(id);
+			discount_codeDao.delete(discount_code);
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		
+		String page = "discount.jsp";
+		model.addAttribute("page", page);
+
+		List<discount_code> list_discount_code = discount_codeDao.findAll();
+		model.addAttribute("list_discount_code", list_discount_code);
+
+		return "/Admin/production/homeadmin";
+//		return "redirect:/admin/discount";
 	}
 
 	@GetMapping("ajax/getdiscount_code/{id}")
@@ -518,20 +592,21 @@ public class AdminController {
 		}
 	}
 
-	// trả hàng
+	// nhận hàng
 	@GetMapping("returns/{id}")
-	public String getReturns(Model model, @PathVariable("id") Integer id) {
-		try {
-			// Tìm đối tượng order theo ID
-			order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+	@ResponseBody
+	public boolean getReturns(Model model, @PathVariable("id") Integer id) {
 
-			// Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
-			status_order returnStatus = status_orderDao.findById(6)
-					.orElseThrow(() -> new RuntimeException("Status not found"));
-
+		// Tìm đối tượng order theo ID
+		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+		// Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
+		status_order returnStatus = status_orderDao.findById(6)
+				.orElseThrow(() -> new RuntimeException("Status not found"));
+		if (orders.getStatus_order().getID() == 5) {
 			// Cập nhật trạng thái trả hàng cho đối tượng order
 			orders.setStatus_order(returnStatus);
-
+			orders.setUPDATE_AT(new Date());
+			orderDaos.save(orders);
 			// Cập nhật số lượng cho từng sản phẩm trong đơn hàng
 			List<order_item> listOrder_Item = orders.getOrder_items();
 			for (order_item order_item : listOrder_Item) {
@@ -539,52 +614,84 @@ public class AdminController {
 				variants.setQUANTITY(variants.getQUANTITY() + order_item.getQUANTITY());
 				variantDao.save(variants);
 			}
-
-			// Lưu lại đối tượng order
-			orderDaos.save(orders);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "redirect:/admin/order?error";
+			return true;
 		}
-
-		return "redirect:/admin/order";
+		return false;
 	}
 
 	@GetMapping("confirmation/{id}")
-	public String getConfirmation(Model model, @PathVariable("id") Integer id) {
+	@ResponseBody
+	public boolean getConfirmation(Model model, @PathVariable("id") Integer id) {
 		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 		status_order returnStatus = status_orderDao.findById(3)
 				.orElseThrow(() -> new RuntimeException("Status not found"));
-		orders.setStatus_order(returnStatus);
-		System.out.println("Order ID: " + id + " updated to status: " + returnStatus.getSTATUS());
-		orderDaos.save(orders);
-		return "redirect:/admin/order";
+		if (orders.getStatus_order().getID() == 2) {
+			orders.setStatus_order(returnStatus);
+			orders.setUPDATE_AT(new Date());
+			orderDaos.save(orders);
+			return true;
+		}
+		return false;
+	}
+
+	@GetMapping("cancel/{id}")
+	@ResponseBody
+	public boolean cancel(Model model, @PathVariable("id") Integer id) {
+		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+		status_order statusOrder = status_orderDao.findById(6)
+				.orElseThrow(() -> new RuntimeException("Status not found"));
+		if (orders.getStatus_order().getID() == 4) {
+			orders.setStatus_order(statusOrder);
+			orders.setUPDATE_AT(new Date());
+			orderDaos.save(orders);
+			return true;
+		}
+		return false;
 	}
 
 	@GetMapping("delivery/{id}")
-	public String getDelivery(@PathVariable("id") Integer id) {
+	@ResponseBody
+	public boolean getDelivery(@PathVariable("id") Integer id) {
 		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 		status_order statusOrder = status_orderDao.findById(4)
 				.orElseThrow(() -> new RuntimeException("Status not found"));
-		orders.setStatus_order(statusOrder);
-		System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
-		orderDaos.save(orders);
-		return "redirect:/admin/order";
+		if (orders.getStatus_order().getID() == 3) {
+			orders.setStatus_order(statusOrder);
+			orders.setUPDATE_AT(new Date());
+			orderDaos.save(orders);
+			return true;
+		}
+		return false;
 	}
 
 	@GetMapping("completed/{id}")
-	public String getCompleted(@PathVariable("id") Integer id) {
+	@ResponseBody
+	public boolean getCompleted(@PathVariable("id") Integer id) {
 		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 		status_order statusOrder = status_orderDao.findById(1)
 				.orElseThrow(() -> new RuntimeException("Status not found"));
-		orders.setStatus_order(statusOrder);
-		status_invoice s = status_invoiceDao.findById(1).get();
-		invoice invoice = orders.getInvoices().get(0);
-		invoice.setStatus_invoice(s);
-		invoiceDao.save(invoice);
-		System.out.println("Order ID: " + id + " updated to status: " + statusOrder.getSTATUS());
-		orderDaos.save(orders);
-		return "redirect:/admin/order";
+		if (orders.getStatus_order().getID() == 4) {
+			orders.setStatus_order(statusOrder);
+			orders.setUPDATE_AT(new Date());
+			status_invoice s = status_invoiceDao.findById(1).get();
+			invoice invoice = orders.getInvoices().get(0);
+			invoice.setStatus_invoice(s);
+			invoiceDao.save(invoice);
+			orderDaos.save(orders);
+			return true;
+		}
+		return false;
+	}
+
+	@GetMapping("unlock/{id}")
+	public String getUnlock(Model model, @PathVariable("id") String id) {
+		user users = userDao.findById(id).get();
+		users.setSTATUS(true);
+		users.setUPDATE_AT(new Date());
+		userDao.save(users);
+		String page = "qlnguoidung.jsp";
+		model.addAttribute("page", page);
+		return "redirect:/admin/user";
 	}
 
 	@PostMapping("category/update")
@@ -602,12 +709,13 @@ public class AdminController {
 
 	@ModelAttribute("confirmations")
 	List<order> getConfigmationOrder() {
-		return orderDaos.findAll();
+		return orderDaos.findAllSX();
 	}
 
 	@ModelAttribute("fillOrder")
 	public List<order> getListOrder() {
-		return orderDaos.findAll();
+		List<order> a = orderDao.findAllSX();
+		return orderDao.findAllSX();
 	}
 
 	@GetMapping("order")
