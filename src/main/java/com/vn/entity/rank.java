@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -26,7 +27,7 @@ public class rank implements Serializable {
 	@NotNull(message = "Vui lòng chọn bậc !")
 	String NAME;
 
-	
+	@ToString.Exclude
 	@OneToMany(mappedBy = "rank")
 	@JsonIgnore
 	List<user> users;

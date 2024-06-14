@@ -82,7 +82,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="card-box table-responsive">
-												<table id="datatable-responsive"
+												<table id=""
 													class="table table-striped table-bordered dt-responsive nowrap"
 													cellspacing="0" width="100%">
 													<thead>
@@ -100,11 +100,13 @@
 															varStatus="loop">
 															<tr>
 																<td>DK<fmt:formatDate value="${item.UPDATE_AT}"
-																		pattern="yyyyMMdd" />${loop.index +1}</td>
+																		pattern="yyyy-MM-dd" />${loop.index +1}</td>
 																<td>${item.user.FULLNAME}</td>
 																<td><fmt:formatNumber type="currency"
 																		currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
-																<td>${item.CREATE_AT}</td>
+																<td>
+																<fmt:formatDate value="${item.UPDATE_AT}" pattern="yyyy-MM-dd HH:mm:ss" /> 
+																</td>
 																<td><c:choose>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Hoàn thành'}">
@@ -153,22 +155,22 @@
 																		</c:when>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Chờ xác nhận'}">
-																			<a class="btn" href="/admin/confirmation/${item.ID}"
+																			<button class="btn"
+																				onclick="confirmation(${item.ID})"
 																				style="width: 100px; background-color: #ffc107; color: black;">
-																				Xác Nhận </a>
+																				Xác Nhận</button>
 																		</c:when>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Đã xác nhận'}">
-																			<a type="button" class="btn"
-																				href="/admin/delivery/${item.ID}"
+																			<button class="btn" onclick="delivery(${item.ID})"
 																				style="width: 100px; background-color: #17a2b8; color: whitesmoke;">
-																				Giao Hàng </a>
+																				Giao hàng</button>
 																		</c:when>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Giao hàng'}">
-																			<a class="btn" href="/admin/completed/${item.ID}"
+																			<button class="btn" onclick="completed(${item.ID})"
 																				style="width: 100px; background-color: #007bff; color: white;">
-																				Hoàn tất </a>
+																				Hoàn tất</button>
 																		</c:when>
 																		<c:when test="${item.status_order.STATUS == 'Hủy'}">
 																			<button type="button" class="btn"
@@ -179,9 +181,9 @@
 																		</c:when>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Trả hàng'}">
-																			<a class="btn btn-dark"
-																				href="/admin/returns/${item.ID}"
-																				style="width: 100px;"> Đã nhận </a>
+																			<button class="btn btn-dark"
+																				onclick="returns(${item.ID})" style="width: 100px;">
+																				Đã nhận</button>
 																		</c:when>
 																	</c:choose></td>
 															</tr>
@@ -214,7 +216,7 @@
 																			<h2>
 																				Ngày cập nhật:
 																				<fmt:formatDate value="${item.UPDATE_AT}"
-																					pattern="yyyy-MM-dd" />
+																					pattern="yyyy-MM-dd HH:mm:ss" />
 																			</h2>
 																		</div>
 																		<div class="modal-footer">
@@ -238,7 +240,7 @@
 																				data-bs-dismiss="modal" aria-label="Close"></button>
 																		</div>
 																		<div class="modal-body">
-																			<h2>${item.user.USERNAME}- ${item.user.FULLNAME}</h2>
+																			<h2>${item.user.USERNAME}-${item.user.FULLNAME}</h2>
 																			<br>
 																			<p>${item.REASON}</p>
 																		</div>
@@ -275,7 +277,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="card-box table-responsive">
-												<table id="datatable-responsive"
+												<table id=""
 													class="table table-striped table-bordered dt-responsive nowrap"
 													cellspacing="0" width="100%">
 													<thead>
@@ -304,10 +306,11 @@
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #ffeb3b; color: black; font-size: 15px;">
 																			Chờ xác nhận </span></td>
-																	<td class="text-center"><a class="btn"
-																		href="/admin/confirmation/${item.ID}"
-																		style="background-color: #ffc107; color: black;"
-																		id="btn-tab-1"> Xác Nhận </a></td>
+																	<td class="text-center">
+																		<button class="btn" onclick="confirmation(${item.ID})"
+																			style="width: 100px; background-color: #ffc107; color: black;">
+																			Xác Nhận</button>
+																	</td>
 																</tr>
 															</c:if>
 														</c:forEach>
@@ -346,7 +349,7 @@
 															<th>Mã đơn hàng</th>
 															<th>Tên người đặt</th>
 															<th>Tổng tiền</th>
-															<th>Ngày đặt</th>
+															<th>Ngày xác nhận</th>
 															<th>Trạng thái</th>
 															<th>Hoạt động</th>
 														</tr>
@@ -362,14 +365,16 @@
 																	<td>${item.user.FULLNAME}</td>
 																	<td><fmt:formatNumber type="currency"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
-																	<td>${item.CREATE_AT}</td>
+																	<td>${item.UPDATE_AT}</td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #2196f3; color: white; font-size: 15px;">
 																			Đã xác nhận </span></td>
-																	<td class="text-center"><a type="button"
-																		class="btn" href="/admin/delivery/${item.ID}"
-																		style="background-color: #17a2b8; color: whitesmoke;"
-																		id="btn-tab-2"> Giao Hàng </a></td>
+																	<td class="text-center">
+																		<button class="btn" onclick="delivery(${item.ID})"
+																			style="width: 100px; background-color: #17a2b8; color: whitesmoke;">
+																			Giao hàng</button>
+
+																	</td>
 																</tr>
 															</c:if>
 														</c:forEach>
@@ -399,7 +404,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="card-box table-responsive">
-												<table id="datatable-responsive"
+												<table id=""
 													class="table table-striped table-bordered dt-responsive nowrap"
 													cellspacing="0" width="100%">
 													<thead>
@@ -407,9 +412,9 @@
 															<th>Mã đơn hàng</th>
 															<th>Tên người đặt</th>
 															<th>Tổng tiền</th>
-															<th>Ngày đặt</th>
+															<th>Ngày giao</th>
 															<th>Trạng thái</th>
-															<th>Hoạt động</th>
+															<th class="text-center">Hoạt động</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -422,14 +427,19 @@
 																	<td>${item.user.FULLNAME}</td>
 																	<td><fmt:formatNumber type="currency"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
-																	<td>${item.CREATE_AT}</td>
+																	<td><fmt:formatDate value="${item.UPDATE_AT}" pattern="yyyy-MM-dd HH:mm:ss" /> </td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #007bff; color: white; font-size: 15px;">
 																			Giao hàng </span></td>
-																	<td class="text-center"><a class="btn"
-																		href="/admin/completed/${item.ID}"
-																		style="background-color: #007bff; color: white; font-size: 15px;"
-																		id="btn-tab-3"> Hoàn Thành </a></td>
+																	<td class="text-center"><button class="btn"
+																			onclick="completed(${item.ID})"
+																			style="width: 100px; background-color: #007bff; color: white;">
+																			Hoàn tất</button>
+																			<button class="btn btn-danger"
+																			onclick="cancel(${item.ID})"
+																			style="width: 100px;">
+																			Hủy</button>
+																			</td>
 																</tr>
 															</c:if>
 														</c:forEach>
@@ -459,7 +469,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="card-box table-responsive">
-												<table id="datatable-responsive"
+												<table id=""
 													class="table table-striped table-bordered dt-responsive nowrap"
 													cellspacing="0" width="100%">
 													<thead>
@@ -467,7 +477,7 @@
 															<th>Mã đơn hàng</th>
 															<th>Tên người đặt</th>
 															<th>Tổng tiền</th>
-															<th>Ngày đặt</th>
+															<th>Ngày hoàn thành</th>
 															<th>Trạng thái</th>
 															<td>Hoạt động</td>
 														</tr>
@@ -483,7 +493,7 @@
 																	<td>${item.user.FULLNAME}</td>
 																	<td><fmt:formatNumber type="currency"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
-																	<td>${item.CREATE_AT}</td>
+																	<td><fmt:formatDate value="${item.UPDATE_AT}" pattern="yyyy-MM-dd HH:mm:ss" /> </td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #4caf50; color: white; font-size: 15px;">
 																			Hoàn thành </span></td>
@@ -524,7 +534,7 @@
 																				<h2>
 																					Ngày cập nhật:
 																					<fmt:formatDate value="${item.UPDATE_AT}"
-																						pattern="yyyy-MM-dd" />
+																						pattern="yyyy-MM-dd HH:mm:ss" />
 																				</h2>
 																			</div>
 																			<div class="modal-footer">
@@ -561,7 +571,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="card-box table-responsive">
-												<table id="datatable-responsive"
+												<table id=""
 													class="table table-striped table-bordered dt-responsive nowrap"
 													cellspacing="0" width="100%">
 													<thead>
@@ -569,7 +579,7 @@
 															<th>Mã đơn hàng</th>
 															<th>Tên người đặt</th>
 															<th>Tổng tiền</th>
-															<th>Ngày đặt</th>
+															<th>Ngày trả</th>
 															<th>Trạng thái</th>
 															<th>Hoạt động</th>
 														</tr>
@@ -585,13 +595,13 @@
 																	<td>${item.user.FULLNAME}</td>
 																	<td><fmt:formatNumber type="currency"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
-																	<td>${item.CREATE_AT}</td>
+																	<td><fmt:formatDate value="${item.UPDATE_AT}" pattern="yyyy-MM-dd HH:mm:ss" /> </td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #9e9e9e; color: white; font-size: 15px;">
 																			Trả hàng </span></td>
-																	<td class="text-center"><a class="btn btn-dark"
-																		href="/admin/returns/${item.ID}" style=""
-																		id="btn-tab-4"> Đã nhận </a></td>
+																	<td class="text-center"><button
+																			class="btn btn-dark" onclick="returns(${item.ID})"
+																			style="width: 100px;">Đã nhận</button></td>
 																</tr>
 															</c:if>
 														</c:forEach>
@@ -620,7 +630,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="card-box table-responsive">
-												<table id="datatable-responsive"
+												<table id=""
 													class="table table-striped table-bordered dt-responsive nowrap"
 													cellspacing="0" width="100%">
 													<thead>
@@ -628,7 +638,7 @@
 															<th>Mã đơn hàng</th>
 															<th>Tên người đặt</th>
 															<th>Tổng tiền</th>
-															<th>Ngày đặt</th>
+															<th>Ngày hủy</th>
 															<th>Trạng thái</th>
 															<th>Lý do</th>
 														</tr>
@@ -644,7 +654,7 @@
 																	<td>${item.user.FULLNAME}</td>
 																	<td><fmt:formatNumber type="currency"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
-																	<td>${item.CREATE_AT}</td>
+																	<td><fmt:formatDate value="${item.UPDATE_AT}" pattern="yyyy-MM-dd HH:mm:ss" /> </td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #f44336; color: white; font-size: 15px;">
 																			Hủy </span></td>
@@ -697,6 +707,9 @@
 			</div>
 		</div>
 	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 	<script>
     function changeTab(index) {
         // Lấy tất cả các tab và các tab nội dung
@@ -734,6 +747,293 @@
             changeTab(0);
         }
     });
+   
+
+    function confirmation(id) {
+    	  $.ajax({
+    	    type: "GET",
+    	    url: "/admin/confirmation/" + id,
+    	    success: function(response) {
+      	      if (response) {
+      	        const Toast = Swal.mixin({
+      	          toast: true,
+      	          position: "top-end",
+      	          showConfirmButton: false,
+      	          timer: 1000,
+      	          timerProgressBar: true,
+      	          didOpen: (toast) => {
+      	            toast.onmouseenter = Swal.stopTimer;
+      	            toast.onmouseleave = Swal.resumeTimer;
+      	          }
+      	        });
+      	        Toast.fire({
+      	          icon: "success",
+      	          title: "Hoàn tất"
+      	        }).then(function() {
+      	          window.location.href = "/admin/order";
+      	        });
+      	      } else {
+      	        const Toast = Swal.mixin({
+      	          toast: true,
+      	          position: "top-end",
+      	          showConfirmButton: false,
+      	          timer: 1000,
+      	          timerProgressBar: true,
+      	          didOpen: (toast) => {
+      	            toast.onmouseenter = Swal.stopTimer;
+      	            toast.onmouseleave = Swal.resumeTimer;
+      	          }
+      	        });
+      	        Toast.fire({
+      	          icon: "error",
+      	          title: "Người dùng đã cập nhật trạng thái mới"
+      	        }).then(function() {
+      	          window.location.href = "/admin/order";
+      	        });
+      	      }
+
+    	    },
+    	    error: function(xhr, status, error) {
+    	    	const Toast = Swal.mixin({
+        	        toast: true,
+        	        position: "top-end",
+        	        showConfirmButton: false,
+        	        timer: 1000,
+        	        timerProgressBar: true,
+        	        didOpen: (toast) => {
+        	          toast.onmouseenter = Swal.stopTimer;
+        	          toast.onmouseleave = Swal.resumeTimer;
+        	        }
+        	      });
+        	      Toast.fire({
+        	        icon: "error",
+        	        title: "Người dùng đã cập nhật trạng thái mới"
+        	      }).then(function(){
+        	    	  window.location.href = "/admin/order";
+        	      });
+    	    }
+    	  });
+    	}
+
+    function cancel(id) {
+    	  $.ajax({
+    	    type: "GET",
+    	    url: "/admin/cancel/" + id,
+    	    success: function(response) {
+      	      if (response) {
+      	        const Toast = Swal.mixin({
+      	          toast: true,
+      	          position: "top-end",
+      	          showConfirmButton: false,
+      	          timer: 1000,
+      	          timerProgressBar: true,
+      	          didOpen: (toast) => {
+      	            toast.onmouseenter = Swal.stopTimer;
+      	            toast.onmouseleave = Swal.resumeTimer;
+      	          }
+      	        });
+      	        Toast.fire({
+      	          icon: "success",
+      	          title: "Hoàn tất"
+      	        }).then(function() {
+      	          window.location.href = "/admin/order";
+      	        });
+      	      } else {
+      	        const Toast = Swal.mixin({
+      	          toast: true,
+      	          position: "top-end",
+      	          showConfirmButton: false,
+      	          timer: 1000,
+      	          timerProgressBar: true,
+      	          didOpen: (toast) => {
+      	            toast.onmouseenter = Swal.stopTimer;
+      	            toast.onmouseleave = Swal.resumeTimer;
+      	          }
+      	        });
+      	        Toast.fire({
+      	          icon: "error",
+      	          title: "Người dùng đã cập nhật trạng thái mới"
+      	        }).then(function() {
+      	          window.location.href = "/admin/order";
+      	        });
+      	      }
+
+    	    },
+    	    error: function(xhr, status, error) {
+    	    	const Toast = Swal.mixin({
+        	        toast: true,
+        	        position: "top-end",
+        	        showConfirmButton: false,
+        	        timer: 1000,
+        	        timerProgressBar: true,
+        	        didOpen: (toast) => {
+        	          toast.onmouseenter = Swal.stopTimer;
+        	          toast.onmouseleave = Swal.resumeTimer;
+        	        }
+        	      });
+        	      Toast.fire({
+        	        icon: "error",
+        	        title: "Người dùng đã cập nhật trạng thái mới"
+        	      }).then(function(){
+        	    	  window.location.href = "/admin/order";
+        	      });
+    	    }
+    	  });
+    	}
+    
+    function delivery(id) {
+    	  $.ajax({
+    	    type: "GET",
+    	    url: "/admin/delivery/" + id,
+    	    success: function(response) {
+    	      if (response) {
+    	        const Toast = Swal.mixin({
+    	          toast: true,
+    	          position: "top-end",
+    	          showConfirmButton: false,
+    	          timer: 1000,
+    	          timerProgressBar: true,
+    	          didOpen: (toast) => {
+    	            toast.onmouseenter = Swal.stopTimer;
+    	            toast.onmouseleave = Swal.resumeTimer;
+    	          }
+    	        });
+    	        Toast.fire({
+    	          icon: "success",
+    	          title: "Hoàn tất"
+    	        }).then(function() {
+    	          window.location.href = "/admin/order";
+    	        });
+    	      } else {
+    	        const Toast = Swal.mixin({
+    	          toast: true,
+    	          position: "top-end",
+    	          showConfirmButton: false,
+    	          timer: 1000,
+    	          timerProgressBar: true,
+    	          didOpen: (toast) => {
+    	            toast.onmouseenter = Swal.stopTimer;
+    	            toast.onmouseleave = Swal.resumeTimer;
+    	          }
+    	        });
+    	        Toast.fire({
+    	          icon: "error",
+    	          title: "Người dùng đã cập nhật trạng thái mới"
+    	        }).then(function() {
+    	          window.location.href = "/admin/order";
+    	        });
+    	      }
+    	    },
+    	    error: function(xhr, status, error) {
+    	      const Toast = Swal.mixin({
+    	        toast: true,
+    	        position: "top-end",
+    	        showConfirmButton: false,
+    	        timer: 1000,
+    	        timerProgressBar: true,
+    	        didOpen: (toast) => {
+    	          toast.onmouseenter = Swal.stopTimer;
+    	          toast.onmouseleave = Swal.resumeTimer;
+    	        }
+    	      });
+    	      Toast.fire({
+    	        icon: "error",
+    	        title: "Đã xảy ra lỗi"
+    	      }).then(function() {
+    	        window.location.href = "/admin/order";
+    	      });
+    	    }
+    	  });
+    	}
+    function completed(id) {
+  	  $.ajax({
+  	    type: "GET",
+  	    url: "/admin/completed/" + id,
+  	    success: function() {
+  	      const Toast = Swal.mixin({
+  	        toast: true,
+  	        position: "top-end",
+  	        showConfirmButton: false,
+  	        timer: 1000,
+  	        timerProgressBar: true,
+  	        didOpen: (toast) => {
+  	          toast.onmouseenter = Swal.stopTimer;
+  	          toast.onmouseleave = Swal.resumeTimer;
+  	        }
+  	      });
+  	      Toast.fire({
+  	        icon: "success",
+  	        title: "Hoàn tất"
+  	      }).then(function(){
+  	    	  window.location.href = "/admin/order";
+  	      });
+  	    },
+  	    error: function(xhr, status, error) {
+  	    	const Toast = Swal.mixin({
+      	        toast: true,
+      	        position: "top-end",
+      	        showConfirmButton: false,
+      	        timer: 1000,
+      	        timerProgressBar: true,
+      	        didOpen: (toast) => {
+      	          toast.onmouseenter = Swal.stopTimer;
+      	          toast.onmouseleave = Swal.resumeTimer;
+      	        }
+      	      });
+      	      Toast.fire({
+      	        icon: "error",
+      	        title: "Người dùng đã cập nhật trạng thái mới"
+      	      }).then(function(){
+      	    	  window.location.href = "/admin/order";
+      	      });
+  	    }
+  	  });
+  	}
+    
+    function returns(id) {
+  	  $.ajax({
+  	    type: "GET",
+  	    url: "/admin/returns/" + id,
+  	    success: function() {
+  	      const Toast = Swal.mixin({
+  	        toast: true,
+  	        position: "top-end",
+  	        showConfirmButton: false,
+  	        timer: 1000,
+  	        timerProgressBar: true,
+  	        didOpen: (toast) => {
+  	          toast.onmouseenter = Swal.stopTimer;
+  	          toast.onmouseleave = Swal.resumeTimer;
+  	        }
+  	      });
+  	      Toast.fire({
+  	        icon: "success",
+  	        title: "Hoàn tất"
+  	      }).then(function(){
+  	    	  window.location.href = "/admin/order";
+  	      });
+  	    },
+  	    error: function(xhr, status, error) {
+  	    	const Toast = Swal.mixin({
+      	        toast: true,
+      	        position: "top-end",
+      	        showConfirmButton: false,
+      	        timer: 1000,
+      	        timerProgressBar: true,
+      	        didOpen: (toast) => {
+      	          toast.onmouseenter = Swal.stopTimer;
+      	          toast.onmouseleave = Swal.resumeTimer;
+      	        }
+      	      });
+      	      Toast.fire({
+      	        icon: "error",
+      	        title: "Người dùng đã cập nhật trạng thái mới"
+      	      }).then(function(){
+      	    	  window.location.href = "/admin/order";
+      	      });
+  	    }
+  	  });
+  	}
 </script>
 </body>
 </html>
