@@ -77,6 +77,8 @@ public class UserController {
 	phoneDao phonedao;
 	@Autowired
 	variantDao variantdao;
+	@Autowired
+	HttpServletRequest request;
 
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
@@ -426,7 +428,9 @@ public class UserController {
 	}
 
 	@RequestMapping("checkout")
-	public String getCheckout(Model model) {
+	public String getCheckout(
+			@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems,
+			Model model) {
 		user us = sessionService.get("list");
 		if (us != null) {
 			order order = orderDao.getOrderMoi();
@@ -449,9 +453,12 @@ public class UserController {
 			model.addAttribute("user", user);
 			model.addAttribute("order", order);
 			model.addAttribute("totalOrder", totalAmount);
-
+			String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
+					.collect(Collectors.joining(","));
+			model.addAttribute("selectedItems", selectedItemsQueryParam);
 			String page = "checkout.jsp";
 			model.addAttribute("page", page);
+			
 			return "index";
 		} else {
 			return "redirect:/shop/login";
@@ -468,7 +475,12 @@ public class UserController {
 			or.setUser(user);
 			or.setCREATE_AT(new Date());
 			or.setUPDATE_AT(new Date());
-			or.setAddress(user.getAddresses().get(0));
+			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
+				or.setAddress(user.getAddresses().get(0));
+			} else {
+				return "redirect:/shop/address";
+			}
+
 			orderDao.save(or);
 
 			order order = orderDao.getOrderMoi();
@@ -487,7 +499,8 @@ public class UserController {
 	}
 
 	@RequestMapping("addorder")
-	public String addorder(Model model) {
+	public String addorder(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItems,
+			Model model) {
 		user us = sessionService.get("list");
 		if (us != null) {
 			user user = userDao.findById(us.getUSERNAME()).get();
@@ -503,15 +516,26 @@ public class UserController {
 			}
 
 			orderDao.save(or);
-			for (cart_item citem : cart.getCart_items()) {
-				order_item order_item = new order_item();
-				order_item.setOrder(or);
-				order_item.setPRICE(citem.getVariant().getPRICE());
-				order_item.setQUANTITY(citem.getQUANTITY());
-				order_item.setVariant(citem.getVariant());
-				order_itemDao.save(order_item);
+
+			if (selectedItems == null || selectedItems.isEmpty()) {
+				// If no items are selected, process all items in the cart
+				selectedItems = cart.getCart_items().stream().map(cart_item::getID).collect(Collectors.toList());
 			}
-			return "redirect:/shop/checkout";
+
+			for (cart_item citem : cart.getCart_items()) {
+				if (selectedItems.contains(citem.getID())) {
+					order_item order_item = new order_item();
+					order_item.setOrder(or);
+					order_item.setPRICE(citem.getVariant().getPRICE());
+					order_item.setQUANTITY(citem.getQUANTITY());
+					order_item.setVariant(citem.getVariant());
+					order_itemDao.save(order_item);
+				}
+			}
+			String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
+					.collect(Collectors.joining(","));
+
+			return "redirect:/shop/checkout?selectedItems=" + selectedItemsQueryParam;
 		}
 		return "redirect:/shop/login";
 	}
@@ -527,7 +551,8 @@ public class UserController {
 	@RequestMapping("ordersuccess")
 	public String getOrderSuccess(Model model, @RequestParam("id_order") Integer idOrder,
 			@RequestParam("id_pay") Integer idPay, @RequestParam("id_address") Integer idAddress,
-			@RequestParam("discount") Optional<Integer> discount) {
+			@RequestParam("discount") Optional<Integer> discount,
+			@RequestParam(value = "selectedItem", required = false) Optional<List<Integer>> selectedItems) {
 		order order = orderDao.findById(idOrder).get();
 		address adr = addressDao.findById(idAddress).get();
 		payment_method pay = payment_methodDao.findById(idPay).get();
@@ -553,7 +578,18 @@ public class UserController {
 		user user = userDao.findById(us.getUSERNAME()).get();
 		cart cart = user.getCarts().get(0);
 		for (cart_item cart_item : cart.getCart_items()) {
-			cart_itemdao.delete(cart_item);
+			List<Integer> selectedItem = selectedItems.orElse(null);
+			if (selectedItem != null) {
+				for (Integer selectedItem1 : selectedItem) {
+					if (cart_item.getID() == selectedItem1) {
+						cart_itemdao.delete(cart_item);
+						break;
+					}
+				}
+			}else {
+				cart_itemdao.delete(cart_item);
+			}
+
 		}
 		model.addAttribute("order", order);
 		model.addAttribute("adr", adr.getADDRESS());
@@ -637,35 +673,41 @@ public class UserController {
 	}
 
 	@RequestMapping("profile")
-	public String getProfile(Model model, user item) {
-		model.addAttribute("item", item);
-
+	public String getProfile(Model model,user item) {
+		
+		  
+		model.addAttribute("items", item);
+		
 		String page = "profile.jsp";
 		model.addAttribute("page", page);
 		return "index";
 	}
-
+	
 	@PostMapping("profile")
-	public String postProfile(@Validated @ModelAttribute("item") user item, BindingResult bindingResult, Model model,
-			@RequestPart("photo_file") MultipartFile file) {
+	public String postProfile(@Validated @ModelAttribute("items") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
 		if (bindingResult.hasErrors()) {
-			System.out.println("hello");
-			model.addAttribute("page", "profile.jsp");
-			return "index";
-		}
-		String photo = paramService.save(file, "/images/");
-		Optional<user> userS = userDao.findById(item.getUSERNAME());
+		        System.out.println("hello");
+		        model.addAttribute("page", "profile.jsp");
+		        return "index";
+		    }
+		String photo=paramService.save(file,"/images/");
+		
+		Optional<user> userS=userDao.findById(item.getUSERNAME());
 
-		userS.get().setAVATAR(photo);
-		userS.get().setFULLNAME(item.getFULLNAME());
-		userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
-		userS.get().setGENDER(item.getGENDER());
-		userS.get().setEMAIL(item.getEMAIL());
-
-		userDao.save(userS.get());
-		sessionService.set("list", userS.get());
-
-		return "redirect:/shop/profile";
+			userS.get().setAVATAR(photo);
+			userS.get().setFULLNAME(item.getFULLNAME());
+			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+			userS.get().setGENDER(item.getGENDER());
+			userS.get().setEMAIL(item.getEMAIL());
+            System.out.println(userS.get().getFULLNAME());
+			userDao.save(userS.get());
+		    sessionService.set("list", userS.get());
+           model.addAttribute("profileSuccess", "true");
+           model.addAttribute("items", item);
+   		
+   		String page = "profile.jsp";
+   		model.addAttribute("page", page);
+   		return "index";
 	}
 
 	@GetMapping("address")
@@ -764,7 +806,7 @@ public class UserController {
 
 		String page = "address.jsp";
 		model.addAttribute("page", page);
-		String address = "trần hưng đạo nối dài, Phường Lê Bình, Quận Cái Răng, Thành phố Cần Thơ";
+		
 
 		return "index";
 	}

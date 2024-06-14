@@ -7,11 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.vn.entity.brand;
 import com.vn.entity.phone;
 import com.vn.entity.system;
 
+@Repository
 public interface phoneDao extends JpaRepository<phone, Integer> {
 	@Query(value = "EXEC GetTop7Phones", nativeQuery = true)
 	List<Object[]> getTop7Phones();
@@ -51,14 +53,7 @@ public interface phoneDao extends JpaRepository<phone, Integer> {
 	// GIA - HANG - HE THONG - NAME
 	@Query("SELECT p FROM phone p JOIN p.variants v WHERE v.PRICE BETWEEN ?1 AND ?2 AND p.system.SYSTEM IN ?3 AND p.brand.NAME IN ?4 AND p.NAME LIKE ?5")
 	Page<phone> findByNamePriceSystemBrand(Double min, Double max, List<String> systemSystems, List<String> brandNames, String keywords, Pageable pageable);
-	
-	
 
-
-
-
-
-
-
-
+	@Query("SELECT p FROM phone p ORDER BY p.UPDATE_AT DESC")
+    List<phone> OrderByCreateAtDesc();
 }

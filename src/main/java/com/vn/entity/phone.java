@@ -1,14 +1,25 @@
 package com.vn.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
@@ -74,50 +85,52 @@ public class phone implements Serializable {
 	String SCREEN_RESOLUTIONKT;
 	
 	@NotNull(message = "Kích thước màn hình không được để trống")
+	@PositiveOrZero(message = "Kích thước màn hình phải lớn hơn 0")
 	Double SCREEN_SIZE;
 	
 	@NotBlank(message = "Bộ xử lý không được bỏ trống")
 	String PROCESSOR;
 	
 	@NotNull(message = "RAM không được bỏ trống")
-	@Min(value = 0,message = "RAM phải lớn hơn 0")
-	Double RAM;
+	@PositiveOrZero(message = "RAM phải lớn hơn 0")
+	Integer RAM;
 	
 	@NotNull(message = "Camera trước không được để trống")
-	@Min(value = 0, message = "Camera trước phải là số không âm")
+	@PositiveOrZero(message = "Camera trước phải là số không âm")
 	Integer SELFIE_CAMERA;
 	
 	@NotNull(message = "Camera sau không được để trống")
-	@Min(value = 0, message = "Camera sau phải là số không âm")
+	@PositiveOrZero(message = "Camera sau phải là số không âm")
 	Integer MAIN_CAMERA;
 	
 	@NotNull(message = "Dung lượng pin không được để trống")
-	@Min(value = 0, message = "Dung lượng pin phải là số không âm")
+	@PositiveOrZero( message = "Dung lượng pin phải là số không âm")
 	Integer BATTERY_CAPACITY;
 	Boolean IS_DELETE;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "CREATE_AT")
 	Date CREATE_AT;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "UPDATE_AT")
 	Date UPDATE_AT;
 	
 	@NotNull(message = "Chiều dài không được để trống")
-	@Min(value = 0, message = "Chiều dài là số không âm")
+	@PositiveOrZero( message = "Chiều dài là số không âm")
 	Double LENGTH;
 	
 	@NotNull(message = "Chiều rộng không được để trống")
 	@Min(value = 0, message = "Chiều rộng là số không âm")
+	@PositiveOrZero(message = "Chiều rộng là số không âm")
 	Double WIDTH;
 	
 	@NotNull(message = "Chiều cao không được để trống")
-	@Min(value = 0, message = "Chiều cao là số không âm")
+	@PositiveOrZero( message = "Chiều cao là số không âm")
 	Double HEIGHT;
 	
 	@NotNull(message = "Trọng lượng không được để trống")
-	@Min(value = 0, message = "Trọng lượng là số không âm")
+	@PositiveOrZero( message = "Trọng lượng là số không âm")
 	Double WEIGHT;
 	
 	@NotNull(message = "Tần số không được để trống")
@@ -125,14 +138,14 @@ public class phone implements Serializable {
 	Integer REFRESH_RATE;
 	
 	@NotNull(message = "Độ sáng không được để trống")
-	@Min(value = 0, message = "Độ sáng là số không âm")
+	@PositiveOrZero(message = "Độ sáng là số không âm")
 	Integer MAXIMUM_BRIGHTNESS;
 	
 	@NotBlank(message = "Vui lòng không bỏ trống ô quay video !")
 	String VIDEO_RECORDING;
 	
 	@NotNull(message = "Tốc độ cpu không được để trống")
-	@Min(value = 0, message = "Tốc độ cpu là số không âm")
+	@PositiveOrZero(message = "Tốc độ cpu là số không âm")
 	Double CPU_SPEED;
 	
 	String IMAGE;

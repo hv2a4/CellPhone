@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,7 +28,7 @@
                 <div class="row align-items-center">
                     <div class="header-text mb-4">
                         <h2>Đăng nhập</h2>
-                        <span class="mt-2 text-danger">${message}</span>
+                        
                     </div>
                     <div class="input-group">
                         <input name="userName" type="text" class=" form-control-lg fs-6 input"
@@ -62,6 +63,65 @@
         </div>
     </div>
 </form>
-    
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <c:choose>
+      <c:when test="${message}">
+           <script>
+           Swal.fire({
+               icon: 'error',
+               title: 'Đăng Nhập Thất Bại',
+               showConfirmButton: false,
+               timer: 800
+           });
+           
+           setTimeout(function() {
+          	 window.location.href = "/shop/login"; 
+           }, 1000);
+           </script>
+         
+      </c:when>
+      <c:when test="${messages}">
+       <script>
+           Swal.fire({
+               icon: 'error',
+               title: 'Tài khoản không còn hoạt động',
+               showConfirmButton: false,
+               timer: 800
+           });
+           
+           setTimeout(function() {
+          	 window.location.href = "/shop/login"; 
+           }, 1000);
+           </script>
+      </c:when>
+      <c:when test="${messagesCheck}">
+       <script>
+           Swal.fire({
+               icon: 'success',
+               title: 'Đăng Nhập Thành Công',
+               showConfirmButton: false,
+               timer: 800
+           });
+           
+           setTimeout(function() {
+          	 window.location.href = "/shop"; 
+           }, 1000);
+           </script>
+      </c:when>
+      <c:when test="${messagesCheckRole}">
+       <script>
+           Swal.fire({
+               icon: 'success',
+               title: 'Đăng Nhập Thành Công',
+               showConfirmButton: false,
+               timer: 800
+           });
+           
+           setTimeout(function() {
+          	 window.location.href = "/admin"; 
+           }, 1000);
+           </script>
+      </c:when>
+    </c:choose>
 </body>
 </html>

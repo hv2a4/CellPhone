@@ -17,7 +17,7 @@
 </head>
 <body>
 	<div class="container">
-	<form:form method="post"  modelAttribute="item" name="UserProfile"
+	<form:form id="uploadForm" method="post"  modelAttribute="item" name="UserProfile"
                              class="form mt-5"
                             action="/admin/profile"   enctype="multipart/form-data">
 		<h2 class="mt-4">Profile</h2>
@@ -90,5 +90,35 @@
 		</form:form>
 	</div>
 	<script src="/js/imgUpload.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+       <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            var imageUpload = document.getElementById('imageUpload');
+            if (imageUpload.files.length === 0) {
+                event.preventDefault(); // Ngăn chặn form submit
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vui lòng chọn ảnh để cập nhật',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                
+                
+            }
+        });
+    </script>
+	<c:if test="${profileAdminSuccess}">
+     <script>
+     Swal.fire({
+         icon: 'success',
+         title: 'Cập Nhật Thành Công',
+         showConfirmButton: false,
+         timer: 1500
+     });
+     
+    
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+    </c:if>
 </body>
 </html>

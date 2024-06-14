@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.vn.entity.phone;
 import com.vn.entity.user;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +18,7 @@ public interface userDao extends JpaRepository<user, String> {
 	int countUsers();
 	
     List<user> findByEMAILLike(String email);
+    
+    @Query("SELECT p FROM user p ORDER BY p.UPDATE_AT DESC")
+    List<user> OrderByUpdateAtDesc();
 }

@@ -118,20 +118,20 @@
 																		<h4 class="modal-title">Lý do trả đơn hàng
 																			${item.ID} của ${item.user.USERNAME}</h4>
 																	</div>
+																	<form  action="" id="returnForm"> 
 																	<div class="modal-body">
 																		<p>
-																			<textarea id="noteReasons-${item.ID}" class="input"></textarea>
-																			<small id="errors-message-${item.ID}"
-																				class="text-danger"></small>
+																			<textarea name="noteReson"  id="noteReasons" class="input"></textarea>
+																			<small id="errors-message" class="text-danger"></small>
 																		</p>
 																	</div>
 																	<div class="modal-footer">
-																		<button type="button" class="btn btn-info"
-																			onclick="submitReturnItemForms(${item.ID})">Xác
-																			Nhận</button>
+																		<button type="submit" class="btn btn-info" 
+																		formaction="/shop/returnItem/${item.ID}" formmethod="post"	>Xác Nhận</button>
 																		<button type="button" class="btn btn-default"
 																			data-dismiss="modal">Close</button>
 																	</div>
+																	</form>
 																</div>
 															</div>
 														</div>
@@ -468,6 +468,7 @@
 											<th>Tổng tiền</th>
 											<th>Ngày đặt</th>
 											<th>Trạng thái</th>
+											<th>Hoạt Động</th>
 										</tr>
 									</thead>
 									<c:forEach var="item" items="${getAllOrders}">
@@ -482,7 +483,9 @@
 													<td><fmt:formatDate value="${item.CREATE_AT}"
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.status_order.STATUS}</td>
-
+                                                   <td><button type="button" class="btn btn-primary "
+															data-toggle="modal" data-target="#myModal${item.ID}"
+															style="width: 100px;">Trả Hàng</button></td>
 												</c:when>
 
 											</c:choose>
@@ -547,6 +550,52 @@
 	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('returnForm').addEventListener('submit', function(event) {
+    var textArea = document.getElementById('noteReasons');
+    var errorMsg = document.getElementById('errors-message');
+    
+    if (textArea.value.trim() === "") {
+        event.preventDefault(); // Prevent form submission
+        errorMsg.textContent = "Không được để trống"; // Display error message
+    } else {
+        errorMsg.textContent = ""; // Clear error message
+    }
+});
+</script>
+<c:choose>
+ <c:when test="${success}">
+  <script>
+     Swal.fire({
+         icon: 'success',
+         title: 'Trả Hàng Thành Công',
+         showConfirmButton: false,
+         timer: 2600
+     });
+     setTimeout(function() {
+    	 window.location.href = "/shop/order"; 
+     }, 2800);
+     
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+ </c:when>
+  <c:when test="${errorss}">
+  <script>
+     Swal.fire({
+         icon: 'error',
+         title: 'Trả hàng thất bại, đơn hàng được cập nhật lại',
+         showConfirmButton: false,
+         timer: 1500
+     });
+     setTimeout(function() {
+    	 window.location.href = "/shop/order"; 
+     }, 1800);
+     
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+ </c:when>
+</c:choose>
+
 <script>
     function submitDeleteForm(orderId) {
         var noteReason = document.getElementById('noteReason-' + orderId).value;
@@ -649,8 +698,8 @@
             }
         });
     }
-    function submitReturnItemForms(orderId) {
-        var noteReason = document.getElementById('noteReasons-' + orderId).value;
+    /*s  function submitReturnItemForms(orderId) {
+         var noteReason = document.getElementById('noteReasons-' + orderId).value;
         var errorMessageElement = document.getElementById('errors-message-' + orderId);
         if (noteReason.trim() === '') {
             // Hiển thị thông báo lỗi nếu người dùng không nhập lý do
@@ -678,5 +727,5 @@
                 alert("Đã xảy ra lỗi: " + error);
             }
         });
-    }
+    } */
 </script>

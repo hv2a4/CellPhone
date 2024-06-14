@@ -22,8 +22,6 @@ import java.util.Optional;
 
 import com.vn.DAO.rankDao;
 
-import com.vn.entity.rank;
-import com.vn.entity.user;
 import jakarta.servlet.ServletContext;
 
 import org.apache.catalina.connector.Response;
@@ -55,22 +53,6 @@ import com.vn.DAO.systemDao;
 
 import com.vn.DAO.variantDao;
 import com.vn.DAO.wireless_charging_technologyDao;
-import com.vn.entity.battery_type;
-import com.vn.entity.brand;
-import com.vn.entity.category;
-import com.vn.entity.charging_port;
-import com.vn.entity.color;
-import com.vn.entity.discount_code;
-import com.vn.entity.graphics_chip;
-import com.vn.entity.headphone_jack;
-import com.vn.entity.payment_method;
-import com.vn.entity.status_invoice;
-import com.vn.entity.screen_resolution;
-import com.vn.entity.status_order;
-import com.vn.entity.storage;
-import com.vn.entity.system;
-import com.vn.entity.wireless_charging_technology;
-
 import com.vn.DAO.invoiceDao;
 import com.vn.DAO.orderDao;
 import com.vn.DAO.userDao;
@@ -261,37 +243,41 @@ public class AdminController {
 	}
 
 	@GetMapping("profile")
-	public String getProfile(Model model, user item) {
-		model.addAttribute("item", item);
+    public String getProfile(Model model,user item) {
+    	model.addAttribute("item", item);
+    	
+        String page = "profile.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+    @PostMapping("profile")
+    public String postProfile(@Validated @ModelAttribute("item") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
+    	 if (bindingResult.hasErrors()) {
+   		  System.out.println("hello");
+   		 String page = "profile.jsp";
+         model.addAttribute("page", page);
+         return "/Admin/production/homeadmin";
+   		    }
+   		String photo=service.save(file,"/images/");
+   		
+   		Optional<user> userS=userDao.findById(item.getUSERNAME());
 
-		String page = "profile.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
+   			userS.get().setAVATAR(photo);
+   			userS.get().setFULLNAME(item.getFULLNAME());
+   			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+   			userS.get().setGENDER(item.getGENDER());
+   			userS.get().setEMAIL(item.getEMAIL());
 
-	@PostMapping("profile")
-	public String postProfile(@Validated @ModelAttribute("item") user item, BindingResult bindingResult, Model model,
-			@RequestPart("photo_file") MultipartFile file) {
-		if (bindingResult.hasErrors()) {
-			System.out.println("hello");
-			model.addAttribute("page", "profile.jsp");
-			return "index";
-		}
-		String photo = service.save(file, "/images/");
-
-		Optional<user> userS = userDao.findById(item.getUSERNAME());
-
-		userS.get().setAVATAR(photo);
-		userS.get().setFULLNAME(item.getFULLNAME());
-		userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
-		userS.get().setGENDER(item.getGENDER());
-		userS.get().setEMAIL(item.getEMAIL());
-
-		userDao.save(userS.get());
-		sessionService.set("list", userS.get());
-
-		return "redirect:/admin/profile";
-	}
+   			userDao.save(userS.get());
+   		    sessionService.set("list", userS.get());
+   		 model.addAttribute("profileAdminSuccess", "true");
+        
+   		 model.addAttribute("item", item);
+     	
+         String page = "profile.jsp";
+         model.addAttribute("page", page);
+         return "/Admin/production/homeadmin";
+    }
 
 	@RequestMapping("logout")
 	public String logOut() {
@@ -338,6 +324,7 @@ public class AdminController {
 			}
 
 			phone.setCREATE_AT(new Date());
+			phone.setUPDATE_AT(new Date());
 			phone.setIS_DELETE(false);
 			phoneDao.save(phone);
 		} catch (IOException e) {
@@ -373,54 +360,53 @@ public class AdminController {
 		return filename; // Trả về tên tệp tin đã lưu
 	}
 
-	@PostMapping("phone/update/{id}")
-	public String updatePhone(@ModelAttribute("phoneUpdate") phone phoneUpdate, @PathVariable("id") Integer id,
-			Model model, @RequestParam("anhUpdate") List<MultipartFile> images) {
+	@PostMapping("/phone/update")
+	@ResponseBody
+	public ResponseEntity<Map<String, String>> updatePhone(@Validated @ModelAttribute("phoneUpdate") phone phoneUpdate,
+			BindingResult bindingResult, @RequestParam("anhUpdate") List<MultipartFile> images,
+			HttpServletRequest req) {
+		phoneUpdate.setUPDATE_AT(new Date());
+		Map<String, String> response = new HashMap<>();
+		if (bindingResult.hasErrors()) {
+			// Collect validation errors
+			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+
 		try {
-			// Kiểm tra và khởi tạo danh sách images nếu nó null
+			// Clear existing images if any
 			if (phoneUpdate.getImages() == null) {
 				phoneUpdate.setImages(new ArrayList<>());
 			} else {
-				phoneUpdate.getImages().clear(); // Xóa các ảnh cũ
+				phoneUpdate.getImages().clear();
 			}
 
-			// Lưu trữ ảnh mới
+			// Process and save new images
 			List<image> newImages = new ArrayList<>();
-
-			// Xử lý upload ảnh
-			if (!images.isEmpty()) {
-				// Lưu trữ ảnh đầu tiên
-				MultipartFile firstImage = images.get(0);
-				if (!firstImage.isEmpty()) {
-					String firstImageUrl = saveImageToDisk(firstImage, req);
-					phoneUpdate.setIMAGE(firstImageUrl);
-				}
-
-				// Lưu trữ các ảnh còn lại
-				for (int i = 1; i < Math.min(images.size(), 5); i++) {
-					MultipartFile imageFile = images.get(i);
-					if (!imageFile.isEmpty()) {
-						String imageUrl = saveImageToDisk(imageFile, req);
-						image image = new image();
-						image.setIMAGE(imageUrl);
-						image.setPhone(phoneUpdate);
-						newImages.add(image);
-					}
+			for (int i = 0; i < Math.min(images.size(), 5); i++) {
+				MultipartFile imageFile = images.get(i);
+				if (!imageFile.isEmpty()) {
+					String imageUrl = saveImageToDisk(imageFile, req);
+					image image = new image();
+					image.setIMAGE(imageUrl);
+					image.setPhone(phoneUpdate);
+					newImages.add(image);
 				}
 			}
 
-			// Cập nhật danh sách ảnh
-			phoneUpdate.getImages().addAll(newImages); // Thêm các ảnh mới
-
-			// Lưu đối tượng phone vào database
+			// Update phone entity with new images
+			phoneUpdate.getImages().addAll(newImages);
+			// Save the phone entity with updated images
 			phoneDao.save(phoneUpdate);
 
+			response.put("status", "success");
+			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "redirect:/admin/product?error";
+			response.put("status", "error");
+			response.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-
-		return "redirect:/admin/product";
 	}
 
 	@GetMapping("phone/delete")
@@ -449,12 +435,12 @@ public class AdminController {
 
 	@ModelAttribute("list_phone")
 	List<phone> list_phone() {
-		return phoneDao.findAll();
+		return phoneDao.OrderByCreateAtDesc();
 	}
 
 	@ModelAttribute("fillTableUser")
 	public List<user> getList() {
-		return UserDao.findAll();
+		return UserDao.OrderByUpdateAtDesc();
 	}
 
 	@GetMapping("discount")
@@ -1495,14 +1481,37 @@ public class AdminController {
 	userDao userDao;
 
 	@GetMapping("authorize/{id}")
-	public String getAuthorize(Model model, @PathVariable("id") String id) {
-		user users = userDao.findById(id).get();
-		users.setROLE(true);
-		users.setUPDATE_AT(new Date());
-		userDao.save(users);
-		String page = "qlnguoidung.jsp";
-		model.addAttribute("page", page);
-		return "redirect:/admin/user";
+	public ResponseEntity<String> getAuthorize(@PathVariable("id") String id) {
+		try {
+			user user = userDao.findById(id).orElse(null);
+			if (user == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy người dùng");
+			}
+			user.setROLE(false); // Giả sử trường ROLE trong User là role, tùy vào định nghĩa của bạn
+			user.setUPDATE_AT(new Date()); // Tương tự như trên, đảm bảo tên trường và kiểu dữ liệu đúng
+			user.setSTATUS(false);
+			userDao.save(user);
+			return ResponseEntity.ok("Người dùng được phê duyệt thành công");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi máy chủ nội bộ");
+		}
+	}
+
+	@GetMapping("unlock/{id}")
+	public ResponseEntity<String> getUnlock(@PathVariable("id") String id) {
+		try {
+			user user = userDao.findById(id).orElse(null);
+			if (user == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy người dùng");
+			}
+			user.setROLE(false); // Giả sử trường ROLE trong User là role, tùy vào định nghĩa của bạn
+			user.setUPDATE_AT(new Date()); // Tương tự như trên, đảm bảo tên trường và kiểu dữ liệu đúng
+			user.setSTATUS(true);
+			userDao.save(user);
+			return ResponseEntity.ok("Người dùng đã được mở khóa thành công");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi máy chủ nội bộ");
+		}
 	}
 
 	@PostMapping("/variant/create")
