@@ -237,37 +237,41 @@ public class AdminController {
 	}
 
 	@GetMapping("profile")
-	public String getProfile(Model model, user item) {
-		model.addAttribute("item", item);
+    public String getProfile(Model model,user item) {
+    	model.addAttribute("item", item);
+    	
+        String page = "profile.jsp";
+        model.addAttribute("page", page);
+        return "/Admin/production/homeadmin";
+    }
+    @PostMapping("profile")
+    public String postProfile(@Validated @ModelAttribute("item") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
+    	 if (bindingResult.hasErrors()) {
+   		  System.out.println("hello");
+   		 String page = "profile.jsp";
+         model.addAttribute("page", page);
+         return "/Admin/production/homeadmin";
+   		    }
+   		String photo=service.save(file,"/images/");
+   		
+   		Optional<user> userS=userDao.findById(item.getUSERNAME());
 
-		String page = "profile.jsp";
-		model.addAttribute("page", page);
-		return "/Admin/production/homeadmin";
-	}
+   			userS.get().setAVATAR(photo);
+   			userS.get().setFULLNAME(item.getFULLNAME());
+   			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+   			userS.get().setGENDER(item.getGENDER());
+   			userS.get().setEMAIL(item.getEMAIL());
 
-	@PostMapping("profile")
-	public String postProfile(@Validated @ModelAttribute("item") user item, BindingResult bindingResult, Model model,
-			@RequestPart("photo_file") MultipartFile file) {
-		if (bindingResult.hasErrors()) {
-			System.out.println("hello");
-			model.addAttribute("page", "profile.jsp");
-			return "index";
-		}
-		String photo = service.save(file, "/images/");
-
-		Optional<user> userS = userDao.findById(item.getUSERNAME());
-
-		userS.get().setAVATAR(photo);
-		userS.get().setFULLNAME(item.getFULLNAME());
-		userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
-		userS.get().setGENDER(item.getGENDER());
-		userS.get().setEMAIL(item.getEMAIL());
-
-		userDao.save(userS.get());
-		sessionService.set("list", userS.get());
-
-		return "redirect:/admin/profile";
-	}
+   			userDao.save(userS.get());
+   		    sessionService.set("list", userS.get());
+   		 model.addAttribute("profileAdminSuccess", "true");
+        
+   		 model.addAttribute("item", item);
+     	
+         String page = "profile.jsp";
+         model.addAttribute("page", page);
+         return "/Admin/production/homeadmin";
+    }
 
 	@RequestMapping("logout")
 	public String logOut() {
