@@ -29,59 +29,67 @@
 											data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>
 									<div class="modal-body">
-										<form:form id="createDiscount" method="POST" modelAttribute="discount_code"
+										<form id="discountCodeForm" method="POST"
 											action="/admin/discount_code/create"
 											class="form-horizontal form-label-left">
 											<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
-														<label class="control-label">Mã giảm giá</label>
-														<form:input path="CODE" cssClass="form-control"
-															placeholder="" />
-															<div class="text-danger" id="CODE_error"></div>
+														<label class="control-label">Mã giảm giá</label> <input
+															type="text" name="CODE" class="form-control" id="CODE"
+															placeholder="ABCDEFJASDLKFJ" /> <small
+															class="text-danger" id="CODE_error"></small>
 													</div>
 													<div class="form-group">
-														<label class="control-label">Phần trăm giảm</label>
-														<form:input path="PERCENTAGE" cssClass="form-control"
-															placeholder="" />
+														<label class="control-label">Phần trăm giảm</label> <input
+															min="0" max="100" type="number" step="1"
+															name="PERCENTAGE" id="PERCENTAGE" class="form-control"
+															placeholder="" /> <small class="text-danger"
+															id="PERCENTAGE_error"></small>
 													</div>
 													<div class="form-group">
 														<label class="control-label">Áp dụng cho đơn tối
-															thiểu</label>
-														<form:input path="MINIMUM" cssClass="form-control"
-															placeholder="" />
+															thiểu</label> <input min="0" step="1" type="number"
+															name="MINIMUM" id="MINIMUM" class="form-control"
+															placeholder="" /> <small class="text-danger"
+															id="MINIMUM_error"></small>
 													</div>
 													<div class="form-group">
-														<label class="control-label">Số lượng</label>
-														<form:input path="QUANTITY" cssClass="form-control" />
+														<label class="control-label">Số lượng</label> <input
+															type="number" min="0" step="1" name="QUANTITY"
+															id="QUANTITY" class="form-control" /> <small
+															class="text-danger" id="QUANTITY_error"></small>
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group">
-														<label class="control-label">Bậc</label>
-														<form:select path="rank" class="form-control">
-															<form:options items="${list_rank}" itemLabel="NAME"
-																itemValue="ID" />
-														</form:select>
+														<label class="control-label">Bậc</label> <select
+															name="rank" id="rank" class="form-select">
+															<c:forEach var="item" items="${list_rank}">
+																<option value="${item.ID}">${item.NAME}</option>
+															</c:forEach>
+														</select> <small id="rank_error" class="text-danger"></small>
 													</div>
 													<div class="form-group">
-														<label class="control-label">Ngày bắt đầu</label>
-														<form:input path="START_DATE" cssClass="form-control"
-															type="date" placeholder="" />
+														<label class="control-label">Ngày bắt đầu</label> <input
+															name="START_DATE" id="START_DATE" class="form-control"
+															type="date" placeholder="" /> <small
+															id="START_DATE_error" class="text-danger"></small>
 													</div>
 													<div class="form-group">
-														<label class="control-label">Ngày kết thúc</label>
-														<form:input path="EXPIRY_DATE" cssClass="form-control"
-															type="date" />
+														<label class="control-label">Ngày kết thúc</label> <input
+															name="EXPIRY_DATE" id="EXPIRY_DATE" class="form-control"
+															type="date" /> <small id="EXPIRY_DATE_error"
+															class="text-danger"></small>
 													</div>
 												</div>
 											</div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-secondary"
 													data-bs-dismiss="modal">Close</button>
-												<button onclick="create()" class="btn btn-primary">Create</button>
+												<button type="submit" class="btn btn-primary">Create</button>
 											</div>
-										</form:form>
+										</form>
 									</div>
 
 								</div>
@@ -93,7 +101,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box table-responsive">
-									<table id="datatable-responsive"
+									<table 
 										class="table table-striped table-bordered dt-responsive nowrap"
 										cellspacing="0" width="100%">
 										<thead>
@@ -144,55 +152,59 @@
 														data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
 												<div class="modal-body">
-													<form:form class="form-horizontal form-label-left"
-														modelAttribute="discount_codeUpdate" method="POST"
-														action="/admin/discount_code/update">
-														<div class="row text-left">
+													<form id="discountCodeFormUpdate" method="POST"
+														action="/admin/discount_code/update"
+														class="form-horizontal form-label-left">
+														<div class="row">
 															<div class="col-md-6">
-
-																<form:input type="hidden" class="form-control"
-																	id="discount_codeId" path="ID" />
-
+																<input type="hidden" name="ID" id="ID_update">
 																<div class="form-group">
-																	<label class="control-label">Mã giảm giá</label>
-																	<form:input id="code" type="text" class="form-control"
-																		path="CODE" placeholder="" />
+																	<label class="control-label">Mã giảm giá</label> <input
+																		readonly type="text" name="CODE" class="form-control"
+																		id="CODE_update" placeholder="" /> <small
+																		class="text-danger" id="CODE_update_error"></small>
 																</div>
 																<div class="form-group">
-																	<label class="control-label">Phần trăm giảm</label>
-																	<form:input id="percentage" type="text"
-																		class="form-control" path="PERCENTAGE" placeholder="" />
+																	<label class="control-label">Phần trăm giảm</label> <input
+																		min="0" max="100" type="number" step="1"
+																		name="PERCENTAGE" id="PERCENTAGE_update"
+																		class="form-control" placeholder="" /> <small
+																		class="text-danger" id="PERCENTAGE_update_error"></small>
 																</div>
 																<div class="form-group">
 																	<label class="control-label">Áp dụng cho đơn
-																		tối thiểu</label>
-																	<form:input id="minimun" type="text"
-																		class="form-control" path="MINIMUM" placeholder="" />
+																		tối thiểu</label> <input min="0" step="1" type="number"
+																		name="MINIMUM" id="MINIMUM_update"
+																		class="form-control" placeholder="" /> <small
+																		class="text-danger" id="MINIMUM_update_error"></small>
 																</div>
 																<div class="form-group">
-																	<label class="control-label">Số lượng</label>
-																	<form:input id="quantity" type="text"
-																		class="form-control" path="QUANTITY" />
+																	<label class="control-label">Số lượng</label> <input
+																		type="number" min="0" step="1" name="QUANTITY"
+																		id="QUANTITY_update" class="form-control" /> <small
+																		class="text-danger" id="QUANTITY_update_error"></small>
 																</div>
 															</div>
 															<div class="col-md-6">
 																<div class="form-group">
-																	<label class="control-label">Bậc</label>
-																	<form:select itemLabel="rank.NAME" id="rank"
-																		path="rank" class="form-select">
-																		<form:options items="${list_rank}" itemLabel="NAME"
-																			itemValue="ID" />
-																	</form:select>
+																	<label class="control-label">Bậc</label> <select
+																		name="rank" id="rank_update" class="form-select">
+																		<c:forEach var="item" items="${list_rank}">
+																			<option value="${item.ID}">${item.NAME}</option>
+																		</c:forEach>
+																	</select> <small id="rank_update_error" class="text-danger"></small>
 																</div>
 																<div class="form-group">
-																	<label class="control-label">Ngày bắt đầu</label>
-																	<form:input id="start_date" type="date"
-																		class="form-control" path="START_DATE" placeholder="" />
+																	<label class="control-label">Ngày bắt đầu</label> <input
+																		name="START_DATE" id="START_DATE_update"
+																		class="form-control" type="date" placeholder="" /> <small
+																		id="START_DATE_update_error" class="text-danger"></small>
 																</div>
 																<div class="form-group">
-																	<label class="control-label">Ngày kết thúc</label>
-																	<form:input id="expiry_date" type="date"
-																		class="form-control" path="EXPIRY_DATE" />
+																	<label class="control-label">Ngày kết thúc</label> <input
+																		name="EXPIRY_DATE" id="EXPIRY_DATE_update"
+																		class="form-control" type="date" /> <small
+																		id="EXPIRY_DATE_update_error" class="text-danger"></small>
 																</div>
 															</div>
 														</div>
@@ -201,7 +213,8 @@
 																data-bs-dismiss="modal">Close</button>
 															<button type="submit" class="btn btn-primary">Update</button>
 														</div>
-													</form:form>
+													</form>
+
 												</div>
 
 											</div>
@@ -238,6 +251,40 @@
 		</div>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+     Swal.fire({
+         icon: 'success',
+         title: '${message}',
+         showConfirmButton: false,
+         timer: 1000
+     });
+     
+     setTimeout(function() {
+    	 window.location.href = "/admin/discount"; 
+     }, 1800);
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+     Swal.fire({
+         icon: 'success',
+         title: '${message}',
+         showConfirmButton: false,
+         timer: 1000
+     });
+     
+     setTimeout(function() {
+    	 window.location.href = "/admin/discount"; 
+     }, 1800);
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+	</c:if>
+
+
 
 	<script>
     function getdiscount_codeById(id) {
@@ -246,13 +293,16 @@
             url: "/admin/ajax/getdiscount_code/" + id,
             success: function (discount_code) {
                 // Đổ dữ liệu vào form:form
-                $("#discount_codeId").val(discount_code.id);
-                $("#code").val(discount_code.code);
+                $("#ID_update").val(discount_code.id);
+                $("#CODE_update").val(discount_code.code);
+                $("#QUANTITY_update").val(discount_code.quantity);
+                $("#PERCENTAGE_update").val(discount_code.percentage);
+                $("#MINIMUM_update").val(discount_code.minimum);
 
-                $("#start_date").val(discount_code.start_DATE);
-                $("#expiry_date").val(discount_code.expiry_DATE);
+                $("#START_DATE_update").val(discount_code.start_DATE);
+                $("#EXPIRY_DATE_update").val(discount_code.expiry_DATE);
 
-                $("#rank option").each(function () {
+                $("#rank_update option").each(function () {
                     if ($(this).val() == discount_code.rank.id) {
                         $(this).prop("selected", true);
                     }
@@ -290,94 +340,133 @@
             }
         });
     }
-	
-    /* function create() {
-    	 $.ajax({
-             type: "GET",
-             url: "/admin/discount/create/",
-             success: function () {
-            	 if (true) {
-                     Swal.fire({
-                         icon: 'success',
-                         title: 'Thêm thành công',
-                         showConfirmButton: false,
-                         timer: 1050
-                     });
-                     setTimeout(function() {
-                         window.location.href = '/admin/discount';
-                     }, 1600);
-                 }
-             },
-             error: function (xhr, status, error) {
-                 console.log("Error: " + error);
-             }
-         });
-    } */
-	
+// Bắt lỗi thêm 
     $(document).ready(function () {
-        $('#createDiscount').submit(function (event) {
-            event.preventDefault(); // Ngăn chặn việc gửi form thông thường
-            let formData = new FormData(this);
-            let code = $('#CODE').val();
-	console.log(code);
-            // Kiểm tra sự tồn tại của tên người dùng
-            $.ajax({
-                type: 'GET',
-                url: '/admin/discount_code/create/check',
-                data: {code: code},
-                success: function (exists) {
-                    if (exists) {
-                        $('#CODE_error').text('Mã đã tồn tại!');
-                    } else {
-                        // Tên người dùng không tồn tại, tiếp tục gửi form
-                        $.ajax({
-                            type: 'POST',
-                            url: '/admin/discount_code/create',
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            success: function (response) {
-                                if (response.status === 'success') {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Thêm người dùng thành công',
-                                        showConfirmButton: false,
-                                        timer: 1050
-                                    });
-                                    setTimeout(function() {
-                                        window.location.href = '/admin/user';
-                                    }, 1600);
-                                }
-                            },
-                            error: function (response) {
-                                let errors = response.responseJSON;
-                                // Xóa các thông báo lỗi cũ
-                                $('.text-danger').text('');
-                                // Hiển thị các thông báo lỗi mới
-                                $.each(errors, function (key, value) {
-                                    // Kiểm tra xem người dùng đã chọn bậc chưa
-                                    if ($('#rank').val() === "") {
-                                        $('#rank_error1').text('Vui lòng chọn bậc !');
-                                    } else {
-                                        $('#rank_error1').text('');
-                                    }
-                                    // kiểm tra avatar có trống hay không
-                                    if ($('#AVATAR').val() === "") {
-                                        $('#AVATAR_error').text('Vui lòng chọn ảnh đại diện !');
-                                    } else {
-                                        $('#AVATAR_error').text('');
-                                    }
+        $('#discountCodeForm').submit(function (event) {
+            event.preventDefault(); // Ngăn chặn việc submit form mặc định
+            
+         // Lấy giá trị của các trường ngày tháng
+            let startDate = new Date($('#START_DATE').val());
+            let expiryDate = new Date($('#EXPIRY_DATE').val());
+            let today = new Date();
 
-                                    $('#' + key + '_error').text(value);
-                                });
-                            }
+            // Kiểm tra START_DATE không được là ngày trước ngày hôm nay
+            if (startDate < today) {
+               $('#START_DATE_error').text("Ngày bắt đầu phải là ngày hiện tại hoặc sau ngày hiện tại.");
+               return;
+            } else {
+               $('#START_DATE_error').text("");
+            }
+
+            // Kiểm tra EXPIRY_DATE phải sau ngày START_DATE
+            if (expiryDate <= startDate) {
+               $('#EXPIRY_DATE_error').text("Ngày kết thúc phải sau ngày bắt đầu.");
+               return;
+            } else {
+               $('#EXPIRY_DATE_error').text("");
+            }
+            
+            let formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: '/admin/discount_code/create',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Hoàn tất',
+                            showConfirmButton: false,
+                            timer: 1050
                         });
-                    }
+
+                        setTimeout(function() {
+                            window.location.href = '/admin/discount'; // Điều hướng tới trang danh sách người dùng
+                        }, 1600);
+                    }else {
+                    	Swal.fire({
+                            icon: 'error',
+                            title: 'Trùng mã',
+                            showConfirmButton: false,
+                            timer: 1050
+                        });
+					}
+                },
+                error: function (response) {
+                    let errors = response.responseJSON;
+                    $.each(errors, function (key, value) {
+                        if ($('#rank').val() === "") {
+                            $('#rank_errors').text("Vui lòng chọn bậc !");
+                        } 
+                        $('#' + key + '_error').text(value); // Hiển thị lỗi trong thẻ span
+                    });
                 }
             });
         });
     });
-     
+// Bắt lỗi cập nhật 
+$(document).ready(function () {
+        $('#discountCodeFormUpdate').submit(function (event) {
+            event.preventDefault(); // Ngăn chặn việc submit form mặc định
+            
+         // Lấy giá trị của các trường ngày tháng
+            let startDate = new Date($('#START_DATE_update').val());
+            let expiryDate = new Date($('#EXPIRY_DATE_update').val());
+            let today = new Date();
+
+            // Kiểm tra START_DATE không được là ngày trước ngày hôm nay
+            if (startDate < today) {
+               $('#START_DATE_update_error').text("Ngày bắt đầu phải là ngày hiện tại hoặc sau ngày hiện tại.");
+               return;
+            } else {
+               $('#START_DATE_update_error').text("");
+            }
+
+            // Kiểm tra EXPIRY_DATE phải sau ngày START_DATE
+            if (expiryDate <= startDate) {
+               $('#EXPIRY_DATE_update_error').text("Ngày kết thúc phải sau ngày bắt đầu.");
+               return;
+            } else {
+               $('#EXPIRY_DATE_update_error').text("");
+            }
+            
+            let formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: '/admin/discount_code/update',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Hoàn tất',
+                            showConfirmButton: false,
+                            timer: 1050
+                        });
+
+                        setTimeout(function() {
+                            window.location.href = '/admin/discount'; // Điều hướng tới trang danh sách người dùng
+                        }, 1600);
+                    }
+                },
+                error: function (response) {
+                    let errors = response.responseJSON;
+                    $.each(errors, function (key, value) {
+                        if ($('#rank').val() === "") {
+                            $('#rank_update_errors').text("Vui lòng chọn bậc !");
+                        } 
+                        $('#' + key + '_update_error').text(value); // Hiển thị lỗi trong thẻ span
+                    });
+                }
+            });
+        });
+    });
+    
+    
 </script>
 
 </body>

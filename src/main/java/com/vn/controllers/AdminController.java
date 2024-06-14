@@ -468,51 +468,92 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
-	@GetMapping("discount_code/create/check")
-	public ResponseEntity<Boolean> checkDiscountcode(@RequestParam String code) {
-		List<discount_code> listDiscountCode = discount_codeDao.findAll();
-		for (discount_code discount_code : listDiscountCode) {
-			if (discount_code.getCODE().equalsIgnoreCase(code)) {
-				return ResponseEntity.ok(false);
-			}
-		}
-		return ResponseEntity.ok(true);
-	}
-
 //	@PostMapping("discount_code/create")
-//	public String createDiscount_code(Model model, @ModelAttribute("discount_code") discount_code discount_code) {
-//		if (!discount_code.getCODE().isEmpty()) {
-//			discount_codeDao.save(discount_code);
-//			return "redirect:/admin/discount";
-//		} else {
-//			return "redirect:/admin/discount";
-//		}
+//	public String createDiscount_code(Model model,
+//			@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate,
+//			@ModelAttribute("discount_code") discount_code discount_code) {
+//
+//		String page = "discount.jsp";
+//		model.addAttribute("page", page);
+//
+//		List<discount_code> list_discount_code = discount_codeDao.findAll();
+//		model.addAttribute("list_discount_code", list_discount_code);
+//		model.addAttribute("thongbao", checkDiscountCode(discount_code));
+//		discount_codeDao.save(discount_code);
+//		return "/Admin/production/homeadmin";
+//
 //	}
 
-	@PostMapping("discount_code/create")
-	public ResponseEntity<Map<String, String>> create(Model model,
-			@ModelAttribute("discount_code") discount_code discount_code) throws IOException {
+	@PostMapping("/discount_code/create")
+	public ResponseEntity<Map<String, String>> createDiscountCode(
+			@Validated @ModelAttribute("discount_code") discount_code discount_code, BindingResult bindingResult,
+			HttpServletRequest req) {
+
 		Map<String, String> response = new HashMap<>();
-		if (!discount_code.getCODE().isEmpty()) {
-			discount_codeDao.save(discount_code);
-			response.put("status", "success");
-			return ResponseEntity.ok(response);
-		} else {
+		if (bindingResult.hasErrors()) {
+			// Trả về lỗi xác thực
+			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
+		try {
+			List<discount_code> discount_codes = discount_codeDao.findAll();
+			for (discount_code item : discount_codes) {
+				if (item.getCODE().equalsIgnoreCase(discount_code.getCODE())) {
+					response.put("status", "error");
+					return ResponseEntity.ok(response);
+				}
+			}
+			discount_codeDao.save(discount_code);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		response.put("status", "success");
+		return ResponseEntity.ok(response);
 	}
+	
+	@PostMapping("/discount_code/update")
+	public ResponseEntity<Map<String, String>> updateDiscountCode(
+			@Validated @ModelAttribute("discount_code") discount_code discount_code, BindingResult bindingResult) {
 
-	@PostMapping("discount_code/update")
-	public String updateDiscount_code(@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate) {
-		discount_codeDao.save(discount_codeUpdate);
-		return "redirect:/admin/discount";
+		Map<String, String> response = new HashMap<>();
+		if (bindingResult.hasErrors()) {
+			// Trả về lỗi xác thực
+			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		try {
+			discount_codeDao.save(discount_code);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+		response.put("status", "success");
+		return ResponseEntity.ok(response);
 	}
-
+	
 	@GetMapping("discount_code/delete")
-	public String deleteDiscount_code(@Param("id") Integer id) {
-		discount_code discount_code = discount_codeDao.getById(id);
-		discount_codeDao.delete(discount_code);
-		return "redirect:/admin/discount";
+	public String deleteDiscount_code(Model model, @Param("id") Integer id) {
+		try {
+			discount_code discount_code = discount_codeDao.getById(id);
+			discount_codeDao.delete(discount_code);
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		
+		String page = "discount.jsp";
+		model.addAttribute("page", page);
+
+		List<discount_code> list_discount_code = discount_codeDao.findAll();
+		model.addAttribute("list_discount_code", list_discount_code);
+
+		return "/Admin/production/homeadmin";
+//		return "redirect:/admin/discount";
 	}
 
 	@GetMapping("ajax/getdiscount_code/{id}")
