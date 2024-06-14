@@ -49,17 +49,31 @@ public class orderUserController {
 		 return "redirect:/shop/order";
 	}
 	@PostMapping("returnItem/{id}")
-	public String postReturnItem(Model model,@PathVariable("id") Integer id,@RequestParam("noteReason") String reason) {
+	public String postReturnItem(Model model,@PathVariable("id") Integer id,@RequestParam("noteReson") String reason) {
 		order ordes=orderDao.getById(id);
 		status_order statusOrder =status_orderDao.getById(5);
 		System.out.println(statusOrder.getSTATUS()+"  trạng thái");
 		System.out.println(ordes.getID()+" mã");
 		System.out.println(reason+" lý do");
-	    
-	   ordes.setStatus_order(statusOrder);
-	   ordes.setREASON(reason);
-	   orderDao.save(ordes); 
-		 return "redirect:/shop/order";
+		 System.out.println(ordes.getStatus_order().getSTATUS()+"   trạng thái hiện tại");
+		 if(ordes.getStatus_order().getSTATUS().equals("Giao hàng")) {
+			 System.out.println("code 1");
+			 ordes.setStatus_order(statusOrder);
+			   ordes.setREASON(reason);
+			   orderDao.save(ordes); 
+			   model.addAttribute("success", "true");
+			   String page = "order.jsp";
+				model.addAttribute("page", page);
+				return "index";
+		 }else {
+			 System.out.println("code 2");
+			 model.addAttribute("errorss", "true");
+			 String page = "order.jsp";
+			model.addAttribute("page", page);
+			return "index";
+		 }
+	   
+		 
 	}
 	
 	@ModelAttribute("getAllOrders")

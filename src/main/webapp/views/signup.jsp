@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
      <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-     
+     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,10 +19,14 @@
   color: red;
 }
     </style>
+    
 </head>
 
 <body>
-     <form:form id="form"  action="/shop/register"  method="post" modelAttribute="item" enctype="multipart/form-data">
+    
+    
+     <form:form id="signupForm" action="/shop/register"  method="post" modelAttribute="item" enctype="multipart/form-data">
+     
       <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-3 bg-white shadow box-area">
        
@@ -54,7 +58,7 @@
                     <div class="input-group">
                          <form:input id="email" path="EMAIL" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Email</label>
-                         <span class="mt-2"><form:errors path="EMAIL"></form:errors></span>
+                         <span class="mt-2"><form:errors path="EMAIL"></form:errors>${messageEmail}</span>
                     </div>
                    <div class=" form-check mt-3">
     <div class="g-recaptcha" data-sitekey="6Ldic9opAAAAANQLYMn3UmCMdmET4chfi2qvRnkc"></div>
@@ -71,7 +75,7 @@
                     <div class="input-group">
                         <form:input id="phoneNumber" path="PHONE_NUMBER" class=" form-control-lg fs-6 input"  placeholder=" " />
                         <label class="label">Số điện thoại</label>
-                         <span class="mt-2"><form:errors path="PHONE_NUMBER"></form:errors></span>
+                         <span class="mt-2"><form:errors path="PHONE_NUMBER"></form:errors>${messageNumberPhone}</span>
                     </div>
                     <div class="input-group">
                          <form:input id="password" path="PASSWORD" type="password" class=" form-control-lg fs-6 input"  placeholder=" " />
@@ -84,11 +88,12 @@
                          <span class="mt-2">${message}</span>
                     </div>
                      <form:hidden path="rank.ID" />
+                     
                 </div>
             </div>
             <hr>
             <div class="input-group" style="margin-top: 5px;">
-                <button class="btn btn-lg btn-primary w-100 fs-6 mb-2" >Đăng ký</button>
+                <button id="submitBtn" class="btn btn-lg btn-primary w-100 fs-6 mb-2" >Đăng ký</button>
             </div>
         
             	
@@ -100,9 +105,27 @@
                <form:hidden path="GENDER" value="NAM"/>
               <small style=" color: red;"><form:errors path="GENDER"></form:errors></small>
     </div>
+         
      </form:form>
-       
-    
+     
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<c:if test="${registrationSuccess}">
+     <script>
+     Swal.fire({
+         icon: 'success',
+         title: 'Đăng Ký Thành Công',
+         showConfirmButton: false,
+         timer: 1500
+     });
+     
+     setTimeout(function() {
+    	 window.location.href = "/shop/login"; 
+     }, 1800);
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+    </c:if>
+   
+        
     
 </body>
 </html>

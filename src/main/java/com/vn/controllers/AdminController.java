@@ -266,8 +266,9 @@ public class AdminController {
     public String postProfile(@Validated @ModelAttribute("item") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
     	 if (bindingResult.hasErrors()) {
    		  System.out.println("hello");
-   		        model.addAttribute("page", "profile.jsp");
-   		        return "index";
+   		 String page = "profile.jsp";
+         model.addAttribute("page", page);
+         return "/Admin/production/homeadmin";
    		    }
    		String photo=service.save(file,"/images/");
    		
@@ -281,9 +282,13 @@ public class AdminController {
 
    			userDao.save(userS.get());
    		    sessionService.set("list", userS.get());
-    	
+   		 model.addAttribute("profileAdminSuccess", "true");
         
-   		 return "redirect:/admin/profile";
+   		 model.addAttribute("item", item);
+     	
+         String page = "profile.jsp";
+         model.addAttribute("page", page);
+         return "/Admin/production/homeadmin";
     }
 
     @RequestMapping("logout")
