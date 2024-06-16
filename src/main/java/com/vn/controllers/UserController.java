@@ -818,15 +818,24 @@ public class UserController {
 	@PostMapping("create")
 	public String createAddress(Model model, address item) {
 		String noteAddress = paramService.getString("noteAddress", "");
-		String city = paramService.getString("province", "");
-		String district = paramService.getString("district", "");
-		String ward = paramService.getString("ward", "");
-		String cityName=paramService.getString("cityName", "");
-		String districtName=paramService.getString("districtNames", "");
-		System.out.println(districtName);
-		System.out.println(cityName);
-		System.out.println(city+"__"+district+"__"+ward);
-		return "redirect:/shop/address";
+		String provinceID = paramService.getString("province", "");
+		String districtID = paramService.getString("district", "");
+		String wardID = paramService.getString("ward", "");
+		String provinceName=paramService.getString("provinceName", "");
+		String districtName=paramService.getString("districtName", "");
+		String  wardName=paramService.getString("wardName", "");
+		user us=sessionService.get("list");
+	    String addreses=noteAddress+", "+wardName+", "+districtName+", "+provinceName;
+	    item.setADDRESS(addreses);
+		item.setUser(us);
+		item.setPROVINCE(Integer.parseInt(provinceID));
+		item.setDISTRICT(Integer.parseInt(districtID));
+		item.setWARD(wardID);	
+		addressDao.save(item);
+		String page = "address.jsp";
+		model.addAttribute("page", page);
+		model.addAttribute("messageAdd", "true");
+		return "index";
 
 	}
 	@GetMapping("newAddress")
@@ -845,8 +854,8 @@ public class UserController {
 		model.addAttribute("item", item);
 		String page = "address.jsp";
 		model.addAttribute("page", page);
-
-		return "redirect:/shop/address";
+		model.addAttribute("messageDelete", "true");
+		return "index";
 	}
 
 	@PostMapping("update/{id}")
@@ -859,7 +868,10 @@ public class UserController {
 		String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + cityName;
 		item.setADDRESS(addres);
 		addressDao.save(item);
-		return "redirect:/shop/address";
+		String page = "address.jsp";
+		model.addAttribute("page", page);
+		model.addAttribute("messageUpdate", "true");
+		return "index";
 	}
 
 	@RequestMapping("/edit/{id}")
