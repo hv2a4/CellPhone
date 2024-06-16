@@ -729,35 +729,41 @@ public class UserController {
 	}
 
 	@RequestMapping("profile")
-	public String getProfile(Model model, user item) {
-		model.addAttribute("item", item);
-
+	public String getProfile(Model model,user item) {
+		
+		  
+		model.addAttribute("items", item);
+		
 		String page = "profile.jsp";
 		model.addAttribute("page", page);
 		return "index";
 	}
-
+	
 	@PostMapping("profile")
-	public String postProfile(@Validated @ModelAttribute("item") user item, BindingResult bindingResult, Model model,
-			@RequestPart("photo_file") MultipartFile file) {
+	public String postProfile(@Validated @ModelAttribute("items") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
 		if (bindingResult.hasErrors()) {
-			System.out.println("hello");
-			model.addAttribute("page", "profile.jsp");
-			return "index";
-		}
-		String photo = paramService.save(file, "/images/");
-		Optional<user> userS = userDao.findById(item.getUSERNAME());
+		        System.out.println("hello");
+		        model.addAttribute("page", "profile.jsp");
+		        return "index";
+		    }
+		String photo=paramService.save(file,"/images/");
+		
+		Optional<user> userS=userDao.findById(item.getUSERNAME());
 
-		userS.get().setAVATAR(photo);
-		userS.get().setFULLNAME(item.getFULLNAME());
-		userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
-		userS.get().setGENDER(item.getGENDER());
-		userS.get().setEMAIL(item.getEMAIL());
-
-		userDao.save(userS.get());
-		sessionService.set("list", userS.get());
-
-		return "redirect:/shop/profile";
+			userS.get().setAVATAR(photo);
+			userS.get().setFULLNAME(item.getFULLNAME());
+			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+			userS.get().setGENDER(item.getGENDER());
+			userS.get().setEMAIL(item.getEMAIL());
+            System.out.println(userS.get().getFULLNAME());
+			userDao.save(userS.get());
+		    sessionService.set("list", userS.get());
+           model.addAttribute("profileSuccess", "true");
+           model.addAttribute("items", item);
+   		
+   		String page = "profile.jsp";
+   		model.addAttribute("page", page);
+   		return "index";
 	}
 
 	@GetMapping("address")
@@ -856,7 +862,7 @@ public class UserController {
 
 		String page = "address.jsp";
 		model.addAttribute("page", page);
-		String address = "trần hưng đạo nối dài, Phường Lê Bình, Quận Cái Răng, Thành phố Cần Thơ";
+		
 
 		return "index";
 	}

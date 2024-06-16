@@ -21,7 +21,7 @@ public class address implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
-
+	
 	String ADDRESS;
 
 	@ManyToOne
