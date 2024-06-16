@@ -39,11 +39,11 @@
 									<td class="text-center hidden-xs itemPri price"><c:choose>
 											<c:when
 												test="${item.variant.discount_product.EXPIRY_DATE.time > System.currentTimeMillis()}">
-												<fmt:formatNumber pattern="###,###"
+												<fmt:formatNumber pattern="###,###.###"
 													value="${(item.variant.PRICE * (100 - item.variant.discount_product.DISCOUNT_PERCENTAGE)/100)}"></fmt:formatNumber>
 											</c:when>
 											<c:otherwise>
-												<fmt:formatNumber pattern="###,###"
+												<fmt:formatNumber pattern="###,###.###"
 													value="${item.variant.PRICE}"></fmt:formatNumber>
 											</c:otherwise>
 										</c:choose></td>
@@ -65,11 +65,11 @@
 											<c:choose>
 												<c:when
 													test="${item.variant.discount_product.EXPIRY_DATE.time > System.currentTimeMillis()}">
-													<fmt:formatNumber pattern="###,###"
+													<fmt:formatNumber pattern="###,###.###"
 														value="${(item.variant.PRICE * ((100 - item.variant.discount_product.DISCOUNT_PERCENTAGE)/100)) * item.QUANTITY}"></fmt:formatNumber>
 												</c:when>
 												<c:otherwise>
-													<fmt:formatNumber pattern="###,###"
+													<fmt:formatNumber pattern="###,###.###"
 														value="${item.variant.PRICE * item.QUANTITY}"></fmt:formatNumber>
 												</c:otherwise>
 											</c:choose>
@@ -85,10 +85,18 @@
 					</table>
 					<div class="row">
 						<div class="col-md-12">
-							<span class="totalPrice pull-right">Tổng tiền: <span
-								id="totalPriceValue"><fmt:formatNumber pattern="###,###"
-										value="${totalPrice}"></fmt:formatNumber></span> đ
+							<span class="totalPrice pull-right">Tổng tiền: <span><fmt:formatNumber
+										pattern="###,###.###" value="${totalPrice}"></fmt:formatNumber></span>
+								đ
 							</span>
+
+						</div>
+						<div class="col-md-12">
+							<span class="totalPrice pull-right">Tổng tiền đã chọn: <span
+								id="totalPriceValue"><fmt:formatNumber pattern="###,###"
+										value="0"></fmt:formatNumber></span> đ
+							</span>
+
 						</div>
 
 					</div>
@@ -141,8 +149,7 @@
         inputElement.value = newQuantity;
 
         // Gửi form sử dụng AJAX để cập nhật số lượng và giá
-        $.ajax({
-            type: "POST",
+        $.ajax({type: "POST",
             url: "/shop/updateQuantity",
             data: {
                 id: itemId,
