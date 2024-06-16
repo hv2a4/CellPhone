@@ -26,7 +26,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class user implements Serializable {
 	@Id
 	@NotBlank(message = "Không Được để trống tài khoản !")
-    @Pattern(regexp = "^[^\\s]*$", message = "Không được chứa khoảng trắng")
+	@Pattern(
+		    regexp = "^[a-zA-Z0-9_]*$", 
+		    message = "không được có dấu và khoảng trắng"
+		)
 	String USERNAME;
 
 	@NotBlank(message = "Không Được để trống !")
