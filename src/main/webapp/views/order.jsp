@@ -206,19 +206,21 @@
 																	<h4 class="modal-title">Lý do hủy đơn hàng của
 																		${item.user.USERNAME}</h4>
 																</div>
+																<form action="">
 																<div class="modal-body">
 																	<p>
-																		<textarea id="noteReason-${item.ID}" class="input"></textarea>
+																		<textarea name="noteReasons" id="noteReason" class="input"></textarea>
 																		<small id="error-message-${item.ID}"
 																			class="text-danger"></small>
 																	</p>
 																</div>
 																<div class="modal-footer">
-																	<button type="button" class="btn btn-info"
-																		onclick="submitDeleteForm(${item.ID})">Hủy</button>
+																	<button type="submit" class="btn btn-info"
+																		formaction="/shop/deleteOrder/${item.ID}" formmethod="post" onclick="submitDeleteForm(${item.ID})">Hủy</button>
 																	<button type="button" class="btn btn-default"
 																		data-dismiss="modal">Close</button>
 																</div>
+																</form>
 															</div>
 														</div>
 													</div>
