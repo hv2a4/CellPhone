@@ -15,9 +15,10 @@
             </div>
         </section>
         <main>
-        <form:form method="post"  modelAttribute="item" name="UserProfile"
+        <form:form id="uploadForm" method="post"  modelAttribute="items" name="UserProfile"
                              class="form mt-5"
                             action="/shop/profile"   enctype="multipart/form-data">
+                              
             <div class="container">
                 <div class="card mt-5">
                     <div class="card-body">
@@ -56,6 +57,7 @@
                                            
                                <form:input path="FULLNAME" class="input form-control" value="${list.FULLNAME}" placeholder=" "  />
                                     <small style=" color: red;"><form:errors path="FULLNAME"></form:errors></small>  
+                                    
                                         </div>
                                     </div>
                                     <div class="form-group row mt-3">
@@ -142,4 +144,36 @@
              </form:form>
              
         </main>
-         
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+       <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            var imageUpload = document.getElementById('imageUpload');
+            if (imageUpload.files.length === 0) {
+                event.preventDefault(); // Ngăn chặn form submit
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Vui lòng chọn ảnh để cập nhật',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                
+                
+            }
+        });
+    </script>
+<c:if test="${profileSuccess}">
+     <script>
+     Swal.fire({
+         icon: 'success',
+         title: 'Cập Nhật Thành Công',
+         showConfirmButton: false,
+         timer: 1500
+     });
+     setTimeout(function() {
+    	 window.location.href = "/shop/profile"; 
+     }, 2200);
+   
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+    </c:if>
+      

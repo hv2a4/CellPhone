@@ -27,12 +27,12 @@
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
-									<form:form class="form-horizontal form-label-left"
-										method="POST" modelAttribute="brand"
+									<form class="form-horizontal form-label-left"
+										method="POST"
 										action="/admin/brand/create">
 										<div class="form-group ">
 											<label class="control-label">Tên hãng</label>
-											<form:input path="NAME" cssClass="form-control"
+											<input required="required" name ="NAME" class="form-control"
 												placeholder="" />
 										</div>
 										<div class="modal-footer">
@@ -40,7 +40,7 @@
 												data-bs-dismiss="modal">Close</button>
 											<button type="submit" class="btn btn-primary">Create</button>
 										</div>
-									</form:form>
+									</form>
 								</div>
 
 							</div>
@@ -52,7 +52,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="card-box table-responsive">
-								<table id="datatable-responsive"
+								<table
 									class="table table-striped table-bordered dt-responsive nowrap"
 									cellspacing="0" width="100%">
 									<thead>
@@ -63,14 +63,14 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="item" items="${list_brand}">
+										<c:forEach var="item" items="${pageBrand.content}">
 											<tr>
-												<td>${item.key }</td>
-												<td>${item.value }</td>
+												<td>${item.ID }</td>
+												<td>${item.NAME }</td>
 												<td class="text-center"><i
-													onclick="getbrandById(${item.key })"
+													onclick="getbrandById(${item.ID })"
 													class="fa-solid fa-pen-to-square fs-4 mr-3"></i> <i
-													onclick="modelDelete(${item.key })"
+													onclick="modelDelete(${item.ID })"
 													class="fa-solid fa-trash fs-4 "></i></td>
 											</tr>
 										</c:forEach>
@@ -108,17 +108,17 @@
 													data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
 											<div class="modal-body">
-												<form:form class="form-horizontal form-label-left"
-													method="POST" modelAttribute="brandUpdate"
+												<form class="form-horizontal form-label-left"
+													method="POST" 
 													action="/admin/brand/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<form:input id="brandId" 
-																path="ID" type="hidden" class="form-control" />
+															<input id="brandId" 
+																name="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên hãng</label>
-															<form:input id="brandName" path="NAME" type="text"
+															<input required="required" id="brandName" name="NAME" type="text"
 																class="form-control" placeholder="" />
 														</div>
 													</div>
@@ -127,13 +127,21 @@
 															data-bs-dismiss="modal">Close</button>
 														<button type="submit" class="btn btn-primary">Update</button>
 													</div>
-												</form:form>
+												</form>
 											</div>
 
 										</div>
 									</div>
 								</div>
 							</div>
+							<c:if test="${pageBrand.totalPages!=1}">
+								<div class="text-right">
+									<c:forEach var="item" begin="1" end="${pageBrand.totalPages}"
+										step="1">
+										<a class="btn btn-primary" href="/admin/brand?pages=${item}">${item}</a>
+									</c:forEach>
+								</div>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -146,7 +154,7 @@
 		        type: "GET",
 		        url: "/admin/ajax/getbrand/" + id,
 		        success: function(brand) {
-		            // Đổ dữ liệu vào form:form
+		            // Đổ dữ liệu vào form
 		            $("#brandId").val(brand.id);
 		            $("#brandName").val(brand.name); 
 		            var modal = new bootstrap.Modal(document
@@ -180,5 +188,63 @@
 		    });
 		}
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Hoàn tất'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/brand";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Trùng tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/brand";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/brand";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/brand";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
 </body>
 </html>

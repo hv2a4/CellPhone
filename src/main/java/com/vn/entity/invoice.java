@@ -29,11 +29,11 @@ public class invoice {
 	@JoinColumn(name = "ID_ORDER")
 	order order;
 		
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "CREATE_AT")
 	Date CREATE_AT;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "UPDATE_AT")
 	Date UPDATE_AT;
 	

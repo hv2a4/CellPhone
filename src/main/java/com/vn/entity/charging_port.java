@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
@@ -16,6 +17,7 @@ public class charging_port implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
+	@NotBlank(message = "Vui lòng nhập tên")
 	String NAME;
 
 	@OneToMany(mappedBy = "charging_port")

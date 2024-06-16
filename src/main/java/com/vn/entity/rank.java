@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -23,10 +24,10 @@ public class rank implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
-	@NotNull(message = "Vui lòng chọn bậc !")
+	@NotBlank(message = "Vui lòng chọn bậc !")
 	String NAME;
 
-	
+	@ToString.Exclude
 	@OneToMany(mappedBy = "rank")
 	@JsonIgnore
 	List<user> users;

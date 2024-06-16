@@ -3,6 +3,8 @@ package com.vn.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,35 +39,62 @@ public class orderUserController {
 		return "index";
 	}
 	@PostMapping("deleteOrder/{id}")
-	public String postDeleteOrder(Model model,@PathVariable("id") Integer id,@RequestParam("noteReason") String reason) {
+	public String postDeleteOrder(Model model,@PathVariable("id") Integer id,@RequestParam("noteReasons") String reason) {
 		order ordes=orderDao.getById(id);
 		status_order statusOrder =status_orderDao.getById(6);
 		System.out.println(statusOrder.getSTATUS());
 		System.out.println(ordes.getID());
 		System.out.println(reason);
-	    ordes.setStatus_order(statusOrder);
-	    ordes.setREASON(reason);
-	    orderDao.save(ordes);
-		 return "redirect:/shop/order";
+		if(ordes.getStatus_order().getSTATUS().equals("Chờ xác nhận")) {
+			 System.out.println("code 1");
+			ordes.setStatus_order(statusOrder);
+		    ordes.setREASON(reason);
+		    orderDao.save(ordes);
+		    model.addAttribute("successError", "true");
+			   String page = "order.jsp";
+				model.addAttribute("page", page);
+				return "index";
+		}else {
+			 System.out.println("code 2");
+			 model.addAttribute("errorsDeleteOrder", "true");
+			 String page = "order.jsp";
+			model.addAttribute("page", page);
+			return "index";
+		 }
 	}
 	@PostMapping("returnItem/{id}")
-	public String postReturnItem(Model model,@PathVariable("id") Integer id,@RequestParam("noteReason") String reason) {
+	public String postReturnItem(Model model,@PathVariable("id") Integer id,@RequestParam("noteReson") String reason) {
 		order ordes=orderDao.getById(id);
-		status_order statusOrder =status_orderDao.getById(5);
+		status_order statusOrder =status_orderDao.getById(7);
 		System.out.println(statusOrder.getSTATUS()+"  trạng thái");
 		System.out.println(ordes.getID()+" mã");
 		System.out.println(reason+" lý do");
-	    
-	   ordes.setStatus_order(statusOrder);
-	   ordes.setREASON(reason);
-	   orderDao.save(ordes); 
-		 return "redirect:/shop/order";
+		 System.out.println(ordes.getStatus_order().getSTATUS()+"   trạng thái hiện tại");
+		 if(ordes.getStatus_order().getSTATUS().equals("Hoàn thành")) {
+			 System.out.println("code 1");
+			 ordes.setStatus_order(statusOrder);
+			   ordes.setREASON(reason);
+			   orderDao.save(ordes); 
+			   model.addAttribute("success", "true");
+			   String page = "order.jsp";
+				model.addAttribute("page", page);
+				return "index";
+		 }else {
+			 System.out.println("code 2");
+			 model.addAttribute("errorsReturnItem", "true");
+			 String page = "order.jsp";
+			model.addAttribute("page", page);
+			return "index";
+		 }
+	   
+		 
 	}
 	
 	@ModelAttribute("getAllOrders")
 	public List<order> getListOrders(){
 		user users=sessionService.get("list");
-		List<order> orders=orderDao.findByUser(users);
+		 Sort sort = Sort.by(Direction.DESC, "ID");
+		List<order> orders=orderDao.findByUser(users,sort);
 		return orders;
 	}
 	

@@ -50,8 +50,18 @@
 						<c:set var="discount"
 							value="${variant2.discount_product.DISCOUNT_PERCENTAGE }" />
 						<h3 id="giav${finByIdPhone.ID}" class="product-price">
-							<fmt:formatNumber pattern="###,###"
+							<c:choose>
+								<c:when
+									test="${variant2.discount_product.EXPIRY_DATE.time > System.currentTimeMillis()}">
+									<fmt:formatNumber pattern="###,###"
 								value=" ${price *(100-discount)/100}"></fmt:formatNumber>
+								</c:when>
+								<c:otherwise>
+									<fmt:formatNumber pattern="###,###"
+										value="${price}"></fmt:formatNumber>
+								</c:otherwise>
+							</c:choose>
+							
 						</h3>
 						<del id="discount${finByIdPhone.ID}" class="product-old-price"
 							style="font-size: 18px">
@@ -67,18 +77,35 @@
 							<c:set var="idphone" value="${finByIdPhone.ID}" />
 
 							<div class="row">
-								<c:forEach var="variant" items="${finByIdPhone.variants }">
+								<c:forEach var="variant" items="${finByIdPhone.variants}">
 									<div class="col-md-3">
 										<c:if test="${variant.storage.ID != GB}">
-											<a
-												href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"><button
-													type="button" class="btn btn-default inline-button">${variant.storage.GB}
-													GB</button></a>
-											<c:set var="GB" value="${variant.storage.ID }"></c:set>
-											<c:set var="price" value="${variant.PRICE }"></c:set>
+											<c:if
+												test="${2048 >= variant.storage.GB && variant.storage.GB >= 1024}">
+												<a
+													href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"
+													class="storage-link"
+													data-storage-id="${variant.storage.ID}">
+													<button type="button" class="btn btn-default inline-button">1
+														TB</button>
+												</a>
+											</c:if>
+											<c:if test="${1024 > variant.storage.GB}">
+												<a
+													href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"
+													class="storage-link"
+													data-storage-id="${variant.storage.ID}">
+													<button type="button" class="btn btn-default inline-button">${variant.storage.GB}
+														GB</button>
+												</a>
+											</c:if>
+
+											<c:set var="GB" value="${variant.storage.ID}"></c:set>
+											<c:set var="price" value="${variant.PRICE}"></c:set>
 										</c:if>
 									</div>
 								</c:forEach>
+
 							</div>
 							<div class="row" style="margin-top: 10px; margin-left: 1px;">
 								<c:set var="usedColors" />
@@ -112,7 +139,7 @@
 								ngay
 							</button>
 							<button class="add-to-cart-btn" type="submit"
-								id="addToCartButton">
+								id="addToCartButton" onclick="addToCartButton">
 								<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
 							</button>
 							<!-- 	<a href="/shop/cart"><button class="add-to-cart-btn">
@@ -494,18 +521,70 @@
 <!-- /container -->
 </div>
 <!-- /Section -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function updateBuyNowButton(idPhone, idVariant) {
-	/* var form = document.getElementById('checkoutForm');
-    form.action = "/shop/muangay/" + idVariant; */
-    // Update the "Mua ngay" button's URL with the selected variant ID
+    // Get the quantity from the input field named 'quantity'
     var quantity = document.getElementsByName('quantity')[0].value;
+
+    // Update the "Mua ngay" button's form action with the selected variant ID and quantity
     var buyNowButton = document.getElementById('buyNowButton');
-    buyNowButton.formAction ="/shop/muangay/" + idVariant + "?quantity=" + quantity;
- 
+    buyNowButton.formAction = "/shop/muangay/" + idVariant + "?quantity=" + quantity;
+
+    // Update the "Thêm giỏ hàng" button's form action with the selected variant ID and quantity
     var addToCartButton = document.getElementById('addToCartButton');
-    addToCartButton.formAction = "/shop/addcart/" + idVariant + "?quantity=" + quantity;
-    // Optionally, call the getGia function to update prices
+    addToCartButton.onclick = function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        var quantity = document.getElementsByName('quantity')[0].value;
+        $.ajax({
+            type: "GET",
+            url: "/shop/cart/add/" + idVariant + "?quantity=" + quantity,
+            success: function() {
+                // If successful, show a success toast notification
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Đã thêm vào giỏ hàng"
+                }).then(function(){
+        	        location.reload();
+      	      });
+                // Optionally, update UI or perform other actions here
+            },
+            error: function(xhr, status, error) {
+                // If there's an error, log it to console
+                console.log("Error: " + error);
+                // Optionally, show an error toast notification
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "Đã xảy ra lỗi khi thêm vào giỏ hàng"
+                });
+            }
+        });
+    };
+
+    // Call the getGia function to update prices based on the selected phone and variant
     getGia(idPhone, idVariant);
 }
 
@@ -559,7 +638,7 @@ function getGiaRelated(idPhone, idVariant) {
 function formatPrice(price) {
     return price.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
-function addCart(id) {
+/* function addCart(id) {
 	  $.ajax({
 	    type: "GET",
 	    url: "/shop/cart/add/" + id,
@@ -586,6 +665,6 @@ function addCart(id) {
 	      console.log("Error: " + error);
 	    }
 	  });
-	}
-</script>
+	} */
 
+</script>

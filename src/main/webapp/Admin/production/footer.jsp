@@ -5,9 +5,8 @@
 <body>
 	<footer>
 		<div class="pull-right">
-			ABC 1234 - Admin Manager Template by <a
-				href="https://www.facebook.com/profile.php?id=100078947503761">Phan
-				Huá»³nh Há»ng SÆ¡n</a>
+			${list.USERNAME} <a
+				href="https://www.facebook.com/profile.php?id=100078947503761">${list.FULLNAME}</a>
 		</div>
 		<div class="clearfix"></div>
 	</footer>

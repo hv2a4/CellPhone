@@ -45,15 +45,15 @@ public class order implements Serializable {
 	discount_code discount_code;
 
 	Double TOTAL_DISCOUNT;
-	Double TOTAL_AMOUNT;
+	double TOTAL_AMOUNT;
 	String NOTE;
 	String REASON;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "CREATE_AT")
 	Date CREATE_AT;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "UPDATE_AT")
 	Date UPDATE_AT;
 

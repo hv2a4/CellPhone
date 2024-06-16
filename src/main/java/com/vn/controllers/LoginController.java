@@ -81,15 +81,17 @@ public class LoginController {
 		                list.get().setINCORRECT_PASSWORD(0);
 		                userDao.save(list.get());
 		                sessionService.set("list", list.get());
-		                return "redirect:/admin";
+		                model.addAttribute("messagesCheckRole", "true");
+		                return "/views/login";
 		            } else {
 		                list.get().setINCORRECT_PASSWORD(0);
 		                userDao.save(list.get());
 		                sessionService.set("list", list.get());
-		                return "redirect:/shop";
+		                model.addAttribute("messagesCheck", "true");
+		                return "/views/login";
 		            }
 		        } else {
-		            model.addAttribute("message", "Tài Khoản Không Còn Hoạt Động");
+		            model.addAttribute("messages", "true");   //not
 		            return "/views/login";
 		        }
 
@@ -97,21 +99,21 @@ public class LoginController {
 			   list.get().setINCORRECT_PASSWORD(list.get().getINCORRECT_PASSWORD()+1);
 			   userDao.save(list.get());
 			   Calendar cal= Calendar.getInstance();
-			   if(list.get().getINCORRECT_PASSWORD()>=5) {   // set thời gian khóa trong bao lâu
+			   if(list.get().getINCORRECT_PASSWORD()>=5&&list.get().getROLE()==false) {   // set thời gian khóa trong bao lâu
 				   list.get().setSTATUS(false);
 				   cal.add(Calendar.MINUTE, 30);
 				   list.get().setCLOCKDOWN_PERIOD(cal.getTime());
 				   userDao.save(list.get());
-				   model.addAttribute("message", "Tài Khoản Không Còn Hoạt Động");
+				   model.addAttribute("messages", "true"); //not
 				   return "/views/login";
 			   }
 			  
-			   model.addAttribute("message", "Đăng Nhập Thất Bại");
+			   model.addAttribute("message", "true");
 			   return "/views/login";
 		   }
 		  // 
 	   }else {
-		   model.addAttribute("message", "Đăng Nhập Thất Bại");
+		   model.addAttribute("message", "true");
 		   return "/views/login";
 	   }
 		
@@ -121,9 +123,12 @@ public class LoginController {
 	//   return "redirect:/shop";
 	}
 	@RequestMapping("logout")
-	public String logOut() {
+	public String logOut(Model model) {
 		sessionService.remove("list");
-		 return "redirect:/shop";
+		model.addAttribute("messageLogout", "true");
+		String page = "home.jsp";
+		model.addAttribute("page", page);
+		return "index";
 	}
 	@GetMapping("/404")
 	public String getError() {
