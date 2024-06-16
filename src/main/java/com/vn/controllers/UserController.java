@@ -570,7 +570,7 @@ public class UserController {
 				if (selectedItems.contains(citem.getID())) {
 					order_item order_item = new order_item();
 					order_item.setOrder(or);
-					order_item.setPRICE(citem.getVariant().getPRICE());
+					order_item.setPRICE(getGiaKhuyenMai(citem.getVariant()));
 					order_item.setQUANTITY(citem.getQUANTITY());
 					order_item.setVariant(citem.getVariant());
 					order_itemDao.save(order_item);
