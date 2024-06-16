@@ -263,7 +263,22 @@
 	</div>
 </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<c:if test="${messageLogout}">
+<script>
+     Swal.fire({
+         icon: 'success',
+         title: 'Đăng xuất thành công',
+         showConfirmButton: false,
+         timer: 800
+     });
+     setTimeout(function() {
+    	 window.location.href = "/shop"; 
+     }, 1000);
+     
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+</c:if>
 <script>
 function formatPrice(price) {
     return price.toLocaleString("en-US");

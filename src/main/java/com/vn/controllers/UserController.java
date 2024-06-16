@@ -788,34 +788,47 @@ public class UserController {
 //			model.addAttribute("page", page);
 //			return "index";
 //		}
+//	@PostMapping("create")
+//	public String createAddress(Model model, address item) {
+//		String noteAddress = paramService.getString("noteAddress", "");
+//		String cityName = paramService.getString("cityName", "");
+//		String districtName = paramService.getString("districtName", "");
+//		String wardName = paramService.getString("wardName", "");
+//		if (noteAddress.isEmpty() || cityName.isEmpty() || districtName.isEmpty() || wardName.isEmpty()) {
+//			String page = "address.jsp";
+//			model.addAttribute("errors", "Bạn Chưa Nhập");
+//			model.addAttribute("page", page);
+//			user userSession = sessionService.get("list");
+//			Optional<user> defaultUser = userDao.findById(userSession.getUSERNAME());
+//			item.setUser(defaultUser.get());
+//			model.addAttribute("item", item);
+//			model.addAttribute("page", page);
+//
+//			return "index";
+//		} else {
+//			String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + cityName;
+//			item.setADDRESS(addres);
+//			addressDao.save(item);
+//			String page = "address.jsp";
+//			model.addAttribute("page", page);
+//			return "redirect:/shop/address";
+//		}
+//
+//	}
 	@PostMapping("create")
 	public String createAddress(Model model, address item) {
 		String noteAddress = paramService.getString("noteAddress", "");
-		String cityName = paramService.getString("cityName", "");
-		String districtName = paramService.getString("districtName", "");
-		String wardName = paramService.getString("wardName", "");
-		if (noteAddress.isEmpty() || cityName.isEmpty() || districtName.isEmpty() || wardName.isEmpty()) {
-			String page = "address.jsp";
-			model.addAttribute("errors", "Bạn Chưa Nhập");
-			model.addAttribute("page", page);
-			user userSession = sessionService.get("list");
-			Optional<user> defaultUser = userDao.findById(userSession.getUSERNAME());
-			item.setUser(defaultUser.get());
-			model.addAttribute("item", item);
-			model.addAttribute("page", page);
-
-			return "index";
-		} else {
-			String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + cityName;
-			item.setADDRESS(addres);
-			addressDao.save(item);
-			String page = "address.jsp";
-			model.addAttribute("page", page);
-			return "redirect:/shop/address";
-		}
+		String city = paramService.getString("province", "");
+		String district = paramService.getString("district", "");
+		String ward = paramService.getString("ward", "");
+		String cityName=paramService.getString("cityName", "");
+		String districtName=paramService.getString("districtNames", "");
+		System.out.println(districtName);
+		System.out.println(cityName);
+		System.out.println(city+"__"+district+"__"+ward);
+		return "redirect:/shop/address";
 
 	}
-
 	@GetMapping("newAddress")
 	public String newAddress(Model model, address item) {
 

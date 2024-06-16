@@ -28,14 +28,12 @@ public class Changepass {
    userDao userDao;
 	@RequestMapping("changepass")
 	public String getchangepass(Model model) {
-		 user item=new user();
-		 model.addAttribute("formSubmitted", false);
-		 model.addAttribute("item", item);
+		
 		return "/views/changepassword";
 	}
 	
 	@PostMapping("changepass")
-	public String postChangePass(@ModelAttribute("item") user item,BindingResult bindingResult ,Model model) {
+	public String postChangePass(Model model) {
 		 
 		String userName=paramService.getString("userName", "");
 		String password=paramService.getString("password", "");
@@ -48,21 +46,18 @@ public class Changepass {
 				if(newPassword.equals(reterNewPassword)) {
 					us.get().setPASSWORD(newPassword);
 					userDao.save(us.get());
-					 model.addAttribute("formSubmitted", true);
-					 model.addAttribute("messages", "Đổi Mật Khẩu Thành Công");
+					 model.addAttribute("formSubmitted", "true");
+					 return "/views/changepassword";
 				}else {
 					model.addAttribute("message3", "Mật khẩu không trùng khớp");
+					return "/views/changepassword";
 				}
 			}else if(newPassword.isEmpty()||newPassword.length()<6) {
 				model.addAttribute("message2", "Mật khẩu không trống và lớn hơn 6 kí tự");
+				return "/views/changepassword";
 			}else {
 				model.addAttribute("message1", "Mật khẩu cũ không đúng");
+				return "/views/changepassword";
 			}
-		
-		
-//		 model.addAttribute("formSubmitted", true);
-//		 model.addAttribute("message", "thông báo này nè");
-		
-		return "/views/changepassword";
 	}
 }
