@@ -25,12 +25,13 @@
 				<li role="presentation"><a href="#hoanthanh" id="hoanthanh-tab"
 					data-toggle="tab" role="tab" aria-controls="hoanthanh"
 					aria-selected="false">Hoàn thành</a></li>
-				<li role="presentation"><a href="#choTraHang" id="choTraHang-tab"
-					data-toggle="tab" role="tab" aria-controls="choTraHang"
-					aria-selected="false">Chờ Trả Hàng</a></li>
-					<li role="presentation"><a href="#xacNhanTraHang" id="xacNhanTraHang-tab"
-					data-toggle="tab" role="tab" aria-controls="xacNhanTraHang"
-					aria-selected="false">Xác Nhận Trả Hàng</a></li>
+				<li role="presentation"><a href="#choTraHang"
+					id="choTraHang-tab" data-toggle="tab" role="tab"
+					aria-controls="choTraHang" aria-selected="false">Chờ Trả Hàng</a></li>
+				<li role="presentation"><a href="#xacNhanTraHang"
+					id="xacNhanTraHang-tab" data-toggle="tab" role="tab"
+					aria-controls="xacNhanTraHang" aria-selected="false">Xác Nhận
+						Trả Hàng</a></li>
 				<li role="presentation"><a href="#dahuy" id="dahuy-tab"
 					data-toggle="tab" role="tab" aria-controls="dahuy"
 					aria-selected="false">Đã hủy</a></li>
@@ -85,25 +86,25 @@
 																	<div class="modal-header">
 																		<button type="button" class="close"
 																			data-dismiss="modal">&times;</button>
-																		<h4 class="modal-title">Lý do hủy đơn hàng
-																			 của ${item.user.USERNAME}</h4>
+																		<h4 class="modal-title">Lý do hủy đơn hàng của
+																			${item.user.USERNAME}</h4>
 																	</div>
-																<form action="">
-																	 <div class="modal-body">
-																		<p>
-																			<textarea name="noteReasons"  class="input"></textarea>
-																			<small id="errors-message"
-																				class="text-danger"></small>
-																		</p>
-																	</div>
-																	<div class="modal-footer">
-																		<button type="submit" class="btn btn-info"
-																			formaction="/shop/deleteOrder/${item.ID}" formmethod="post">Hủy</button>
-																		<button type="button" class="btn btn-default"
-																			data-dismiss="modal">Close</button>
-																	</div>
-																	 </form>
-																	
+																	<form action="">
+																		<div class="modal-body">
+																			<p>
+																				<textarea name="noteReasons" class="input"></textarea>
+																				<small id="errors-message" class="text-danger"></small>
+																			</p>
+																		</div>
+																		<div class="modal-footer">
+																			<button type="submit" class="btn btn-info"
+																				formaction="/shop/deleteOrder/${item.ID}"
+																				formmethod="post">Hủy</button>
+																			<button type="button" class="btn btn-default"
+																				data-dismiss="modal">Close</button>
+																		</div>
+																	</form>
+
 																</div>
 															</div>
 														</div>
@@ -111,7 +112,8 @@
 													<c:when test="${item.status_order.STATUS == 'Hoàn thành'}">
 														<td><button type="button"
 																class="btn btn-warning btn-md" data-toggle="modal"
-															style="width: 100px;"	data-target="#myModal-${item.ID+1}">Trả Hàng</button></td>
+																style="width: 100px;"
+																data-target="#myModal-${item.ID+1}">Trả Hàng</button></td>
 														<!-- Modal -->
 														<div id="myModal-${item.ID+1}" class="modal fade"
 															role="dialog">
@@ -121,28 +123,30 @@
 																	<div class="modal-header">
 																		<button type="button" class="close"
 																			data-dismiss="modal">&times;</button>
-																		<h4 class="modal-title">Lý do trả đơn hàng
-																			 của " ${item.user.FULLNAME} "</h4>
+																		<h4 class="modal-title">Lý do trả đơn hàng của "
+																			${item.user.FULLNAME} "</h4>
 																	</div>
-																	<form  action="" id="returnForm"> 
-																	<div class="modal-body">
-																		<p>
-																			<textarea name="noteReson"  id="noteReasons" class="input"></textarea>
-																			<small id="errors-message" class="text-danger"></small>
-																		</p>
-																	</div>
-																	<div class="modal-footer">
-																		<button type="submit" class="btn btn-info" 
-																		formaction="/shop/returnItem/${item.ID}" formmethod="post"	>Xác Nhận</button>
-																		<button type="button" class="btn btn-default"
-																			data-dismiss="modal">Close</button>
-																	</div>
+																	<form action="" id="returnForm">
+																		<div class="modal-body">
+																			<p>
+																				<textarea name="noteReson" id="noteReasons"
+																					class="input"></textarea>
+																				<small id="errors-message" class="text-danger"></small>
+																			</p>
+																		</div>
+																		<div class="modal-footer">
+																			<button type="submit" class="btn btn-info"
+																				formaction="/shop/returnItem/${item.ID}"
+																				formmethod="post">Xác Nhận</button>
+																			<button type="button" class="btn btn-default"
+																				data-dismiss="modal">Close</button>
+																		</div>
 																	</form>
 																</div>
 															</div>
 														</div>
 													</c:when>
-													
+
 												</c:choose>
 
 
@@ -206,19 +210,21 @@
 																	<h4 class="modal-title">Lý do hủy đơn hàng của
 																		${item.user.USERNAME}</h4>
 																</div>
-																<div class="modal-body">
-																	<p>
-																		<textarea id="noteReason-${item.ID}" class="input"></textarea>
-																		<small id="error-message-${item.ID}"
-																			class="text-danger"></small>
-																	</p>
-																</div>
-																<div class="modal-footer">
-																	<button type="button" class="btn btn-info"
-																		onclick="submitDeleteForm(${item.ID})">Hủy</button>
-																	<button type="button" class="btn btn-default"
-																		data-dismiss="modal">Close</button>
-																</div>
+																<form action="/shop/deleteOrder/${item.ID}" method="post">
+																	<div class="modal-body">
+																		<p>
+																			<textarea id="noteReason-${item.ID}" name="noteReasons" class="input"></textarea>
+																			<small id="error-message-${item.ID}"
+																				class="text-danger"></small>
+																		</p>
+																	</div>
+																	<div class="modal-footer">
+																		<button type="submit" class="btn btn-info"
+																			onclick="submitDeleteForm(${item.ID})">Hủy</button>
+																		<button type="button" class="btn btn-default"
+																			data-dismiss="modal">Close</button>
+																	</div>
+																</form>
 															</div>
 														</div>
 													</div>
@@ -313,7 +319,7 @@
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.status_order.STATUS }</td>
 													<td></td>
-													
+
 												</c:when>
 
 											</c:choose>
@@ -325,7 +331,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 				<!-- Hoàn thành -->
 				<div class="tab-pane fade" id="hoanthanh" role="tabpanel"
 					aria-labelledby="hoanthanh-tab" tabindex="0">
@@ -358,38 +364,41 @@
 													<td><fmt:formatDate value="${item.CREATE_AT}"
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.status_order.STATUS}</td>
-                                                   <td><button type="button"
-																class="btn btn-warning btn-md" data-toggle="modal"
-															style="width: 100px;"	data-target="#myModal-${item.ID}">Trả Hàng</button></td>
-															<!-- Modal -->
-														<div id="myModal-${item.ID}" class="modal fade"
-															role="dialog">
-															<div class="modal-dialog">
-																<!-- Modal content-->
-																<div class="modal-content">
-																	<div class="modal-header">
-																		<button type="button" class="close"
-																			data-dismiss="modal">&times;</button>
-																		<h4 class="modal-title">Lý do trả đơn hàng
-																			 của " ${item.user.FULLNAME} "</h4>
-																	</div>
-																	<form  action="" id="returnForm"> 
+													<td><button type="button"
+															class="btn btn-warning btn-md" data-toggle="modal"
+															style="width: 100px;" data-target="#myModal-${item.ID}">Trả
+															Hàng</button></td>
+													<!-- Modal -->
+													<div id="myModal-${item.ID}" class="modal fade"
+														role="dialog">
+														<div class="modal-dialog">
+															<!-- Modal content-->
+															<div class="modal-content">
+																<div class="modal-header">
+																	<button type="button" class="close"
+																		data-dismiss="modal">&times;</button>
+																	<h4 class="modal-title">Lý do trả đơn hàng của "
+																		${item.user.FULLNAME} "</h4>
+																</div>
+																<form action="" id="returnForm">
 																	<div class="modal-body">
 																		<p>
-																			<textarea name="noteReson"  id="noteReasons" class="input"></textarea>
+																			<textarea name="noteReson" id="noteReasons"
+																				class="input"></textarea>
 																			<small id="errors-message" class="text-danger"></small>
 																		</p>
 																	</div>
 																	<div class="modal-footer">
-																		<button type="submit" class="btn btn-info" 
-																		formaction="/shop/returnItem/${item.ID}" formmethod="post"	>Xác Nhận</button>
+																		<button type="submit" class="btn btn-info"
+																			formaction="/shop/returnItem/${item.ID}"
+																			formmethod="post">Xác Nhận</button>
 																		<button type="button" class="btn btn-default"
 																			data-dismiss="modal">Close</button>
 																	</div>
-																	</form>
-																</div>
+																</form>
 															</div>
 														</div>
+													</div>
 												</c:when>
 
 											</c:choose>
@@ -401,7 +410,7 @@
 						</div>
 					</div>
 				</div>
-                 <!--Chờ Trả Hàng -->
+				<!--Chờ Trả Hàng -->
 				<div class="tab-pane fade" id="choTraHang" role="tabpanel"
 					aria-labelledby="choTraHang-tab" tabindex="0">
 					<div class="card mt-3">
@@ -425,7 +434,8 @@
 										<tbody>
 
 											<c:choose>
-												<c:when test="${item.status_order.STATUS == 'Chờ xác nhận trả '}">
+												<c:when
+													test="${item.status_order.STATUS == 'Chờ xác nhận trả '}">
 													<td>${item.ID }</td>
 													<td>${item.user.USERNAME }</td>
 													<td><fmt:formatNumber type="currency"
@@ -434,7 +444,7 @@
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.status_order.STATUS }</td>
 													<td></td>
-													
+
 
 												</c:when>
 
@@ -471,7 +481,8 @@
 										<tbody>
 
 											<c:choose>
-												<c:when test="${item.status_order.STATUS == 'Xác nhận trả hàng'}">
+												<c:when
+													test="${item.status_order.STATUS == 'Xác nhận trả hàng'}">
 													<td>${item.ID }</td>
 													<td>${item.user.USERNAME }</td>
 													<td><fmt:formatNumber type="currency"
@@ -480,7 +491,7 @@
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.status_order.STATUS }</td>
 													<td></td>
-													
+
 
 												</c:when>
 
@@ -525,8 +536,8 @@
 													<td><fmt:formatDate value="${item.CREATE_AT}"
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.REASON }</td>
-													<td><a href="/shop/mualai?id_order="${item.ID}><button type="button" class="btn btn-success">Mua
-															Lại</button></a> </td>
+													<td><a href="/shop/mualai?id_order=" ${item.ID}><button
+																type="button" class="btn btn-success">Mua Lại</button></a></td>
 
 												</c:when>
 
@@ -559,8 +570,8 @@ document.getElementById('returnForm').addEventListener('submit', function(event)
 });
 </script>
 <c:choose>
- <c:when test="${success}">
-  <script>
+	<c:when test="${success}">
+		<script>
      Swal.fire({
          icon: 'success',
          title: 'Trả Hàng Thành Công',
@@ -573,9 +584,9 @@ document.getElementById('returnForm').addEventListener('submit', function(event)
      
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>
- </c:when>
-  <c:when test="${errorsReturnItem}">
-  <script>
+	</c:when>
+	<c:when test="${errorsReturnItem}">
+		<script>
      Swal.fire({
          icon: 'error',
          title: 'Trả hàng thất bại, đơn hàng được cập nhật lại',
@@ -588,9 +599,9 @@ document.getElementById('returnForm').addEventListener('submit', function(event)
      
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>
- </c:when>
-  <c:when test="${successError}">
-  <script>
+	</c:when>
+	<c:when test="${successError}">
+		<script>
      Swal.fire({
          icon: 'success',
          title: 'Đã Hủy Đơn hàng thành Công',
@@ -603,9 +614,9 @@ document.getElementById('returnForm').addEventListener('submit', function(event)
      
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>
- </c:when>
-  <c:when test="${errorsDeleteOrder}">
-  <script>
+	</c:when>
+	<c:when test="${errorsDeleteOrder}">
+		<script>
      Swal.fire({
          icon: 'error',
          title: 'Hủy hàng thất bại, đơn hàng được cập nhật lại',
@@ -618,6 +629,6 @@ document.getElementById('returnForm').addEventListener('submit', function(event)
      
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>
- </c:when>
+	</c:when>
 </c:choose>
 
