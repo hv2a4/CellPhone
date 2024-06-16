@@ -22,7 +22,8 @@
 						<div class="modal-dialog modal-lg">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h1 class="modal-title fs-5" id="themLabel">Thêm trạng thái hóa đơn mới</h1>
+									<h1 class="modal-title fs-5" id="themLabel">Thêm trạng
+										thái hóa đơn mới</h1>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
@@ -112,13 +113,15 @@
 													action="/admin/status_invoice/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<form:input id="status_invoiceId" value="${status_invoiceUpdate.ID}"
-																path="ID" type="hidden" class="form-control" />
+															<form:input id="status_invoiceId"
+																value="${status_invoiceUpdate.ID}" path="ID"
+																type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
-															<label class="control-label">Tên trạng thái hóa đơn</label>
-															<form:input id="status_invoiceName" path="NAME" type="text"
-																class="form-control" placeholder="" />
+															<label class="control-label">Tên trạng thái hóa
+																đơn</label>
+															<form:input id="status_invoiceName" path="NAME"
+																type="text" class="form-control" placeholder="" />
 														</div>
 													</div>
 													<div class="modal-footer">
@@ -179,5 +182,79 @@
 		    });
 		}
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Hoàn tất'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/status_invoice";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không được để trống tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/status_invoice";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Trùng tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/status_invoice";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/status_invoice";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/status_invoice";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
 </body>
 </html>

@@ -151,8 +151,6 @@ public class UserController {
 
 	@RequestMapping("")
 	public String getHome(Model model) {
-		Optional<user> users = userDao.findById("user1");
-		List<cart_item> cartItems = (List<cart_item>) users.get().getCarts().get(0).getCart_items();
 		String page = "home.jsp";
 		model.addAttribute("page", page);
 		return "index";
@@ -322,8 +320,10 @@ public class UserController {
 	public String getStore(Model model, @RequestParam("q") Optional<String> q,
 			@RequestParam(name = "brand") Optional<List<String>> brand,
 			@RequestParam(name = "system") Optional<List<String>> systems,
-			@RequestParam(name = "min") Optional<Double> min, @RequestParam(name = "max") Optional<Double> max,
-			@RequestParam(name = "sorts") Optional<String> sorts, @RequestParam(value = "dirs") Optional<String> dirs,
+			@RequestParam(name = "min") Optional<Double> min, 
+			@RequestParam(name = "max") Optional<Double> max,
+			@RequestParam(name = "sorts") Optional<String> sorts, 
+			@RequestParam(value = "dirs") Optional<String> dirs,
 			@RequestParam(name = "sizes") Optional<Integer> sizes,
 			@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
 

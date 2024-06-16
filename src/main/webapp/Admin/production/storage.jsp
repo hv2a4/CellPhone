@@ -22,25 +22,24 @@
 						<div class="modal-dialog modal-lg">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h1 class="modal-title fs-5" id="themLabel">Thêm dung lượng mới</h1>
+									<h1 class="modal-title fs-5" id="themLabel">Thêm dung
+										lượng mới</h1>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
-									<form:form class="form-horizontal form-label-left"
-										method="POST" modelAttribute="storage"
+									<form class="form-horizontal form-label-left" method="POST"
 										action="/admin/storage/create">
 										<div class="form-group ">
-											<label class="control-label">Dung lượng</label>
-											<form:input path="GB" cssClass="form-control"
-												placeholder="" />
+											<label class="control-label">Dung lượng</label> <input required="required"
+												name="GB" class="form-control" placeholder="" />
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary"
 												data-bs-dismiss="modal">Close</button>
 											<button type="submit" class="btn btn-primary">Create</button>
 										</div>
-									</form:form>
+									</form>
 								</div>
 
 							</div>
@@ -52,7 +51,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="card-box table-responsive">
-								<table id="datatable-responsive"
+								<table 
 									class="table table-striped table-bordered dt-responsive nowrap"
 									cellspacing="0" width="100%">
 									<thead>
@@ -63,7 +62,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="item" items="${list_storage}">
+										<c:forEach var="item" items="${pageStorage.content}">
 											<tr>
 												<td>${item.ID }</td>
 												<td><fmt:formatNumber pattern="###,###">
@@ -109,17 +108,17 @@
 													data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
 											<div class="modal-body">
-												<form:form class="form-horizontal form-label-left"
-													method="POST" modelAttribute="storageUpdate"
+												<form class="form-horizontal form-label-left" method="POST"
 													action="/admin/storage/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<form:input id="storageId" value="${storageUpdate.ID}"
-																path="ID" type="hidden" class="form-control" />
+															<input required="required" id="storageId"
+																value="${storageUpdate.ID}" name="ID" type="hidden"
+																class="form-control" />
 														</div>
 														<div class="form-group">
-															<label class="control-label">Dung lượng</label>
-															<form:input id="storageGB" path="GB" type="text"
+															<label class="control-label">Dung lượng</label> <input
+																required="required" id="storageGB" name="GB" type="text"
 																class="form-control" placeholder="" />
 														</div>
 													</div>
@@ -128,13 +127,21 @@
 															data-bs-dismiss="modal">Close</button>
 														<button type="submit" class="btn btn-primary">Update</button>
 													</div>
-												</form:form>
+												</form>
 											</div>
 
 										</div>
 									</div>
 								</div>
 							</div>
+							<c:if test="${pageStorage.totalPages!=1}">
+								<div class="text-right">
+									<c:forEach var="item" begin="1" end="${pageStorage.totalPages}"
+										step="1">
+										<a class="btn btn-primary" href="/admin/storage?pages=${item}">${item}</a>
+									</c:forEach>
+								</div>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -147,7 +154,7 @@
 		        type: "GET",
 		        url: "/admin/ajax/getstorage/" + id,
 		        success: function(storage) {
-		            // Đổ dữ liệu vào form:form
+		            // Đổ dữ liệu vào form
 		            $("#storageId").val(storage.id);
 		            $("#storageGB").val(storage.gb); 
 		            var modal = new bootstrap.Modal(document
@@ -181,5 +188,64 @@
 		    });
 		}
 	</script>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Hoàn tất'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/storage";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Trùng GB'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/storage";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/storage";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/storage";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
 </body>
 </html>

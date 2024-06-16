@@ -180,5 +180,82 @@
 		    });
 		}
 	</script>
+	
+	
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Hoàn tất'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/rank";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không được để trống tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/rank";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Trùng tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/rank";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/rank";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/rank";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	
 </body>
 </html>
