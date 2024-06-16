@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,13 +70,21 @@
         </div>
     </div>
   </form>
-	<script>
-	 const formSubmitted = ${formSubmitted}; // This will be true or false
-     const message = "${messages}";
-     
-     if (formSubmitted && message) {
-         alert(message);
-     }
-	</script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${formSubmitted}">
+     <script>
+     Swal.fire({
+         icon: 'success',
+         title: 'Cập Nhật Thành Công',
+         showConfirmButton: false,
+         timer: 1500
+     });
+     setTimeout(function() {
+    	 window.location.href = "/shop/changepass"; 
+     }, 2200);
+   
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+    </c:if>
 </body>
 </html>

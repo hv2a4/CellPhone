@@ -123,9 +123,12 @@ public class LoginController {
 	//   return "redirect:/shop";
 	}
 	@RequestMapping("logout")
-	public String logOut() {
+	public String logOut(Model model) {
 		sessionService.remove("list");
-		 return "redirect:/shop";
+		model.addAttribute("messageLogout", "true");
+		String page = "home.jsp";
+		model.addAttribute("page", page);
+		return "index";
 	}
 	@GetMapping("/404")
 	public String getError() {

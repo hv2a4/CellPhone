@@ -25,9 +25,12 @@
 				<li role="presentation"><a href="#hoanthanh" id="hoanthanh-tab"
 					data-toggle="tab" role="tab" aria-controls="hoanthanh"
 					aria-selected="false">Hoàn thành</a></li>
-				<li role="presentation"><a href="#traHang" id="traHang-tab"
-					data-toggle="tab" role="tab" aria-controls="traHang"
-					aria-selected="false">Trả Hàng</a></li>
+				<li role="presentation"><a href="#choTraHang" id="choTraHang-tab"
+					data-toggle="tab" role="tab" aria-controls="choTraHang"
+					aria-selected="false">Chờ Trả Hàng</a></li>
+					<li role="presentation"><a href="#xacNhanTraHang" id="xacNhanTraHang-tab"
+					data-toggle="tab" role="tab" aria-controls="xacNhanTraHang"
+					aria-selected="false">Xác Nhận Trả Hàng</a></li>
 				<li role="presentation"><a href="#dahuy" id="dahuy-tab"
 					data-toggle="tab" role="tab" aria-controls="dahuy"
 					aria-selected="false">Đã hủy</a></li>
@@ -71,10 +74,10 @@
 														<td>
 															<button type="button" class="btn btn-danger "
 																style="width: 100px;" data-toggle="modal"
-																data-target="#myModal-${item.ID+1}">Hủy</button>
+																data-target="#myModal-${item.ID+2}">Hủy</button>
 														</td>
 														<!-- Modal -->
-														<div id="myModal-${item.ID+1}" class="modal fade"
+														<div id="myModal-${item.ID+2}" class="modal fade"
 															role="dialog">
 															<div class="modal-dialog">
 																<!-- Modal content-->
@@ -83,29 +86,32 @@
 																		<button type="button" class="close"
 																			data-dismiss="modal">&times;</button>
 																		<h4 class="modal-title">Lý do hủy đơn hàng
-																			${item.ID} của ${item.user.USERNAME}</h4>
+																			 của ${item.user.USERNAME}</h4>
 																	</div>
-																	<div class="modal-body">
+																<form action="">
+																	 <div class="modal-body">
 																		<p>
-																			<textarea id="noteReasons-${item.ID}" class="input"></textarea>
-																			<small id="errors-message-${item.ID}"
+																			<textarea name="noteReasons"  class="input"></textarea>
+																			<small id="errors-message"
 																				class="text-danger"></small>
 																		</p>
 																	</div>
 																	<div class="modal-footer">
-																		<button type="button" class="btn btn-info"
-																			onclick="submitDeleteForms(${item.ID})">Hủy</button>
+																		<button type="submit" class="btn btn-info"
+																			formaction="/shop/deleteOrder/${item.ID}" formmethod="post">Hủy</button>
 																		<button type="button" class="btn btn-default"
 																			data-dismiss="modal">Close</button>
 																	</div>
+																	 </form>
+																	
 																</div>
 															</div>
 														</div>
 													</c:when>
-													<c:when test="${item.status_order.STATUS == 'Giao hàng'}">
+													<c:when test="${item.status_order.STATUS == 'Hoàn thành'}">
 														<td><button type="button"
 																class="btn btn-warning btn-md" data-toggle="modal"
-																data-target="#myModal-${item.ID+1}">Trả Hàng</button></td>
+															style="width: 100px;"	data-target="#myModal-${item.ID+1}">Trả Hàng</button></td>
 														<!-- Modal -->
 														<div id="myModal-${item.ID+1}" class="modal fade"
 															role="dialog">
@@ -116,7 +122,7 @@
 																		<button type="button" class="close"
 																			data-dismiss="modal">&times;</button>
 																		<h4 class="modal-title">Lý do trả đơn hàng
-																			${item.ID} của ${item.user.USERNAME}</h4>
+																			 của " ${item.user.FULLNAME} "</h4>
 																	</div>
 																	<form  action="" id="returnForm"> 
 																	<div class="modal-body">
@@ -136,36 +142,7 @@
 															</div>
 														</div>
 													</c:when>
-													<c:when test="${item.status_order.STATUS == 'Trả hàng'}">
-														<td><button type="button" class="btn btn-primary"
-																style="width: 100px;" data-toggle="modal"
-																data-target="#myModal${item.ID+2}">Lý do</button></td>
-														<!-- Modal -->
-														<div id="myModal${item.ID+2}" class="modal fade"
-															role="dialog">
-															<div class="modal-dialog">
-
-																<!-- Modal content-->
-																<div class="modal-content">
-																	<div class="modal-header">
-																		<button type="button" class="close"
-																			data-dismiss="modal">&times;</button>
-																		<h4 class="modal-title">Lý do trả hàng của
-																			${item.ID}</h4>
-																	</div>
-																	<div class="modal-body">
-																		<p>${item.REASON}</p>
-																	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn btn-default"
-																			data-dismiss="modal">Close</button>
-																	</div>
-																</div>
-
-															</div>
-														</div>
-
-													</c:when>
+													
 												</c:choose>
 
 
@@ -335,40 +312,8 @@
 													<td><fmt:formatDate value="${item.CREATE_AT}"
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.status_order.STATUS }</td>
-													<td>
-														<button type="button" class="btn btn-warning "
-															style="width: 100px;" data-toggle="modal"
-															data-target="#myModal-${item.ID}">Trả Hàng</button>
-													</td>
-													<!-- Modal -->
-													<div id="myModal-${item.ID}" class="modal fade"
-														role="dialog">
-														<div class="modal-dialog">
-															<!-- Modal content-->
-															<div class="modal-content">
-																<div class="modal-header">
-																	<button type="button" class="close"
-																		data-dismiss="modal">&times;</button>
-																	<h4 class="modal-title">Lý do trả hàng của
-																		${item.user.USERNAME}</h4>
-																</div>
-																<div class="modal-body">
-																	<p>
-																		<textarea id="noteReason-${item.ID}" class="input"></textarea>
-																		<small id="error-message-${item.ID}"
-																			class="text-danger"></small>
-																	</p>
-																</div>
-																<div class="modal-footer">
-																	<button type="button" class="btn btn-info"
-																		onclick="submitReturnItemForm(${item.ID})">Xác
-																		Nhận</button>
-																	<button type="button" class="btn btn-default"
-																		data-dismiss="modal">Close</button>
-																</div>
-															</div>
-														</div>
-													</div>
+													<td></td>
+													
 												</c:when>
 
 											</c:choose>
@@ -380,77 +325,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- Trả Hàng -->
-				<div class="tab-pane fade" id="traHang" role="tabpanel"
-					aria-labelledby="traHang-tab" tabindex="0">
-					<div class="card mt-3">
-						<div class="card-header">
-							<h2 class="card-title">Danh Sách</h2>
-						</div>
-						<div class="card-body">
-							<div class="table-responsive">
-								<table class="table table-striped table-bordered">
-									<thead>
-										<tr>
-											<th>Mã đơn hàng</th>
-											<th>Tên người đặt</th>
-											<th>Tổng tiền</th>
-											<th>Ngày đặt</th>
-											<th>Trạng thái</th>
-											<th>Hoạt Động</th>
-										</tr>
-									</thead>
-									<c:forEach var="item" items="${getAllOrders}">
-										<tbody>
-
-											<c:choose>
-												<c:when test="${item.status_order.STATUS == 'Trả hàng'}">
-													<td>${item.ID }</td>
-													<td>${item.user.USERNAME }</td>
-													<td><fmt:formatNumber type="currency"
-															currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
-													<td><fmt:formatDate value="${item.CREATE_AT}"
-															pattern="yyyy-MM-dd" /></td>
-													<td>${item.status_order.STATUS }</td>
-													<td><button type="button" class="btn btn-primary "
-															data-toggle="modal" data-target="#myModal${item.ID}"
-															style="width: 100px;">Lý do</button></td>
-													<!-- Modal -->
-													<div id="myModal${item.ID}" class="modal fade"
-														role="dialog">
-														<div class="modal-dialog">
-
-															<!-- Modal content-->
-															<div class="modal-content">
-																<div class="modal-header">
-																	<button type="button" class="close"
-																		data-dismiss="modal">&times;</button>
-																	<h4 class="modal-title">Lý do trả hàng của
-																		${item.ID}</h4>
-																</div>
-																<div class="modal-body">
-																	<p>${item.REASON}</p>
-																</div>
-																<div class="modal-footer">
-																	<button type="button" class="btn btn-default"
-																		data-dismiss="modal">Close</button>
-																</div>
-															</div>
-
-														</div>
-													</div>
-
-												</c:when>
-
-											</c:choose>
-
-										</tbody>
-									</c:forEach>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
+				
 				<!-- Hoàn thành -->
 				<div class="tab-pane fade" id="hoanthanh" role="tabpanel"
 					aria-labelledby="hoanthanh-tab" tabindex="0">
@@ -483,9 +358,38 @@
 													<td><fmt:formatDate value="${item.CREATE_AT}"
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.status_order.STATUS}</td>
-                                                   <td><button type="button" class="btn btn-primary "
-															data-toggle="modal" data-target="#myModal${item.ID}"
-															style="width: 100px;">Trả Hàng</button></td>
+                                                   <td><button type="button"
+																class="btn btn-warning btn-md" data-toggle="modal"
+															style="width: 100px;"	data-target="#myModal-${item.ID}">Trả Hàng</button></td>
+															<!-- Modal -->
+														<div id="myModal-${item.ID}" class="modal fade"
+															role="dialog">
+															<div class="modal-dialog">
+																<!-- Modal content-->
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<button type="button" class="close"
+																			data-dismiss="modal">&times;</button>
+																		<h4 class="modal-title">Lý do trả đơn hàng
+																			 của " ${item.user.FULLNAME} "</h4>
+																	</div>
+																	<form  action="" id="returnForm"> 
+																	<div class="modal-body">
+																		<p>
+																			<textarea name="noteReson"  id="noteReasons" class="input"></textarea>
+																			<small id="errors-message" class="text-danger"></small>
+																		</p>
+																	</div>
+																	<div class="modal-footer">
+																		<button type="submit" class="btn btn-info" 
+																		formaction="/shop/returnItem/${item.ID}" formmethod="post"	>Xác Nhận</button>
+																		<button type="button" class="btn btn-default"
+																			data-dismiss="modal">Close</button>
+																	</div>
+																	</form>
+																</div>
+															</div>
+														</div>
 												</c:when>
 
 											</c:choose>
@@ -497,7 +401,98 @@
 						</div>
 					</div>
 				</div>
+                 <!--Chờ Trả Hàng -->
+				<div class="tab-pane fade" id="choTraHang" role="tabpanel"
+					aria-labelledby="choTraHang-tab" tabindex="0">
+					<div class="card mt-3">
+						<div class="card-header">
+							<h2 class="card-title">Danh Sách</h2>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Mã đơn hàng</th>
+											<th>Tên người đặt</th>
+											<th>Tổng tiền</th>
+											<th>Ngày đặt</th>
+											<th>Trạng thái</th>
+											<th>Hoạt Động</th>
+										</tr>
+									</thead>
+									<c:forEach var="item" items="${getAllOrders}">
+										<tbody>
 
+											<c:choose>
+												<c:when test="${item.status_order.STATUS == 'Chờ xác nhận trả '}">
+													<td>${item.ID }</td>
+													<td>${item.user.USERNAME }</td>
+													<td><fmt:formatNumber type="currency"
+															currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+													<td><fmt:formatDate value="${item.CREATE_AT}"
+															pattern="yyyy-MM-dd" /></td>
+													<td>${item.status_order.STATUS }</td>
+													<td></td>
+													
+
+												</c:when>
+
+											</c:choose>
+
+										</tbody>
+									</c:forEach>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- xác nhận trả hàng-->
+				<div class="tab-pane fade" id="xacNhanTraHang" role="tabpanel"
+					aria-labelledby="xacNhanTraHang-tab" tabindex="0">
+					<div class="card mt-3">
+						<div class="card-header">
+							<h2 class="card-title">Danh Sáchfgff</h2>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>Mã đơn hàng</th>
+											<th>Tên người đặt</th>
+											<th>Tổng tiền</th>
+											<th>Ngày đặt</th>
+											<th>Trạng thái</th>
+											<th>Hoạt Động</th>
+										</tr>
+									</thead>
+									<c:forEach var="item" items="${getAllOrders}">
+										<tbody>
+
+											<c:choose>
+												<c:when test="${item.status_order.STATUS == 'Xác nhận trả hàng'}">
+													<td>${item.ID }</td>
+													<td>${item.user.USERNAME }</td>
+													<td><fmt:formatNumber type="currency"
+															currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
+													<td><fmt:formatDate value="${item.CREATE_AT}"
+															pattern="yyyy-MM-dd" /></td>
+													<td>${item.status_order.STATUS }</td>
+													<td></td>
+													
+
+												</c:when>
+
+											</c:choose>
+
+										</tbody>
+									</c:forEach>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 				<!-- Đã hủy -->
 				<div class="tab-pane fade" id="dahuy" role="tabpanel"
 					aria-labelledby="dahuy-tab" tabindex="0">
@@ -530,8 +525,8 @@
 													<td><fmt:formatDate value="${item.CREATE_AT}"
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.REASON }</td>
-													<td><button type="button" class="btn btn-success">Mua
-															Lại</button></td>
+													<td><a href="/shop/mualai?id_order="${item.ID}><button type="button" class="btn btn-success">Mua
+															Lại</button></a> </td>
 
 												</c:when>
 
@@ -579,7 +574,7 @@ document.getElementById('returnForm').addEventListener('submit', function(event)
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>
  </c:when>
-  <c:when test="${errorss}">
+  <c:when test="${errorsReturnItem}">
   <script>
      Swal.fire({
          icon: 'error',
@@ -594,138 +589,35 @@ document.getElementById('returnForm').addEventListener('submit', function(event)
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>
  </c:when>
+  <c:when test="${successError}">
+  <script>
+     Swal.fire({
+         icon: 'success',
+         title: 'Đã Hủy Đơn hàng thành Công',
+         showConfirmButton: false,
+         timer: 1500
+     });
+     setTimeout(function() {
+    	 window.location.href = "/shop/order"; 
+     }, 1800);
+     
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+ </c:when>
+  <c:when test="${errorsDeleteOrder}">
+  <script>
+     Swal.fire({
+         icon: 'error',
+         title: 'Hủy hàng thất bại, đơn hàng được cập nhật lại',
+         showConfirmButton: false,
+         timer: 1500
+     });
+     setTimeout(function() {
+    	 window.location.href = "/shop/order"; 
+     }, 1800);
+     
+    // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    </script>
+ </c:when>
 </c:choose>
 
-<script>
-    function submitDeleteForm(orderId) {
-        var noteReason = document.getElementById('noteReason-' + orderId).value;
-        var errorMessageElement = document.getElementById('error-message-' + orderId);
-
-        if (noteReason.trim() === '') {
-            // Hiển thị thông báo lỗi nếu người dùng không nhập lý do
-            errorMessageElement.textContent = 'Vui lòng nhập lý do hủy đơn hàng.';
-            return;  // Dừng việc gửi yêu cầu
-        } 
-        $.ajax({
-            type: "POST",
-            url: "/shop/deleteOrder/" + orderId,
-            data: {
-                noteReason: noteReason
-            },
-            success: function(response) {
-              
-                $('#myModal-' + orderId).modal('hide');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Đơn Hàng Đã Hủy Thành Công',
-                    showConfirmButton: false,
-                    timer: 950
-                });
-                
-                setTimeout(function() {
-                    window.location.href = "/shop/order";
-                }, 1200);
-               
-            },
-            error: function(xhr, status, error) {
-                alert("Đã xảy ra lỗi: " + error);
-            }
-        });
-    }
-    function submitDeleteForms(orderId) {
-        var noteReason = document.getElementById('noteReasons-' + orderId).value;
-        var errorMessageElement = document.getElementById('errors-message-' + orderId);
-
-        if (noteReason.trim() === '') {
-            // Hiển thị thông báo lỗi nếu người dùng không nhập lý do
-            errorMessageElement.textContent = 'Vui lòng nhập lý do hủy đơn hàng.';
-            return;  // Dừng việc gửi yêu cầu
-        } 
-        $.ajax({
-            type: "POST",
-            url: "/shop/deleteOrder/" + orderId,
-            data: {
-                noteReason: noteReason
-            },
-            success: function(response) {
-               
-                $('#myModal-' + orderId).modal('hide');
-               
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Đơn Hàng Đã Hủy Thành Công',
-                    showConfirmButton: false,
-                    timer: 950
-                });
-                setTimeout(function() {
-                    window.location.href = "/shop/order";
-                }, 1200);
-               
-            },
-            error: function(xhr, status, error) {
-                alert("Đã xảy ra lỗi: " + error);
-            }
-        });
-    }
-    function submitReturnItemForm(orderId) {
-        var noteReason = document.getElementById('noteReason-' + orderId).value;
-        var errorMessageElement = document.getElementById('error-message-' + orderId);
-        if (noteReason.trim() === '') {
-            // Hiển thị thông báo lỗi nếu người dùng không nhập lý do
-            errorMessageElement.textContent = 'Vui lòng nhập lý do trả đơn hàng.';
-            return;  // Dừng việc gửi yêu cầu
-        }
-        $.ajax({
-            type: "POST",
-            url: "/shop/returnItem/" + orderId,
-            data: {
-                noteReason: noteReason
-            },
-            success: function(response) {
-                
-            	Swal.fire({
-                    icon: 'success',
-                    title: 'Trả Hàng Thành Công',
-                    showConfirmButton: false,
-                    timer: 950
-                });
-                setTimeout(function() {
-                    window.location.href = "/shop/order";
-                }, 1200);
-            },
-            error: function(xhr, status, error) {
-                alert("Đã xảy ra lỗi: " + error);
-            }
-        });
-    }
-    /*s  function submitReturnItemForms(orderId) {
-         var noteReason = document.getElementById('noteReasons-' + orderId).value;
-        var errorMessageElement = document.getElementById('errors-message-' + orderId);
-        if (noteReason.trim() === '') {
-            // Hiển thị thông báo lỗi nếu người dùng không nhập lý do
-            errorMessageElement.textContent = 'Vui lòng nhập lý do trả đơn hàng.';
-            return;  // Dừng việc gửi yêu cầu
-        } 
-        $.ajax({
-            type: "POST",
-            url: "/shop/returnItem/" + orderId,
-            data: {
-                noteReason: noteReason
-            },
-            success: function(response) {
-            	Swal.fire({
-                    icon: 'success',
-                    title: 'Trả Hàng Thành Công',
-                    showConfirmButton: false,
-                    timer: 950
-                });
-                setTimeout(function() {
-                    window.location.href = "/shop/order";
-                }, 1200);
-            },
-            error: function(xhr, status, error) {
-                alert("Đã xảy ra lỗi: " + error);
-            }
-        });
-    } */
-</script>
