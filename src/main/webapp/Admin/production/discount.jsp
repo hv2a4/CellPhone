@@ -101,12 +101,12 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box table-responsive">
-									<table 
+									<table
 										class="table table-striped table-bordered dt-responsive nowrap"
 										cellspacing="0" width="100%">
 										<thead>
 											<tr>
-												<th>Số thứ tự</th>
+												<th>STT</th>
 												<th>Bậc áp dụng</th>
 												<th>Mã giảm giá</th>
 												<th>Ngày bắt đầu</th>
@@ -118,7 +118,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<c:forEach items="${list_discount_code}" var="item"
+											<c:forEach items="${pageDiscountCode.content}" var="item"
 												varStatus="loop">
 												<tr>
 													<td>${loop.index +1 }</td>
@@ -244,6 +244,15 @@
 									</td>
 								</div>
 							</div>
+							<c:if test="${pageDiscountCode.totalPages!=1}">
+								<div class="text-right">
+									<c:forEach var="item" begin="1"
+										end="${pageDiscountCode.totalPages}" step="1">
+										<a class="btn btn-primary"
+											href="/admin/discount?pages=${item}">${item}</a>
+									</c:forEach>
+								</div>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -252,7 +261,6 @@
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<c:if test="${message eq 'Đã xóa'}">
 		<script>
      Swal.fire({
@@ -271,7 +279,7 @@
 	<c:if test="${message eq 'Không thể xóa'}">
 		<script>
      Swal.fire({
-         icon: 'success',
+         icon: 'error',
          title: '${message}',
          showConfirmButton: false,
          timer: 1000
@@ -279,7 +287,7 @@
      
      setTimeout(function() {
     	 window.location.href = "/admin/discount"; 
-     }, 1800);
+     }, 1001);
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>
 	</c:if>

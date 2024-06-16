@@ -45,7 +45,7 @@ public class order implements Serializable {
 	discount_code discount_code;
 
 	Double TOTAL_DISCOUNT;
-	double TOTAL_AMOUNT;
+	Double TOTAL_AMOUNT;
 	String NOTE;
 	String REASON;
 	

@@ -56,9 +56,9 @@
 														name="category.ID" id="category" class="form-select">
 														<option value="">Chọn danh mục</option>
 														<c:forEach items="${list_category}" var="entry">
-															<option value="${entry.key}">
-																<c:if test="${entry.key == phone.category.ID}">selected</c:if>
-																${entry.value}
+															<option value="${entry.ID}">
+																<c:if test="${entry.ID == phone.category.ID}">selected</c:if>
+																${entry.NAME}
 															</option>
 														</c:forEach>
 													</select> <span id="category_errors" class="text-danger"></span>
@@ -156,9 +156,10 @@
 														id="CONNECTION_error" class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Mô tả</label> <input
-														name="DESCRIPTION" type="text" class="form-control" /> <span
-														id="DESCRIPTION_error" class="text-danger"></span>
+													<label class="control-label">Mô tả</label>
+													<textarea rows="" cols="" name="DESCRIPTION" type="text"
+														class="form-control"></textarea>
+													<span id="DESCRIPTION_error" class="text-danger"></span>
 												</div>
 												<div class="form-group ">
 													<label class="control-label">Kích thước độ phân
@@ -347,7 +348,7 @@
 																</div>
 																<div class="modal-body">
 																	<form class="form-horizontal form-label-left"
-																		method="POST" id="updateForms"
+																		method="POST" id="updateForms${item.ID}"
 																		action="/admin/phone/update"
 																		enctype="multipart/form-data">
 																		<div class="row text-left">
@@ -379,9 +380,9 @@
 																						class="form-select">
 																						<option value="">Chọn danh mục</option>
 																						<c:forEach items="${list_category}" var="entry">
-																							<option value="${entry.key}"
-																								<c:if test="${entry.key == item.category.ID}">selected</c:if>>
-																								${entry.value}</option>
+																							<option value="${entry.ID}"
+																								<c:if test="${entry.ID == item.category.ID}">selected</c:if>>
+																								${entry.NAME}</option>
 																						</c:forEach>
 																					</select> <span id="category_errorss" class="text-danger"></span>
 																				</div>
@@ -488,9 +489,11 @@
 																						id="CONNECTION_errors" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Mô tả</label> <input
-																						name="DESCRIPTION" type="text"
-																						class="form-control" value="${item.DESCRIPTION}" />
+																					<label class="control-label">Mô tả</label>
+																					<textarea rows="" cols="" name="DESCRIPTION"
+																						type="text" class="form-control"
+																						value="${item.DESCRIPTION}">${item.DESCRIPTION}</textarea>
+
 																					<span id="DESCRIPTION_errors" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
@@ -559,7 +562,8 @@
 																						name="MAXIMUM_BRIGHTNESS" type="number" step="any"
 																						class="form-control"
 																						value="${item.MAXIMUM_BRIGHTNESS}" /> <span
-																						id="MAXIMUM_BRIGHTNESS_errorss" class="text-danger"></span>
+																						id="MAXIMUM_BRIGHTNESS_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Tốc độ CPU</label> <input
@@ -571,7 +575,8 @@
 																					<label class="control-label">Camera trước</label> <input
 																						name="SELFIE_CAMERA" type="number" step="any"
 																						class="form-control" value="${item.SELFIE_CAMERA}" />
-																					<span id="SELFIE_CAMERA_errorss" class="text-danger"></span>
+																					<span id="SELFIE_CAMERA_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Camera sau</label> <input
@@ -615,6 +620,7 @@
 																				<button type="button" class="btn btn-secondary"
 																					data-bs-dismiss="modal">Close</button>
 																				<button type="submit" id="btnUpdate"
+																					onclick="updatePhone(${item.ID})"
 																					class="btn btn-primary">Update</button>
 																			</div>
 																		</div>
@@ -647,7 +653,7 @@
 											</tr>
 											<tr class="" id="bienthe" tabindex="-1"
 												aria-labelledby="bientheLabel" aria-hidden="true">
-												<td colspan="8 row">
+												<td colspan="9 row">
 													<div class="accordion accordion-flush"
 														id="accordionFlushExample">
 														<div class="accordion-item">
@@ -748,8 +754,9 @@
 																											<div class="row text-left">
 																												<div class="form-group">
 																													<input type="hidden" name="phone.ID"
-																														value="${item.ID}" /> <input type="hidden"
-																														name="ID" value="${variant.ID}" />
+																														value="${item.ID}" /> <input
+																														type="hidden" name="ID"
+																														value="${variant.ID}" />
 																													<fmt:formatDate var="formattedCreateAt"
 																														value="${item.CREATE_AT}"
 																														pattern="yyyyMMdd" />
@@ -999,153 +1006,249 @@
 			</div>
 		</div>
 	</div>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
-    function previewImage(input, imgId) {
-        console.log("previewImage called for", imgId); // Log kiểm tra
-        let imgElement = document.getElementById(imgId);
-        console.log("input files:", input.files); // Kiểm tra file đầu vào
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                console.log("File loaded:", e.target.result); // Log kết quả load file
-                imgElement.src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+		function previewImage(input, imgId) {
+			console.log("previewImage called for", imgId); // Log kiểm tra
+			let imgElement = document.getElementById(imgId);
+			console.log("input files:", input.files); // Kiểm tra file đầu vào
+			if (input.files && input.files[0]) {
+				let reader = new FileReader();
+				reader.onload = function(e) {
+					console.log("File loaded:", e.target.result); // Log kết quả load file
+					imgElement.src = e.target.result;
+				};
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
 
-    $(document).ready(function() {
-        $('#updateForms').submit(function(event) {
-            event.preventDefault(); // Prevent default form submission
+		function updatePhone(id) {
+			$(document).ready(function() {
+				$('#updateForms'+id).submit(function(event) {
+					event.preventDefault(); // Prevent default form submission
 
-            let formData = new FormData($(this)[0]); // Create FormData object
-            $.ajax({
-                type: 'POST',
-                url: '/admin/phone/update',
-                data: formData,
-                contentType: false, // Important for multipart/form-data
-                processData: false, // Important for multipart/form-data
-                success: function(response) {
-                    if (response.status === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Cập nhật sản phẩm thành công',
-                            showConfirmButton: false,
-                            timer: 1050
-                        });
+					let formData = new FormData(this); // Create FormData object
+					$.ajax({
+						type : 'POST',
+						url : '/admin/phone/update',
+						data : formData,
+						contentType : false, // Important for multipart/form-data
+						processData : false, // Important for multipart/form-data
+						success : function(response) {
+							if (response.status === 'success') {
+								Swal.fire({
+									icon : 'success',
+									title : 'Cập nhật sản phẩm thành công',
+									showConfirmButton : false,
+									timer : 1050
+								});
 
-                        setTimeout(function() {
-                            window.location.href = '/admin/product'; // Redirect to product list
-                        }, 1600);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Có lỗi xảy ra khi cập nhật sản phẩm',
-                            showConfirmButton: true
-                        });
-                    }
-                },
-                error: function(xhr) {
-                    let errors = xhr.responseJSON;
-                    $.each(errors, function(key, value) {
-                        $('#' + key + '_errorss').text(value); // Display errors in the corresponding error spans
-                    });
-                }
-            });
-        });
-    });
+								setTimeout(function() {
+									window.location.href = '/admin/product'; // Redirect to product list
+								}, 1600);
+							} else {
+								Swal.fire({
+									icon : 'error',
+									title : 'Có lỗi xảy ra khi cập nhật sản phẩm',
+									showConfirmButton : true
+								});
+							}
+						},
+						error : function(xhr) {
+							let errors = xhr.responseJSON;
+							$.each(errors, function(key, value) {
+								$('#' + key + '_errorss').text(value); // Display errors in the corresponding error spans
+							});
+						}
+					});
+				});
+			});
+		}
+		
+		
 
+		$(document)
+				.ready(
+						function() {
+							$('#form')
+									.submit(
+											function(event) {
+												event.preventDefault(); // Ngăn chặn việc submit form mặc định
+												let formData = new FormData(
+														this);
+												$
+														.ajax({
+															type : 'POST',
+															url : '/admin/phone/create',
+															data : formData,
+															contentType : false,
+															processData : false,
+															success : function(
+																	response) {
+																if (response.status === 'success') {
+																	Swal
+																			.fire({
+																				icon : 'success',
+																				title : 'Thêm sản phẩm thành công',
+																				showConfirmButton : false,
+																				timer : 1050
+																			});
 
-    $(document).ready(function () {
-        $('#form').submit(function (event) {
-            event.preventDefault(); // Ngăn chặn việc submit form mặc định
-            let formData = new FormData(this);
-            $.ajax({
-                type: 'POST',
-                url: '/admin/phone/create',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if (response.status === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Thêm sản phẩm thành công',
-                            showConfirmButton: false,
-                            timer: 1050
-                        });
+																	setTimeout(
+																			function() {
+																				window.location.href = '/admin/product'; // Điều hướng tới trang danh sách người dùng
+																			},
+																			1600);
+																}
+															},
+															error : function(
+																	response) {
+																let errors = response.responseJSON;
+																$
+																		.each(
+																				errors,
+																				function(
+																						key,
+																						value) {
+																					if ($(
+																							'#brand')
+																							.val() === "") {
+																						$(
+																								'#brand_errors')
+																								.text(
+																										"Vui lòng chọn hãng điện thoại !");
+																					} else {
+																						$(
+																								'#brand_errors')
+																								.text(
+																										'');
+																					}
 
-                        setTimeout(function() {
-                            window.location.href = '/admin/product'; // Điều hướng tới trang danh sách người dùng
-                        }, 1600);
-                    }
-                },
-                error: function (response) {
-                    let errors = response.responseJSON;
-                    $.each(errors, function (key, value) {
-                        if ($('#brand').val() === "") {
-                            $('#brand_errors').text("Vui lòng chọn hãng điện thoại !");
-                        } else {
-                            $('#brand_errors').text('');
-                        }
+																					if ($(
+																							'#category')
+																							.val() === "") {
+																						$(
+																								'#category_errors')
+																								.text(
+																										'Vui lòng chọn danh mục !');
+																					} else {
+																						$(
+																								'#category_errors')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#category').val() === "") {
-                            $('#category_errors').text('Vui lòng chọn danh mục !');
-                        } else {
-                            $('#category_errors').text('');
-                        }
+																					if ($(
+																							'#system')
+																							.val() === "") {
+																						$(
+																								'#system_errors')
+																								.text(
+																										'Vui lòng chọn hệ điều hành !');
+																					} else {
+																						$(
+																								'#system_errors')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#system').val() === "") {
-                            $('#system_errors').text('Vui lòng chọn hệ điều hành !');
-                        } else {
-                            $('#system_errors').text('');
-                        }
+																					if ($(
+																							'#charging_port')
+																							.val() === "") {
+																						$(
+																								'#charging_port_errors')
+																								.text(
+																										'Vui lòng chọn cổng sạc !');
+																					} else {
+																						$(
+																								'#charging_port_errors')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#charging_port').val() === "") {
-                            $('#charging_port_errors').text('Vui lòng chọn cổng sạc !');
-                        } else {
-                            $('#charging_port_errors').text('');
-                        }
+																					if ($(
+																							'#headphone_jack')
+																							.val() === "") {
+																						$(
+																								'#headphone_jack_errors')
+																								.text(
+																										'Vui lòng chọn cổng tai nghe !');
+																					} else {
+																						$(
+																								'#headphone_jack_errors')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#headphone_jack').val() === "") {
-                            $('#headphone_jack_errors').text('Vui lòng chọn cổng tai nghe !');
-                        } else {
-                            $('#headphone_jack_errors').text('');
-                        }
+																					if ($(
+																							'#battery_type')
+																							.val() === "") {
+																						$(
+																								'#battery_type_errors')
+																								.text(
+																										'Vui lòng chọn loại pin !');
+																					} else {
+																						$(
+																								'#battery_type_errors')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#battery_type').val() === "") {
-                            $('#battery_type_errors').text('Vui lòng chọn loại pin !');
-                        } else {
-                            $('#battery_type_errors').text('');
-                        }
+																					if ($(
+																							'#screen_resolution')
+																							.val() === "") {
+																						$(
+																								'#screen_resolution_errors')
+																								.text(
+																										'Vui lòng chọn độ phân giải màn hình !');
+																					} else {
+																						$(
+																								'#screen_resolution_errors')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#screen_resolution').val() === "") {
-                            $('#screen_resolution_errors').text('Vui lòng chọn độ phân giải màn hình !');
-                        } else {
-                            $('#screen_resolution_errors').text('');
-                        }
+																					if ($(
+																							'#graphics_chip')
+																							.val() === "") {
+																						$(
+																								'#graphics_chip_errors')
+																								.text(
+																										'Vui lòng chọn chip đồ họa !');
+																					} else {
+																						$(
+																								'#graphics_chip_errors')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#graphics_chip').val() === "") {
-                            $('#graphics_chip_errors').text('Vui lòng chọn chip đồ họa !');
-                        } else {
-                            $('#graphics_chip_errors').text('');
-                        }
+																					if ($(
+																							'#imageInput1')
+																							.val() === "") {
+																						$(
+																								'#anh_error')
+																								.text(
+																										'Vui lòng chọn ảnh !');
+																					} else {
+																						$(
+																								'#anh_error')
+																								.text(
+																										'');
+																					}
 
-                        if ($('#imageInput1').val() === "") {
-                            $('#anh_error').text('Vui lòng chọn ảnh !');
-                        } else {
-                            $('#anh_error').text('');
-                        }
-
-                        $('#' + key + '_error').text(value); // Hiển thị lỗi trong thẻ span
-                    });
-                }
-            });
-        });
-    });
-   
-</script>
+																					$(
+																							'#'
+																									+ key
+																									+ '_error')
+																							.text(
+																									value); // Hiển thị lỗi trong thẻ span
+																				});
+															}
+														});
+											});
+						});
+	</script>
 </body>
 </html>

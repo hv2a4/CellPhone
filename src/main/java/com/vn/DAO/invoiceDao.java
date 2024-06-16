@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface invoiceDao extends JpaRepository<invoice, Integer> {
 	@Query("select sum(i.TOTAL_AMOUNT) from invoice i where i.status_invoice.ID = 1")
-	long sumRevenue();
+	Long sumRevenue();
 	@Query(value = "DECLARE @Year INT = :year; DECLARE @Month INT = :month; " +
             "WITH AllDays AS ( " +
             "SELECT DATEADD(DAY, N-1, DATEFROMPARTS(@Year, @Month, 1)) AS OrderDate " +

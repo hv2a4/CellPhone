@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
@@ -21,6 +22,8 @@ public class system implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
+	
+	@NotBlank(message = "Không được để trống tên")
 	String SYSTEM;
 
 	@OneToMany(mappedBy = "system")

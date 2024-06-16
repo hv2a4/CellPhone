@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
@@ -21,9 +22,10 @@ public class status_invoice implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int ID;
+
+	@NotBlank(message = "Vui lòng nhập tên")
 	String NAME;
 
-	
 	@OneToMany(mappedBy = "status_invoice")
 	@JsonIgnore
 	List<invoice> invoices;

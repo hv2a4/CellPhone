@@ -2,6 +2,8 @@ package com.vn.DAO;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,4 +23,7 @@ public interface userDao extends JpaRepository<user, String> {
     
     @Query("SELECT p FROM user p ORDER BY p.UPDATE_AT DESC")
     List<user> OrderByUpdateAtDesc();
+    
+    @Query("SELECT p FROM user p ORDER BY p.UPDATE_AT DESC")
+	Page<user> findAllSX(Pageable pageable);
 }
