@@ -3,7 +3,6 @@ package com.vn.entity;
 import java.io.Serializable;
 import java.util.List;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,11 +20,14 @@ public class address implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
-	
+
 	String ADDRESS;
+	Integer PROVINCE;
+	Integer DISTRICT;
+	String WARD;
 
 	@ManyToOne
-	@JoinColumn(name="ID_USER")
+	@JoinColumn(name = "ID_USER")
 	user user;
 
 	@OneToMany(mappedBy = "address")
