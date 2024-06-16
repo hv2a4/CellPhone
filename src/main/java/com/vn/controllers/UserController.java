@@ -501,7 +501,7 @@ public class UserController {
 			order_item order_item = new order_item();
 			order_item.setOrder(order);
 			order_item.setVariant(variant.get());
-			order_item.setPRICE(getPriceVariant(variant.get()));
+			order_item.setPRICE(getGiaKhuyenMai(variant.get()));
 			order_item.setQUANTITY(quantity);
 
 			order_itemDao.save(order_item);
@@ -509,40 +509,40 @@ public class UserController {
 		}
 		return "redirect:/shop/login";
 	}
-	@RequestMapping("mualai")
-	public String muaLai(Model model, @RequestParam("id_order") Integer id,
-			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
-		user us = sessionService.get("list");
-		if (us != null) {
-			user user = userDao.findById(us.getUSERNAME()).get();
-			order or = new order();
-			or.setUser(user);
-			or.setCREATE_AT(new Date());
-			or.setUPDATE_AT(new Date());
-			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-				or.setAddress(user.getAddresses().get(0));
-			} else {
-				return "redirect:/shop/address";
-			}
-			
-			orderDao.save(or);
-			
-			order order = orderDao.getOrderMoi();
-			
-			Optional<variant> variant = variantDao.findById(id);
-			order_item order_item = new order_item();
-			order_item.setOrder(order);
-			order_item.setVariant(variant.get());
-			order_item.setPRICE(getPriceVariant(variant.get()));
-			order_item.setQUANTITY(quantity);
-			
-			order_itemDao.save(order_item);
-			return "redirect:/shop/checkout";
-		}
-		return "redirect:/shop/login";
-	}
-
-	
+//	@RequestMapping("mualai")
+//	public String muaLai(Model model, @RequestParam("id_order") Integer id,
+//			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+//		user us = sessionService.get("list");
+//		if (us != null) {
+//			user user = userDao.findById(us.getUSERNAME()).get();
+//			order or = new order();
+//			or.setUser(user);
+//			or.setCREATE_AT(new Date());
+//			or.setUPDATE_AT(new Date());
+//			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
+//				or.setAddress(user.getAddresses().get(0));
+//			} else {
+//				return "redirect:/shop/address";
+//			}
+//			
+//			orderDao.save(or);
+//			
+//			order order = orderDao.getOrderMoi();
+//			
+//			Optional<variant> variant = variantDao.findById(id);
+//			order_item order_item = new order_item();
+//			order_item.setOrder(order);
+//			order_item.setVariant(variant.get());
+//			order_item.setPRICE(getPriceVariant(variant.get()));
+//			order_item.setQUANTITY(quantity);
+//			
+//			order_itemDao.save(order_item);
+//			return "redirect:/shop/checkout";
+//		}
+//		return "redirect:/shop/login";
+//	}
+//
+//	
 	
 	@RequestMapping("addorder")
 	public String addorder(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItems,
@@ -570,7 +570,7 @@ public class UserController {
 				if (selectedItems.contains(citem.getID())) {
 					order_item order_item = new order_item();
 					order_item.setOrder(or);
-					order_item.setPRICE(citem.getVariant().getPRICE());
+					order_item.setPRICE(getGiaKhuyenMai(citem.getVariant()));
 					order_item.setQUANTITY(citem.getQUANTITY());
 					order_item.setVariant(citem.getVariant());
 					order_itemDao.save(order_item);
