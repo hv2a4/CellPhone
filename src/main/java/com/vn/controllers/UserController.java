@@ -199,8 +199,7 @@ public class UserController {
 
 	@RequestMapping("cart/add/{id}")
 	@ResponseBody
-	public String addCart(Model model, @PathVariable("id") Integer id,
-			@RequestParam("quantity") Optional<Integer> quantity) {
+	public String addCart(Model model, @PathVariable("id") Integer id) {
 		Optional<variant> variant = variantdao.findById(id);
 		user userss = sessionService.get("list");
 		user user = userDao.getById(userss.getUSERNAME());
@@ -208,7 +207,7 @@ public class UserController {
 			cart_item cart_item = new cart_item();
 			cart_item.setCart(user.getCarts().get(0));
 
-			cart_item.setQUANTITY(quantity.orElse(1));
+			cart_item.setQUANTITY(1);
 			cart_item.setVariant(variant.get());
 
 			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
@@ -303,7 +302,7 @@ public class UserController {
 			for (cart_item item : list_cart_item) {
 				if (variant.get().getID() == item.getVariant().getID()) {
 					cart_item = item;
-					cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+					cart_item.setQUANTITY(cart_item.getQUANTITY() + quantity);
 					break;
 				}
 			}
