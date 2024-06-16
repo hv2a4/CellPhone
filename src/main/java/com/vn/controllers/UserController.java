@@ -78,6 +78,10 @@ public class UserController {
 	@Autowired
 	variantDao variantdao;
 	@Autowired
+	status_invoiceDao status_invoiceDao;
+	@Autowired
+	invoiceDao invoiceDao;
+	@Autowired
 	HttpServletRequest request;
 
 	@GetMapping("forgotpass1")
@@ -197,7 +201,7 @@ public class UserController {
 
 	@RequestMapping("cart/add/{id}")
 	@ResponseBody
-	public String addCart(Model model, @PathVariable("id") Integer id) {
+	public String addCart(Model model, @PathVariable("id") Integer id,@RequestParam("quantity") Optional<Integer> quantity) {
 		Optional<variant> variant = variantdao.findById(id);
 		user userss = sessionService.get("list");
 		user user = userDao.getById(userss.getUSERNAME());
@@ -205,7 +209,7 @@ public class UserController {
 			cart_item cart_item = new cart_item();
 			cart_item.setCart(user.getCarts().get(0));
 
-			cart_item.setQUANTITY(1);
+			cart_item.setQUANTITY(quantity.orElse(1));
 			cart_item.setVariant(variant.get());
 
 			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
@@ -262,7 +266,7 @@ public class UserController {
 			List<cart_item> cart_items = user.getCarts().getFirst().getCart_items();
 			double totalPrice = 0;
 			for (cart_item item : cart_items) {
-				totalPrice += item.getVariant().getPRICE() * item.getQUANTITY();
+				totalPrice += getGiaKhuyenMai(item.getVariant()) * item.getQUANTITY();
 			}
 
 			String page = "cart.jsp";
@@ -428,42 +432,50 @@ public class UserController {
 	}
 
 	@RequestMapping("checkout")
-	public String getCheckout(
-			@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems,
-			Model model) {
-		user us = sessionService.get("list");
-		if (us != null) {
-			order order = orderDao.getOrderMoi();
+	public String getCheckout(@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems,
+	                          Model model) {
+	    user us = sessionService.get("list");
+	    if (us != null) {
+	        order order = orderDao.getOrderMoi();
 
-			double totalAmount = 0;
-			double totalDiscount = 0;
-			List<order_item> listItem = order.getOrder_items();
-			for (order_item oi : listItem) {
-				totalAmount += oi.getPRICE() * oi.getQUANTITY();
-				totalDiscount += oi.getPRICE()
-						* ((oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
-			}
-			order.setTOTAL_AMOUNT(totalAmount);
-			order.setTOTAL_DISCOUNT(totalDiscount);
-			orderDao.save(order);
-			user user = userDao.findById(us.getUSERNAME()).get();
-			List<payment_method> listPay = payment_methodDao.findAll();
-			model.addAttribute("pays", listPay);
+	        double totalAmount = 0;
+	        double totalDiscount = 0;
+	        List<order_item> listItem = order.getOrder_items();
+	        for (order_item oi : listItem) {
+	            totalAmount += oi.getPRICE() * oi.getQUANTITY();
+	            totalDiscount += oi.getPRICE() * (oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE() / 100);
+	        }
+	        order.setTOTAL_AMOUNT(totalAmount);
+	        order.setTOTAL_DISCOUNT(totalDiscount);
+	        orderDao.save(order);
+	        user user = userDao.findById(us.getUSERNAME()).get();
+	        List<payment_method> listPay = payment_methodDao.findAll();
+	        model.addAttribute("pays", listPay);
 
-			model.addAttribute("user", user);
-			model.addAttribute("order", order);
-			model.addAttribute("totalOrder", totalAmount);
-			String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
-					.collect(Collectors.joining(","));
-			model.addAttribute("selectedItems", selectedItemsQueryParam);
-			String page = "checkout.jsp";
-			model.addAttribute("page", page);
-			
-			return "index";
-		} else {
-			return "redirect:/shop/login";
-		}
+	        model.addAttribute("user", user);
+	        model.addAttribute("order", order);
+	        model.addAttribute("totalOrder", totalAmount);
+
+	        String selectedItemsQueryParam = "";
+	        if (selectedItems.isPresent()) {
+	            List<String> selectedItemStrings = new ArrayList<>();
+	            for (Integer selectedItem : selectedItems.get()) {
+	                selectedItemStrings.add(String.valueOf(selectedItem));
+	            }
+	            selectedItemsQueryParam = String.join(",", selectedItemStrings);
+	        }
+	        model.addAttribute("selectedItems", selectedItemsQueryParam);
+
+	        String page = "checkout.jsp";
+	        model.addAttribute("page", page);
+
+	        return "index";
+	    } else {
+	        return "redirect:/shop/login";
+	    }
 	}
+
+
 
 	@RequestMapping("muangay/{id}")
 	public String muaNgay(Model model, @PathVariable("id") Integer id,
@@ -497,7 +509,41 @@ public class UserController {
 		}
 		return "redirect:/shop/login";
 	}
+	@RequestMapping("mualai")
+	public String muaLai(Model model, @RequestParam("id_order") Integer id,
+			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+		user us = sessionService.get("list");
+		if (us != null) {
+			user user = userDao.findById(us.getUSERNAME()).get();
+			order or = new order();
+			or.setUser(user);
+			or.setCREATE_AT(new Date());
+			or.setUPDATE_AT(new Date());
+			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
+				or.setAddress(user.getAddresses().get(0));
+			} else {
+				return "redirect:/shop/address";
+			}
+			
+			orderDao.save(or);
+			
+			order order = orderDao.getOrderMoi();
+			
+			Optional<variant> variant = variantDao.findById(id);
+			order_item order_item = new order_item();
+			order_item.setOrder(order);
+			order_item.setVariant(variant.get());
+			order_item.setPRICE(getPriceVariant(variant.get()));
+			order_item.setQUANTITY(quantity);
+			
+			order_itemDao.save(order_item);
+			return "redirect:/shop/checkout";
+		}
+		return "redirect:/shop/login";
+	}
 
+	
+	
 	@RequestMapping("addorder")
 	public String addorder(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItems,
 			Model model) {
@@ -513,10 +559,8 @@ public class UserController {
 				or.setAddress(user.getAddresses().get(0));
 			} else {
 				return "redirect:/shop/address";
-			}
-
+			} 
 			orderDao.save(or);
-
 			if (selectedItems == null || selectedItems.isEmpty()) {
 				// If no items are selected, process all items in the cart
 				selectedItems = cart.getCart_items().stream().map(cart_item::getID).collect(Collectors.toList());
@@ -552,7 +596,7 @@ public class UserController {
 	public String getOrderSuccess(Model model, @RequestParam("id_order") Integer idOrder,
 			@RequestParam("id_pay") Integer idPay, @RequestParam("id_address") Integer idAddress,
 			@RequestParam("discount") Optional<Integer> discount,
-			@RequestParam(value = "selectedItem", required = false) Optional<List<Integer>> selectedItems) {
+			@RequestParam(value = "selectedItem", required = false) Optional<List<Integer>> selectedItem) {
 		order order = orderDao.findById(idOrder).get();
 		address adr = addressDao.findById(idAddress).get();
 		payment_method pay = payment_methodDao.findById(idPay).get();
@@ -577,26 +621,38 @@ public class UserController {
 		user us = sessionService.get("list");
 		user user = userDao.findById(us.getUSERNAME()).get();
 		cart cart = user.getCarts().get(0);
-		for (cart_item cart_item : cart.getCart_items()) {
-			List<Integer> selectedItem = selectedItems.orElse(null);
-			if (selectedItem != null) {
-				for (Integer selectedItem1 : selectedItem) {
+		List<Integer> selectedItems = selectedItem.orElse(null);
+		if (selectedItems != null) {
+			for (cart_item cart_item : cart.getCart_items()) {
+				for (Integer selectedItem1 : selectedItems) {
 					if (cart_item.getID() == selectedItem1) {
-						cart_itemdao.delete(cart_item);
-						break;
+						cart_itemdao.deleteById(cart_item.getID());;
+						break;	
 					}
 				}
-			}else {
-				cart_itemdao.delete(cart_item);
-			}
-
 		}
+		}
+		
+		
+		invoice inv = new invoice();
+		if (pay.getNAME().equalsIgnoreCase("Thanh toán khi nhận hàng")) {
+			inv.setStatus_invoice(status_invoice(2));
+		}else {
+			inv.setStatus_invoice(status_invoice(1));
+		}
+		inv.setOrder(order);
+		inv.setCREATE_AT(new Date());
+		inv.setUPDATE_AT(new Date());
+		inv.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
+		invoiceDao.save(inv);
 		model.addAttribute("order", order);
 		model.addAttribute("adr", adr.getADDRESS());
 		model.addAttribute("pay", pay.getNAME());
 		return "/views/ordersuccess";
 	}
-
+	public status_invoice status_invoice(Integer id) {
+		return status_invoiceDao.findById(id).get();
+	}
 	@RequestMapping("address")
 	public String getAddress(Model model) {
 		String page = "address.jsp";
