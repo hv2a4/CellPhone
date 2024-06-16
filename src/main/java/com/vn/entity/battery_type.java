@@ -25,6 +25,7 @@ public class battery_type implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
 	
+	@NotBlank(message = "Không được bỏ trống")
 	String NAME;
 	
 	@OneToMany(mappedBy = "battery_type")

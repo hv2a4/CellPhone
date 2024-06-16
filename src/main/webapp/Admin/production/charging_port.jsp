@@ -22,7 +22,8 @@
 						<div class="modal-dialog modal-lg">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h1 class="modal-title fs-5" id="themLabel">Thêm cổng sạc mới</h1>
+									<h1 class="modal-title fs-5" id="themLabel">Thêm cổng sạc
+										mới</h1>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
@@ -65,12 +66,12 @@
 									<tbody>
 										<c:forEach var="item" items="${list_charging_port}">
 											<tr>
-												<td>${item.key }</td>
-												<td>${item.value }</td>
+												<td>${item.ID }</td>
+												<td>${item.NAME }</td>
 												<td class="text-center"><i
-													onclick="getcharging_portById(${item.key })"
+													onclick="getcharging_portById(${item.ID })"
 													class="fa-solid fa-pen-to-square fs-4 mr-3"></i> <i
-													onclick="modelDelete(${item.key })"
+													onclick="modelDelete(${item.ID })"
 													class="fa-solid fa-trash fs-4 "></i></td>
 											</tr>
 										</c:forEach>
@@ -113,13 +114,14 @@
 													action="/admin/charging_port/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<form:input id="charging_portId" value="${charging_portUpdate.ID}"
-																path="ID" type="hidden" class="form-control" />
+															<form:input id="charging_portId"
+																value="${charging_portUpdate.ID}" path="ID"
+																type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên cổng sạc</label>
-															<form:input id="charging_portName" path="NAME" type="text"
-																class="form-control" placeholder="" />
+															<form:input id="charging_portName" path="NAME"
+																type="text" class="form-control" placeholder="" />
 														</div>
 													</div>
 													<div class="modal-footer">
@@ -180,5 +182,79 @@
 		    });
 		}
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Hoàn tất'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/charging_port";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không được để trống tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/charging_port";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Trùng tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/charging_port";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/charging_port";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/charging_port";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
 </body>
 </html>

@@ -35,7 +35,6 @@
 											<label class="control-label">Tên loại pin</label>
 											<form:input path="NAME" cssClass="form-control"
 												placeholder="" />
-											<form:errors path="NAME"></form:errors>
 										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary"
@@ -121,6 +120,7 @@
 															<label class="control-label">Tên loại pin</label>
 															<form:input id="battery_typeName" path="NAME" type="text"
 																class="form-control" placeholder="" />
+																<form:errors path="NAME"></form:errors>
 														</div>
 													</div>
 													<div class="modal-footer">
@@ -141,6 +141,79 @@
 			</div>
 		</div>
 	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Hoàn tất'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/battery_type";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không được bỏ trống tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/battery_type";
+			}, 1800);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Trùng tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1500
+			});
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/battery_type";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/battery_type";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	
 	<script>
 		function getbattery_typeById(id) {
 		    $.ajax({

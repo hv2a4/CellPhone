@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.vn.DAO.*;
 import com.vn.entity.*;
 import com.vn.utils.*;
@@ -27,6 +28,10 @@ import jakarta.servlet.ServletContext;
 import org.apache.catalina.connector.Response;
 import org.hibernate.boot.model.source.spi.Orderable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -243,41 +248,43 @@ public class AdminController {
 	}
 
 	@GetMapping("profile")
-    public String getProfile(Model model,user item) {
-    	model.addAttribute("item", item);
-    	
-        String page = "profile.jsp";
-        model.addAttribute("page", page);
-        return "/Admin/production/homeadmin";
-    }
-    @PostMapping("profile")
-    public String postProfile(@Validated @ModelAttribute("item") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
-    	 if (bindingResult.hasErrors()) {
-   		  System.out.println("hello");
-   		 String page = "profile.jsp";
-         model.addAttribute("page", page);
-         return "/Admin/production/homeadmin";
-   		    }
-   		String photo=service.save(file,"/images/");
-   		
-   		Optional<user> userS=userDao.findById(item.getUSERNAME());
+	public String getProfile(Model model, user item) {
+		model.addAttribute("item", item);
 
-   			userS.get().setAVATAR(photo);
-   			userS.get().setFULLNAME(item.getFULLNAME());
-   			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
-   			userS.get().setGENDER(item.getGENDER());
-   			userS.get().setEMAIL(item.getEMAIL());
+		String page = "profile.jsp";
+		model.addAttribute("page", page);
+		return "/Admin/production/homeadmin";
+	}
 
-   			userDao.save(userS.get());
-   		    sessionService.set("list", userS.get());
-   		 model.addAttribute("profileAdminSuccess", "true");
-        
-   		 model.addAttribute("item", item);
-     	
-         String page = "profile.jsp";
-         model.addAttribute("page", page);
-         return "/Admin/production/homeadmin";
-    }
+	@PostMapping("profile")
+	public String postProfile(@Validated @ModelAttribute("item") user item, BindingResult bindingResult, Model model,
+			@RequestPart("photo_file") MultipartFile file) {
+		if (bindingResult.hasErrors()) {
+			System.out.println("hello");
+			String page = "profile.jsp";
+			model.addAttribute("page", page);
+			return "/Admin/production/homeadmin";
+		}
+		String photo = service.save(file, "/images/");
+
+		Optional<user> userS = userDao.findById(item.getUSERNAME());
+
+		userS.get().setAVATAR(photo);
+		userS.get().setFULLNAME(item.getFULLNAME());
+		userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+		userS.get().setGENDER(item.getGENDER());
+		userS.get().setEMAIL(item.getEMAIL());
+
+		userDao.save(userS.get());
+		sessionService.set("list", userS.get());
+		model.addAttribute("profileAdminSuccess", "true");
+
+		model.addAttribute("item", item);
+
+		String page = "profile.jsp";
+		model.addAttribute("page", page);
+		return "/Admin/production/homeadmin";
+	}
 
 	@RequestMapping("logout")
 	public String logOut() {
@@ -445,30 +452,21 @@ public class AdminController {
 
 	@GetMapping("discount")
 	public String getQLMaGiamGia(Model model, @ModelAttribute("discount_code") discount_code discount_code,
-			@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate) {
+			@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate,
+			@RequestParam(value = "dirs") Optional<String> dirs, @RequestParam(name = "sizes") Optional<Integer> sizes,
+			@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
+
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, sizes.orElse(12));
+		Page<discount_code> pageDiscountCode = discount_codeDao.findAllSX(pageable);
+
 		String page = "discount.jsp";
 		model.addAttribute("page", page);
-		List<discount_code> list_discount_code = discount_codeDao.findAll();
+		List<discount_code> list_discount_code = pageDiscountCode.getContent();
 		model.addAttribute("list_discount_code", list_discount_code);
+		model.addAttribute("pageDiscountCode", pageDiscountCode);
 
 		return "/Admin/production/homeadmin";
 	}
-
-//	@PostMapping("discount_code/create")
-//	public String createDiscount_code(Model model,
-//			@ModelAttribute("discount_codeUpdate") discount_code discount_codeUpdate,
-//			@ModelAttribute("discount_code") discount_code discount_code) {
-//
-//		String page = "discount.jsp";
-//		model.addAttribute("page", page);
-//
-//		List<discount_code> list_discount_code = discount_codeDao.findAll();
-//		model.addAttribute("list_discount_code", list_discount_code);
-//		model.addAttribute("thongbao", checkDiscountCode(discount_code));
-//		discount_codeDao.save(discount_code);
-//		return "/Admin/production/homeadmin";
-//
-//	}
 
 	@PostMapping("/discount_code/create")
 	public ResponseEntity<Map<String, String>> createDiscountCode(
@@ -499,7 +497,7 @@ public class AdminController {
 		response.put("status", "success");
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@PostMapping("/discount_code/update")
 	public ResponseEntity<Map<String, String>> updateDiscountCode(
 			@Validated @ModelAttribute("discount_code") discount_code discount_code, BindingResult bindingResult) {
@@ -521,7 +519,7 @@ public class AdminController {
 		response.put("status", "success");
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@GetMapping("discount_code/delete")
 	public String deleteDiscount_code(Model model, @Param("id") Integer id) {
 		try {
@@ -531,7 +529,7 @@ public class AdminController {
 		} catch (Exception e) {
 			model.addAttribute("message", "Không thể xóa");
 		}
-		
+
 		String page = "discount.jsp";
 		model.addAttribute("page", page);
 
@@ -562,34 +560,59 @@ public class AdminController {
 	}
 
 	@ModelAttribute("list_category")
-	public Map<Integer, String> getCategorys() {
-		Map<Integer, String> map = new HashMap<Integer, String>();
+	public List<category> getCategorys() {
+		return categoryDao.findAll();
 
-		List<category> list_category = categoryDao.findAll();
-		for (category categorys : list_category) {
-			map.put(categorys.getID(), categorys.getNAME());
-		}
-		return map;
 	}
 
 	@PostMapping("category/create")
 	public String postMethodName(Model model, @Validated @ModelAttribute("category") category category,
 			BindingResult result) {
-		if (result.hasErrors()) {
-			String page = "category.jsp";
-			model.addAttribute("page", page);
-
-			category categoryUpdate = new category();
-			model.addAttribute("categoryUpdate", categoryUpdate);
-
-			// Đặt giá trị true để hiển thị modal
-			model.addAttribute("showModal", true);
-
-			return "/Admin/production/homeadmin";
-		} else {
-			categoryDao.save(category);
-			return "redirect:/admin/category";
+		model.addAttribute("page", "category.jsp");
+		model.addAttribute("list_category", getCategorys());
+		model.addAttribute("category", category);
+		String page = "category.jsp";
+		for (category item : getCategorys()) {
+			if (item.getNAME().equalsIgnoreCase(category.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
 		}
+		categoryDao.save(category);
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
+
+	}
+
+	@PostMapping("category/update")
+	public String updateCategory(Model model, @ModelAttribute("category") category category) {
+		model.addAttribute("page", "category.jsp");
+		model.addAttribute("list_category", getCategorys());
+		model.addAttribute("category", category);
+		String page = "category.jsp";
+		for (category item : getCategorys()) {
+			if (item.getNAME().equalsIgnoreCase(category.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		categoryDao.save(category);
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
+	}
+
+	@GetMapping("category/delete/{id}")
+	public String deletecategory(Model model, @PathVariable("id") Integer id) {
+		model.addAttribute("page", "category.jsp");
+
+		try {
+			category category = categoryDao.findById(id).get();
+			categoryDao.delete(category);
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	// nhận hàng
@@ -614,6 +637,25 @@ public class AdminController {
 				variants.setQUANTITY(variants.getQUANTITY() + order_item.getQUANTITY());
 				variantDao.save(variants);
 			}
+			return true;
+		}
+		return false;
+	}
+
+	// xác nhận trả hàng
+	@GetMapping("xacNhanTraHang/{id}")
+	@ResponseBody
+	public boolean xacNhanTraHang(Model model, @PathVariable("id") Integer id) {
+		// Tìm đối tượng order theo ID
+		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+		// Tìm đối tượng status_order mới có ID là 5
+		status_order returnStatus = status_orderDao.findById(5)
+				.orElseThrow(() -> new RuntimeException("Status not found"));
+		if (orders.getStatus_order().getID() == 7) {
+			// Cập nhật trạng thái trả hàng cho đối tượng order
+			orders.setStatus_order(returnStatus);
+			orders.setUPDATE_AT(new Date());
+			orderDaos.save(orders);
 			return true;
 		}
 		return false;
@@ -683,30 +725,6 @@ public class AdminController {
 		return false;
 	}
 
-	@GetMapping("unlock/{id}")
-	public String getUnlock(Model model, @PathVariable("id") String id) {
-		user users = userDao.findById(id).get();
-		users.setSTATUS(true);
-		users.setUPDATE_AT(new Date());
-		userDao.save(users);
-		String page = "qlnguoidung.jsp";
-		model.addAttribute("page", page);
-		return "redirect:/admin/user";
-	}
-
-	@PostMapping("category/update")
-	public String updateCategory(@ModelAttribute("category") category category) {
-		categoryDao.save(category);
-		return "redirect:/admin/category";
-	}
-
-	@GetMapping("category/delete/{id}")
-	public String deletecategory(@PathVariable("id") Integer id) {
-		category category = categoryDao.findById(id).get();
-		categoryDao.delete(category);
-		return "redirect:/admin/category";
-	}
-
 	@ModelAttribute("confirmations")
 	List<order> getConfigmationOrder() {
 		return orderDaos.findAllSX();
@@ -719,9 +737,13 @@ public class AdminController {
 	}
 
 	@GetMapping("order")
-	public String getQLDonHang(Model model) {
+	public String getQLDonHang(Model model, @RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 12);
+		Page<order> pageOrder = orderDao.findAllSX(pageable);
+
 		String page = "order.jsp";
 		model.addAttribute("page", page);
+		model.addAttribute("pageOrder", pageOrder);
 		return "/Admin/production/homeadmin";
 	}
 
@@ -734,12 +756,14 @@ public class AdminController {
 	}
 
 	@GetMapping("color")
-	public String getQLColor(Model model) {
+	public String getQLColor(Model model, @RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
 		String page = "color.jsp";
 		model.addAttribute("page", page);
 
-		List<color> list_color = colorDao.findAll();
-		model.addAttribute("list_color", list_color);
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 12);
+		Page<color> pageColor = colorDao.findAll(pageable);
+
+		model.addAttribute("pageColor", pageColor);
 
 		color color = new color();
 		model.addAttribute("color", color);
@@ -750,23 +774,52 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
+	@ModelAttribute("list_color")
+	public List<color> getListColor() {
+		return colorDao.findAll();
+	}
+
 	@PostMapping("color/create")
-	public String postMethodName(@ModelAttribute("color") color color) {
+	public String postMethodName(@ModelAttribute("color") color color, Model model) {
+		model.addAttribute("page", "color.jsp");
+		for (color item : getListColor()) {
+			if (item.getNAME().equalsIgnoreCase(color.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		colorDao.save(color);
-		return "redirect:/admin/color";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("color/update")
-	public String updatecolor(@ModelAttribute("colorUpdate") color color) {
+	public String updatecolor(@ModelAttribute("color") color color, Model model) {
+		model.addAttribute("page", "color.jsp");
+		for (color item : getListColor()) {
+			if (item.getNAME().equalsIgnoreCase(color.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		colorDao.save(color);
-		return "redirect:/admin/color";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("color/delete")
-	public String deletecolor(@Param("id") Integer id) {
-		color color = colorDao.getById(id);
-		colorDao.delete(color);
-		return "redirect:/admin/color";
+	public String deletecolor(@Param("id") Integer id, Model model) {
+
+		model.addAttribute("page", "color.jsp");
+		try {
+			model.addAttribute("message", "Hoàn tất");
+			color color = colorDao.getById(id);
+			colorDao.delete(color);
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
+
 	}
 
 	@GetMapping("ajax/getcolor/{id}")
@@ -778,39 +831,55 @@ public class AdminController {
 	}
 
 	@GetMapping("storage")
-	public String getQLstorage(Model model) {
-		String page = "storage.jsp";
-		model.addAttribute("page", page);
+	public String getQLstorage(Model model, @RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
+		model.addAttribute("page", "storage.jsp");
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 12);
+		Page<storage> pageStorage = storageDao.findAllSX(pageable);
 
-		List<storage> list_storage = storageDao.findAll();
-		model.addAttribute("list_storage", list_storage);
-
-		storage storage = new storage();
-		model.addAttribute("storage", storage);
-
-		storage storageUpdate = new storage();
-		model.addAttribute("storageUpdate", storageUpdate);
+		model.addAttribute("pageStorage", pageStorage);
 
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("storage/create")
-	public String postMethodName(@ModelAttribute("storage") storage storage) {
+	public String postMethodName(@ModelAttribute("storage") storage storage, Model model) {
+		model.addAttribute("page", "storage.jsp");
+		for (storage item : storageDao.findAll()) {
+			if (item.getGB() == storage.getGB()) {
+				model.addAttribute("message", "Trùng GB");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		storageDao.save(storage);
-		return "redirect:/admin/storage";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("storage/update")
-	public String updaetStorage(@ModelAttribute("storage") storage storage) {
+	public String updaetStorage(@ModelAttribute("storage") storage storage, Model model) {
+		model.addAttribute("page", "storage.jsp");
+		for (storage item : storageDao.findAll()) {
+			if (item.getGB() == storage.getGB()) {
+				model.addAttribute("message", "Trùng GB");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		storageDao.save(storage);
-		return "redirect:/admin/storage";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("storage/delete")
-	public String deletestorage(@Param("id") Integer id) {
-		storage storage = storageDao.getById(id);
-		storageDao.delete(storage);
-		return "redirect:/admin/storage";
+	public String deletestorage(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "storage.jsp");
+		try {
+			storage storage = storageDao.getById(id);
+			storageDao.delete(storage);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getstorage/{id}")
@@ -822,29 +891,53 @@ public class AdminController {
 	}
 
 	@GetMapping("brand")
-	public String getQLbrand(Model model) {
-		String page = "brand.jsp";
-		model.addAttribute("page", page);
-
-		brand brand = new brand();
-		model.addAttribute("brand", brand);
-
-		brand brandUpdate = new brand();
-		model.addAttribute("brandUpdate", brandUpdate);
-
+	public String getQLbrand(Model model, @RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
+		model.addAttribute("page", "brand.jsp");
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 12);
+		Page<brand> pageBrand = brandDao.findAll(pageable);
+		model.addAttribute("pageBrand", pageBrand);
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("brand/create")
-	public String postMethodName(@ModelAttribute("brand") brand brand) {
+	public String postMethodName(@ModelAttribute("brand") brand brand, Model model) {
+		model.addAttribute("page", "brand.jsp");
+		for (brand item : brandDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(brand.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		brandDao.save(brand);
-		return "redirect:/admin/brand";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("brand/update")
-	public String updateBrand(@ModelAttribute("brandUpdate") brand brand) {
+	public String updateBrand(@ModelAttribute("brandUpdate") brand brand, Model model) {
+		model.addAttribute("page", "brand.jsp");
+		for (brand item : brandDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(brand.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		brandDao.save(brand);
-		return "redirect:/admin/brand";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
+	}
+
+	@GetMapping("brand/delete")
+	public String deletebrand(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "brand.jsp");
+		try {
+			brand brand = brandDao.getById(id);
+			brandDao.delete(brand);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getbrand/{id}")
@@ -855,23 +948,14 @@ public class AdminController {
 		return brandUpdate;
 	}
 
-	@GetMapping("brand/delete")
-	public String deletebrand(@Param("id") Integer id) {
-		brand brand = brandDao.getById(id);
-		brandDao.delete(brand);
-		return "redirect:/admin/brand";
-	}
-
 	@GetMapping("battery_type")
-	public String getQLbattery_type(Model model) {
+	public String getQLbattery_type(@Validated @ModelAttribute("battery_type") battery_type battery_type,
+			BindingResult bindingResult, Model model) {
 		String page = "battery_type.jsp";
 		model.addAttribute("page", page);
 
 		List<battery_type> list_battery_type = battery_typeDao.findAll();
 		model.addAttribute("list_battery_type", list_battery_type);
-
-		battery_type battery_type = new battery_type();
-		model.addAttribute("battery_type", battery_type);
 
 		battery_type battery_typeUpdate = new battery_type();
 		model.addAttribute("battery_typeUpdate", battery_typeUpdate);
@@ -880,22 +964,59 @@ public class AdminController {
 	}
 
 	@PostMapping("battery_type/create")
-	public String postMethodName(@ModelAttribute("battery_type") battery_type battery_type) {
-		battery_typeDao.save(battery_type);
-		return "redirect:/admin/battery_type";
+	public String postMethodName(@Validated @ModelAttribute("battery_type") battery_type battery_type,
+			BindingResult bindingResult, Model model) {
+		model.addAttribute("page", "battery_type.jsp");
+		model.addAttribute("battery_typeUpdate", new com.vn.entity.battery_type());
+		model.addAttribute("list_battery_type", battery_typeDao.findAll());
+		for (battery_type item : battery_typeDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(battery_type.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			battery_typeDao.save(battery_type);
+			model.addAttribute("message", "Hoàn tất");
+			return "/Admin/production/homeadmin";
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được bỏ trống tên");
+			model.addAttribute("a", "Không được bỏ trống tên");
+			return "/Admin/production/homeadmin";
+		}
 	}
 
 	@PostMapping("battery_type/update")
-	public String updateBattery_type(@ModelAttribute("battery_type") battery_type battery_type) {
+	public String updateBattery_type(@ModelAttribute("battery_type") battery_type battery_type, Model model) {
+		model.addAttribute("page", "battery_type.jsp");
+		model.addAttribute("battery_type", new com.vn.entity.battery_type());
+		model.addAttribute("battery_typeUpdate", new com.vn.entity.battery_type());
+		model.addAttribute("list_battery_type", battery_typeDao.findAll());
+		for (battery_type item : battery_typeDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(battery_type.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		battery_typeDao.save(battery_type);
-		return "redirect:/admin/battery_type";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("battery_type/delete")
-	public String deletebattery_type(@Param("id") Integer id) {
-		battery_type battery_type = battery_typeDao.getById(id);
-		battery_typeDao.delete(battery_type);
-		return "redirect:/admin/battery_type";
+	public String deletebattery_type(@Param("id") Integer id, Model model) {
+		try {
+			battery_type battery_type = battery_typeDao.getById(id);
+			battery_typeDao.delete(battery_type);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		model.addAttribute("page", "battery_type.jsp");
+		model.addAttribute("battery_type", new com.vn.entity.battery_type());
+		model.addAttribute("battery_typeUpdate", new com.vn.entity.battery_type());
+		model.addAttribute("list_battery_type", battery_typeDao.findAll());
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getbattery_type/{id}")
@@ -908,15 +1029,9 @@ public class AdminController {
 
 	@GetMapping("system")
 	public String getQLsystem(Model model) {
-		String page = "system.jsp";
-		model.addAttribute("page", page);
-
-		system system = new system();
-		model.addAttribute("system", system);
-
-		system systemUpdate = new system();
-		model.addAttribute("systemUpdate", systemUpdate);
-
+		model.addAttribute("page", "system.jsp");
+		model.addAttribute("system", new system());
+		model.addAttribute("systemUpdate", new system());
 		return "/Admin/production/homeadmin";
 	}
 
@@ -932,22 +1047,56 @@ public class AdminController {
 	}
 
 	@PostMapping("system/create")
-	public String postMethodName(@ModelAttribute("system") system system) {
-		systemDao.save(system);
-		return "redirect:/admin/system";
+	public String postMethodName(@ModelAttribute("system") system system, Model model) {
+
+		model.addAttribute("page", "system.jsp");
+		model.addAttribute("system", new system());
+		model.addAttribute("systemUpdate", new system());
+		for (system item : systemDao.findAll()) {
+			if (item.getSYSTEM().equalsIgnoreCase(system.getSYSTEM())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			systemDao.save(system);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("system/update")
-	public String updateSystemm(@ModelAttribute("system") system system) {
+	public String updateSystemm(@ModelAttribute("system") system system, Model model) {
+		model.addAttribute("page", "system.jsp");
+		model.addAttribute("system", new system());
+		model.addAttribute("systemUpdate", new system());
+		for (system item : systemDao.findAll()) {
+			if (item.getSYSTEM().equalsIgnoreCase(system.getSYSTEM())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
 		systemDao.save(system);
-		return "redirect:/admin/system";
+		model.addAttribute("message", "Hoàn tất");
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("system/delete")
-	public String deletesystem(@Param("id") Integer id) {
-		system system = systemDao.getById(id);
-		systemDao.delete(system);
-		return "redirect:/admin/system";
+	public String deletesystem(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "system.jsp");
+		model.addAttribute("system", new system());
+		model.addAttribute("systemUpdate", new system());
+		try {
+			system system = systemDao.getById(id);
+			systemDao.delete(system);
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getsystem/{id}")
@@ -959,39 +1108,65 @@ public class AdminController {
 	}
 
 	@GetMapping("rank")
-	public String getQLrank(Model model) {
-		String page = "rank.jsp";
-		model.addAttribute("page", page);
-
-		List<rank> list_rank = rankDao.findAll();
-		model.addAttribute("list_rank", list_rank);
-
-		rank rank = new rank();
-		model.addAttribute("rank", rank);
-
-		rank rankUpdate = new rank();
-		model.addAttribute("rankUpdate", rankUpdate);
-
+	public String getQLrank(Model model, @ModelAttribute("rank") rank rank,
+			@ModelAttribute("rankUpdate") rank rankUpdate) {
+		model.addAttribute("page", "rank.jsp");
+		model.addAttribute("list_rank", rankDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("rank/create")
-	public String postMethodName(@ModelAttribute("rank") rank rank) {
-		rankDao.save(rank);
-		return "redirect:/admin/rank";
+	public String postMethodName(Model model, @ModelAttribute("rank") rank rank,
+			@ModelAttribute("rankUpdate") rank rankUpdate) {
+		model.addAttribute("page", "rank.jsp");
+		model.addAttribute("list_rank", rankDao.findAll());
+		for (rank item : rankDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(rank.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			rankDao.save(rank);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("rank/update")
-	public String updateRank(@ModelAttribute("rank") rank rank) {
-		rankDao.save(rank);
-		return "redirect:/admin/rank";
+	public String updateRank(Model model, @ModelAttribute("rank") rank rank,
+			@ModelAttribute("rankUpdate") rank rankUpdate) {
+		model.addAttribute("page", "rank.jsp");
+		model.addAttribute("list_rank", rankDao.findAll());
+		for (rank item : rankDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(rank.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			rankDao.save(rank);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("rank/delete")
-	public String deleterank(@Param("id") Integer id) {
-		rank rank = rankDao.getById(id);
-		rankDao.delete(rank);
-		return "redirect:/admin/rank";
+	public String deleterank(@Param("id") Integer id, @ModelAttribute("rank") rank rank,
+			@ModelAttribute("rankUpdate") rank rankUpdate, Model model) {
+		model.addAttribute("page", "rank.jsp");
+		model.addAttribute("list_rank", rankDao.findAll());
+		try {
+			rankDao.delete(rankDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getrank/{id}")
@@ -1003,36 +1178,69 @@ public class AdminController {
 	}
 
 	@GetMapping("headphone_jack")
-	public String getQLheadphone_jack(Model model) {
-		String page = "headphone_jack.jsp";
-		model.addAttribute("page", page);
-
-		headphone_jack headphone_jack = new headphone_jack();
-		model.addAttribute("headphone_jack", headphone_jack);
-
-		headphone_jack headphone_jackUpdate = new headphone_jack();
-		model.addAttribute("headphone_jackUpdate", headphone_jackUpdate);
-
+	public String getQLheadphone_jack(Model model, @ModelAttribute("headphone_jack") headphone_jack headphone_jack) {
+		model.addAttribute("page", "headphone_jack.jsp");
+		model.addAttribute("headphone_jackUpdate", new headphone_jack());
+		model.addAttribute("list_headphone_jack", headphone_jackDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("headphone_jack/create")
-	public String postMethodName(@ModelAttribute("headphone_jack") headphone_jack headphone_jack) {
-		headphone_jackDao.save(headphone_jack);
-		return "redirect:/admin/headphone_jack";
+	public String postMethodName(@ModelAttribute("headphone_jack") headphone_jack headphone_jack, Model model) {
+		model.addAttribute("page", "headphone_jack.jsp");
+		model.addAttribute("headphone_jackUpdate", new headphone_jack());
+		model.addAttribute("list_headphone_jack", headphone_jackDao.findAll());
+
+		for (headphone_jack item : headphone_jackDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(headphone_jack.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			headphone_jackDao.save(headphone_jack);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("headphone_jack/update")
-	public String UpdateHeadphone_jack(@ModelAttribute("headphone_jack") headphone_jack headphone_jack) {
-		headphone_jackDao.save(headphone_jack);
-		return "redirect:/admin/headphone_jack";
+	public String UpdateHeadphone_jack(@ModelAttribute("headphone_jack") headphone_jack headphone_jack, Model model) {
+		model.addAttribute("page", "headphone_jack.jsp");
+		model.addAttribute("headphone_jackUpdate", new headphone_jack());
+		model.addAttribute("list_headphone_jack", headphone_jackDao.findAll());
+
+		for (headphone_jack item : headphone_jackDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(headphone_jack.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			headphone_jackDao.save(headphone_jack);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("headphone_jack/delete")
-	public String deleteheadphone_jack(@Param("id") Integer id) {
-		headphone_jack headphone_jack = headphone_jackDao.getById(id);
-		headphone_jackDao.delete(headphone_jack);
-		return "redirect:/admin/headphone_jack";
+	public String deleteheadphone_jack(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "headphone_jack.jsp");
+		model.addAttribute("headphone_jack", new headphone_jack());
+		model.addAttribute("headphone_jackUpdate", new headphone_jack());
+		model.addAttribute("list_headphone_jack", headphone_jackDao.findAll());
+		try {
+			headphone_jackDao.delete(headphone_jackDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
+
 	}
 
 	@GetMapping("ajax/getheadphone_jack/{id}")
@@ -1045,15 +1253,10 @@ public class AdminController {
 
 	@GetMapping("charging_port")
 	public String getQLcharging_port(Model model) {
-		String page = "charging_port.jsp";
-		model.addAttribute("page", page);
-
-		charging_port charging_port = new charging_port();
-		model.addAttribute("charging_port", charging_port);
-
-		charging_port charging_portUpdate = new charging_port();
-		model.addAttribute("charging_portUpdate", charging_portUpdate);
-
+		model.addAttribute("page", "charging_port.jsp");
+		model.addAttribute("charging_port", new charging_port());
+		model.addAttribute("charging_portUpdate", new charging_port());
+		model.addAttribute("list_charging_port", charging_portDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
@@ -1069,22 +1272,58 @@ public class AdminController {
 	}
 
 	@PostMapping("charging_port/create")
-	public String postMethodName(@ModelAttribute("charging_port") charging_port charging_port) {
-		charging_portDao.save(charging_port);
-		return "redirect:/admin/charging_port";
+	public String postMethodName(@ModelAttribute("charging_port") charging_port charging_port, Model model) {
+		model.addAttribute("page", "charging_port.jsp");
+		model.addAttribute("charging_portUpdate", new charging_port());
+		model.addAttribute("list_charging_port", charging_portDao.findAll());
+		for (charging_port item : charging_portDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(charging_port.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			charging_portDao.save(charging_port);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("charging_port/update")
-	public String updateCharging_port(@ModelAttribute("charging_port") charging_port charging_port) {
-		charging_portDao.save(charging_port);
-		return "redirect:/admin/charging_port";
+	public String updateCharging_port(@ModelAttribute("charging_port") charging_port charging_port, Model model) {
+		model.addAttribute("page", "charging_port.jsp");
+		model.addAttribute("charging_portUpdate", new charging_port());
+		model.addAttribute("list_charging_port", charging_portDao.findAll());
+		for (charging_port item : charging_portDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(charging_port.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			charging_portDao.save(charging_port);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("charging_port/delete")
-	public String deletecharging_port(@Param("id") Integer id) {
-		charging_port charging_port = charging_portDao.getById(id);
-		charging_portDao.delete(charging_port);
-		return "redirect:/admin/charging_port";
+	public String deletecharging_port(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "charging_port.jsp");
+		model.addAttribute("charging_port", new charging_port());
+		model.addAttribute("charging_portUpdate", new charging_port());
+		model.addAttribute("list_charging_port", charging_portDao.findAll());
+		try {
+			charging_portDao.delete(charging_portDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getcharging_port/{id}")
@@ -1097,41 +1336,68 @@ public class AdminController {
 
 	@GetMapping("wireless_charging_technology")
 	public String getQLcharging_technology(Model model) {
-		String page = "wireless_charging_technology.jsp";
-		model.addAttribute("page", page);
-
-		List<wireless_charging_technology> list_wireless_charging_technology = wireless_charging_technologyDao
-				.findAll();
-		model.addAttribute("list_wireless_charging_technology", list_wireless_charging_technology);
-
-		wireless_charging_technology wireless_charging_technology = new wireless_charging_technology();
-		model.addAttribute("wireless_charging_technology", wireless_charging_technology);
-
-		wireless_charging_technology wireless_charging_technologyUpdate = new wireless_charging_technology();
-		model.addAttribute("wireless_charging_technologyUpdate", wireless_charging_technologyUpdate);
-
+		model.addAttribute("page", "wireless_charging_technology.jsp");
+		model.addAttribute("wireless_charging_technology", new wireless_charging_technology());
+		model.addAttribute("wireless_charging_technologyUpdate", new wireless_charging_technology());
+		model.addAttribute("list_wireless_charging_technology", wireless_charging_technologyDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("wireless_charging_technology/create")
-	public String postMethodName(
+	public String postMethodName( Model model, 
 			@ModelAttribute("wireless_charging_technology") wireless_charging_technology wireless_charging_technology) {
-		wireless_charging_technologyDao.save(wireless_charging_technology);
-		return "redirect:/admin/wireless_charging_technology";
+		model.addAttribute("page", "wireless_charging_technology.jsp");
+		model.addAttribute("wireless_charging_technologyUpdate", new wireless_charging_technology());
+		model.addAttribute("list_wireless_charging_technology", wireless_charging_technologyDao.findAll());
+		for (wireless_charging_technology item : wireless_charging_technologyDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(wireless_charging_technology.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			wireless_charging_technologyDao.save(wireless_charging_technology);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("wireless_charging_technology/update")
-	public String updateƯireless_charging_technology(
+	public String updateƯireless_charging_technology( Model model, 
 			@ModelAttribute("wireless_charging_technologyUpdate") wireless_charging_technology wireless_charging_technologyUpdate) {
-		wireless_charging_technologyDao.save(wireless_charging_technologyUpdate);
-		return "redirect:/admin/wireless_charging_technology";
+		model.addAttribute("page", "wireless_charging_technology.jsp");
+		model.addAttribute("wireless_charging_technology", new wireless_charging_technology());
+		model.addAttribute("list_wireless_charging_technology", wireless_charging_technologyDao.findAll());
+		for (wireless_charging_technology item : wireless_charging_technologyDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(wireless_charging_technologyUpdate.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			wireless_charging_technologyDao.save(wireless_charging_technologyUpdate);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("wireless_charging_technology/delete")
-	public String deletewireless_charging_technology(@Param("id") Integer id) {
-		wireless_charging_technology wireless_charging_technology = wireless_charging_technologyDao.getById(id);
-		wireless_charging_technologyDao.delete(wireless_charging_technology);
-		return "redirect:/admin/wireless_charging_technology";
+	public String deletewireless_charging_technology(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "wireless_charging_technology.jsp");
+		model.addAttribute("wireless_charging_technology", new wireless_charging_technology());
+		model.addAttribute("wireless_charging_technologyUpdate", new wireless_charging_technology());
+		model.addAttribute("list_wireless_charging_technology", wireless_charging_technologyDao.findAll());
+		try {
+			wireless_charging_technologyDao.delete(wireless_charging_technologyDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getwireless_charging_technology/{id}")
@@ -1147,36 +1413,67 @@ public class AdminController {
 
 	@GetMapping("screen_resolution")
 	public String getQLscreen_resolution(Model model) {
-		String page = "screen_resolution.jsp";
-		model.addAttribute("page", page);
-
-		screen_resolution screen_resolution = new screen_resolution();
-		model.addAttribute("screen_resolution", screen_resolution);
-
-		screen_resolution screen_resolutionUpdate = new screen_resolution();
-		model.addAttribute("screen_resolutionUpdate", screen_resolutionUpdate);
-
+		model.addAttribute("page", "screen_resolution.jsp");
+		model.addAttribute("screen_resolution", new screen_resolution());
+		model.addAttribute("screen_resolutionUpdate", new screen_resolution());
+		model.addAttribute("list_screen_resolution", screen_resolutionDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("screen_resolution/create")
-	public String postMethodName(@ModelAttribute("screen_resolution") screen_resolution screen_resolution) {
-		screen_resolutionDao.save(screen_resolution);
-		return "redirect:/admin/screen_resolution";
+	public String postMethodName(Model model, @ModelAttribute("screen_resolution") screen_resolution screen_resolution) {
+		model.addAttribute("page", "screen_resolution.jsp");
+		model.addAttribute("screen_resolutionUpdate", new screen_resolution());
+		model.addAttribute("list_screen_resolution", screen_resolutionDao.findAll());
+		for (screen_resolution item : screen_resolutionDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(screen_resolution.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			screen_resolutionDao.save(screen_resolution);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("screen_resolution/update")
-	public String updateScreen_resolution(
+	public String updateScreen_resolution(Model model, 
 			@ModelAttribute("screen_resolutionUpdate") screen_resolution screen_resolutionUpdate) {
-		screen_resolutionDao.save(screen_resolutionUpdate);
-		return "redirect:/admin/screen_resolution";
+		model.addAttribute("page", "screen_resolution.jsp");
+		model.addAttribute("screen_resolution", new screen_resolution());
+		model.addAttribute("list_screen_resolution", screen_resolutionDao.findAll());
+		for (screen_resolution item : screen_resolutionDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(screen_resolutionUpdate.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			screen_resolutionDao.save(screen_resolutionUpdate);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("screen_resolution/delete")
-	public String deletescreen_resolution(@Param("id") Integer id) {
-		screen_resolution screen_resolution = screen_resolutionDao.getById(id);
-		screen_resolutionDao.delete(screen_resolution);
-		return "redirect:/admin/screen_resolution";
+	public String deletescreen_resolution(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "screen_resolution.jsp");
+		model.addAttribute("screen_resolution", new screen_resolution());
+		model.addAttribute("screen_resolutionUpdate", new screen_resolution());
+		model.addAttribute("list_screen_resolution", screen_resolutionDao.findAll());
+		try {
+			screen_resolutionDao.delete(screen_resolutionDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getscreen_resolution/{id}")
@@ -1189,35 +1486,67 @@ public class AdminController {
 
 	@GetMapping("graphics_chip")
 	public String getQLgraphics_chip(Model model) {
-		String page = "graphics_chip.jsp";
-		model.addAttribute("page", page);
-
-		graphics_chip graphics_chip = new graphics_chip();
-		model.addAttribute("graphics_chip", graphics_chip);
-
-		graphics_chip graphics_chipUpdate = new graphics_chip();
-		model.addAttribute("graphics_chipUpdate", graphics_chipUpdate);
-
+		model.addAttribute("page", "graphics_chip.jsp");
+		model.addAttribute("graphics_chip", new graphics_chip());
+		model.addAttribute("graphics_chipUpdate", new graphics_chip());
+		model.addAttribute("list_graphics_chip", graphics_chipDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("graphics_chip/create")
-	public String postMethodName(@ModelAttribute("graphics_chip") graphics_chip graphics_chip) {
-		graphics_chipDao.save(graphics_chip);
-		return "redirect:/admin/graphics_chip";
+	public String postMethodName(Model model, @ModelAttribute("graphics_chip") graphics_chip graphics_chip) {
+		model.addAttribute("page", "graphics_chip.jsp");
+		model.addAttribute("graphics_chipUpdate", new graphics_chip());
+		model.addAttribute("list_graphics_chip", graphics_chipDao.findAll());
+		for (graphics_chip item : graphics_chipDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(graphics_chip.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			graphics_chipDao.save(graphics_chip);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("graphics_chip/update")
-	public String updateGraphics_chip(@ModelAttribute("graphics_chipUpdate") graphics_chip graphics_chipUpdate) {
-		graphics_chipDao.save(graphics_chipUpdate);
-		return "redirect:/admin/graphics_chip";
+	public String updategraphics_chip(Model model, 
+			@ModelAttribute("graphics_chipUpdate") graphics_chip graphics_chipUpdate) {
+		model.addAttribute("page", "graphics_chip.jsp");
+		model.addAttribute("graphics_chip", new graphics_chip());
+		model.addAttribute("list_graphics_chip", graphics_chipDao.findAll());
+		for (graphics_chip item : graphics_chipDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(graphics_chipUpdate.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			graphics_chipDao.save(graphics_chipUpdate);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("graphics_chip/delete")
-	public String deletegraphics_chip(@Param("id") Integer id) {
-		graphics_chip graphics_chip = graphics_chipDao.getById(id);
-		graphics_chipDao.delete(graphics_chip);
-		return "redirect:/admin/graphics_chip";
+	public String deletegraphics_chip(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "graphics_chip.jsp");
+		model.addAttribute("graphics_chip", new graphics_chip());
+		model.addAttribute("graphics_chipUpdate", new graphics_chip());
+		model.addAttribute("list_graphics_chip", graphics_chipDao.findAll());
+		try {
+			graphics_chipDao.delete(graphics_chipDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getgraphics_chip/{id}")
@@ -1230,35 +1559,67 @@ public class AdminController {
 
 	@GetMapping("status_order")
 	public String getQLstatus_order(Model model) {
-		String page = "status_order.jsp";
-		model.addAttribute("page", page);
-
-		List<status_order> list_status_order = status_orderDao.findAll();
-		model.addAttribute("list_status_order", list_status_order);
-
-		status_order status_order = new status_order();
-		model.addAttribute("status_order", status_order);
-
-		status_order status_orderUpdate = new status_order();
-		model.addAttribute("status_orderUpdate", status_orderUpdate);
+		model.addAttribute("page", "status_order.jsp");
+		model.addAttribute("status_order", new status_order());
+		model.addAttribute("status_orderUpdate", new status_order());
+		model.addAttribute("list_status_order", status_orderDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("status_order/create")
-	public String postMethodName(@ModelAttribute("status_order") status_order status_order) {
-		status_orderDao.save(status_order);
-		return "redirect:/admin/status_order";
+	public String postMethodName(Model model, @ModelAttribute("status_order") status_order status_order) {
+		model.addAttribute("page", "status_order.jsp");
+		model.addAttribute("status_orderUpdate", new status_order());
+		model.addAttribute("list_status_order", status_orderDao.findAll());
+		for (status_order item : status_orderDao.findAll()) {
+			if (item.getSTATUS().equalsIgnoreCase(status_order.getSTATUS())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			status_orderDao.save(status_order);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("status_order/update")
-	public String updateStatus_order(@ModelAttribute("status_orderUpdate") status_order status_orderUpdate) {
-		return "redirect:/admin/status_order";
+	public String updatestatus_order(Model model, 
+			@ModelAttribute("status_orderUpdate") status_order status_orderUpdate) {
+		model.addAttribute("page", "status_order.jsp");
+		model.addAttribute("status_order", new status_order());
+		model.addAttribute("list_status_order", status_orderDao.findAll());
+		for (status_order item : status_orderDao.findAll()) {
+			if (item.getSTATUS().equalsIgnoreCase(status_orderUpdate.getSTATUS())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			status_orderDao.save(status_orderUpdate);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("status_order/delete")
-	public String deleteStatus_order(@ModelAttribute("status_order") status_order status_order) {
-		status_orderDao.delete(status_order);
-		return "redirect:/admin/status_order";
+	public String deletestatus_order(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "status_order.jsp");
+		model.addAttribute("status_order", new status_order());
+		model.addAttribute("status_orderUpdate", new status_order());
+		model.addAttribute("list_status_order", status_orderDao.findAll());
+		try {
+			status_orderDao.delete(status_orderDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getstatus_order/{id}")
@@ -1268,42 +1629,107 @@ public class AdminController {
 		model.addAttribute("status_orderUpdate", status_orderUpdate.orElseGet(null).getClass());
 		return status_orderUpdate;
 	}
-
+	
 	@GetMapping("payment_method")
 	public String getQLpayment_method(Model model) {
-		String page = "payment_method.jsp";
-		model.addAttribute("page", page);
-
-		List<payment_method> list_payment_method = payment_methodDao.findAll();
-		model.addAttribute("list_payment_method", list_payment_method);
-
-		payment_method payment_method = new payment_method();
-		model.addAttribute("payment_method", payment_method);
-
-		payment_method payment_methodUpdate = new payment_method();
-		model.addAttribute("payment_methodUpdate", payment_methodUpdate);
-
+		model.addAttribute("page", "payment_method.jsp");
+		model.addAttribute("payment_method", new payment_method());
+		model.addAttribute("payment_methodUpdate", new payment_method());
+		model.addAttribute("list_payment_method", payment_methodDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("payment_method/create")
-	public String postMethodName(@ModelAttribute("payment_method") payment_method payment_method) {
-		payment_methodDao.save(payment_method);
-		return "redirect:/admin/payment_method";
+	public String postMethodName(Model model, @ModelAttribute("payment_method") payment_method payment_method) {
+		model.addAttribute("page", "payment_method.jsp");
+		model.addAttribute("payment_methodUpdate", new payment_method());
+		model.addAttribute("list_payment_method", payment_methodDao.findAll());
+		for (payment_method item : payment_methodDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(payment_method.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			payment_methodDao.save(payment_method);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("payment_method/update")
-	public String updatePayment_method(@ModelAttribute("payment_methodUpdate") payment_method payment_methodUpdate) {
-		payment_methodDao.save(payment_methodUpdate);
-		return "redirect:/admin/payment_method";
+	public String updatepayment_method(Model model, 
+			@ModelAttribute("payment_methodUpdate") payment_method payment_methodUpdate) {
+		model.addAttribute("page", "payment_method.jsp");
+		model.addAttribute("payment_method", new payment_method());
+		model.addAttribute("list_payment_method", payment_methodDao.findAll());
+		for (payment_method item : payment_methodDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(payment_methodUpdate.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			payment_methodDao.save(payment_methodUpdate);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("payment_method/delete")
-	public String deletepayment_method(@Param("id") Integer id) {
-		payment_method payment_method = payment_methodDao.getById(id);
-		payment_methodDao.delete(payment_method);
-		return "redirect:/admin/payment_method";
+	public String deletepayment_method(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "payment_method.jsp");
+		model.addAttribute("payment_method", new payment_method());
+		model.addAttribute("payment_methodUpdate", new payment_method());
+		model.addAttribute("list_payment_method", payment_methodDao.findAll());
+		try {
+			payment_methodDao.delete(payment_methodDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
+//	
+//	@GetMapping("payment_method")
+//	public String getQLpayment_method(Model model) {
+//		String page = "payment_method.jsp";
+//		model.addAttribute("page", page);
+//
+//		List<payment_method> list_payment_method = payment_methodDao.findAll();
+//		model.addAttribute("list_payment_method", list_payment_method);
+//
+//		payment_method payment_method = new payment_method();
+//		model.addAttribute("payment_method", payment_method);
+//
+//		payment_method payment_methodUpdate = new payment_method();
+//		model.addAttribute("payment_methodUpdate", payment_methodUpdate);
+//
+//		return "/Admin/production/homeadmin";
+//	}
+//
+//	@PostMapping("payment_method/create")
+//	public String postMethodName(@ModelAttribute("payment_method") payment_method payment_method) {
+//		payment_methodDao.save(payment_method);
+//		return "redirect:/admin/payment_method";
+//	}
+//
+//	@PostMapping("payment_method/update")
+//	public String updatePayment_method(@ModelAttribute("payment_methodUpdate") payment_method payment_methodUpdate) {
+//		payment_methodDao.save(payment_methodUpdate);
+//		return "redirect:/admin/payment_method";
+//	}
+//
+//	@GetMapping("payment_method/delete")
+//	public String deletepayment_method(@Param("id") Integer id) {
+//		payment_method payment_method = payment_methodDao.getById(id);
+//		payment_methodDao.delete(payment_method);
+//		return "redirect:/admin/payment_method";
+//	}
 
 	@GetMapping("ajax/getpayment_method/{id}")
 	@ResponseBody
@@ -1315,38 +1741,67 @@ public class AdminController {
 
 	@GetMapping("status_invoice")
 	public String getQLstatus_invoice(Model model) {
-		String page = "status_invoice.jsp";
-		model.addAttribute("page", page);
-
-		List<status_invoice> list_status_invoice = status_invoiceDao.findAll();
-		model.addAttribute("list_status_invoice", list_status_invoice);
-
-		status_invoice status_invoice = new status_invoice();
-		model.addAttribute("status_invoice", status_invoice);
-
-		status_invoice status_invoiceUpdate = new status_invoice();
-		model.addAttribute("status_invoiceUpdate", status_invoiceUpdate);
-
+		model.addAttribute("page", "status_invoice.jsp");
+		model.addAttribute("status_invoice", new status_invoice());
+		model.addAttribute("status_invoiceUpdate", new status_invoice());
+		model.addAttribute("list_status_invoice", status_invoiceDao.findAll());
 		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("status_invoice/create")
-	public String postMethodName(@ModelAttribute("status_invoice") status_invoice status_invoice) {
-		status_invoiceDao.save(status_invoice);
-		return "redirect:/admin/status_invoice";
+	public String postMethodName(Model model, @ModelAttribute("status_invoice") status_invoice status_invoice) {
+		model.addAttribute("page", "status_invoice.jsp");
+		model.addAttribute("status_invoiceUpdate", new status_invoice());
+		model.addAttribute("list_status_invoice", status_invoiceDao.findAll());
+		for (status_invoice item : status_invoiceDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(status_invoice.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			status_invoiceDao.save(status_invoice);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@PostMapping("status_invoice/update")
-	public String updateStatus_invoice(@ModelAttribute("status_invoiceUpdate") status_invoice status_invoiceUpdate) {
-		status_invoiceDao.save(status_invoiceUpdate);
-		return "redirect:/admin/status_invoice";
+	public String updatestatus_invoice(Model model, 
+			@ModelAttribute("status_invoiceUpdate") status_invoice status_invoiceUpdate) {
+		model.addAttribute("page", "status_invoice.jsp");
+		model.addAttribute("status_invoice", new status_invoice());
+		model.addAttribute("list_status_invoice", status_invoiceDao.findAll());
+		for (status_invoice item : status_invoiceDao.findAll()) {
+			if (item.getNAME().equalsIgnoreCase(status_invoiceUpdate.getNAME())) {
+				model.addAttribute("message", "Trùng tên");
+				return "/Admin/production/homeadmin";
+			}
+		}
+		try {
+			status_invoiceDao.save(status_invoiceUpdate);
+			model.addAttribute("message", "Hoàn tất");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không được để trống tên");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("status_invoice/delete")
-	public String deletestatus_invoice(@Param("id") Integer id) {
-		status_invoice status_invoice = status_invoiceDao.getById(id);
-		status_invoiceDao.delete(status_invoice);
-		return "redirect:/admin/status_invoice";
+	public String deletestatus_invoice(@Param("id") Integer id, Model model) {
+		model.addAttribute("page", "status_invoice.jsp");
+		model.addAttribute("status_invoice", new status_invoice());
+		model.addAttribute("status_invoiceUpdate", new status_invoice());
+		model.addAttribute("list_status_invoice", status_invoiceDao.findAll());
+		try {
+			status_invoiceDao.delete(status_invoiceDao.getById(id));
+			model.addAttribute("message", "Đã xóa");
+		} catch (Exception e) {
+			model.addAttribute("message", "Không thể xóa");
+		}
+		return "/Admin/production/homeadmin";
 	}
 
 	@GetMapping("ajax/getstatus_invoice/{id}")
@@ -1378,7 +1833,7 @@ public class AdminController {
 		List<Double> getTotalPricePerMonth = invoiceDao.getTotalPricePerMonth(currentYear);
 		int countUsers = UserDao.countUsers();
 		long totalSumProducts = variantDao.totalSumProduct();
-		long sumRevenue = invoiceDao.sumRevenue();
+		Long sumRevenue = invoiceDao.sumRevenue();
 		long countOrder = orderDao.countOrder();
 		model.addAttribute("getTop7Quantity", getTop7Quantity);
 		model.addAttribute("getTotalPricePerDay", getTotalPricePerDay);
@@ -1396,15 +1851,15 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
-	@ModelAttribute("fillRank")
-	public Map<Integer, String> getCategory() {
-		Map<Integer, String> map = new HashMap<>();
-		List<rank> ranks = rankDao.findAll();
-		for (rank r : ranks) {
-			map.put(r.getID(), r.getNAME());
-		}
-		return map;
-	}
+//	@ModelAttribute("fillRank")
+//	public Map<Integer, String> getCategory() {
+//		Map<Integer, String> map = new HashMap<>();
+//		List<rank> ranks = rankDao.findAll();
+//		for (rank r : ranks) {
+//			map.put(r.getID(), r.getNAME());
+//		}
+//		return map;
+//	}
 
 	@ModelAttribute("fillRole")
 	public Map<Boolean, String> getRole() {
@@ -1470,8 +1925,13 @@ public class AdminController {
 	}
 
 	@GetMapping("user")
-	public String getQLNguoiDung(Model model, @ModelAttribute("userItem") user user) {
+	public String getQLNguoiDung(Model model, @ModelAttribute("userItem") user user,
+			@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
+
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 12);
+		Page<user> pageUser = userDao.findAllSX(pageable);
 		model.addAttribute("userItem", user);
+		model.addAttribute("pageUser", pageUser);
 		String page = "qlnguoidung.jsp";
 		model.addAttribute("page", page);
 		return "/Admin/production/homeadmin";
