@@ -139,7 +139,7 @@
 								ngay
 							</button>
 							<button class="add-to-cart-btn" type="submit"
-								id="addToCartButton" onclick="addToCartButton">
+								id="addToCartButton" >
 								<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
 							</button>
 							<!-- 	<a href="/shop/cart"><button class="add-to-cart-btn">
@@ -539,7 +539,7 @@ function updateBuyNowButton(idPhone, idVariant) {
         var quantity = document.getElementsByName('quantity')[0].value;
         $.ajax({
             type: "GET",
-            url: "/shop/cart/add/" + idVariant + "?quantity=" + quantity,
+            url: "/shop/addcart/" + idVariant + "?quantity=" + quantity,
             success: function() {
                 // If successful, show a success toast notification
                 const Toast = Swal.mixin({
