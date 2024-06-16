@@ -169,7 +169,9 @@
          showConfirmButton: false,
          timer: 1500
      });
-     
+     setTimeout(function() {
+    	 window.location.href = "/shop/profile"; 
+     }, 2200);
    
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
     </script>

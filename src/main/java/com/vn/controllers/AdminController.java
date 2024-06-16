@@ -1497,22 +1497,22 @@ public class AdminController {
 		}
 	}
 
-	@GetMapping("unlock/{id}")
-	public ResponseEntity<String> getUnlock(@PathVariable("id") String id) {
-		try {
-			user user = userDao.findById(id).orElse(null);
-			if (user == null) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy người dùng");
-			}
-			user.setROLE(false); // Giả sử trường ROLE trong User là role, tùy vào định nghĩa của bạn
-			user.setUPDATE_AT(new Date()); // Tương tự như trên, đảm bảo tên trường và kiểu dữ liệu đúng
-			user.setSTATUS(true);
-			userDao.save(user);
-			return ResponseEntity.ok("Người dùng đã được mở khóa thành công");
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi máy chủ nội bộ");
-		}
-	}
+//	@GetMapping("unlock/{id}")
+//	public ResponseEntity<String> getUnlock(@PathVariable("id") String id) {
+//		try {
+//			user user = userDao.findById(id).orElse(null);
+//			if (user == null) {
+//				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy người dùng");
+//			}
+//			user.setROLE(false); // Giả sử trường ROLE trong User là role, tùy vào định nghĩa của bạn
+//			user.setUPDATE_AT(new Date()); // Tương tự như trên, đảm bảo tên trường và kiểu dữ liệu đúng
+//			user.setSTATUS(true);
+//			userDao.save(user);
+//			return ResponseEntity.ok("Người dùng đã được mở khóa thành công");
+//		} catch (Exception e) {
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi máy chủ nội bộ");
+//		}
+//	}
 
 	@PostMapping("/variant/create")
 	public String createVariant(Model model, @ModelAttribute("ObjectVariant") variant variant) {
