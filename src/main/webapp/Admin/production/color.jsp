@@ -27,12 +27,11 @@
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
-									<form:form class="form-horizontal form-label-left"
-										method="POST" modelAttribute="color"
+									<form class="form-horizontal form-label-left" method="POST"
 										action="/admin/color/create">
 										<div class="form-group ">
-											<label class="control-label">Tên màu</label>
-											<form:input path="NAME" cssClass="form-control"
+											<label class="control-label">Tên màu</label> <input
+												required="required" name="NAME" class="form-control"
 												placeholder="" />
 										</div>
 										<div class="modal-footer">
@@ -40,7 +39,7 @@
 												data-bs-dismiss="modal">Close</button>
 											<button type="submit" class="btn btn-primary">Create</button>
 										</div>
-									</form:form>
+									</form>
 								</div>
 
 							</div>
@@ -52,7 +51,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="card-box table-responsive">
-								<table id="datatable-responsive"
+								<table
 									class="table table-striped table-bordered dt-responsive nowrap"
 									cellspacing="0" width="100%">
 									<thead>
@@ -63,14 +62,16 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="item" items="${list_color}" varStatus="stt">
+										<c:forEach var="item" items="${pageColor.content}"
+											varStatus="stt">
 											<tr>
 												<td>${stt.index +1 }</td>
 												<td>${item.NAME }</td>
-												<td class="text-center">
-												<i onclick="getColorById(${item.ID })" class="fa-solid fa-pen-to-square fs-4 mr-3"> </i> 
-												<i onclick="modelDelete(${item.ID })" class="fa-solid fa-trash fs-4 "></i>
-												</td>
+												<td class="text-center"><i
+													onclick="getColorById(${item.ID })"
+													class="fa-solid fa-pen-to-square fs-4 mr-3"> </i> <i
+													onclick="modelDelete(${item.ID })"
+													class="fa-solid fa-trash fs-4 "></i></td>
 											</tr>
 										</c:forEach>
 									</tbody>
@@ -81,8 +82,10 @@
 									<div class="modal-dialog">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h1 class="modal-title fs-5" id="deleteLabel">Xác nhận xóa</h1>
-												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												<h1 class="modal-title fs-5" id="deleteLabel">Xác nhận
+													xóa</h1>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
 											<div class="modal-body text-left" id="thongbao"></div>
 											<div class="modal-footer">
@@ -102,20 +105,20 @@
 											<div class="modal-header">
 												<h1 class="modal-title fs-5" id="updateLabel">Cập nhật</h1>
 												<button type="button" class="btn-close"
-														data-bs-dismiss="modal" aria-label="Close"></button>
+													data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
 											<div class="modal-body">
-												<form:form class="form-horizontal form-label-left"
-													method="POST" modelAttribute="colorUpdate"
+												<form class="form-horizontal form-label-left"
+													method="POST"
 													action="/admin/color/update">
 													<div class="row text-left">
 														<div class="form-group">
-															<form:input id="colorId" value="${colorUpdate.ID}"
-																path="ID" type="hidden" class="form-control" />
+															<input id="colorId" 
+																name ="ID" type="hidden" class="form-control" />
 														</div>
 														<div class="form-group">
 															<label class="control-label">Tên màu</label>
-															<form:input id="colorName" path="NAME" type="text"
+															<input id="colorName" name ="NAME" type="text"
 																class="form-control" placeholder="" />
 														</div>
 													</div>
@@ -124,13 +127,21 @@
 															data-bs-dismiss="modal">Close</button>
 														<button type="submit" class="btn btn-primary">Update</button>
 													</div>
-												</form:form>
+												</form>
 											</div>
 
 										</div>
 									</div>
 								</div>
 							</div>
+							<c:if test="${pageColor.totalPages!=1}">
+								<div class="text-right">
+									<c:forEach var="item" begin="1" end="${pageColor.totalPages}"
+										step="1">
+										<a class="btn btn-primary" href="/admin/color?pages=${item}">${item}</a>
+									</c:forEach>
+								</div>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -143,7 +154,7 @@
 		        type: "GET",
 		        url: "/admin/ajax/getcolor/" + id,
 		        success: function(color) {
-		            // Đổ dữ liệu vào form:form
+		            // Đổ dữ liệu vào form
 		            $("#colorId").val(color.id);
 		            $("#colorName").val(color.name); 
 		            var modal = new bootstrap.Modal(document
@@ -176,5 +187,63 @@
 		    });
 		}
 	</script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<c:if test="${message eq 'Hoàn tất'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+
+			setTimeout(function() {
+				window.location.href = "/admin/color";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Trùng tên'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/color";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Đã xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'success',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/color";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
+	<c:if test="${message eq 'Không thể xóa'}">
+		<script>
+			Swal.fire({
+				icon : 'error',
+				title : '${message}',
+				showConfirmButton : false,
+				timer : 1000
+			});
+			setTimeout(function() {
+				window.location.href = "/admin/color";
+			}, 1001);
+			// Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+		</script>
+	</c:if>
 </body>
 </html>

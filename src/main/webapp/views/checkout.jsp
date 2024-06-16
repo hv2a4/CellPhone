@@ -179,7 +179,7 @@ function UpdateOrder(idOrder,idPay) {
 	var address = document.getElementsByName("address")[0].value;
     var form = document.getElementById('succussForm');
     var discountCode = document.getElementsByName("tel")[0].value;
-    var selectedItem = "${selectedItems.join(',')}";
+    var selectedItem = "${selectedItems}";
     form.action = "/shop/ordersuccess?id_order=" + idOrder + "&id_pay=" + idPay + "&id_address=" + address + "&discount=" + discountCode + "&selectedItem=" + selectedItem;
 }
 

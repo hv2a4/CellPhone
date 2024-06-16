@@ -525,8 +525,8 @@
 													<td><fmt:formatDate value="${item.CREATE_AT}"
 															pattern="yyyy-MM-dd" /></td>
 													<td>${item.REASON }</td>
-													<td><button type="button" class="btn btn-success">Mua
-															Lại</button></td>
+													<td><a href="/shop/mualai?id_order="${item.ID}><button type="button" class="btn btn-success">Mua
+															Lại</button></a> </td>
 
 												</c:when>
 
