@@ -137,7 +137,7 @@
 				</div>
 				<div class="form-group">
 					<label for="ward" style="font-weight: 1">Phường</label> 
-					 <select id="ward" name="ward"  class="form-control" onchange="calculateShippingFee()">
+					 <select id="ward" name="ward"  class="form-control" onchange="setWardName()()">
                     <option value="" data-name="" >Chọn Phường/Xã</option>
                 </select> <input type="hidden" name="wardName" id="wardName"> <small
 						style="color: red;">${errors}</small>
@@ -220,10 +220,11 @@
     <script>
         const token = '61810660-2862-11ef-8e53-0a00184fe694';  // Thay thế bằng token thực
         const shopId = '192562';  // Thay thế bằng shop ID thực
-        
+       
        
         document.addEventListener("DOMContentLoaded", function() {
             fetchProvinces();
+           
            
         });
 		
@@ -254,10 +255,8 @@
 
         // Hàm lấy tên quận/huyện theo ID
         function fetchDistrictNameById(districtId) {
-        	
-        	 const provinceId = document.getElementById('province').value;
-        	 console.log(provinceId+'    mã tỉnh 1');
-        	 console.log(districtId+'    mã huyện 1');
+            const provinceId = document.getElementById('province').value;
+            
             return fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id='+provinceId+'&shop_id='+shopId, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -281,6 +280,7 @@
 
         // Hàm lấy tên phường/xã theo ID
         function fetchWardNameById(wardId) {
+        	const districtId = document.getElementById('district').value;
             return fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id='+districtId+'&shop_id='+shopId, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -371,28 +371,39 @@
            
           
         };
-        function findDistrictName() {
-        	const districtSelect = parseInt( document.getElementById('district').value);
+        function setDistrictName() {
+        	const districtSelect = document.getElementById('district').value;
+        	const num = Number(districtSelect);
         	
-        	
-        	fetchDistrictNameById(districtSelect)
+        	fetchDistrictNameById(num)
             .then(districtName => {
-               
-                console.log(fetchDistrictNameById(districtName)+'   tên huyện');
+            	 document.getElementById('nameDistrict').value =districtName;
             })
             .catch(error => {
                 console.error('Error:', error);
             });
+        	
       }
-        
+        function setWardName() {
+        	const wardSelect = document.getElementById('ward').value;
+        	
+        	fetchWardNameById(wardSelect)
+            .then(WardName => {
+            	document.getElementById('wardName').value =WardName;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        	
+      }
         
         
         function fetchWards() {
         	
             const districtId = document.getElementById('district').value;
-           
+            setDistrictName();
             if (!districtId) return;
-            findDistrictName();
+            
             fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id='+districtId+'&shop_id='+shopId, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -413,7 +424,7 @@
                 });
             })
             .catch(error => console.error('Error fetching wards:', error));
-           
+            
         }
        
 		// Hàm định dạng số thành tiền tệ
@@ -424,6 +435,7 @@
         function calculateShippingFee() {
             const toDistrictId = document.getElementById('district').value;
             const toWardCode = document.getElementById('ward').value;
+           
             if (!toDistrictId || !toWardCode) {
                 alert('Vui lòng chọn đầy đủ thông tin địa điểm');
                 return;

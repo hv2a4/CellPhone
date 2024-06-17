@@ -199,7 +199,7 @@ public class UserController {
 
 	@RequestMapping("cart/add/{id}")
 	@ResponseBody
-	public String addCart(Model model, @PathVariable("id") Integer id,@RequestParam("quantity") Optional<Integer> quantity) {
+	public String addCart(Model model, @PathVariable("id") Integer id) {
 		Optional<variant> variant = variantdao.findById(id);
 		user userss = sessionService.get("list");
 		user user = userDao.getById(userss.getUSERNAME());
@@ -207,7 +207,7 @@ public class UserController {
 			cart_item cart_item = new cart_item();
 			cart_item.setCart(user.getCarts().get(0));
 
-			cart_item.setQUANTITY(quantity.orElse(1));
+			cart_item.setQUANTITY(1);
 			cart_item.setVariant(variant.get());
 
 			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
@@ -302,7 +302,7 @@ public class UserController {
 			for (cart_item item : list_cart_item) {
 				if (variant.get().getID() == item.getVariant().getID()) {
 					cart_item = item;
-					cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
+					cart_item.setQUANTITY(cart_item.getQUANTITY() + quantity);
 					break;
 				}
 			}
@@ -324,10 +324,8 @@ public class UserController {
 	public String getStore(Model model, @RequestParam("q") Optional<String> q,
 			@RequestParam(name = "brand") Optional<List<String>> brand,
 			@RequestParam(name = "system") Optional<List<String>> systems,
-			@RequestParam(name = "min") Optional<Double> min, 
-			@RequestParam(name = "max") Optional<Double> max,
-			@RequestParam(name = "sorts") Optional<String> sorts, 
-			@RequestParam(value = "dirs") Optional<String> dirs,
+			@RequestParam(name = "min") Optional<Double> min, @RequestParam(name = "max") Optional<Double> max,
+			@RequestParam(name = "sorts") Optional<String> sorts, @RequestParam(value = "dirs") Optional<String> dirs,
 			@RequestParam(name = "sizes") Optional<Integer> sizes,
 			@RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
 
@@ -432,50 +430,49 @@ public class UserController {
 	}
 
 	@RequestMapping("checkout")
-	public String getCheckout(@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems,
-	                          Model model) {
-	    user us = sessionService.get("list");
-	    if (us != null) {
-	        order order = orderDao.getOrderMoi();
+	public String getCheckout(
+			@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems,
+			Model model) {
+		user us = sessionService.get("list");
+		if (us != null) {
+			order order = orderDao.getOrderMoi();
 
-	        double totalAmount = 0;
-	        double totalDiscount = 0;
-	        List<order_item> listItem = order.getOrder_items();
-	        for (order_item oi : listItem) {
-	            totalAmount += oi.getPRICE() * oi.getQUANTITY();
-	            totalDiscount += oi.getPRICE() * (oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE() / 100);
-	        }
-	        order.setTOTAL_AMOUNT(totalAmount);
-	        order.setTOTAL_DISCOUNT(totalDiscount);
-	        orderDao.save(order);
-	        user user = userDao.findById(us.getUSERNAME()).get();
-	        List<payment_method> listPay = payment_methodDao.findAll();
-	        model.addAttribute("pays", listPay);
+			double totalAmount = 0;
+			double totalDiscount = 0;
+			List<order_item> listItem = order.getOrder_items();
+			for (order_item oi : listItem) {
+				totalAmount += oi.getPRICE() * oi.getQUANTITY();
+				totalDiscount += oi.getPRICE() * (oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE() / 100);
+			}
+			order.setTOTAL_AMOUNT(totalAmount);
+			order.setTOTAL_DISCOUNT(totalDiscount);
+			orderDao.save(order);
+			user user = userDao.findById(us.getUSERNAME()).get();
+			List<payment_method> listPay = payment_methodDao.findAll();
+			model.addAttribute("pays", listPay);
 
-	        model.addAttribute("user", user);
-	        model.addAttribute("order", order);
-	        model.addAttribute("totalOrder", totalAmount);
+			model.addAttribute("user", user);
+			model.addAttribute("order", order);
+			model.addAttribute("totalOrder", totalAmount);
 
-	        String selectedItemsQueryParam = "";
-	        if (selectedItems.isPresent()) {
-	            List<String> selectedItemStrings = new ArrayList<>();
-	            for (Integer selectedItem : selectedItems.get()) {
-	                selectedItemStrings.add(String.valueOf(selectedItem));
-	            }
-	            selectedItemsQueryParam = String.join(",", selectedItemStrings);
-	        }
-	        model.addAttribute("selectedItems", selectedItemsQueryParam);
+			String selectedItemsQueryParam = "";
+			if (selectedItems.isPresent()) {
+				List<String> selectedItemStrings = new ArrayList<>();
+				for (Integer selectedItem : selectedItems.get()) {
+					selectedItemStrings.add(String.valueOf(selectedItem));
+				}
+				selectedItemsQueryParam = String.join(",", selectedItemStrings);
+			}
+			model.addAttribute("selectedItems", selectedItemsQueryParam);
 
-	        String page = "checkout.jsp";
-	        model.addAttribute("page", page);
+			String page = "checkout.jsp";
+			model.addAttribute("page", page);
 
-	        return "index";
-	    } else {
-	        return "redirect:/shop/login";
-	    }
+			return "index";
+		} else {
+			return "redirect:/shop/login";
+		}
 	}
-
-
 
 	@RequestMapping("muangay/{id}")
 	public String muaNgay(Model model, @PathVariable("id") Integer id,
@@ -501,7 +498,7 @@ public class UserController {
 			order_item order_item = new order_item();
 			order_item.setOrder(order);
 			order_item.setVariant(variant.get());
-			order_item.setPRICE(getPriceVariant(variant.get()));
+			order_item.setPRICE(getGiaKhuyenMai(variant.get()));
 			order_item.setQUANTITY(quantity);
 
 			order_itemDao.save(order_item);
@@ -509,41 +506,41 @@ public class UserController {
 		}
 		return "redirect:/shop/login";
 	}
-	@RequestMapping("mualai")
-	public String muaLai(Model model, @RequestParam("id_order") Integer id,
-			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
-		user us = sessionService.get("list");
-		if (us != null) {
-			user user = userDao.findById(us.getUSERNAME()).get();
-			order or = new order();
-			or.setUser(user);
-			or.setCREATE_AT(new Date());
-			or.setUPDATE_AT(new Date());
-			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-				or.setAddress(user.getAddresses().get(0));
-			} else {
-				return "redirect:/shop/address";
-			}
-			
-			orderDao.save(or);
-			
-			order order = orderDao.getOrderMoi();
-			
-			Optional<variant> variant = variantDao.findById(id);
-			order_item order_item = new order_item();
-			order_item.setOrder(order);
-			order_item.setVariant(variant.get());
-			order_item.setPRICE(getPriceVariant(variant.get()));
-			order_item.setQUANTITY(quantity);
-			
-			order_itemDao.save(order_item);
-			return "redirect:/shop/checkout";
-		}
-		return "redirect:/shop/login";
-	}
+//	@RequestMapping("mualai")
+//	public String muaLai(Model model, @RequestParam("id_order") Integer id,
+//			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+//		user us = sessionService.get("list");
+//		if (us != null) {
+//			user user = userDao.findById(us.getUSERNAME()).get();
+//			order or = new order();
+//			or.setUser(user);
+//			or.setCREATE_AT(new Date());
+//			or.setUPDATE_AT(new Date());
+//			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
+//				or.setAddress(user.getAddresses().get(0));
+//			} else {
+//				return "redirect:/shop/address";
+//			}
+//			
+//			orderDao.save(or);
+//			
+//			order order = orderDao.getOrderMoi();
+//			
+//			Optional<variant> variant = variantDao.findById(id);
+//			order_item order_item = new order_item();
+//			order_item.setOrder(order);
+//			order_item.setVariant(variant.get());
+//			order_item.setPRICE(getPriceVariant(variant.get()));
+//			order_item.setQUANTITY(quantity);
+//			
+//			order_itemDao.save(order_item);
+//			return "redirect:/shop/checkout";
+//		}
+//		return "redirect:/shop/login";
+//	}
+//
+//	
 
-	
-	
 	@RequestMapping("addorder")
 	public String addorder(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItems,
 			Model model) {
@@ -559,7 +556,7 @@ public class UserController {
 				or.setAddress(user.getAddresses().get(0));
 			} else {
 				return "redirect:/shop/address";
-			} 
+			}
 			orderDao.save(or);
 			if (selectedItems == null || selectedItems.isEmpty()) {
 				// If no items are selected, process all items in the cart
@@ -626,18 +623,18 @@ public class UserController {
 			for (cart_item cart_item : cart.getCart_items()) {
 				for (Integer selectedItem1 : selectedItems) {
 					if (cart_item.getID() == selectedItem1) {
-						cart_itemdao.deleteById(cart_item.getID());;
-						break;	
+						cart_itemdao.deleteById(cart_item.getID());
+						;
+						break;
 					}
 				}
+			}
 		}
-		}
-		
-		
+
 		invoice inv = new invoice();
 		if (pay.getNAME().equalsIgnoreCase("Thanh toán khi nhận hàng")) {
 			inv.setStatus_invoice(status_invoice(2));
-		}else {
+		} else {
 			inv.setStatus_invoice(status_invoice(1));
 		}
 		inv.setOrder(order);
@@ -650,9 +647,11 @@ public class UserController {
 		model.addAttribute("pay", pay.getNAME());
 		return "/views/ordersuccess";
 	}
+
 	public status_invoice status_invoice(Integer id) {
 		return status_invoiceDao.findById(id).get();
 	}
+
 	@RequestMapping("address")
 	public String getAddress(Model model) {
 		String page = "address.jsp";
@@ -729,41 +728,41 @@ public class UserController {
 	}
 
 	@RequestMapping("profile")
-	public String getProfile(Model model,user item) {
-		
-		  
+	public String getProfile(Model model, user item) {
+
 		model.addAttribute("items", item);
-		
+
 		String page = "profile.jsp";
 		model.addAttribute("page", page);
 		return "index";
 	}
-	
-	@PostMapping("profile")
-	public String postProfile(@Validated @ModelAttribute("items") user item,BindingResult bindingResult ,Model model,@RequestPart("photo_file") MultipartFile file) {
-		if (bindingResult.hasErrors()) {
-		        System.out.println("hello");
-		        model.addAttribute("page", "profile.jsp");
-		        return "index";
-		    }
-		String photo=paramService.save(file,"/images/");
-		
-		Optional<user> userS=userDao.findById(item.getUSERNAME());
 
-			userS.get().setAVATAR(photo);
-			userS.get().setFULLNAME(item.getFULLNAME());
-			userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
-			userS.get().setGENDER(item.getGENDER());
-			userS.get().setEMAIL(item.getEMAIL());
-            System.out.println(userS.get().getFULLNAME());
-			userDao.save(userS.get());
-		    sessionService.set("list", userS.get());
-           model.addAttribute("profileSuccess", "true");
-           model.addAttribute("items", item);
-   		
-   		String page = "profile.jsp";
-   		model.addAttribute("page", page);
-   		return "index";
+	@PostMapping("profile")
+	public String postProfile(@Validated @ModelAttribute("items") user item, BindingResult bindingResult, Model model,
+			@RequestPart("photo_file") MultipartFile file) {
+		if (bindingResult.hasErrors()) {
+			System.out.println("hello");
+			model.addAttribute("page", "profile.jsp");
+			return "index";
+		}
+		String photo = paramService.save(file, "/images/");
+
+		Optional<user> userS = userDao.findById(item.getUSERNAME());
+
+		userS.get().setAVATAR(photo);
+		userS.get().setFULLNAME(item.getFULLNAME());
+		userS.get().setPHONE_NUMBER(item.getPHONE_NUMBER());
+		userS.get().setGENDER(item.getGENDER());
+		userS.get().setEMAIL(item.getEMAIL());
+		System.out.println(userS.get().getFULLNAME());
+		userDao.save(userS.get());
+		sessionService.set("list", userS.get());
+		model.addAttribute("profileSuccess", "true");
+		model.addAttribute("items", item);
+
+		String page = "profile.jsp";
+		model.addAttribute("page", page);
+		return "index";
 	}
 
 	@GetMapping("address")
@@ -821,14 +820,15 @@ public class UserController {
 		String city = paramService.getString("province", "");
 		String district = paramService.getString("district", "");
 		String ward = paramService.getString("ward", "");
-		String cityName=paramService.getString("cityName", "");
-		String districtName=paramService.getString("districtNames", "");
+		String cityName = paramService.getString("cityName", "");
+		String districtName = paramService.getString("districtNames", "");
 		System.out.println(districtName);
 		System.out.println(cityName);
-		System.out.println(city+"__"+district+"__"+ward);
+		System.out.println(city + "__" + district + "__" + ward);
 		return "redirect:/shop/address";
 
 	}
+
 	@GetMapping("newAddress")
 	public String newAddress(Model model, address item) {
 
@@ -875,7 +875,6 @@ public class UserController {
 
 		String page = "address.jsp";
 		model.addAttribute("page", page);
-		
 
 		return "index";
 	}
