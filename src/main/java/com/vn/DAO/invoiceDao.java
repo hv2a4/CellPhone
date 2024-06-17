@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.vn.entity.color;
 import com.vn.entity.invoice;
+import com.vn.entity.order;
 import com.vn.entity.system;
 import org.springframework.stereotype.Repository;
 
@@ -60,5 +61,7 @@ List<Double> getTotalAmountPerHour(@Param("year") int year, @Param("month") int 
             "GROUP BY m.MonthNumber " +
             "ORDER BY m.MonthNumber", nativeQuery = true)
 List<Double> getTotalPricePerMonth(@Param("year") int year);
-
+	
+	@Query("SELECT o FROM invoice o WHERE o.ID = (SELECT MAX(o2.ID) FROM invoice o2)")
+    invoice getInvoiceMoi();
 }
