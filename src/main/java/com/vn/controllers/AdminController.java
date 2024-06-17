@@ -425,34 +425,30 @@ public class AdminController {
 
 	@PostMapping("variant/update")
 	public ResponseEntity<Map<String, String>> updateVariant(
-	        @Validated @ModelAttribute("ObjectVariant") variant variant,
-	        BindingResult bindingResult) {
-	    Map<String, String> response = new HashMap<>();
-	    
-	    if (bindingResult.hasErrors()) {
-	        // Nếu có lỗi xảy ra trong quá trình binding
-	        bindingResult.getFieldErrors().forEach(error -> 
-	            response.put(error.getField(), error.getDefaultMessage())
-	        );
-	        return ResponseEntity.badRequest().body(response);
-	    }
+			@Validated @ModelAttribute("ObjectVariant") variant variant, BindingResult bindingResult) {
+		Map<String, String> response = new HashMap<>();
 
-	    try {
-	        // Lưu biến thể vào cơ sở dữ liệu
-	        variantDao.save(variant);
-	        
-	        // Trả về thông báo thành công
-	        response.put("status", "success");
-	        return ResponseEntity.ok(response);
-	    } catch (Exception e) {
-	        // Xử lý các ngoại lệ xảy ra
-	        e.printStackTrace();
-	        response.put("status", "error");
-	        response.put("message", "Có lỗi xảy ra khi cập nhật biến thể: " + e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-	    }
+		if (bindingResult.hasErrors()) {
+			// Nếu có lỗi xảy ra trong quá trình binding
+			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+
+		try {
+			// Lưu biến thể vào cơ sở dữ liệu
+			variantDao.save(variant);
+
+			// Trả về thông báo thành công
+			response.put("status", "success");
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			// Xử lý các ngoại lệ xảy ra
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "Có lỗi xảy ra khi cập nhật biến thể: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 	}
-
 
 	@GetMapping("phone/delete")
 	public String deletePhone(@Param("id") Integer id, RedirectAttributes redirectAttributes) {
@@ -1997,9 +1993,20 @@ public class AdminController {
 	}
 
 	@GetMapping("variant/detele/{id}")
-	public String deleteVariant(@PathVariable("id") Integer id) {
-		variantDao.deleteById(id);
-		return "redirect:/admin/product";
+	public String deleteVariant(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+	    try {	        
+	        variantDao.deleteById(id);
+	        redirectAttributes.addFlashAttribute("a", "Hoàn tất");
+	        redirectAttributes.addFlashAttribute("b", "success");
+	    } catch (DataIntegrityViolationException e) {
+	        redirectAttributes.addFlashAttribute("a", "Không thể xóa. Bản ghi đang được sử dụng.");
+	        redirectAttributes.addFlashAttribute("b", "error");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("a", "Có lỗi xảy ra khi xóa bản ghi.");
+	        redirectAttributes.addFlashAttribute("b", "error");
+	    }
+
+	    return "redirect:/admin/product";
 	}
 
 	@GetMapping("user")

@@ -709,23 +709,23 @@
 																						<td>${variant.color.NAME}</td>
 																						<td><c:choose>
 																								<c:when test="${variant.storage.GB == 32}">
-                                                                                        32 GB
-                                                                                    </c:when>
+	                                                                                        32 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 64}">
-                                                                                        64 GB
-                                                                                    </c:when>
+	                                                                                        64 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 128}">
-                                                                                        128 GB
-                                                                                    </c:when>
+	                                                                                        128 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 256}">
-                                                                                        256 GB
-                                                                                    </c:when>
+	                                                                                        256 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 512}">
-                                                                                        512 GB
-                                                                                    </c:when>
+	                                                                                        512 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 1024}">
-                                                                                        1024 T
-                                                                                    </c:when>
+	                                                                                        1024 T
+	                                                                                    </c:when>
 																								<c:otherwise>Đang cập nhật</c:otherwise>
 																							</c:choose></td>
 																						<td><c:choose>
@@ -761,7 +761,8 @@
 																									<div class="modal-body">
 
 																										<form class="form-horizontal form-label-left"
-																											action="/admin/variant/update" method="post" id="updateVariant${variant.ID}">
+																											action="/admin/variant/update" method="post"
+																											id="updateVariantForm${variant.ID}">
 																											<div class="row text-left">
 																												<div class="form-group">
 																													<input type="hidden" name="phone.ID"
@@ -784,8 +785,10 @@
 																														class="form-control">
 
 																													<div class="form-group">
-																														<label class="control-label">Màu</label> 
-																														<select name="variants[${variant.ID}].colorID" class="form-select">				
+																														<label class="control-label">Màu</label> <select
+																															name="color.ID"
+																															id="${variant.ID}colorUpdate"
+																															class="form-select">
 																															<option value="">Chọn màu</option>
 																															<c:forEach items="${listColor}"
 																																var="color">
@@ -793,13 +796,15 @@
 																																	<c:if test="${color.key == variant.color.ID}">selected</c:if>>
 																																	${color.value}</option>
 																															</c:forEach>
-																														</select>
+																														</select> <span class="text-danger"
+																															id="${variant.ID}colorUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Bộ
-																															nhớ trong</label> 
-																															<select name="variants[${variant.ID}].storageID" class="form-select">
+																															nhớ trong</label> <select name="storage.ID"
+																															id="${variant.ID}storageUpdate"
+																															class="form-select">
 																															<option value="">Chọn dung lượng
 																															</option>
 																															<c:forEach var="st"
@@ -808,14 +813,16 @@
 																																	<c:if test="${st.key == variant.storage.ID}">selected</c:if>>
 																																	${st.value} GB</option>
 																															</c:forEach>
-																														</select>
+																														</select> <span class="text-danger"
+																															id="${variant.ID}storageUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Phần
 																															trăm giảm</label> <select
-																															name="${variant.ID}_${item.ID}discount_product.ID"
-																															id="discount_productUpdate" class="form-select">
+																															name="discount_product.ID"
+																															id="${variant.ID}discount_productUpdate"
+																															class="form-select">
 																															<option value="">Chọn giảm giá</option>
 																															<c:forEach var="dp"
 																																items="${listDiscount}">
@@ -823,36 +830,48 @@
 																																	<c:if test="${dp.key == variant.discount_product.ID}">selected</c:if>>
 																																	${dp.value}%</option>
 																															</c:forEach>
-																														</select>
-
+																														</select> <span class="text-danger"
+																															id="${variant.ID}discount_productUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Ngày
 																															bắt đầu</label> <input type="date"
-																															name="${variant.ID}_${item.ID}START_DATE" class="form-control"
+																															name="START_DATE"
+																															id="${variant.ID}START_DATE_UPDATE"
+																															class="form-control"
 																															value="${variant.discount_product.START_DATE}">
+																														<span class="text-danger"
+																															id="${variant.ID}START_DATEUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Ngày
 																															kết thúc</label> <input type="date"
-																															name="${variant.ID}_${item.ID}EXPIRY_DATE" class="form-control"
+																															name="EXPIRY_DATE"
+																															id="${variant.ID}EXPIRY_DATE_UPDATE"
+																															class="form-control"
 																															value="${variant.discount_product.EXPIRY_DATE}">
+																														<span class="text-danger"
+																															id="${variant.ID}EXPIRY_DATEUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Số
 																															lượng</label> <input type="number"
-																															name="${variant.ID}_${item.ID}QUANTITY" class="form-control"
-																															value="${variant.QUANTITY}">
+																															name="QUANTITY" class="form-control"
+																															value="${variant.QUANTITY}"> <span
+																															class="text-danger"
+																															id="${variant.ID}QUANTITY_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Giá</label> <input
-																															type="number" step="any" name="${variant.ID}_${item.ID}PRICE"
+																															type="number" step="any" name="PRICE"
 																															class="form-control"
-																															value="${variant.PRICE}">
+																															value="${variant.PRICE}"> <span
+																															class="text-danger"
+																															id="${variant.ID}PRICE_error"></span>
 																													</div>
 																												</div>
 																											</div>
@@ -860,7 +879,9 @@
 																												<button type="button"
 																													class="btn btn-secondary"
 																													data-bs-dismiss="modal">Close</button>
-																												<button type="submit" class="btn btn-primary" onclick="updateVariant(${variant.ID})">Update</button>
+																												<button type="submit"
+																													class="btn btn-primary"
+																													onclick="updateVariant(${variant.ID})">Update</button>
 																											</div>
 																										</form>
 																									</div>
@@ -934,19 +955,21 @@
 																								</div>
 																								<div class="form-group">
 																									<label class="control-label">Màu</label> <select
-																										name="color.ID" class="form-select" id="${item.ID}color">
+																										name="color.ID" class="form-select"
+																										id="${item.ID}color">
 																										<option value="">Chọn màu</option>
 																										<c:forEach items="${listColor}" var="color">
 																											<option value="${color.key}"
 																												id="color-validate"
 																												<c:if test="${color.key == ObjectVariant.color.ID}">selected</c:if>>${color.value}</option>
 																										</c:forEach>
-																									</select> <span id="${item.ID}color_error" class="text-danger"></span>
+																									</select> <span id="${item.ID}color_error"
+																										class="text-danger"></span>
 																								</div>
 																								<div class="form-group">
 																									<label class="control-label">Bộ nhớ
-																										trong</label> <select name="storage.ID" id="${item.ID}storage"
-																										class="form-select">
+																										trong</label> <select name="storage.ID"
+																										id="${item.ID}storage" class="form-select">
 																										<option value="">Chọn dung lượng</option>
 																										<c:forEach var="st" items="${listStorage}">
 																											<option value="${st.key}"
@@ -954,12 +977,14 @@
 																												<c:if test="${st.key == ObjectVariant.storage.ID}">selected</c:if>>${st.value}
 																												GB</option>
 																										</c:forEach>
-																									</select> <span id="${item.ID}storage_error" class="text-danger"></span>
+																									</select> <span id="${item.ID}storage_error"
+																										class="text-danger"></span>
 																								</div>
 																								<div class="form-group">
 																									<label class="control-label">Phần trăm
 																										giảm</label> <select name="discount_product.ID"
-																										id="${item.ID}discount_product" class="form-select">
+																										id="${item.ID}discount_product"
+																										class="form-select">
 																										<option value="">Chọn giảm giá</option>
 																										<c:forEach var="db" items="${listDiscount}">
 																											<option value="${db.key}"
@@ -972,20 +997,23 @@
 																									<label class="control-label">Ngày bắt
 																										đầu</label> <input type="date" name="START_DATE"
 																										id="${item.ID}START_DATE" class="form-control">
-																									<span id="${item.ID}START_DATE_error" class="text-danger"></span>
+																									<span id="${item.ID}START_DATE_error"
+																										class="text-danger"></span>
 																								</div>
 																								<div class="form-group">
 																									<label class="control-label">Ngày kết
 																										thúc</label> <input type="date" name="EXPIRY_DATE"
-																										id="${item.ID}EXPIRY_DATE" class="form-control">
-																									<span id="${item.ID}EXPIRY_DATE_error"
+																										id="${item.ID}EXPIRY_DATE"
+																										class="form-control"> <span
+																										id="${item.ID}EXPIRY_DATE_error"
 																										class="text-danger"></span>
 																								</div>
 																								<div class="form-group">
 																									<label class="control-label">Số lượng</label> <input
 																										type="number" name="QUANTITY"
 																										class="form-control"> <span
-																										id="${item.ID}QUANTITY_error" class="text-danger"></span>
+																										id="${item.ID}QUANTITY_error"
+																										class="text-danger"></span>
 																								</div>
 																								<div class="form-group">
 																									<label class="control-label">Giá</label> <input
@@ -1044,6 +1072,23 @@
 	        });
 	    </script>
 	</c:if>
+	<c:if test="${not empty a}">
+		<script>
+        var messages = "${a}";
+        var messageTypes = "${b}";
+        var icon = messageTypes === "success" ? "success" : "error";
+        
+        Swal.fire({
+            icon: icon,
+            title: messages,
+            showConfirmButton: false,
+            timer: 1800
+        }).then(() => {
+            window.location.href = "/admin/product";
+        });
+    </script>
+	</c:if>
+
 	<script>
 		function previewImage(input, imgId) {
 			console.log("previewImage called for", imgId); // Log kiểm tra
@@ -1093,10 +1138,54 @@
 		                error: function(xhr) {
 		                    let errors = xhr.responseJSON;
 		                    $.each(errors, function(key, value) {
-		                        // Display errors in the corresponding error spans
-		                        console.log(key + ": " + value);
-		                        // Example of how to display error message if needed
-		                        // $('#updateVariantForm' + idvariant + '_' + idphone + ' .' + key + '_error').text(value);
+		                    	if ($('#'+idvariant+'colorUpdate').val()== '') {
+									$('#'+idvariant+'colorUpdate_error').text('Vui lòng chọn màu trong danh sách');
+								}else{
+									$('#'+idvariant+'colorUpdate_error').text('');
+								}
+		                    	
+		                    	if ($('#'+idvariant+'storageUpdate').val()== '') {
+									$('#'+idvariant+'storageUpdate_error').text('Vui lòng chọn bộ nhớ trong danh sách');
+								}else{
+									$('#'+idvariant+'storageUpdate_error').text('');
+								}
+		                    	
+		                    	if ($('#'+idvariant+'discount_productUpdate').val()== '') {
+									$('#'+idvariant+'discount_productUpdate_error').text('Vui lòng chọn giảm giá trong danh sách');
+								}else{
+									$('#'+idvariant+'discount_productUpdate_error').text('');
+								}
+		                    	
+		                    	// Lấy giá trị của ngày bắt đầu, ngày kết thúc và ngày hiện tại từ các input
+		                    	var startDateStr = $('#' + idvariant + 'START_DATE_UPDATE').val().trim();
+		                    	var expiryDateStr = $('#' + idvariant + 'EXPIRY_DATE_UPDATE').val().trim();
+		                    	var currentDate = new Date(); // Ngày hiện tại
+
+		                    	// Kiểm tra nếu ngày bắt đầu và ngày kết thúc không được để trống
+		                    	if (startDateStr === "") {
+		                    	    $('#' + idvariant + 'START_DATEUpdate_error').text("Vui lòng không bỏ trống ngày bắt đầu!");
+		                    	} else if (expiryDateStr === "") {
+		                    	    $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text("Vui lòng không bỏ trống ngày kết thúc!");
+		                    	} else {
+		                    	    // Chuyển đổi ngày bắt đầu và ngày kết thúc thành đối tượng Date
+		                    	    var startDate = new Date(startDateStr);
+		                    	    var expiryDate = new Date(expiryDateStr);
+
+		                    	    // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
+		                    	    if (startDate >= expiryDate) {
+		                    	        $('#' + idvariant + 'START_DATEUpdate_error').text("Ngày bắt đầu không được lớn hơn hoặc bằng ngày kết thúc!");
+		                    	        $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text(""); // Đảm bảo clear lỗi ngày kết thúc nếu có
+		                    	    } else {
+		                    	        $('#' + idvariant + 'START_DATEUpdate_error').text("");
+		                    	        // Kiểm tra nếu ngày kết thúc nhỏ hơn hoặc bằng ngày hiện tại
+		                    	        if (expiryDate <= currentDate) {
+		                    	            $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text("Ngày kết thúc phải lớn hơn ngày hiện tại!");
+		                    	        } else {
+		                    	            $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text("");
+		                    	        }
+		                    	    }
+		                    	}	
+							$('#'+ idvariant + key + '_error').text(value);
 		                    });
 		                }
 		            });

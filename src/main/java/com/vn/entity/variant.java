@@ -52,11 +52,11 @@ import lombok.Data;
 		@JoinColumn(name = "ID_DISCOUNT_PRODUCT")
 		discount_product discount_product;
 	
-		@OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
+		@OneToMany(mappedBy = "variant")
 		@JsonIgnore
 		List<order_item> order_items;
 	
-		@OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
+		@OneToMany(mappedBy = "variant")
 		@JsonIgnore
 		List<cart_item> cart_items;
 	
