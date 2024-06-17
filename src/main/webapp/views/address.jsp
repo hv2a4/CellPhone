@@ -119,6 +119,7 @@
 			<form id="mainForm"  method="post" >
 			
 				<div class="form-group">
+				
 					<label for="city" style="font-weight: 1">Tỉnh</label> 
 				 <select id="province"  name="province" class="form-control"  onchange="fetchDistricts(); setProvinceName()">
                     <option value="" data-name="">Chọn Tỉnh/Thành phố</option>
@@ -128,7 +129,7 @@
 				</div>
 				<div class="form-group">
 					<label for="" style="font-weight: 1">Quận huyện</label> 
-				<select id="district"   name="district" class="form-control" onchange="fetchWards()">
+				<select id="district"   name="district" class="form-control" onchange="fetchWards(); ">
                     <option value="" data-name="" >Chọn Quận/Huyện</option>
                 </select> 
                  <input type="hidden" name="districtName" id="nameDistrict"> 
@@ -136,11 +137,12 @@
 				</div>
 				<div class="form-group">
 					<label for="ward" style="font-weight: 1">Phường</label> 
-				<select id="ward" name="ward"  class="form-control" onchange="setWardName()()">
+				<select id="ward" name="ward"  class="form-control" onchange="setWardName(); calculateShippingFee();">
                     <option value="" data-name="" >Chọn Phường/Xã</option>
                 </select> <input type="hidden" name="wardName" id="wardName"> 
                 <small style="color: red;">${errors}</small>
 				</div>
+				<input type="hidden" name="moneyShip" id="moneyShip">
 				<div class="order-notes">
 					<label for="noteAddress" style="font-weight: 1">Địa chỉ cụ
 						thể</label>
@@ -152,6 +154,7 @@
 						class="btn btn-info">Thêm</button>
 						<button formaction="/shop/update/${item.ID}" formmethod="post"
 						type="submit" class="btn btn-info">Cập Nhật</button>
+						<a href="/shop/newAddress" class="btn btn-info">Mới</a>
 				</div>
 			</form>
 		</div>
@@ -471,6 +474,59 @@
             })
             .catch(error => console.error('Error fetching wards:', error));
             
+        }
+        function calculateShippingFee() {
+            const toDistrictId =  document.getElementById('district').value;
+            const toDistrictIdNum =Number(toDistrictId)
+            console.log(toDistrictId+'   mã huyện');
+            const toWardCode = document.getElementById('ward').value;
+            console.log(toWardCode+'   mã xã');
+            if (!toDistrictId || !toWardCode) {
+                alert('Vui lòng chọn đầy đủ thông tin địa điểm');
+                return;
+            }
+
+            const params = new URLSearchParams({
+                from_district_id: 1574,
+                from_ward_code: '550307',
+                service_id: 53320,
+                service_type_id: '',
+                to_district_id: toDistrictIdNum,
+                to_ward_code: toWardCode,
+                height: 10,
+                length: 10,
+                weight: 10,
+                width: 10,
+                insurance_value: 10000,
+                cod_failed_amount: 2000,
+                coupon: ''
+            });
+
+            fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee?'+params.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Token': token,
+                    'ShopId': shopId
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+           
+                const moneyShip = document.getElementById('moneyShip').value;
+                if (data.code === 200 && data.data) {
+					
+             
+                    console.log(data.data.total+'   tiền ');
+                    document.getElementById('moneyShip').value=data.data.total;
+                } else {
+                    shippingFeeElement.textContent = 'Không thể tính phí vận chuyển';
+                }
+            })
+            .catch(error => {
+                console.error('Error calculating shipping fee:', error);
+                document.getElementById('shippingFee').textContent = 'Lỗi khi tính phí vận chuyển';
+            });
         }
     </script>
    <script>
