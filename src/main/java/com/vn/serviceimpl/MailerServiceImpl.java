@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.vn.model.MailInfo;
 import com.vn.service.MailerService;
+import com.vn.utils.SessionService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -24,6 +25,8 @@ import jakarta.mail.internet.MimeMessage;
 public class MailerServiceImpl implements MailerService {
     @Autowired
     JavaMailSender sender;
+    @Autowired
+    SessionService SessionService;
 
     @Override
     public void send(MailInfo mail) {
@@ -96,11 +99,12 @@ public class MailerServiceImpl implements MailerService {
     public String gererateOtp(String email) {
         SecureRandom random = new SecureRandom();
         String otp = String.format("%06d", random.nextInt(1000000));
+        SessionService.set("otp", otp);
         otpStorage.put(email, otp);
         return otp;
     }
 
     public Boolean validateOtp(String email, String otp) {
-        return otp.equals(otpStorage.get(email));
+        return otp.equals(SessionService.get("otp"));
     }
 }

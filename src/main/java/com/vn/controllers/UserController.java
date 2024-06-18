@@ -2,7 +2,9 @@ package com.vn.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vn.service.VNPayService;
 import com.vn.DAO.*;
 import com.vn.entity.*;
 import com.vn.serviceimpl.MailerServiceImpl;
@@ -83,6 +86,8 @@ public class UserController {
 	invoiceDao invoiceDao;
 	@Autowired
 	HttpServletRequest request;
+	@Autowired
+	VNPayService vnPayService;
 
 	@GetMapping("forgotpass1")
 	public String getForgotpass(Model model) {
@@ -96,6 +101,7 @@ public class UserController {
 			model.addAttribute("emailNotFound", "Email này chưa được đăng ký!");
 			return "/views/forgotpass1";
 		}
+		
 		String otp = mailer.gererateOtp(email); // Corrected the method name
 		System.out.println(otp);
 		sessionService.set("listUserSession", listUser);
@@ -108,8 +114,7 @@ public class UserController {
 	@PostMapping("forgotpass3")
 	public String postForgotpass3(Model model, @RequestParam(name = "emailUser") String email,
 			@RequestParam(name = "otpEmail") String otp) {
-		System.out.println(email);
-		System.out.println(otp);
+		
 		Boolean statusEmailOtp = mailer.validateOtp(email, otp);
 		System.out.println(statusEmailOtp);
 
@@ -433,10 +438,10 @@ public class UserController {
 	public String getCheckout(
 			@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems,
 			Model model) {
+		// code này thu được tiền ship
 		user us = sessionService.get("list");
 		if (us != null) {
 			order order = orderDao.getOrderMoi();
-
 			double totalAmount = 0;
 			double totalDiscount = 0;
 			List<order_item> listItem = order.getOrder_items();
@@ -505,6 +510,26 @@ public class UserController {
 			return "redirect:/shop/checkout";
 		}
 		return "redirect:/shop/login";
+	}
+
+	@GetMapping("getShippingFee")
+	@ResponseBody
+	public Map<String, Object> getShippingFee(@RequestParam(value = "address", required = false) String addressId) {
+		Map<String, Object> response = new HashMap<>();
+		if (addressId != null) {
+			Optional<address> listAdrs = addressDao.findById(Integer.parseInt(addressId));
+			if (listAdrs.isPresent()) {
+				response.put("shippingFee", listAdrs.get().getSHIPPING_FEE());
+				response.put("message", "Shipping fee updated");
+			} else {
+				response.put("shippingFee", 0);
+				response.put("message", "Address not found");
+			}
+		} else {
+			response.put("shippingFee", 0);
+			response.put("message", "Address ID is null");
+		}
+		return response;
 	}
 //	@RequestMapping("mualai")
 //	public String muaLai(Model model, @RequestParam("id_order") Integer id,
@@ -590,24 +615,17 @@ public class UserController {
 	}
 
 	@RequestMapping("ordersuccess")
-	public String getOrderSuccess(Model model, @RequestParam("id_order") Integer idOrder,
-			@RequestParam("id_pay") Integer idPay, @RequestParam("id_address") Integer idAddress,
-			@RequestParam("discount") Optional<Integer> discount,
-			@RequestParam(value = "selectedItem", required = false) Optional<List<Integer>> selectedItem) {
-		order order = orderDao.findById(idOrder).get();
-		address adr = addressDao.findById(idAddress).get();
-		payment_method pay = payment_methodDao.findById(idPay).get();
-		discount_code discount_code;
-		if (discount.isPresent()) {
-			discount_code = discount_codeDao.findById(discount.get()).orElse(null);
-		} else {
-			discount_code = null;
-		}
+	public String getOrderSuccess(Model model, @RequestParam("id_pay") Optional<Integer> idPay,
+			@RequestParam("id_address") Optional<Integer> idAddress) {
+		order order = orderDao.getOrderMoi();
+		address adr = addressDao.findById(idAddress.orElse(1)).get();
+		payment_method pay = payment_methodDao.findById(idPay.orElse(2)).get();
 
 		order.setAddress(adr);
+		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT() + adr.getSHIPPING_FEE());
 		order.setPayment_method(pay);
 		order.setStatus_order(status_orderDao.findById(2).get());
-		order.setDiscount_code(discount_code);
+
 		orderDao.save(order);
 		List<order_item> listOrderItem = order_itemDao.finByAllOrder(order.getID());
 		for (order_item oi : listOrderItem) {
@@ -618,15 +636,15 @@ public class UserController {
 		user us = sessionService.get("list");
 		user user = userDao.findById(us.getUSERNAME()).get();
 		cart cart = user.getCarts().get(0);
-		List<Integer> selectedItems = selectedItem.orElse(null);
-		if (selectedItems != null) {
-			for (cart_item cart_item : cart.getCart_items()) {
-				for (Integer selectedItem1 : selectedItems) {
-					if (cart_item.getID() == selectedItem1) {
-						cart_itemdao.deleteById(cart_item.getID());
-						;
-						break;
-					}
+
+		List<cart_item> cart_items = cart.getCart_items();
+		List<order_item> order_items = order.getOrder_items();
+
+		for (cart_item item : cart_items) {
+			for (order_item order_item : order_items) {
+				if (order_item.getVariant().getID() == item.getVariant().getID()) {
+					cart_itemdao.delete(item);
+					break;
 				}
 			}
 		}
@@ -634,18 +652,61 @@ public class UserController {
 		invoice inv = new invoice();
 		if (pay.getNAME().equalsIgnoreCase("Thanh toán khi nhận hàng")) {
 			inv.setStatus_invoice(status_invoice(2));
+			inv.setOrder(order);
+			inv.setCREATE_AT(new Date());
+			inv.setUPDATE_AT(new Date());
+			inv.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
+			invoiceDao.save(inv);
+			model.addAttribute("order", order);
+			model.addAttribute("adr", adr.getADDRESS());
+			model.addAttribute("pay", pay.getNAME());
+			return "/views/ordersuccess";
 		} else {
 			inv.setStatus_invoice(status_invoice(1));
+			inv.setOrder(order);
+			inv.setCREATE_AT(new Date());
+			inv.setUPDATE_AT(new Date());
+			inv.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
+			invoiceDao.save(inv);
+
+			invoice invm = getInvoiceMoi();
+
+			model.addAttribute("order", order);
+			model.addAttribute("adr", adr.getADDRESS());
+			model.addAttribute("pay", pay.getNAME());
+			request.setAttribute("id_oder", invm.getID());
+			request.setAttribute("id_address", invm.getOrder().getAddress().getID());
+
+			long totalAmountInt = invm.getTOTAL_AMOUNT().intValue();
+			String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+			String vnpayUrl = vnPayService.createOrder(totalAmountInt, invm.getID() + "", baseUrl);
+			return "redirect:" + vnpayUrl;
 		}
-		inv.setOrder(order);
-		inv.setCREATE_AT(new Date());
-		inv.setUPDATE_AT(new Date());
-		inv.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
-		invoiceDao.save(inv);
+
+	}
+
+	@GetMapping("/thanhtoanonline")
+	public String GetMapping(HttpServletRequest request, Model model) {
+		int paymentStatus = vnPayService.orderReturn(request);
+
+		String orderInfo = request.getParameter("vnp_OrderInfo");
+		String paymentTime = request.getParameter("vnp_PayDate");
+		String transactionId = request.getParameter("vnp_TransactionNo");
+		String totalPrice = request.getParameter("vnp_Amount");
+		order order = orderDao.getOrderMoi();
+
+		model.addAttribute("adr", order.getAddress().getADDRESS());
+		model.addAttribute("pay", "Thanh toán online");
 		model.addAttribute("order", order);
-		model.addAttribute("adr", adr.getADDRESS());
-		model.addAttribute("pay", pay.getNAME());
-		return "/views/ordersuccess";
+		model.addAttribute("totalPrice", totalPrice);
+		model.addAttribute("paymentTime", paymentTime);
+		model.addAttribute("transactionId", transactionId);
+
+		return paymentStatus == 1 ? "views/ordersuccess" : "views/orderfail";
+	}
+
+	public invoice getInvoiceMoi() {
+		return invoiceDao.getInvoiceMoi();
 	}
 
 	public status_invoice status_invoice(Integer id) {
@@ -817,15 +878,26 @@ public class UserController {
 	@PostMapping("create")
 	public String createAddress(Model model, address item) {
 		String noteAddress = paramService.getString("noteAddress", "");
-		String city = paramService.getString("province", "");
-		String district = paramService.getString("district", "");
-		String ward = paramService.getString("ward", "");
-		String cityName = paramService.getString("cityName", "");
-		String districtName = paramService.getString("districtNames", "");
-		System.out.println(districtName);
-		System.out.println(cityName);
-		System.out.println(city + "__" + district + "__" + ward);
-		return "redirect:/shop/address";
+		String provinceID = paramService.getString("province", "");
+		String districtID = paramService.getString("district", "");
+		String wardID = paramService.getString("ward", "");
+		String provinceName = paramService.getString("provinceName", "");
+		String districtName = paramService.getString("districtName", "");
+		String wardName = paramService.getString("wardName", "");
+		Double shippingFee = Double.parseDouble(paramService.getString("moneyShip", ""));
+		user us = sessionService.get("list");
+		String addreses = noteAddress + ", " + wardName + ", " + districtName + ", " + provinceName;
+		item.setADDRESS(addreses);
+		item.setUser(us);
+		item.setPROVINCE(Integer.parseInt(provinceID));
+		item.setDISTRICT(Integer.parseInt(districtID));
+		item.setWARD(wardID);
+		item.setSHIPPING_FEE(shippingFee);
+		addressDao.save(item);
+		String page = "address.jsp";
+		model.addAttribute("page", page);
+		model.addAttribute("messageAdd", "true");
+		return "index";
 
 	}
 
@@ -845,27 +917,43 @@ public class UserController {
 		model.addAttribute("item", item);
 		String page = "address.jsp";
 		model.addAttribute("page", page);
-
-		return "redirect:/shop/address";
+		model.addAttribute("messageDelete", "true");
+		return "index";
 	}
 
 	@PostMapping("update/{id}")
 	public String postUpdate(address item, Model model, @PathVariable("id") Integer id) {
 		System.out.println(id);
+		user us = sessionService.get("list");
+
+		String provinceID = paramService.getString("province", "");
+		String districtID = paramService.getString("district", "");
+		String wardID = paramService.getString("ward", "");
 		String noteAddress = paramService.getString("noteAddress", "");
-		String cityName = paramService.getString("cityName", "");
+		String provinceName = paramService.getString("provinceName", "");
 		String districtName = paramService.getString("districtName", "");
 		String wardName = paramService.getString("wardName", "");
-		String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + cityName;
+		Double shippingFee = Double.parseDouble(paramService.getString("moneyShip", ""));
+		String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + provinceName;
+		item.setID(id);
 		item.setADDRESS(addres);
+		item.setUser(us);
+		item.setPROVINCE(Integer.parseInt(provinceID));
+		item.setDISTRICT(Integer.parseInt(districtID));
+		item.setWARD(wardID);
+		item.setSHIPPING_FEE(shippingFee);
 		addressDao.save(item);
-		return "redirect:/shop/address";
+		String page = "address.jsp";
+		model.addAttribute("page", page);
+		model.addAttribute("messageUpdate", "true");
+		return "index";
 	}
 
 	@RequestMapping("/edit/{id}")
 	public String editRequest(@PathVariable("id") Integer id, address item, Model model) {
 		System.out.println(id);
 		address list = addressDao.findById(id).get();
+		model.addAttribute("id", list.getID());
 		model.addAttribute("item", list);
 		System.out.println(list.getADDRESS());
 		// tên đường
