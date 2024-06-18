@@ -358,8 +358,8 @@
 																				<div class="form-group ">
 																					<label class="control-label">Tên</label> <input
 																						type="text" class="form-control" name="NAME"
-																						value="${item.NAME}" /> <span id="NAME_errors"
-																						class="text-danger"></span>
+																						value="${item.NAME}" /> <span
+																						id="${item.ID}NAME_errors" class="text-danger"></span>
 																				</div>
 																				<!-- Hãng -->
 																				<div class="form-group">
@@ -371,7 +371,8 @@
 																								<c:if test="${entry.key == item.brand.ID}">selected</c:if>>
 																								${entry.value}</option>
 																						</c:forEach>
-																					</select> <span id="brand_errorss" class="text-danger"></span>
+																					</select> <span id="${item.ID}brand_errorss"
+																						class="text-danger"></span>
 																				</div>
 
 																				<div class="form-group">
@@ -384,7 +385,8 @@
 																								<c:if test="${entry.ID == item.category.ID}">selected</c:if>>
 																								${entry.NAME}</option>
 																						</c:forEach>
-																					</select> <span id="category_errorss" class="text-danger"></span>
+																					</select> <span id="${item.ID}category_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group">
 																					<label class="control-label">Hệ điều hành</label> <select
@@ -395,7 +397,8 @@
 																								<c:if test="${entry.key == item.system.ID}">selected</c:if>>
 																								${entry.value}</option>
 																						</c:forEach>
-																					</select> <span id="system_errorss" class="text-danger"></span>
+																					</select> <span id="${item.ID}system_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group">
 																					<label class="control-label">Cổng sạc</label> <select
@@ -408,7 +411,7 @@
 																								<c:if test="${entry.key == item.charging_port.ID}">selected</c:if>>
 																								${entry.value}</option>
 																						</c:forEach>
-																					</select> <span id="charging_port_errorss"
+																					</select> <span id="${item.ID}charging_port_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group">
@@ -422,7 +425,7 @@
 																								<c:if test="${entry.key == item.headphone_jack.ID}">selected</c:if>>
 																								${entry.value}</option>
 																						</c:forEach>
-																					</select> <span id="headphone_jack_errorss"
+																					</select> <span id="${item.ID}headphone_jack_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group">
@@ -438,7 +441,7 @@
 	                                                                                                selected</c:if>>
 																								${entry.value}</option>
 																						</c:forEach>
-																					</select> <span id="battery_type_errorss"
+																					</select> <span id="${item.ID}battery_type_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group">
@@ -452,7 +455,7 @@
 																								<c:if test="${entry.key == item.screen_resolution.ID}">selected</c:if>>
 																								${entry.value}</option>
 																						</c:forEach>
-																					</select> <span id="screen_resolution_errorss"
+																					</select> <span id="${item.ID}screen_resolution_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group">
@@ -466,27 +469,30 @@
 																								<c:if test="${entry.key == item.graphics_chip.ID}">selected</c:if>>
 																								${entry.value}</option>
 																						</c:forEach>
-																					</select> <span id="graphics_chip_errorss"
+																					</select> <span id="${item.ID}graphics_chip_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Chip</label> <input
 																						name="PROCESSOR" type="text" class="form-control"
 																						value="${item.PROCESSOR}" /> <span
-																						id="PROCESSOR_errors" class="text-danger"></span>
+																						id="${item.ID}PROCESSOR_errors"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Quay video</label> <input
 																						name="VIDEO_RECORDING" type="text"
 																						class="form-control"
 																						value="${item.VIDEO_RECORDING}" /> <span
-																						id="VIDEO_RECORDING_errors" class="text-danger"></span>
+																						id="${item.ID}VIDEO_RECORDING_errors"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Kết nối</label> <input
 																						name="CONNECTION" type="text" class="form-control"
 																						value="${item.CONNECTION}" /> <span
-																						id="CONNECTION_errors" class="text-danger"></span>
+																						id="${item.ID}CONNECTION_errors"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Mô tả</label>
@@ -494,14 +500,15 @@
 																						type="text" class="form-control"
 																						value="${item.DESCRIPTION}">${item.DESCRIPTION}</textarea>
 
-																					<span id="DESCRIPTION_errors" class="text-danger"></span>
+																					<span id="${item.ID}DESCRIPTION_errors"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Kích thước độ
 																						phân giải</label> <input name="SCREEN_RESOLUTIONKT"
 																						type="text" class="form-control"
 																						value="${item.SCREEN_RESOLUTIONKT}" /> <span
-																						id="SCREEN_RESOLUTIONKT_errors"
+																						id="${item.ID}SCREEN_RESOLUTIONKT_errors"
 																						class="text-danger"></span>
 																				</div>
 
@@ -510,79 +517,84 @@
 																				<div class="form-group ">
 																					<label class="control-label">Chiều rộng</label> <input
 																						name="WIDTH" type="number" class="form-control"
-																						value="${item.WIDTH}" /> <span id="WIDTH_errorss"
-																						class="text-danger"></span>
+																						value="${item.WIDTH}" /> <span
+																						id="${item.ID}WIDTH_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Chiều dài</label> <input
 																						name="LENGTH" type="number" step="any"
 																						class="form-control" value="${item.LENGTH}" /> <span
-																						id="LENGTH_errorss" class="text-danger"></span>
+																						id="${item.ID}LENGTH_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Chiều cao</label> <input
 																						name="HEIGHT" type="number" step="any"
 																						class="form-control" value="${item.HEIGHT}" /> <span
-																						id="HEIGHT_errorss" class="text-danger"></span>
+																						id="${item.ID}HEIGHT_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Kích thước
 																						màng hình</label> <input name="SCREEN_SIZE" type="number"
 																						step="any" class="form-control"
 																						value="${item.SCREEN_SIZE}" /> <span
-																						id="SCREEN_SIZE_errorss" class="text-danger"></span>
+																						id="${item.ID}SCREEN_SIZE_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Trọng lượng</label> <input
 																						name="WEIGHT" type="number" step="any"
 																						class="form-control" value="${item.WEIGHT}" /> <span
-																						id="WEIGHT_errorss" class="text-danger"></span>
+																						id="${item.ID}WEIGHT_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Dung lượng</label> <input
 																						name="BATTERY_CAPACITY" type="number" step="any"
 																						class="form-control"
 																						value="${item.BATTERY_CAPACITY}" /> <span
-																						id="BATTERY_CAPACITY_errorss" class="text-danger"></span>
+																						id="${item.ID}BATTERY_CAPACITY_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Ram</label> <input
 																						name="RAM" type="number" step="any"
 																						class="form-control" value="${item.RAM}" /> <span
-																						id="RAM_errorss" class="text-danger"></span>
+																						id="${item.ID}RAM_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Tần số làm mới</label>
 																					<input name="REFRESH_RATE" type="number" step="any"
 																						class="form-control" value="${item.REFRESH_RATE}" />
-																					<span id="REFRESH_RATE_errorss" class="text-danger"></span>
+																					<span id="${item.ID}REFRESH_RATE_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Độ sáng</label> <input
 																						name="MAXIMUM_BRIGHTNESS" type="number" step="any"
 																						class="form-control"
 																						value="${item.MAXIMUM_BRIGHTNESS}" /> <span
-																						id="MAXIMUM_BRIGHTNESS_errorss"
+																						id="${item.ID}MAXIMUM_BRIGHTNESS_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Tốc độ CPU</label> <input
 																						name="CPU_SPEED" type="number" step="any"
 																						class="form-control" value="${item.CPU_SPEED}" />
-																					<span id="CPU_SPEED_errorss" class="text-danger"></span>
+																					<span id="${item.ID}CPU_SPEED_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Camera trước</label> <input
 																						name="SELFIE_CAMERA" type="number" step="any"
 																						class="form-control" value="${item.SELFIE_CAMERA}" />
-																					<span id="SELFIE_CAMERA_errorss"
+																					<span id="${item.ID}SELFIE_CAMERA_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Camera sau</label> <input
 																						name="MAIN_CAMERA" type="number" step="any"
 																						class="form-control" value="${item.MAIN_CAMERA}" />
-																					<span id="MAIN_CAMERA_errorss" class="text-danger"></span>
+																					<span id="${item.ID}MAIN_CAMERA_errorss"
+																						class="text-danger"></span>
 																				</div>
 																			</div>
 																			<div class="col-md-4">
@@ -596,7 +608,8 @@
 																						id="imageInput1_${item.ID}" name="anhUpdate"
 																						type="file" class="form-control mt-3"
 																						onchange="previewImage(this, 'previewImg1_${item.ID}')">
-																					<span id="anh1_2_errorss" class="text-danger"></span>
+																					<span id="${item.ID}anh1_2_errorss"
+																						class="text-danger"></span>
 																				</div>
 																				<c:forEach var="image" items="${item.images}"
 																					varStatus="index" begin="1" end="5" step="1">
@@ -677,8 +690,6 @@
 																				</tr>
 																			</thead>
 																			<tbody>
-
-
 																				<c:forEach var="variant" items="${item.variants}"
 																					varStatus="stt">
 																					<tr>
@@ -698,23 +709,23 @@
 																						<td>${variant.color.NAME}</td>
 																						<td><c:choose>
 																								<c:when test="${variant.storage.GB == 32}">
-                                                                                        32 GB
-                                                                                    </c:when>
+	                                                                                        32 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 64}">
-                                                                                        64 GB
-                                                                                    </c:when>
+	                                                                                        64 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 128}">
-                                                                                        128 GB
-                                                                                    </c:when>
+	                                                                                        128 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 256}">
-                                                                                        256 GB
-                                                                                    </c:when>
+	                                                                                        256 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 512}">
-                                                                                        512 GB
-                                                                                    </c:when>
+	                                                                                        512 GB
+	                                                                                    </c:when>
 																								<c:when test="${variant.storage.GB == 1024}">
-                                                                                        1024 T
-                                                                                    </c:when>
+	                                                                                        1024 T
+	                                                                                    </c:when>
 																								<c:otherwise>Đang cập nhật</c:otherwise>
 																							</c:choose></td>
 																						<td><c:choose>
@@ -750,7 +761,8 @@
 																									<div class="modal-body">
 
 																										<form class="form-horizontal form-label-left"
-																											action="/admin/variant/update" method="post">
+																											action="/admin/variant/update" method="post"
+																											id="updateVariantForm${variant.ID}">
 																											<div class="row text-left">
 																												<div class="form-group">
 																													<input type="hidden" name="phone.ID"
@@ -774,7 +786,9 @@
 
 																													<div class="form-group">
 																														<label class="control-label">Màu</label> <select
-																															name="color.ID" class="form-select">
+																															name="color.ID"
+																															id="${variant.ID}colorUpdate"
+																															class="form-select">
 																															<option value="">Chọn màu</option>
 																															<c:forEach items="${listColor}"
 																																var="color">
@@ -782,12 +796,14 @@
 																																	<c:if test="${color.key == variant.color.ID}">selected</c:if>>
 																																	${color.value}</option>
 																															</c:forEach>
-																														</select>
+																														</select> <span class="text-danger"
+																															id="${variant.ID}colorUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Bộ
 																															nhớ trong</label> <select name="storage.ID"
+																															id="${variant.ID}storageUpdate"
 																															class="form-select">
 																															<option value="">Chọn dung lượng
 																															</option>
@@ -797,13 +813,15 @@
 																																	<c:if test="${st.key == variant.storage.ID}">selected</c:if>>
 																																	${st.value} GB</option>
 																															</c:forEach>
-																														</select>
+																														</select> <span class="text-danger"
+																															id="${variant.ID}storageUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Phần
 																															trăm giảm</label> <select
 																															name="discount_product.ID"
+																															id="${variant.ID}discount_productUpdate"
 																															class="form-select">
 																															<option value="">Chọn giảm giá</option>
 																															<c:forEach var="dp"
@@ -812,35 +830,48 @@
 																																	<c:if test="${dp.key == variant.discount_product.ID}">selected</c:if>>
 																																	${dp.value}%</option>
 																															</c:forEach>
-																														</select>
+																														</select> <span class="text-danger"
+																															id="${variant.ID}discount_productUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Ngày
 																															bắt đầu</label> <input type="date"
-																															name="START_DATE" class="form-control"
+																															name="START_DATE"
+																															id="${variant.ID}START_DATE_UPDATE"
+																															class="form-control"
 																															value="${variant.discount_product.START_DATE}">
+																														<span class="text-danger"
+																															id="${variant.ID}START_DATEUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Ngày
 																															kết thúc</label> <input type="date"
-																															name="EXPIRY_DATE" class="form-control"
+																															name="EXPIRY_DATE"
+																															id="${variant.ID}EXPIRY_DATE_UPDATE"
+																															class="form-control"
 																															value="${variant.discount_product.EXPIRY_DATE}">
+																														<span class="text-danger"
+																															id="${variant.ID}EXPIRY_DATEUpdate_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Số
 																															lượng</label> <input type="number"
 																															name="QUANTITY" class="form-control"
-																															value="${variant.QUANTITY}">
+																															value="${variant.QUANTITY}"> <span
+																															class="text-danger"
+																															id="${variant.ID}QUANTITY_error"></span>
 																													</div>
 
 																													<div class="form-group">
 																														<label class="control-label">Giá</label> <input
 																															type="number" step="any" name="PRICE"
 																															class="form-control"
-																															value="${variant.PRICE}">
+																															value="${variant.PRICE}"> <span
+																															class="text-danger"
+																															id="${variant.ID}PRICE_error"></span>
 																													</div>
 																												</div>
 																											</div>
@@ -849,7 +880,8 @@
 																													class="btn btn-secondary"
 																													data-bs-dismiss="modal">Close</button>
 																												<button type="submit"
-																													class="btn btn-primary">Update</button>
+																													class="btn btn-primary"
+																													onclick="updateVariant(${variant.ID})">Update</button>
 																											</div>
 																										</form>
 																									</div>
@@ -908,9 +940,10 @@
 																					</div>
 																					<div class="modal-body">
 																						<form class="form-horizontal form-label-left"
-																							action="/admin/variant/create" method="post">
+																							id="addVariant${item.ID}" method="post"
+																							action="/admin/variant/create">
 																							<div class="row text-left">
-																								<div class="form-group ">
+																								<div class="form-group">
 																									<input type="hidden" name="phone.ID"
 																										value="${item.ID}" /> <label
 																										class="control-label">Mã phone</label>
@@ -920,72 +953,85 @@
 																										value="PD${formattedCreateAt}${item.ID}"
 																										class="form-control">
 																								</div>
-																								<div class="form-group ">
+																								<div class="form-group">
 																									<label class="control-label">Màu</label> <select
-																										name="color.ID" class="form-select">
+																										name="color.ID" class="form-select"
+																										id="${item.ID}color">
 																										<option value="">Chọn màu</option>
 																										<c:forEach items="${listColor}" var="color">
 																											<option value="${color.key}"
 																												id="color-validate"
-																												<c:if test="${color.key == ObjectVariant.color.ID}">selected</c:if>>
-																												${color.value}</option>
+																												<c:if test="${color.key == ObjectVariant.color.ID}">selected</c:if>>${color.value}</option>
 																										</c:forEach>
-
-																									</select>
+																									</select> <span id="${item.ID}color_error"
+																										class="text-danger"></span>
 																								</div>
-																								<div class="form-group ">
+																								<div class="form-group">
 																									<label class="control-label">Bộ nhớ
 																										trong</label> <select name="storage.ID"
-																										class="form-select">
+																										id="${item.ID}storage" class="form-select">
 																										<option value="">Chọn dung lượng</option>
 																										<c:forEach var="st" items="${listStorage}">
-																											<option value="${st.key}" id="color-validate"
-																												<c:if test="${st.key == ObjectVariant.storage.ID}">selected</c:if>>
-																												${st.value} GB</option>
+																											<option value="${st.key}"
+																												id="storage-validate"
+																												<c:if test="${st.key == ObjectVariant.storage.ID}">selected</c:if>>${st.value}
+																												GB</option>
 																										</c:forEach>
-																									</select>
+																									</select> <span id="${item.ID}storage_error"
+																										class="text-danger"></span>
 																								</div>
-																								<div class="form-group ">
+																								<div class="form-group">
 																									<label class="control-label">Phần trăm
 																										giảm</label> <select name="discount_product.ID"
+																										id="${item.ID}discount_product"
 																										class="form-select">
 																										<option value="">Chọn giảm giá</option>
-																										<c:forEach var="st" items="${listDiscount}">
-																											<option value="${st.key}" id="color-validate"
-																												<c:if test="${st.key == ObjectVariant.discount_product.DISCOUNT_PERCENTAGE}">selected</c:if>>
-																												${st.value}%</option>
+																										<c:forEach var="db" items="${listDiscount}">
+																											<option value="${db.key}"
+																												<c:if test="${db.key == ObjectVariant.discount_product.DISCOUNT_PERCENTAGE}">selected</c:if>>${db.value}%</option>
 																										</c:forEach>
-																									</select>
+																									</select> <span id="${item.ID}discount_product_error"
+																										class="text-danger"></span>
 																								</div>
-																								<div class="form-group ">
+																								<div class="form-group">
 																									<label class="control-label">Ngày bắt
 																										đầu</label> <input type="date" name="START_DATE"
-																										class="form-control">
+																										id="${item.ID}START_DATE" class="form-control">
+																									<span id="${item.ID}START_DATE_error"
+																										class="text-danger"></span>
 																								</div>
-																								<div class="form-group ">
+																								<div class="form-group">
 																									<label class="control-label">Ngày kết
 																										thúc</label> <input type="date" name="EXPIRY_DATE"
-																										class="form-control">
+																										id="${item.ID}EXPIRY_DATE"
+																										class="form-control"> <span
+																										id="${item.ID}EXPIRY_DATE_error"
+																										class="text-danger"></span>
 																								</div>
-																								<div class="form-group ">
-																									<label class="control-label">Số lương</label> <input
+																								<div class="form-group">
+																									<label class="control-label">Số lượng</label> <input
 																										type="number" name="QUANTITY"
-																										class="form-control">
+																										class="form-control"> <span
+																										id="${item.ID}QUANTITY_error"
+																										class="text-danger"></span>
 																								</div>
-																								<div class="form-group ">
+																								<div class="form-group">
 																									<label class="control-label">Giá</label> <input
 																										type="number" step="any" name="PRICE"
-																										class="form-control">
+																										class="form-control"> <span
+																										id="${item.ID}PRICE_error" class="text-danger"></span>
 																								</div>
 																							</div>
 																							<div class="modal-footer">
 																								<button type="button" class="btn btn-secondary"
 																									data-bs-dismiss="modal">Close</button>
-																								<button type="submit" class="btn btn-primary">
-																									Create</button>
+																								<button type="submit" class="btn btn-primary"
+																									onclick="createVariantPhone(${item.ID})">Create</button>
 																							</div>
 																						</form>
+
 																					</div>
+
 																				</div>
 																			</div>
 																		</div>
@@ -1009,6 +1055,40 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<!-- Display message if exists -->
+	<c:if test="${not empty message}">
+		<script>
+	        var message = "${message}";
+	        var messageType = "${messageType}";
+	        var icon = messageType === "success" ? "success" : "error";
+	
+	        Swal.fire({
+	            icon: icon,
+	            title: message,
+	            showConfirmButton: false,
+	            timer: 1800
+	        }).then(() => {
+	            window.location.href = "/admin/product";
+	        });
+	    </script>
+	</c:if>
+	<c:if test="${not empty a}">
+		<script>
+        var messages = "${a}";
+        var messageTypes = "${b}";
+        var icon = messageTypes === "success" ? "success" : "error";
+        
+        Swal.fire({
+            icon: icon,
+            title: messages,
+            showConfirmButton: false,
+            timer: 1800
+        }).then(() => {
+            window.location.href = "/admin/product";
+        });
+    </script>
+	</c:if>
+
 	<script>
 		function previewImage(input, imgId) {
 			console.log("previewImage called for", imgId); // Log kiểm tra
@@ -1023,231 +1103,406 @@
 				reader.readAsDataURL(input.files[0]);
 			}
 		}
+		function updateVariant(idvariant) {
+		    $(document).ready(function() {
+		        $('#updateVariantForm' + idvariant).submit(function(event) {
+		            event.preventDefault();
+		            let formData = new FormData(this);
 
+		            $.ajax({
+		                type: 'POST',
+		                url: '/admin/variant/update',
+		                data: formData,
+		                contentType: false,
+		                processData: false,
+		                success: function(response) {
+		                    if (response.status === 'success') {
+		                        Swal.fire({
+		                            icon: 'success',
+		                            title: 'Cập nhật sản phẩm thành công',
+		                            showConfirmButton: false,
+		                            timer: 1050
+		                        });
+
+		                        setTimeout(function() {
+		                            window.location.href = '/admin/product';
+		                        }, 1600);
+		                    } else {
+		                        Swal.fire({
+		                            icon: 'error',
+		                            title: 'Có lỗi xảy ra khi cập nhật sản phẩm',
+		                            showConfirmButton: true
+		                        });
+		                    }
+		                },
+		                error: function(xhr) {
+		                    let errors = xhr.responseJSON;
+		                    $.each(errors, function(key, value) {
+		                    	if ($('#'+idvariant+'colorUpdate').val()== '') {
+									$('#'+idvariant+'colorUpdate_error').text('Vui lòng chọn màu trong danh sách');
+								}else{
+									$('#'+idvariant+'colorUpdate_error').text('');
+								}
+		                    	
+		                    	if ($('#'+idvariant+'storageUpdate').val()== '') {
+									$('#'+idvariant+'storageUpdate_error').text('Vui lòng chọn bộ nhớ trong danh sách');
+								}else{
+									$('#'+idvariant+'storageUpdate_error').text('');
+								}
+		                    	
+		                    	if ($('#'+idvariant+'discount_productUpdate').val()== '') {
+									$('#'+idvariant+'discount_productUpdate_error').text('Vui lòng chọn giảm giá trong danh sách');
+								}else{
+									$('#'+idvariant+'discount_productUpdate_error').text('');
+								}
+		                    	
+		                    	// Lấy giá trị của ngày bắt đầu, ngày kết thúc và ngày hiện tại từ các input
+		                    	var startDateStr = $('#' + idvariant + 'START_DATE_UPDATE').val().trim();
+		                    	var expiryDateStr = $('#' + idvariant + 'EXPIRY_DATE_UPDATE').val().trim();
+		                    	var currentDate = new Date(); // Ngày hiện tại
+
+		                    	// Kiểm tra nếu ngày bắt đầu và ngày kết thúc không được để trống
+		                    	if (startDateStr === "") {
+		                    	    $('#' + idvariant + 'START_DATEUpdate_error').text("Vui lòng không bỏ trống ngày bắt đầu!");
+		                    	} else if (expiryDateStr === "") {
+		                    	    $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text("Vui lòng không bỏ trống ngày kết thúc!");
+		                    	} else {
+		                    	    // Chuyển đổi ngày bắt đầu và ngày kết thúc thành đối tượng Date
+		                    	    var startDate = new Date(startDateStr);
+		                    	    var expiryDate = new Date(expiryDateStr);
+
+		                    	    // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
+		                    	    if (startDate >= expiryDate) {
+		                    	        $('#' + idvariant + 'START_DATEUpdate_error').text("Ngày bắt đầu không được lớn hơn hoặc bằng ngày kết thúc!");
+		                    	        $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text(""); // Đảm bảo clear lỗi ngày kết thúc nếu có
+		                    	    } else {
+		                    	        $('#' + idvariant + 'START_DATEUpdate_error').text("");
+		                    	        // Kiểm tra nếu ngày kết thúc nhỏ hơn hoặc bằng ngày hiện tại
+		                    	        if (expiryDate <= currentDate) {
+		                    	            $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text("Ngày kết thúc phải lớn hơn ngày hiện tại!");
+		                    	        } else {
+		                    	            $('#' + idvariant + 'EXPIRY_DATEUpdate_error').text("");
+		                    	        }
+		                    	    }
+		                    	}	
+							$('#'+ idvariant + key + '_error').text(value);
+		                    });
+		                }
+		            });
+		        });
+		    });
+		}
+
+		function createVariantPhone(id) {
+			$(document).ready(function() {			    
+		        // Prevent form submission
+		        $('#addVariant' + id).submit(function(event) {
+		            event.preventDefault();
+	
+		            // Initialize formData for AJAX submission
+		            let formData = new FormData(this);	            
+		            // AJAX request to submit form data
+		            $.ajax({
+		                type: 'POST',
+		                url: '/admin/variant/create',
+		                data: formData,
+		                contentType: false,
+		                processData: false,
+		                success: function(response) {
+		                    if (response.status === 'success') {
+		                        // Show success message using SweetAlert
+		                        Swal.fire({
+		                            icon: 'success',
+		                            title: 'Thêm biến thể thành công',
+		                            showConfirmButton: false,
+		                            timer: 1050
+		                        });
+	
+		                        // Redirect to product page after a delay
+		                        setTimeout(function() {
+		                            window.location.href = '/admin/product';
+		                        }, 1600);
+		                    }
+		                },
+		                error: function(response) {
+		                    // Handle errors returned from server
+		                    let errors = response.responseJSON;
+	
+		                    // Clear previous error messages
+		                    $('.text-danger').text('');
+	
+		                    // Display new error messages based on validation
+		                    $.each(errors, function(key, value) {
+		                   		
+		                    	console.log('xin chào : '+$('#'+id+'START_DATE').val())
+		                    	if($('#'+id+'discount_product').val() == ""){
+		                    		$('#'+id+'discount_product_error').text("Vui lòng chọn giảm giá trong danh sách!");
+		                    	}else{
+		                    		$('#'+id+'discount_product_error').text("");
+		                    	}
+		                    	
+		                    	if($('#'+id+'START_DATE').val().length === 0){
+		                    		$('#'+id+'START_DATE_error').text("Vui lòng không bỏ trống ngày bắt đầu!");
+		                    	}else{
+		                    		$('#'+id+'START_DATE_error').text("");
+		                    	}
+		                    	
+		                    	if($('#'+id+'EXPIRY_DATE').val().length === 0){
+		                    		$('#'+id+'EXPIRY_DATE_error').text("Vui lòng không bỏ trống ngày kết thúc!");
+		                    	}else{
+		                    		$('#'+id+'EXPIRY_DATE_error').text("");
+		                    	}			
+		                    	
+		                    	if($('#'+id+'storage').val() == ""){
+		                    		$('#'+id+'storage_error').text("Vui lòng chọn bộ nhớ trong danh sách!");
+		                    	}else{
+		                    		$('#'+id+'storage_error').text("");
+		                    	}
+		                    	
+		                    	if($('#'+id+'color').val() == ""){
+		                    		$('#'+id+'color_error').text("Vui lòng chọn bộ nhớ trong danh sách!");
+		                    	}else{
+		                    		$('#'+id+'color_error').text("");
+		                    	}
+		                    	// Lấy giá trị của ngày bắt đầu, ngày kết thúc và ngày hiện tại từ các input
+		                    	var startDateStr = $('#' + id + 'START_DATE').val().trim();
+		                    	var expiryDateStr = $('#' + id + 'EXPIRY_DATE').val().trim();
+		                    	var currentDate = new Date(); // Ngày hiện tại
+
+		                    	// Kiểm tra nếu ngày bắt đầu và ngày kết thúc không được để trống
+		                    	if (startDateStr === "") {
+		                    	    $('#' + id + 'START_DATE_error').text("Vui lòng không bỏ trống ngày bắt đầu!");
+		                    	} else if (expiryDateStr === "") {
+		                    	    $('#' + id + 'EXPIRY_DATE_error').text("Vui lòng không bỏ trống ngày kết thúc!");
+		                    	} else {
+		                    	    // Chuyển đổi ngày bắt đầu và ngày kết thúc thành đối tượng Date
+		                    	    var startDate = new Date(startDateStr);
+		                    	    var expiryDate = new Date(expiryDateStr);
+
+		                    	    // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
+		                    	    if (startDate >= expiryDate) {
+		                    	        $('#' + id + 'START_DATE_error').text("Ngày bắt đầu không được lớn hơn hoặc bằng ngày kết thúc!");
+		                    	        $('#' + id + 'EXPIRY_DATE_error').text(""); // Đảm bảo clear lỗi ngày kết thúc nếu có
+		                    	    } else {
+		                    	        $('#' + id + 'START_DATE_error').text("");
+		                    	        // Kiểm tra nếu ngày kết thúc nhỏ hơn hoặc bằng ngày hiện tại
+		                    	        if (expiryDate <= currentDate) {
+		                    	            $('#' + id + 'EXPIRY_DATE_error').text("Ngày kết thúc phải lớn hơn ngày hiện tại!");
+		                    	        } else {
+		                    	            $('#' + id + 'EXPIRY_DATE_error').text("");
+		                    	        }
+		                    	    }
+		                    	}	
+		                    	$('#'+ id + key + '_error').text(value);
+		                    });
+		                }
+		            });
+		        });
+		});
+		}
+		
+
+	
 		function updatePhone(id) {
 			$(document).ready(function() {
 				$('#updateForms'+id).submit(function(event) {
 					event.preventDefault(); // Prevent default form submission
 
 					let formData = new FormData(this); // Create FormData object
-					$.ajax({
-						type : 'POST',
-						url : '/admin/phone/update',
-						data : formData,
-						contentType : false, // Important for multipart/form-data
-						processData : false, // Important for multipart/form-data
-						success : function(response) {
-							if (response.status === 'success') {
-								Swal.fire({
-									icon : 'success',
-									title : 'Cập nhật sản phẩm thành công',
-									showConfirmButton : false,
-									timer : 1050
-								});
-
-								setTimeout(function() {
-									window.location.href = '/admin/product'; // Redirect to product list
-								}, 1600);
-							} else {
-								Swal.fire({
-									icon : 'error',
-									title : 'Có lỗi xảy ra khi cập nhật sản phẩm',
-									showConfirmButton : true
+						$.ajax({
+							type : 'POST',
+							url : '/admin/phone/update',
+							data : formData,
+							contentType : false, // Important for multipart/form-data
+							processData : false, // Important for multipart/form-data
+							success : function(response) {
+								if (response.status === 'success') {
+									Swal.fire({
+										icon : 'success',
+										title : 'Cập nhật sản phẩm thành công',
+										showConfirmButton : false,
+										timer : 1050
+									});
+	
+									setTimeout(function() {
+										window.location.href = '/admin/product'; // Redirect to product list
+									}, 1600);
+								} else {
+									Swal.fire({
+										icon : 'error',
+										title : 'Có lỗi xảy ra khi cập nhật sản phẩm',
+										showConfirmButton : true
+									});
+								}
+							},
+							error : function(xhr) {
+								let errors = xhr.responseJSON;
+								$.each(errors, function(key, value) {
+									$('#' + id + key + '_errorss').text(value); // Display errors in the corresponding error spans
 								});
 							}
-						},
-						error : function(xhr) {
-							let errors = xhr.responseJSON;
-							$.each(errors, function(key, value) {
-								$('#' + key + '_errorss').text(value); // Display errors in the corresponding error spans
-							});
-						}
-					});
+						});
 				});
 			});
 		}
 		
-		
-
-		$(document)
-				.ready(
-						function() {
-							$('#form')
-									.submit(
-											function(event) {
-												event.preventDefault(); // Ngăn chặn việc submit form mặc định
-												let formData = new FormData(
-														this);
-												$
-														.ajax({
-															type : 'POST',
-															url : '/admin/phone/create',
-															data : formData,
-															contentType : false,
-															processData : false,
-															success : function(
-																	response) {
-																if (response.status === 'success') {
-																	Swal
-																			.fire({
-																				icon : 'success',
-																				title : 'Thêm sản phẩm thành công',
-																				showConfirmButton : false,
-																				timer : 1050
-																			});
-
-																	setTimeout(
-																			function() {
-																				window.location.href = '/admin/product'; // Điều hướng tới trang danh sách người dùng
-																			},
-																			1600);
-																}
-															},
-															error : function(
-																	response) {
-																let errors = response.responseJSON;
-																$
-																		.each(
-																				errors,
-																				function(
-																						key,
-																						value) {
-																					if ($(
-																							'#brand')
-																							.val() === "") {
-																						$(
-																								'#brand_errors')
-																								.text(
-																										"Vui lòng chọn hãng điện thoại !");
-																					} else {
-																						$(
-																								'#brand_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#category')
-																							.val() === "") {
-																						$(
-																								'#category_errors')
-																								.text(
-																										'Vui lòng chọn danh mục !');
-																					} else {
-																						$(
-																								'#category_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#system')
-																							.val() === "") {
-																						$(
-																								'#system_errors')
-																								.text(
-																										'Vui lòng chọn hệ điều hành !');
-																					} else {
-																						$(
-																								'#system_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#charging_port')
-																							.val() === "") {
-																						$(
-																								'#charging_port_errors')
-																								.text(
-																										'Vui lòng chọn cổng sạc !');
-																					} else {
-																						$(
-																								'#charging_port_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#headphone_jack')
-																							.val() === "") {
-																						$(
-																								'#headphone_jack_errors')
-																								.text(
-																										'Vui lòng chọn cổng tai nghe !');
-																					} else {
-																						$(
-																								'#headphone_jack_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#battery_type')
-																							.val() === "") {
-																						$(
-																								'#battery_type_errors')
-																								.text(
-																										'Vui lòng chọn loại pin !');
-																					} else {
-																						$(
-																								'#battery_type_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#screen_resolution')
-																							.val() === "") {
-																						$(
-																								'#screen_resolution_errors')
-																								.text(
-																										'Vui lòng chọn độ phân giải màn hình !');
-																					} else {
-																						$(
-																								'#screen_resolution_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#graphics_chip')
-																							.val() === "") {
-																						$(
-																								'#graphics_chip_errors')
-																								.text(
-																										'Vui lòng chọn chip đồ họa !');
-																					} else {
-																						$(
-																								'#graphics_chip_errors')
-																								.text(
-																										'');
-																					}
-
-																					if ($(
-																							'#imageInput1')
-																							.val() === "") {
-																						$(
-																								'#anh_error')
-																								.text(
-																										'Vui lòng chọn ảnh !');
-																					} else {
-																						$(
-																								'#anh_error')
-																								.text(
-																										'');
-																					}
-
-																					$(
-																							'#'
-																									+ key
-																									+ '_error')
-																							.text(
-																									value); // Hiển thị lỗi trong thẻ span
-																				});
-															}
-														});
+ 
+		$(document).ready(function() {
+					$('#form').submit(function(event) {
+						event.preventDefault(); // Ngăn chặn việc submit form mặc định
+						let formData = new FormData(this);
+						$.ajax({
+							type : 'POST',
+							url : '/admin/phone/create',
+							data : formData,
+							contentType : false,
+							processData : false,
+							success : function(response) {
+								if (response.status === 'success') {
+									Swal.fire({
+												icon : 'success',
+												title : 'Thêm sản phẩm thành công',
+												showConfirmButton : false,
+												timer : 1050
 											});
+
+									setTimeout(
+									function() {
+										window.location.href = '/admin/product'; // Điều hướng tới trang danh sách người dùng
+									},1600);
+								}
+							},
+							error : function(
+									response) {
+								let errors = response.responseJSON;
+								$.each(errors,function(key,value) {
+										if ($('#brand').val() === "") {
+											$('#brand_errors').text("Vui lòng chọn hãng điện thoại !");}
+										else {$('#brand_errors').text('');
+										}
+
+													if ($(
+															'#category')
+															.val() === "") {
+														$(
+																'#category_errors')
+																.text(
+																		'Vui lòng chọn danh mục !');
+													} else {
+														$(
+																'#category_errors')
+																.text(
+																		'');
+													}
+
+													if ($(
+															'#system')
+															.val() === "") {
+														$(
+																'#system_errors')
+																.text(
+																		'Vui lòng chọn hệ điều hành !');
+													} else {
+														$(
+																'#system_errors')
+																.text(
+																		'');
+													}
+
+													if ($(
+															'#charging_port')
+															.val() === "") {
+														$(
+																'#charging_port_errors')
+																.text(
+																		'Vui lòng chọn cổng sạc !');
+													} else {
+														$(
+																'#charging_port_errors')
+																.text(
+																		'');
+													}
+
+													if ($(
+															'#headphone_jack')
+															.val() === "") {
+														$(
+																'#headphone_jack_errors')
+																.text(
+																		'Vui lòng chọn cổng tai nghe !');
+													} else {
+														$(
+																'#headphone_jack_errors')
+																.text(
+																		'');
+													}
+
+													if ($(
+															'#battery_type')
+															.val() === "") {
+														$(
+																'#battery_type_errors')
+																.text(
+																		'Vui lòng chọn loại pin !');
+													} else {
+														$(
+																'#battery_type_errors')
+																.text(
+																		'');
+													}
+
+													if ($(
+															'#screen_resolution')
+															.val() === "") {
+														$(
+																'#screen_resolution_errors')
+																.text(
+																		'Vui lòng chọn độ phân giải màn hình !');
+													} else {
+														$(
+																'#screen_resolution_errors')
+																.text(
+																		'');
+													}
+
+													if ($(
+															'#graphics_chip')
+															.val() === "") {
+														$(
+																'#graphics_chip_errors')
+																.text(
+																		'Vui lòng chọn chip đồ họa !');
+													} else {
+														$(
+																'#graphics_chip_errors')
+																.text(
+																		'');
+													}
+
+													if ($(
+															'#imageInput1')
+															.val() === "") {
+														$(
+																'#anh_error')
+																.text(
+																		'Vui lòng chọn ảnh !');
+													} else {
+														$(
+																'#anh_error')
+																.text(
+																		'');
+													}
+
+													$(
+															'#'
+																	+ key
+																	+ '_error')
+															.text(
+																	value); // Hiển thị lỗi trong thẻ span
+												});
+							}
+						});
+			});
 						});
 	</script>
 </body>

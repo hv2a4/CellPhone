@@ -6,7 +6,8 @@
 <!DOCTYPE html>
 <!-- SECTION -->
 <div class="section">
-	<form id="succussForm" action="/shop/ordersuccuss" method="post"
+<!-- code có cộng tiền ship vào -->
+	<form id="succussForm" action="/shop/ordersuccess" method="post"
 		onsubmit="return submitOrder();">
 		<!-- container -->
 		<div class="container">
@@ -45,7 +46,10 @@
 						<div class="order-col">
 							<div>Vận Chuyển</div>
 							<div>
-								<strong>MIỄN PHÍ</strong>
+								<strong id="shippingFee">
+								 <fmt:formatNumber value="${order.address.SHIPPING_FEE}"
+											pattern="###,###.###" />
+								</strong>
 							</div>
 						</div>
 						<div class="order-col">
@@ -53,13 +57,15 @@
 								<strong>TỔNG CỘNG</strong>
 							</div>
 							<div>
-								<strong class="order-total"> <fmt:formatNumber
-										value="${empty order?0:totalOrder}" pattern="###,###.###" /></strong>
+								<strong id="totalOrder" class="order-total"> <fmt:formatNumber
+										value="${empty order?0:totalOrder+order.address.SHIPPING_FEE}" pattern="###,###.###" />
+										</strong>
+								<input type="hidden" name="moneys" id="moneys" value="${empty order?0:totalOrder}"> 		
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
-						<select class="input" name="address">
+						<select class="input" name="address" id="addressSelect" onchange="sendAddress()">
 							<c:forEach var="adr" items="${user.addresses}">
 								<option name="address" value="${adr.ID}">${adr.ADDRESS}</option>
 							</c:forEach>
@@ -108,6 +114,52 @@
 	</form>
 </div>
 <!-- /SECTION -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function sendAddress() {
+        var addressID = document.getElementById("addressSelect").value;
+        var totalOrderText = document.getElementById("moneys").value;
+        console.log(totalOrderText)
+       var totalOrderNumber = parseFloat(totalOrderText); 
+         totalOrderNumber = parseInt(totalOrderNumber.toFixed(0)); 
+        var formattedNumber = new Intl.NumberFormat('en-US').format(totalOrderNumber);
+
+        $.ajax({
+            url: '/shop/getShippingFee',
+            type: 'GET',
+            data: { address: addressID },
+            success: function(response) {
+                console.log(response); // Ghi log phản hồi
+                if (response && response.shippingFee !== undefined) {
+                	 var shippingFeeNumber = Number(response.shippingFee);
+                	 var formattedFee = new Intl.NumberFormat('en-US', {
+                         minimumFractionDigits: 0,
+                         maximumFractionDigits: 3,
+                         useGrouping: true
+                     }).format(response.shippingFee);
+                	 console.log(totalOrderNumber)
+                	  console.log(shippingFeeNumber)
+                	 var total = totalOrderNumber + shippingFeeNumber;
+                	 
+                	 var formattedTotal = new Intl.NumberFormat('en-US', {
+                		    minimumFractionDigits: 0,
+                		    maximumFractionDigits: 3,
+                		    useGrouping: true
+                		}).format(total);
+
+                    document.getElementById("shippingFee").innerText = formattedFee.replace(/,/g, '.');
+                    document.getElementById("totalOrder").innerText = formattedTotal.replace(/,/g, '.');
+                } else {
+                    document.getElementById("shippingFee").innerText = "lỗi";
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                document.getElementById("shippingFee").innerText = "lỗi 2";
+            }
+        });
+    }
+</script>
 <script>
 //Lắng nghe sự kiện change trên các radio button phương thức thanh toán
 var paymentRadios = document.querySelectorAll('input[name="payment"]');

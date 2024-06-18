@@ -175,7 +175,8 @@
 									</div>
 								</div>
 								<div class="add-to-cart">
-									<a href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
+									<a
+										href="/shop/product/${phone.ID}?id_variant=${variantmd.ID}&id_storage=${variantmd.storage.ID}">
 										<button class="add-to-cart-btn" type="button">
 											<i class="fa-brands fa-bitcoin" style="font-size: 20px;"></i>
 											Mua ngay
@@ -194,15 +195,16 @@
 			</div>
 			</c:if>
 
-
-			<div class="store-filter clearfix text-right">
-				<input type="hidden" name="pages" id="pages"
-					value="${productPage.number + 1}">
-				<c:forEach var="item" begin="1" end="${productPage.totalPages}"
-					step="1">
-					<button type="button" class="btn" onclick="changePage(${item})">${item}</button>
-				</c:forEach>
-			</div>
+			<c:if test="${productPage.totalPages!=1}">
+				<div class="store-filter clearfix text-right">
+					<input type="hidden" name="pages" id="pages"
+						value="${productPage.number + 1}">
+					<c:forEach var="item" begin="1" end="${productPage.totalPages}"
+						step="1">
+						<button type="button" class="btn" onclick="changePage(${item})">${item}</button>
+					</c:forEach>
+				</div>
+			</c:if>
 		</form>
 	</div>
 </div>
