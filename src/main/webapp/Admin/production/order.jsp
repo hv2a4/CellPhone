@@ -225,7 +225,8 @@
 																			<h2>Địa chỉ: ${item.address.ADDRESS}</h2>
 																			<h2>Phương thức thanh toán:
 																				${item.payment_method.NAME}</h2>
-																			<h2>Tổng khấu trừ: ${item.TOTAL_DISCOUNT}</h2>
+																			<h2>Tổng giảm giá: <fmt:formatNumber type="number" currencyCode="VND"
+																						value="${item.TOTAL_DISCOUNT}" /></h2>
 																			<h2>
 																				Tổng tiền:
 																				<fmt:formatNumber type="number" currencyCode="VND"
@@ -549,7 +550,11 @@
 																				<h2>Địa chỉ: ${item.address.ADDRESS}</h2>
 																				<h2>Phương thức thanh toán:
 																					${item.payment_method.NAME}</h2>
-																				<h2>Tổng khấu trừ: ${item.TOTAL_DISCOUNT}</h2>
+																				<h2>
+																					Tổng giảm giá:
+																					<fmt:formatNumber type="number" pattern="###,###"
+																						value="${item.TOTAL_DISCOUNT}" />
+																				</h2>
 																				<h2>
 																					Tổng tiền:
 																					<fmt:formatNumber type="number" currencyCode="VND"
