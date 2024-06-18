@@ -654,7 +654,7 @@ public class UserController {
 			request.setAttribute("id_oder", invm.getID());
 			request.setAttribute("id_address", invm.getOrder().getAddress().getID());
 
-			int totalAmountInt = invm.getTOTAL_AMOUNT().intValue();
+			long totalAmountInt = invm.getTOTAL_AMOUNT().intValue();
 			String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 			String vnpayUrl = vnPayService.createOrder(totalAmountInt, invm.getID() + "", baseUrl);
 			return "redirect:" + vnpayUrl;
