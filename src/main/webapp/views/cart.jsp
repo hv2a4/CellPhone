@@ -87,7 +87,7 @@
 						<div class="col-md-12">
 							<span class="totalPrice pull-right">Tổng tiền: <span><fmt:formatNumber
 										pattern="###,###.###" value="${totalPrice}"></fmt:formatNumber></span>
-								đ
+								
 							</span>
 
 						</div>
