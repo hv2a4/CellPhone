@@ -17,7 +17,6 @@ import com.vn.entity.system;
 public interface phoneDao extends JpaRepository<phone, Integer> {
 	@Query(value = "EXEC GetTop7Phones", nativeQuery = true)
 	List<Object[]> getTop7Phones();
-
 	@Query("SELECT p FROM phone p WHERE p.category.ID = ?1 AND p.brand.ID = ?2")
 	List<phone> findProductsByCategoryAndBrand(int categoryId, int brandId);
 	
