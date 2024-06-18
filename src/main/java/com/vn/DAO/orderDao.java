@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.vn.entity.discount_code;
+import com.vn.entity.invoice;
 import com.vn.entity.order;
 import com.vn.entity.user;
 
@@ -32,5 +33,4 @@ public interface orderDao extends JpaRepository<order, Integer> {
 	
 	@Query("SELECT o FROM order o ORDER BY o.UPDATE_AT DESC")
 	Page<order> findAllSX(Pageable pageable);
-	
 }
