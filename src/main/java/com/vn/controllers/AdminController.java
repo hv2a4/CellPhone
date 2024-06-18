@@ -738,9 +738,8 @@ public class AdminController {
 
 	@GetMapping("order")
 	public String getQLDonHang(Model model, @RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
-		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 12);
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 10);
 		Page<order> pageOrder = orderDao.findAllSX(pageable);
-
 		String page = "order.jsp";
 		model.addAttribute("page", page);
 		model.addAttribute("pageOrder", pageOrder);
