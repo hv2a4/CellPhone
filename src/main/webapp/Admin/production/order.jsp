@@ -7,7 +7,6 @@
 <!DOCTYPE html>
 <html>
 <body>
-
 	<div class="row">
 		<div class="col-md-12 col-sm-12 ">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -74,7 +73,9 @@
 					</button>
 				</li>
 			</ul>
+
 			<div class="tab-content" id="myTabContent">
+				<!-- Danh Sách Tất Cả Đơn Hàng -->
 				<div class="tab-pane fade show active" id="home-tab-pane"
 					role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 					<div class="clearfix"></div>
@@ -83,7 +84,6 @@
 							<div class="x_panel">
 								<div class="x_title">
 									<h2>Danh Sách</h2>
-
 									<div class="clearfix"></div>
 								</div>
 								<div class="x_content">
@@ -108,12 +108,14 @@
 															varStatus="loop">
 															<tr>
 																<td>DK<fmt:formatDate value="${item.UPDATE_AT}"
-																		pattern="yyyy-MM-dd" />${loop.index +1}</td>
+																		pattern="yyyy-MM-dd" />${loop.index +1}
+																</td>
 																<td>${item.user.FULLNAME}</td>
 																<td><fmt:formatNumber type="currency"
 																		currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																<td><fmt:formatDate value="${item.UPDATE_AT}"
 																		pattern="yyyy-MM-dd HH:mm:ss" /></td>
+																<!-- Trạng thái giao hàng -->
 																<td><c:choose>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Hoàn thành'}">
@@ -157,6 +159,7 @@
 																				Chờ xác nhận trả hàng </span>
 																		</c:when>
 																	</c:choose></td>
+																<!-- Hoạt động -->
 																<td class="text-center"><c:choose>
 																		<c:when
 																			test="${item.status_order.STATUS == 'Hoàn thành'}">
@@ -206,6 +209,7 @@
 																		</c:when>
 																	</c:choose></td>
 															</tr>
+															<!-- Chi tiết đơn hàng -->
 															<div class="modal fade"
 																id="exampleModal_${loop.index + 1}" tabindex="-1"
 																aria-labelledby="exampleModalLabel_${loop.index + 1}"
@@ -245,6 +249,7 @@
 																	</div>
 																</div>
 															</div>
+															<!-- Lý do hủy đơn hàng -->
 															<div class="modal fade" id="xemlydo_${loop.index + 1}"
 																tabindex="-1"
 																aria-labelledby="exampleModalLabel_${loop.index + 1}"
@@ -256,7 +261,8 @@
 																				id="exampleModalLabel_${loop.index + 1}">Xem lý
 																				do</h1>
 																			<button type="button" class="btn-close"
-																				data-bs-dismiss="modal" aria-label="Close"></button>
+																				data-bs-dismiss="modal" aria-label="Close">
+																			</button>
 																		</div>
 																		<div class="modal-body">
 																			<h2>${item.user.USERNAME}-${item.user.FULLNAME}</h2>
@@ -273,6 +279,7 @@
 														</c:forEach>
 													</tbody>
 												</table>
+												<!-- Phân Trang -->
 												<c:if test="${pageOrder.totalPages!=1}">
 													<div class="text-right">
 														<c:forEach var="item" begin="1"
@@ -290,9 +297,10 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Chờ xác nhận -->
 				<div class="tab-pane fade" id="profile-tab-pane" role="tabpanel"
 					aria-labelledby="profile-tab" tabindex="0">
-
 					<div class="clearfix"></div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12 ">
@@ -353,16 +361,15 @@
 					</div>
 				</div>
 
+				<!-- Đã xác nhận -->
 				<div class="tab-pane fade" id="contact-tab-pane" role="tabpanel"
 					aria-labelledby="contact-tab" tabindex="0">
-
 					<div class="clearfix"></div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12 ">
 							<div class="x_panel">
 								<div class="x_title">
 									<h2>Danh Sách</h2>
-
 									<div class="clearfix"></div>
 								</div>
 								<div class="x_content">
@@ -401,7 +408,6 @@
 																		<button class="btn" onclick="delivery(${item.ID})"
 																			style="width: 100px; background-color: #17a2b8; color: whitesmoke;">
 																			Giao hàng</button>
-
 																	</td>
 																</tr>
 															</c:if>
@@ -416,9 +422,10 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Đang giao hàng -->
 				<div class="tab-pane fade" id="dangvanchuyen" role="tabpanel"
 					aria-labelledby="dangvanchuyen-tab" tabindex="0">
-
 					<div class="clearfix"></div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12 ">
@@ -451,7 +458,8 @@
 															<c:if test="${item.status_order.STATUS == 'Giao hàng'}">
 																<tr>
 																	<td>DK<fmt:formatDate value="${item.UPDATE_AT}"
-																			pattern="yyyyMMdd" />${loop.index +1}</td>
+																			pattern="yyyyMMdd" />${loop.index +1}
+																	</td>
 																	<td>${item.user.FULLNAME}</td>
 																	<td><fmt:formatNumber type="currency"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
@@ -460,10 +468,11 @@
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #007bff; color: white; font-size: 15px;">
 																			Giao hàng </span></td>
-																	<td class="text-center"><button class="btn"
-																			onclick="completed(${item.ID})"
+																	<td class="text-center">
+																		<button class="btn" onclick="completed(${item.ID})"
 																			style="width: 100px; background-color: #007bff; color: white;">
-																			Hoàn tất</button></td>
+																			Hoàn tất</button>
+																	</td>
 																</tr>
 															</c:if>
 														</c:forEach>
@@ -477,16 +486,16 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Đã giao xong -->
 				<div class="tab-pane fade" id="hoanthanh" role="tabpanel"
 					aria-labelledby="hoanthanh-tab" tabindex="0">
-
 					<div class="clearfix"></div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12 ">
 							<div class="x_panel">
 								<div class="x_title">
 									<h2>Danh Sách</h2>
-
 									<div class="clearfix"></div>
 								</div>
 								<div class="x_content">
@@ -541,7 +550,8 @@
 																					id="exampleModalLabels_${loop.index + 1}">Chi
 																					tiết</h1>
 																				<button type="button" class="btn-close"
-																					data-bs-dismiss="modal" aria-label="Close"></button>
+																					data-bs-dismiss="modal" aria-label="Close">
+																				</button>
 																			</div>
 																			<div class="modal-body">
 																				<h2>Tên: ${item.user.FULLNAME}</h2>
@@ -581,9 +591,10 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Trả hàng -->
 				<div class="tab-pane fade" id="trahang" role="tabpanel"
 					aria-labelledby="trahang-tab" tabindex="0">
-
 					<div class="clearfix"></div>
 					<div class="row">
 						<div class="col-md-12 col-sm-12 ">
@@ -625,9 +636,11 @@
 																	<td><span class="badge rounded-pill"
 																		style="width: 100px; background-color: #9e9e9e; color: white; font-size: 15px;">
 																			Trả hàng </span></td>
-																	<td class="text-center"><button
-																			class="btn btn-dark" onclick="returns(${item.ID})"
-																			style="width: 100px;">Đã nhận</button></td>
+																	<td class="text-center">
+																		<button class="btn btn-dark"
+																			onclick="returns(${item.ID})" style="width: 100px;">
+																			Đã nhận</button>
+																	</td>
 																</tr>
 															</c:if>
 														</c:forEach>
@@ -641,6 +654,8 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Đã hủy -->
 				<div class="tab-pane fade" id="dahuy" role="tabpanel"
 					aria-labelledby="dahuy-tab" tabindex="0">
 					<div class="clearfix"></div>
@@ -693,6 +708,7 @@
 																			Lý do</button>
 																	</td>
 																</tr>
+																<!-- Lý do trả hàng -->
 																<div class="modal fade" id="xemlydos_${loop.index + 1}"
 																	tabindex="-1"
 																	aria-labelledby="exampleModalLabel_${loop.index + 1}"
@@ -704,11 +720,11 @@
 																					id="exampleModalLabel_${loop.index + 1}">Xem
 																					lý do</h1>
 																				<button type="button" class="btn-close"
-																					data-bs-dismiss="modal" aria-label="Close"></button>
+																					data-bs-dismiss="modal" aria-label="Close">
+																				</button>
 																			</div>
 																			<div class="modal-body">
-																				<h2>${item.user.USERNAME}-
-																					${item.user.FULLNAME}</h2>
+																				<h2>${item.user.USERNAME}-${item.user.FULLNAME}</h2>
 																				<br>
 																				<p>${item.REASON}</p>
 																			</div>
@@ -731,6 +747,8 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Chờ xác nhận trả hàng -->
 				<div class="tab-pane fade" id="choxacnhantrahang" role="tabpanel"
 					aria-labelledby="choxacnhantrahang-tab" tabindex="0">
 					<div class="clearfix"></div>
@@ -739,7 +757,6 @@
 							<div class="x_panel">
 								<div class="x_title">
 									<h2>Danh Sách</h2>
-
 									<div class="clearfix"></div>
 								</div>
 								<div class="x_content">
@@ -776,7 +793,7 @@
 																			pattern="yyyy-MM-dd HH:mm:ss" /></td>
 																	<td><span class="badge rounded-pill"
 																		style="width: 120px; background-color: #ffeb3b; color: white; font-size: 15px;">
-																			Chờ xác nhận</span></td>
+																			Chờ xác nhận </span></td>
 																	<td class="text-center">
 																		<button type="button" class="btn"
 																			style="width: 120px; background-color: #ffeb3b; color: white;"
@@ -791,6 +808,7 @@
 																			Xác nhận</button>
 																	</td>
 																</tr>
+																<!-- Xem lý do trả hàng -->
 																<div class="modal fade"
 																	id="xemlydotrahang_${loop.index + 1}" tabindex="-1"
 																	aria-labelledby="exampleModalLabel_${loop.index + 1}"
@@ -802,11 +820,11 @@
 																					id="exampleModalLabel_${loop.index + 1}">Xem
 																					lý do</h1>
 																				<button type="button" class="btn-close"
-																					data-bs-dismiss="modal" aria-label="Close"></button>
+																					data-bs-dismiss="modal" aria-label="Close">
+																				</button>
 																			</div>
 																			<div class="modal-body">
-																				<h2>${item.user.USERNAME}-
-																					${item.user.FULLNAME}</h2>
+																				<h2>${item.user.USERNAME}-${item.user.FULLNAME}</h2>
 																				<br>
 																				<p>${item.REASON}</p>
 																			</div>
