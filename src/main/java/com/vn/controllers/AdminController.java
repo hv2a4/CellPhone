@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
+import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,10 +87,6 @@ import com.vn.utils.SessionService;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 
 @Controller
 @RequestMapping("/admin")
@@ -581,7 +578,7 @@ public class AdminController {
 		model.addAttribute("list_discount_code", list_discount_code);
 
 		return "/Admin/production/homeadmin";
-//		return "redirect:/admin/discount";
+		// return "redirect:/admin/discount";
 	}
 
 	@GetMapping("ajax/getdiscount_code/{id}")
@@ -1738,42 +1735,44 @@ public class AdminController {
 		}
 		return "/Admin/production/homeadmin";
 	}
-//	
-//	@GetMapping("payment_method")
-//	public String getQLpayment_method(Model model) {
-//		String page = "payment_method.jsp";
-//		model.addAttribute("page", page);
-//
-//		List<payment_method> list_payment_method = payment_methodDao.findAll();
-//		model.addAttribute("list_payment_method", list_payment_method);
-//
-//		payment_method payment_method = new payment_method();
-//		model.addAttribute("payment_method", payment_method);
-//
-//		payment_method payment_methodUpdate = new payment_method();
-//		model.addAttribute("payment_methodUpdate", payment_methodUpdate);
-//
-//		return "/Admin/production/homeadmin";
-//	}
-//
-//	@PostMapping("payment_method/create")
-//	public String postMethodName(@ModelAttribute("payment_method") payment_method payment_method) {
-//		payment_methodDao.save(payment_method);
-//		return "redirect:/admin/payment_method";
-//	}
-//
-//	@PostMapping("payment_method/update")
-//	public String updatePayment_method(@ModelAttribute("payment_methodUpdate") payment_method payment_methodUpdate) {
-//		payment_methodDao.save(payment_methodUpdate);
-//		return "redirect:/admin/payment_method";
-//	}
-//
-//	@GetMapping("payment_method/delete")
-//	public String deletepayment_method(@Param("id") Integer id) {
-//		payment_method payment_method = payment_methodDao.getById(id);
-//		payment_methodDao.delete(payment_method);
-//		return "redirect:/admin/payment_method";
-//	}
+	//
+	// @GetMapping("payment_method")
+	// public String getQLpayment_method(Model model) {
+	// String page = "payment_method.jsp";
+	// model.addAttribute("page", page);
+	//
+	// List<payment_method> list_payment_method = payment_methodDao.findAll();
+	// model.addAttribute("list_payment_method", list_payment_method);
+	//
+	// payment_method payment_method = new payment_method();
+	// model.addAttribute("payment_method", payment_method);
+	//
+	// payment_method payment_methodUpdate = new payment_method();
+	// model.addAttribute("payment_methodUpdate", payment_methodUpdate);
+	//
+	// return "/Admin/production/homeadmin";
+	// }
+	//
+	// @PostMapping("payment_method/create")
+	// public String postMethodName(@ModelAttribute("payment_method") payment_method
+	// payment_method) {
+	// payment_methodDao.save(payment_method);
+	// return "redirect:/admin/payment_method";
+	// }
+	//
+	// @PostMapping("payment_method/update")
+	// public String updatePayment_method(@ModelAttribute("payment_methodUpdate")
+	// payment_method payment_methodUpdate) {
+	// payment_methodDao.save(payment_methodUpdate);
+	// return "redirect:/admin/payment_method";
+	// }
+	//
+	// @GetMapping("payment_method/delete")
+	// public String deletepayment_method(@Param("id") Integer id) {
+	// payment_method payment_method = payment_methodDao.getById(id);
+	// payment_methodDao.delete(payment_method);
+	// return "redirect:/admin/payment_method";
+	// }
 
 	@GetMapping("ajax/getpayment_method/{id}")
 	@ResponseBody
@@ -1895,15 +1894,15 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
-//	@ModelAttribute("fillRank")
-//	public Map<Integer, String> getCategory() {
-//		Map<Integer, String> map = new HashMap<>();
-//		List<rank> ranks = rankDao.findAll();
-//		for (rank r : ranks) {
-//			map.put(r.getID(), r.getNAME());
-//		}
-//		return map;
-//	}
+	@ModelAttribute("fillRank")
+	public Map<Integer, String> getCategory() {
+		Map<Integer, String> map = new HashMap<>();
+		List<rank> ranks = rankDao.findAll();
+		for (rank r : ranks) {
+			map.put(r.getID(), r.getNAME());
+		}
+		return map;
+	}
 
 	@ModelAttribute("fillRole")
 	public Map<Boolean, String> getRole() {
@@ -1918,7 +1917,6 @@ public class AdminController {
 		Map<String, String> map = new HashMap<>();
 		map.put("NAM", "Nam");
 		map.put("NU", "Nữ");
-		map.put("KHAC", "Khác");
 		return map;
 	}
 
@@ -1932,7 +1930,7 @@ public class AdminController {
 	public ResponseEntity<Map<String, String>> create(Model model, @Validated @ModelAttribute("userItem") user users,
 			BindingResult bindingResult, @RequestParam("photo_file") MultipartFile img) throws IOException {
 		Map<String, String> response = new HashMap<>();
-		
+
 		if (bindingResult.hasErrors()) {
 			// Trả về lỗi xác thực
 			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
@@ -1961,13 +1959,32 @@ public class AdminController {
 			users.setSTATUS(true);
 			users.setCREATE_AT(new Date());
 			users.setUPDATE_AT(new Date());
-
+			users.setROLE(true);
+			rank rank = new rank();
+			rank.setID(5);
+			users.setRank(rank);
 			// Lưu người dùng vào cơ sở dữ liệu
 			userDao.save(users);
 		}
 		response.put("status", "success");
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("delete/{username}")
+	public String deleteUser(@PathVariable("username") String username, RedirectAttributes redirectAttributes) {
+	    try {
+	        userDao.deleteById(username);
+	        redirectAttributes.addFlashAttribute("message", "Vô hiệu hóa thành công");
+	        redirectAttributes.addFlashAttribute("messageType", "success");
+	        System.out.println("Thành công");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("message", "Không thể vô hiệu hóa. Tài khoản đang được sử dụng.");
+	        redirectAttributes.addFlashAttribute("messageType", "error");
+	        System.out.println("Lỗi");
+	    }
+	    return "redirect:/admin/user";
+	}
+
 
 	@PostMapping("variant/create")
 	public ResponseEntity<Map<String, String>> createVariant(
@@ -1994,19 +2011,19 @@ public class AdminController {
 
 	@GetMapping("variant/detele/{id}")
 	public String deleteVariant(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-	    try {	        
-	        variantDao.deleteById(id);
-	        redirectAttributes.addFlashAttribute("a", "Hoàn tất");
-	        redirectAttributes.addFlashAttribute("b", "success");
-	    } catch (DataIntegrityViolationException e) {
-	        redirectAttributes.addFlashAttribute("a", "Không thể xóa. Bản ghi đang được sử dụng.");
-	        redirectAttributes.addFlashAttribute("b", "error");
-	    } catch (Exception e) {
-	        redirectAttributes.addFlashAttribute("a", "Có lỗi xảy ra khi xóa bản ghi.");
-	        redirectAttributes.addFlashAttribute("b", "error");
-	    }
+		try {
+			variantDao.deleteById(id);
+			redirectAttributes.addFlashAttribute("a", "Hoàn tất");
+			redirectAttributes.addFlashAttribute("b", "success");
+		} catch (DataIntegrityViolationException e) {
+			redirectAttributes.addFlashAttribute("a", "Không thể xóa. Bản ghi đang được sử dụng.");
+			redirectAttributes.addFlashAttribute("b", "error");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("a", "Có lỗi xảy ra khi xóa bản ghi.");
+			redirectAttributes.addFlashAttribute("b", "error");
+		}
 
-	    return "redirect:/admin/product";
+		return "redirect:/admin/product";
 	}
 
 	@GetMapping("user")
