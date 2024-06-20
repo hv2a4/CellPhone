@@ -111,7 +111,7 @@
 																		pattern="yyyy-MM-dd" />${loop.index +1}
 																</td>
 																<td>${item.user.FULLNAME}</td>
-																<td><fmt:formatNumber type="currency"
+																<td><fmt:formatNumber type="number"
 																		currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																<td><fmt:formatDate value="${item.UPDATE_AT}"
 																		pattern="yyyy-MM-dd HH:mm:ss" /></td>
@@ -229,10 +229,11 @@
 																			<h2>Địa chỉ: ${item.address.ADDRESS}</h2>
 																			<h2>Phương thức thanh toán:
 																				${item.payment_method.NAME}</h2>
-																			<h2>Tổng khấu trừ: ${item.TOTAL_DISCOUNT}</h2>
+																			<h2>Tổng giảm giá: <fmt:formatNumber type="number" currencyCode="VND"
+																						value="${item.TOTAL_DISCOUNT}" /></h2>
 																			<h2>
 																				Tổng tiền:
-																				<fmt:formatNumber type="currency" currencyCode="VND"
+																				<fmt:formatNumber type="number" currencyCode="VND"
 																					value="${item.TOTAL_AMOUNT}" />
 																			</h2>
 																			<h2>Ngày tạo: ${item.CREATE_AT}</h2>
@@ -336,7 +337,7 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency"
+																	<td><fmt:formatNumber type="number"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.CREATE_AT}</td>
 																	<td><span class="badge rounded-pill"
@@ -398,7 +399,7 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency"
+																	<td><fmt:formatNumber type="number"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td>${item.UPDATE_AT}</td>
 																	<td><span class="badge rounded-pill"
@@ -461,7 +462,7 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency"
+																	<td><fmt:formatNumber type="number"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td><fmt:formatDate value="${item.UPDATE_AT}"
 																			pattern="yyyy-MM-dd HH:mm:ss" /></td>
@@ -524,7 +525,7 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency"
+																	<td><fmt:formatNumber type="number"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td><fmt:formatDate value="${item.UPDATE_AT}"
 																			pattern="yyyy-MM-dd HH:mm:ss" /></td>
@@ -559,11 +560,15 @@
 																				<h2>Địa chỉ: ${item.address.ADDRESS}</h2>
 																				<h2>Phương thức thanh toán:
 																					${item.payment_method.NAME}</h2>
-																				<h2>Tổng khấu trừ: ${item.TOTAL_DISCOUNT}</h2>
+																				<h2>
+																					Tổng giảm giá:
+																					<fmt:formatNumber type="number" pattern="###,###"
+																						value="${item.TOTAL_DISCOUNT}" />
+																				</h2>
 																				<h2>
 																					Tổng tiền:
-																					<fmt:formatNumber type="currency"
-																						currencyCode="VND" value="${item.TOTAL_AMOUNT}" />
+																					<fmt:formatNumber type="number" currencyCode="VND"
+																						value="${item.TOTAL_AMOUNT}" />
 																				</h2>
 																				<h2>Ngày tạo: ${item.CREATE_AT}</h2>
 																				<h2>
@@ -629,7 +634,7 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency"
+																	<td><fmt:formatNumber type="number"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td><fmt:formatDate value="${item.UPDATE_AT}"
 																			pattern="yyyy-MM-dd HH:mm:ss" /></td>
@@ -693,7 +698,7 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency"
+																	<td><fmt:formatNumber type="number"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td><fmt:formatDate value="${item.UPDATE_AT}"
 																			pattern="yyyy-MM-dd HH:mm:ss" /></td>
@@ -787,7 +792,7 @@
 																			pattern="yyyyMMdd" />${loop.index +1}
 																	</td>
 																	<td>${item.user.FULLNAME}</td>
-																	<td><fmt:formatNumber type="currency"
+																	<td><fmt:formatNumber type="number"
 																			currencyCode="VND" value="${item.TOTAL_AMOUNT}" /></td>
 																	<td><fmt:formatDate value="${item.UPDATE_AT}"
 																			pattern="yyyy-MM-dd HH:mm:ss" /></td>

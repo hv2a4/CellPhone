@@ -38,11 +38,10 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @Controller
 @RequestMapping("shop")
 public class SignUpController {
-	
+
 	@Autowired
 	ParamService paramService;
 	@Autowired
@@ -51,100 +50,102 @@ public class SignUpController {
 	rankDao rankDao;
 	@Autowired
 	cartDao cartDao;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
 	private RedirectAttributes redirectAttributes;
-	
+
 	@RequestMapping("register")
 	public String getSignUp(Model model) {
-		   user item = new user();
-		   rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
-		   System.out.println(defaultRank.getNAME());
-	        item.setRank(defaultRank);
-	     
-	        model.addAttribute("item", item);
-	        return "/views/signup";
+		user item = new user();
+		rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
+		System.out.println(defaultRank.getNAME());
+		item.setRank(defaultRank);
+
+		model.addAttribute("item", item);
+		return "/views/signup";
 	}
-	
+
 	@PostMapping("register")
-	public String postSignUp(@Validated @ModelAttribute("item") user item,BindingResult bindingResult , Model model,@RequestParam(name="g-recaptcha-response") String captchaResponse) {
-		 if (bindingResult.hasErrors()) {
-			 return "/views/signup";
-	        }
-		 
-		String url="https://www.google.com/recaptcha/api/siteverify";
+	public String postSignUp(@Validated @ModelAttribute("item") user item, BindingResult bindingResult, Model model,
+			@RequestParam(name = "g-recaptcha-response") String captchaResponse) {
+		if (bindingResult.hasErrors()) {
+			return "/views/signup";
+		}
+
+		String url = "https://www.google.com/recaptcha/api/siteverify";
 		String secret = "6Ldic9opAAAAAN2WSa-LXYrk6xvBItowDdT_R5Da";
-	    String param = "?secret=" + secret + "&response=" + captchaResponse;
-	    String renterPassWord=paramService.getString("renterPassWord", "");
-		ReCaptChaResponse  reCaptChaResponse=restTemplate.exchange(url+param,HttpMethod.POST, null, ReCaptChaResponse.class).getBody();
-         System.out.println(item.getRank().getID());
-		if(reCaptChaResponse.isSuccess()) {
+		String param = "?secret=" + secret + "&response=" + captchaResponse;
+		String renterPassWord = paramService.getString("renterPassWord", "");
+		ReCaptChaResponse reCaptChaResponse = restTemplate
+				.exchange(url + param, HttpMethod.POST, null, ReCaptChaResponse.class).getBody();
+		System.out.println(item.getRank().getID());
+		if (reCaptChaResponse.isSuccess()) {
 			if (userDao.existsById(item.getUSERNAME())) {
-				 user items = new user();
-	            rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
-	          
-	            model.addAttribute("item", item);
-	            model.addAttribute("messages", "Tên tài khoản đã tồn tại");
-	            return "/views/signup";
-	        }else if (!checkEmail(item.getEMAIL())) {
-	            model.addAttribute("item",item);
-	            rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
-	            item.setRank(defaultRank);
-	            model.addAttribute("messageEmail", "Email đã tồn tại");
-	            return "/views/signup";
-	        } else if (!checkNumberPhone(item.getPHONE_NUMBER())) {
-	            model.addAttribute("item", item);
-	            rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
-	            item.setRank(defaultRank);
-	            model.addAttribute("messageNumberPhone", "Số điện thoại đã tồn tại");
-	            return "/views/signup";
-	        } else if (!item.getPASSWORD().equals(renterPassWord)) {
-	            model.addAttribute("item", item);
-	            rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
-	            item.setRank(defaultRank);
-	            model.addAttribute("message", "Mật khẩu không trùng khớp");
-	            return "/views/signup";
-	        } else {
-	            item.setROLE(false);
-	            item.setSTATUS(true);
-	            item.setGENDER("KHAC");
-	            userDao.save(item);
-	            cart cart = new cart();
-	            cart.setUser(item);
-	            cartDao.save(cart);
-	            model.addAttribute("registrationSuccess", "true");
-	            return "/views/signup";
-	        }
-		}else {
-			 rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
-		        item.setRank(defaultRank);
-		        model.addAttribute("item", item);
+				user items = new user();
+				rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
+
+				model.addAttribute("item", item);
+				model.addAttribute("messages", "Tên tài khoản đã tồn tại");
+				return "/views/signup";
+			} else if (!checkEmail(item.getEMAIL())) {
+				model.addAttribute("item", item);
+				rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
+				item.setRank(defaultRank);
+				model.addAttribute("messageEmail", "Email đã tồn tại");
+				return "/views/signup";
+			} else if (!checkNumberPhone(item.getPHONE_NUMBER())) {
+				model.addAttribute("item", item);
+				rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
+				item.setRank(defaultRank);
+				model.addAttribute("messageNumberPhone", "Số điện thoại đã tồn tại");
+				return "/views/signup";
+			} else if (!item.getPASSWORD().equals(renterPassWord)) {
+				model.addAttribute("item", item);
+				rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
+				item.setRank(defaultRank);
+				model.addAttribute("message", "Mật khẩu không trùng khớp");
+				return "/views/signup";
+			} else {
+				item.setROLE(false);
+				item.setSTATUS(true);
+				item.setGENDER("KHAC");
+				userDao.save(item);
+				cart cart = new cart();
+				cart.setUser(item);
+				cartDao.save(cart);
+				model.addAttribute("registrationSuccess", "true");
+				return "/views/signup";
+			}
+		} else {
+			rank defaultRank = rankDao.findById(1).orElse(null); // Assuming rankDao.findById() returns an Optional
+			item.setRank(defaultRank);
+			model.addAttribute("item", item);
 			model.addAttribute("name", "Bạn chưa xác thực");
-			 return "/views/signup";
+			return "/views/signup";
 		}
-		
-		
 	}
+
 	public boolean checkEmail(String email) {
-		List<user> listUsers=userDao.findAll();
-		for(user us:listUsers) {
-			if(us.getEMAIL().equalsIgnoreCase(email)) {
+		List<user> listUsers = userDao.findAll();
+		for (user us : listUsers) {
+			if (us.getEMAIL().equalsIgnoreCase(email)) {
 				return false;
-				
+
 			}
 		}
 		return true;
 	}
+
 	public boolean checkNumberPhone(String numberPhone) {
-		List<user> listUsers=userDao.findAll();
-		for(user us:listUsers) {
-			if(us.getPHONE_NUMBER().equalsIgnoreCase(numberPhone)) {
+		List<user> listUsers = userDao.findAll();
+		for (user us : listUsers) {
+			if (us.getPHONE_NUMBER().equalsIgnoreCase(numberPhone)) {
 				return false;
-				
+
 			}
 		}
 		return true;
 	}
-	
+
 }

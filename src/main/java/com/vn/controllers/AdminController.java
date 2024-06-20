@@ -1,37 +1,21 @@
 package com.vn.controllers;
 
-import java.text.ParseException;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.vn.DAO.*;
-import com.vn.entity.*;
-import com.vn.utils.*;
-
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
-import com.vn.DAO.rankDao;
-
-import jakarta.servlet.ServletContext;
-
-import org.apache.catalina.connector.Response;
-import org.hibernate.boot.model.source.spi.Orderable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,51 +23,73 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-
-import com.vn.DAO.ColorDao;
-
-import com.vn.DAO.battery_typeDao;
-import com.vn.DAO.brandDao;
-import com.vn.DAO.categoryDao;
-import com.vn.DAO.discount_codeDao;
-import com.vn.DAO.graphics_chipDao;
-import com.vn.DAO.headphone_jackDao;
-import com.vn.DAO.payment_methodDao;
-import com.vn.DAO.screen_resolutionDao;
-import com.vn.DAO.status_invoiceDao;
-import com.vn.DAO.status_orderDao;
-import com.vn.DAO.charging_portDao;
-import com.vn.DAO.storageDao;
-import com.vn.DAO.systemDao;
-
-import com.vn.DAO.variantDao;
-import com.vn.DAO.wireless_charging_technologyDao;
-import com.vn.DAO.invoiceDao;
-import com.vn.DAO.orderDao;
-import com.vn.DAO.userDao;
-
-import jakarta.servlet.http.HttpServletRequest;
-
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.vn.DAO.ColorDao;
+import com.vn.DAO.battery_typeDao;
+import com.vn.DAO.brandDao;
+import com.vn.DAO.categoryDao;
+import com.vn.DAO.charging_portDao;
+import com.vn.DAO.discount_codeDao;
+import com.vn.DAO.discount_productDao;
+import com.vn.DAO.graphics_chipDao;
+import com.vn.DAO.headphone_jackDao;
+import com.vn.DAO.imageDao;
+import com.vn.DAO.invoiceDao;
+import com.vn.DAO.orderDao;
+import com.vn.DAO.payment_methodDao;
+import com.vn.DAO.phoneDao;
+import com.vn.DAO.rankDao;
+import com.vn.DAO.screen_resolutionDao;
+import com.vn.DAO.status_invoiceDao;
+import com.vn.DAO.status_orderDao;
+import com.vn.DAO.storageDao;
+import com.vn.DAO.systemDao;
+import com.vn.DAO.userDao;
+import com.vn.DAO.variantDao;
+import com.vn.DAO.wireless_charging_technologyDao;
+import com.vn.entity.battery_type;
+import com.vn.entity.brand;
+import com.vn.entity.category;
+import com.vn.entity.charging_port;
+import com.vn.entity.color;
+import com.vn.entity.discount_code;
+import com.vn.entity.discount_product;
+import com.vn.entity.graphics_chip;
+import com.vn.entity.headphone_jack;
+import com.vn.entity.image;
+import com.vn.entity.invoice;
+import com.vn.entity.order;
+import com.vn.entity.order_item;
+import com.vn.entity.payment_method;
+import com.vn.entity.phone;
+import com.vn.entity.rank;
+import com.vn.entity.screen_resolution;
+import com.vn.entity.status_invoice;
+import com.vn.entity.status_order;
+import com.vn.entity.storage;
+import com.vn.entity.system;
+import com.vn.entity.user;
+import com.vn.entity.variant;
+import com.vn.entity.wireless_charging_technology;
+import com.vn.utils.ParamService;
+import com.vn.utils.SessionService;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 @Controller
 @RequestMapping("/admin")
@@ -142,7 +148,8 @@ public class AdminController {
 	imageDao imageDao;
 	@Autowired
 	ParamService service;
-
+	@Autowired
+	discount_productDao discount_productDao;
 	LocalDate now = LocalDate.now();
 	int numDays = now.lengthOfMonth();
 	int currentYear = now.getYear();
@@ -416,10 +423,47 @@ public class AdminController {
 		}
 	}
 
+	@PostMapping("variant/update")
+	public ResponseEntity<Map<String, String>> updateVariant(
+			@Validated @ModelAttribute("ObjectVariant") variant variant, BindingResult bindingResult) {
+		Map<String, String> response = new HashMap<>();
+
+		if (bindingResult.hasErrors()) {
+			// Nếu có lỗi xảy ra trong quá trình binding
+			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+
+		try {
+			// Lưu biến thể vào cơ sở dữ liệu
+			variantDao.save(variant);
+
+			// Trả về thông báo thành công
+			response.put("status", "success");
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			// Xử lý các ngoại lệ xảy ra
+			e.printStackTrace();
+			response.put("status", "error");
+			response.put("message", "Có lỗi xảy ra khi cập nhật biến thể: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+	}
+
 	@GetMapping("phone/delete")
-	public String deletePhone(@Param("id") Integer id) {
-		phone phone = phoneDao.getById(id);
-		phoneDao.delete(phone);
+	public String deletePhone(@Param("id") Integer id, RedirectAttributes redirectAttributes) {
+		try {
+			phone phone = phoneDao.getById(id);
+			phoneDao.delete(phone);
+			redirectAttributes.addFlashAttribute("message", "Hoàn tất");
+			redirectAttributes.addFlashAttribute("messageType", "success");
+		} catch (DataIntegrityViolationException e) {
+			redirectAttributes.addFlashAttribute("message", "Không thể xóa. Bản ghi đang được sử dụng.");
+			redirectAttributes.addFlashAttribute("messageType", "error");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("message", "Có lỗi xảy ra khi xóa bản ghi.");
+			redirectAttributes.addFlashAttribute("messageType", "error");
+		}
 		return "redirect:/admin/product";
 	}
 
@@ -738,7 +782,7 @@ public class AdminController {
 	// Quản Lý Đơn Hàng
 	@GetMapping("order")
 	public String getQLDonHang(Model model, @RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
-		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 12);
+		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 10);
 		Page<order> pageOrder = orderDao.findAllSX(pageable);
 		String page = "order.jsp";
 		model.addAttribute("page", page);
@@ -1343,7 +1387,7 @@ public class AdminController {
 	}
 
 	@PostMapping("wireless_charging_technology/create")
-	public String postMethodName( Model model, 
+	public String postMethodName(Model model,
 			@ModelAttribute("wireless_charging_technology") wireless_charging_technology wireless_charging_technology) {
 		model.addAttribute("page", "wireless_charging_technology.jsp");
 		model.addAttribute("wireless_charging_technologyUpdate", new wireless_charging_technology());
@@ -1364,7 +1408,7 @@ public class AdminController {
 	}
 
 	@PostMapping("wireless_charging_technology/update")
-	public String updateƯireless_charging_technology( Model model, 
+	public String updateƯireless_charging_technology(Model model,
 			@ModelAttribute("wireless_charging_technologyUpdate") wireless_charging_technology wireless_charging_technologyUpdate) {
 		model.addAttribute("page", "wireless_charging_technology.jsp");
 		model.addAttribute("wireless_charging_technology", new wireless_charging_technology());
@@ -1420,7 +1464,8 @@ public class AdminController {
 	}
 
 	@PostMapping("screen_resolution/create")
-	public String postMethodName(Model model, @ModelAttribute("screen_resolution") screen_resolution screen_resolution) {
+	public String postMethodName(Model model,
+			@ModelAttribute("screen_resolution") screen_resolution screen_resolution) {
 		model.addAttribute("page", "screen_resolution.jsp");
 		model.addAttribute("screen_resolutionUpdate", new screen_resolution());
 		model.addAttribute("list_screen_resolution", screen_resolutionDao.findAll());
@@ -1440,7 +1485,7 @@ public class AdminController {
 	}
 
 	@PostMapping("screen_resolution/update")
-	public String updateScreen_resolution(Model model, 
+	public String updateScreen_resolution(Model model,
 			@ModelAttribute("screen_resolutionUpdate") screen_resolution screen_resolutionUpdate) {
 		model.addAttribute("page", "screen_resolution.jsp");
 		model.addAttribute("screen_resolution", new screen_resolution());
@@ -1513,7 +1558,7 @@ public class AdminController {
 	}
 
 	@PostMapping("graphics_chip/update")
-	public String updategraphics_chip(Model model, 
+	public String updategraphics_chip(Model model,
 			@ModelAttribute("graphics_chipUpdate") graphics_chip graphics_chipUpdate) {
 		model.addAttribute("page", "graphics_chip.jsp");
 		model.addAttribute("graphics_chip", new graphics_chip());
@@ -1586,7 +1631,7 @@ public class AdminController {
 	}
 
 	@PostMapping("status_order/update")
-	public String updatestatus_order(Model model, 
+	public String updatestatus_order(Model model,
 			@ModelAttribute("status_orderUpdate") status_order status_orderUpdate) {
 		model.addAttribute("page", "status_order.jsp");
 		model.addAttribute("status_order", new status_order());
@@ -1628,7 +1673,7 @@ public class AdminController {
 		model.addAttribute("status_orderUpdate", status_orderUpdate.orElseGet(null).getClass());
 		return status_orderUpdate;
 	}
-	
+
 	@GetMapping("payment_method")
 	public String getQLpayment_method(Model model) {
 		model.addAttribute("page", "payment_method.jsp");
@@ -1659,7 +1704,7 @@ public class AdminController {
 	}
 
 	@PostMapping("payment_method/update")
-	public String updatepayment_method(Model model, 
+	public String updatepayment_method(Model model,
 			@ModelAttribute("payment_methodUpdate") payment_method payment_methodUpdate) {
 		model.addAttribute("page", "payment_method.jsp");
 		model.addAttribute("payment_method", new payment_method());
@@ -1768,7 +1813,7 @@ public class AdminController {
 	}
 
 	@PostMapping("status_invoice/update")
-	public String updatestatus_invoice(Model model, 
+	public String updatestatus_invoice(Model model,
 			@ModelAttribute("status_invoiceUpdate") status_invoice status_invoiceUpdate) {
 		model.addAttribute("page", "status_invoice.jsp");
 		model.addAttribute("status_invoice", new status_invoice());
@@ -1887,6 +1932,7 @@ public class AdminController {
 	public ResponseEntity<Map<String, String>> create(Model model, @Validated @ModelAttribute("userItem") user users,
 			BindingResult bindingResult, @RequestParam("photo_file") MultipartFile img) throws IOException {
 		Map<String, String> response = new HashMap<>();
+		
 		if (bindingResult.hasErrors()) {
 			// Trả về lỗi xác thực
 			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
@@ -1921,6 +1967,46 @@ public class AdminController {
 		}
 		response.put("status", "success");
 		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("variant/create")
+	public ResponseEntity<Map<String, String>> createVariant(
+			@Validated @ModelAttribute("ObjectVariant") variant variant, BindingResult bindingResult) {
+		Map<String, String> response = new HashMap<>();
+
+		if (bindingResult.hasErrors()) {
+			bindingResult.getFieldErrors().forEach(error -> {
+				response.put(error.getField(), error.getDefaultMessage());
+			});
+			return ResponseEntity.badRequest().body(response);
+		}
+
+		try {
+			variantDao.save(variant);
+			response.put("status", "success");
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			response.put("status", "error");
+			response.put("message", "Failed to save variant: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+	}
+
+	@GetMapping("variant/detele/{id}")
+	public String deleteVariant(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+	    try {	        
+	        variantDao.deleteById(id);
+	        redirectAttributes.addFlashAttribute("a", "Hoàn tất");
+	        redirectAttributes.addFlashAttribute("b", "success");
+	    } catch (DataIntegrityViolationException e) {
+	        redirectAttributes.addFlashAttribute("a", "Không thể xóa. Bản ghi đang được sử dụng.");
+	        redirectAttributes.addFlashAttribute("b", "error");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("a", "Có lỗi xảy ra khi xóa bản ghi.");
+	        redirectAttributes.addFlashAttribute("b", "error");
+	    }
+
+	    return "redirect:/admin/product";
 	}
 
 	@GetMapping("user")
@@ -1973,24 +2059,6 @@ public class AdminController {
 		}
 	}
 
-	@PostMapping("/variant/create")
-	public String createVariant(Model model, @ModelAttribute("ObjectVariant") variant variant) {
-		variantDao.save(variant);
-		return "redirect:/admin/product";
-	}
-
-	@PostMapping("variant/update")
-	public String updateVariant(@ModelAttribute("ObjectVariant") variant variant) {
-		variantDao.save(variant);
-		return "redirect:/admin/product";
-	}
-
-	@GetMapping("variant/detele/{id}")
-	public String deleteVariant(@PathVariable("id") Integer id) {
-		variantDao.deleteById(id);
-		return "redirect:/admin/product";
-	}
-
 	@ModelAttribute("listColor")
 	public Map<Integer, String> getColor() {
 		Map<Integer, String> map = new HashMap<>();
@@ -2010,9 +2078,6 @@ public class AdminController {
 		}
 		return map;
 	}
-
-	@Autowired
-	discount_productDao discount_productDao;
 
 	@ModelAttribute("listDiscount")
 	public Map<Integer, Double> getDiscount() {

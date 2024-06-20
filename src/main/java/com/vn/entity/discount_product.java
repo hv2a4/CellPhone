@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -22,11 +23,14 @@ public class discount_product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer ID;
+	@NotNull(message = "Vui lòng chọn mã giảm giá")
 	Double DISCOUNT_PERCENTAGE;
 	
+	@NotNull(message = "Không bỏ trống ngày bắt đầu")
 	@Temporal(TemporalType.DATE)
 	Date START_DATE;
 	
+	@NotNull(message = "Không bỏ trống ngày kết thúc")
 	@Temporal(TemporalType.DATE)
 	Date EXPIRY_DATE;
 	
