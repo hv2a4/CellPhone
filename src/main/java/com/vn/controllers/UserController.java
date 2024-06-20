@@ -490,7 +490,7 @@ public class UserController {
 			or.setCREATE_AT(new Date());
 			or.setUPDATE_AT(new Date());
 			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-				or.setAddress(user.getAddresses().get(0));
+				or.setADDRESS((user.getAddresses().get(0)).getADDRESS());
 			} else {
 				return "redirect:/shop/address";
 			}
@@ -578,7 +578,7 @@ public class UserController {
 			or.setCREATE_AT(new Date());
 			or.setUPDATE_AT(new Date());
 			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-				or.setAddress(user.getAddresses().get(0));
+				or.setADDRESS((user.getAddresses().get(0)).getADDRESS());
 			} else {
 				return "redirect:/shop/address";
 			}
@@ -617,11 +617,13 @@ public class UserController {
 	@RequestMapping("ordersuccess")
 	public String getOrderSuccess(Model model, @RequestParam("id_pay") Optional<Integer> idPay,
 			@RequestParam("id_address") Optional<Integer> idAddress) {
+		
+		user user1 = getUser();
 		order order = orderDao.getOrderMoi();
 		address adr = addressDao.findById(idAddress.orElse(1)).get();
 		payment_method pay = payment_methodDao.findById(idPay.orElse(2)).get();
 
-		order.setAddress(adr);
+		order.setADDRESS((user1.getAddresses().get(0)).getADDRESS());
 		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT() + adr.getSHIPPING_FEE());
 		order.setPayment_method(pay);
 		order.setStatus_order(status_orderDao.findById(2).get());
@@ -675,7 +677,6 @@ public class UserController {
 			model.addAttribute("adr", adr.getADDRESS());
 			model.addAttribute("pay", pay.getNAME());
 			request.setAttribute("id_oder", invm.getID());
-			request.setAttribute("id_address", invm.getOrder().getAddress().getID());
 
 			long totalAmountInt = invm.getTOTAL_AMOUNT().intValue();
 			String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -695,7 +696,7 @@ public class UserController {
 		String totalPrice = request.getParameter("vnp_Amount");
 		order order = orderDao.getOrderMoi();
 
-		model.addAttribute("adr", order.getAddress().getADDRESS());
+		model.addAttribute("adr", order.getADDRESS());
 		model.addAttribute("pay", "Thanh toán online");
 		model.addAttribute("order", order);
 		model.addAttribute("totalPrice", totalPrice);

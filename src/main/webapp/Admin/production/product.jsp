@@ -171,36 +171,36 @@
 											</div>
 											<div class="col-md-4">
 												<div class="form-group ">
-													<label class="control-label">Chiều rộng</label> <input
+													<label class="control-label">Chiều rộng(mm)</label> <input
 														name="WIDTH" type="number" step="any" class="form-control" />
 													<span id="WIDTH_error" class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Chiều dài</label> <input
+													<label class="control-label">Chiều dài(mm)</label> <input
 														name="LENGTH" type="number" step="any"
 														class="form-control" /> <span id="LENGTH_error"
 														class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Chiều cao</label> <input
+													<label class="control-label">Chiều cao(mm)</label> <input
 														name="HEIGHT" type="number" step="any"
 														class="form-control" /> <span id="HEIGHT_error"
 														class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Kích thước màng hình</label> <input
+													<label class="control-label">Kích thước màng hình(inch)</label> <input
 														name="SCREEN_SIZE" type="number" step="any"
 														class="form-control" /> <span id="SCREEN_SIZE_error"
 														class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Trọng lượng</label> <input
+													<label class="control-label">Trọng lượng(gam)</label> <input
 														name="WEIGHT" type="number" step="any"
 														class="form-control" /> <span id="WEIGHT_error"
 														class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Dung lượng</label> <input
+													<label class="control-label">Dung lượng(mA)</label> <input
 														name="BATTERY_CAPACITY" type="number" step="any"
 														class="form-control" /> <span id="BATTERY_CAPACITY_error"
 														class="text-danger"></span>
@@ -211,31 +211,31 @@
 														id="RAM_error" class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Tần số làm mới</label> <input
+													<label class="control-label">Tần số làm mới(hz)</label> <input
 														name="REFRESH_RATE" type="number" step="any"
 														class="form-control" /> <span id="REFRESH_RATE_error"
 														class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Độ sáng</label> <input
+													<label class="control-label">Độ sáng(ghz)</label> <input
 														name="MAXIMUM_BRIGHTNESS" type="number" step="any"
 														class="form-control" /> <span
 														id="MAXIMUM_BRIGHTNESS_error" class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Tốc độ CPU</label> <input
+													<label class="control-label">Tốc độ CPU(hz)</label> <input
 														name="CPU_SPEED" type="number" step="any"
 														class="form-control" /> <span id="CPU_SPEED_error"
 														class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Camera trước</label> <input
+													<label class="control-label">Camera trước(MP)</label> <input
 														name="SELFIE_CAMERA" type="number" step="any"
 														class="form-control" /> <span id="SELFIE_CAMERA_error"
 														class="text-danger"></span>
 												</div>
 												<div class="form-group ">
-													<label class="control-label">Camera sau</label> <input
+													<label class="control-label">Camera sau(MP)</label> <input
 														name="MAIN_CAMERA" type="number" step="any"
 														class="form-control" /> <span id="MAIN_CAMERA_error"
 														class="text-danger"></span>
@@ -515,39 +515,39 @@
 																			</div>
 																			<div class="col-md-4">
 																				<div class="form-group ">
-																					<label class="control-label">Chiều rộng</label> <input
+																					<label class="control-label">Chiều rộng(mm)</label> <input
 																						name="WIDTH" type="number" class="form-control"
 																						value="${item.WIDTH}" /> <span
 																						id="${item.ID}WIDTH_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Chiều dài</label> <input
+																					<label class="control-label">Chiều dài(mm)</label> <input
 																						name="LENGTH" type="number" step="any"
 																						class="form-control" value="${item.LENGTH}" /> <span
 																						id="${item.ID}LENGTH_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Chiều cao</label> <input
+																					<label class="control-label">Chiều cao(mm)</label> <input
 																						name="HEIGHT" type="number" step="any"
 																						class="form-control" value="${item.HEIGHT}" /> <span
 																						id="${item.ID}HEIGHT_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
 																					<label class="control-label">Kích thước
-																						màng hình</label> <input name="SCREEN_SIZE" type="number"
+																						màng hình(inch)</label> <input name="SCREEN_SIZE" type="number"
 																						step="any" class="form-control"
 																						value="${item.SCREEN_SIZE}" /> <span
 																						id="${item.ID}SCREEN_SIZE_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Trọng lượng</label> <input
+																					<label class="control-label">Trọng lượng(gam)</label> <input
 																						name="WEIGHT" type="number" step="any"
 																						class="form-control" value="${item.WEIGHT}" /> <span
 																						id="${item.ID}WEIGHT_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Dung lượng</label> <input
+																					<label class="control-label">Dung lượng(mA)</label> <input
 																						name="BATTERY_CAPACITY" type="number" step="any"
 																						class="form-control"
 																						value="${item.BATTERY_CAPACITY}" /> <span
@@ -561,7 +561,7 @@
 																						id="${item.ID}RAM_errorss" class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Tần số làm mới</label>
+																					<label class="control-label">Tần số làm mới(hz)</label>
 																					<input name="REFRESH_RATE" type="number" step="any"
 																						class="form-control" value="${item.REFRESH_RATE}" />
 																					<span id="${item.ID}REFRESH_RATE_errorss"
@@ -583,14 +583,14 @@
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Camera trước</label> <input
+																					<label class="control-label">Camera trước(MP)</label> <input
 																						name="SELFIE_CAMERA" type="number" step="any"
 																						class="form-control" value="${item.SELFIE_CAMERA}" />
 																					<span id="${item.ID}SELFIE_CAMERA_errorss"
 																						class="text-danger"></span>
 																				</div>
 																				<div class="form-group ">
-																					<label class="control-label">Camera sau</label> <input
+																					<label class="control-label">Camera sau(MP)</label> <input
 																						name="MAIN_CAMERA" type="number" step="any"
 																						class="form-control" value="${item.MAIN_CAMERA}" />
 																					<span id="${item.ID}MAIN_CAMERA_errorss"
