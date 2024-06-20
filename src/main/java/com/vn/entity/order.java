@@ -33,10 +33,6 @@ public class order implements Serializable {
 	status_order status_order;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_ADDRESS")
-	address address;
-
-	@ManyToOne
 	@JoinColumn(name = "ID_PAYMENT_METHOD")
 	payment_method payment_method;
 
@@ -48,6 +44,7 @@ public class order implements Serializable {
 	Double TOTAL_AMOUNT;
 	String NOTE;
 	String REASON;
+	String ADDRESS;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JoinColumn(name = "CREATE_AT")
