@@ -1932,6 +1932,7 @@ public class AdminController {
 	public ResponseEntity<Map<String, String>> create(Model model, @Validated @ModelAttribute("userItem") user users,
 			BindingResult bindingResult, @RequestParam("photo_file") MultipartFile img) throws IOException {
 		Map<String, String> response = new HashMap<>();
+		
 		if (bindingResult.hasErrors()) {
 			// Trả về lỗi xác thực
 			bindingResult.getFieldErrors().forEach(error -> response.put(error.getField(), error.getDefaultMessage()));
