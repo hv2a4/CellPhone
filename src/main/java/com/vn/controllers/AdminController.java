@@ -670,6 +670,10 @@ public class AdminController {
             // Cập nhật trạng thái trả hàng cho đối tượng order
             orders.setStatus_order(returnStatus);
             orders.setUPDATE_AT(new Date());
+            invoice invoice = orders.getInvoices().get(0);
+            status_invoice siv = status_invoiceDao.findById(2).get();
+            invoice.setStatus_invoice(siv);
+            invoiceDao.save(invoice);
             orderDaos.save(orders);
             // Cập nhật số lượng cho từng sản phẩm trong đơn hàng
             List<order_item> listOrder_Item = orders.getOrder_items();
@@ -682,7 +686,14 @@ public class AdminController {
         }
         return false;
     }
-
+    
+    public void capNhatTrangThaiThanhToanDonHang(order order, Integer idStatusInvoice){
+    	 invoice invoice = order.getInvoices().get(0);
+         status_invoice siv = status_invoiceDao.findById(idStatusInvoice).get();
+         invoice.setStatus_invoice(siv);
+         invoiceDao.save(invoice);
+    }
+    
     // xác nhận trả hàng
     @GetMapping("xacNhanTraHang/{id}")
     @ResponseBody
@@ -797,6 +808,12 @@ public class AdminController {
             orders.setREASON(noteAdmin);
             orders.setStatus_order(returnStatus);
             orders.setUPDATE_AT(new Date());
+            capNhatTrangThaiThanhToanDonHang(orders, 2);
+            List<order_item> listOrderItem = orders.getOrder_items();
+            for (order_item order_item : listOrderItem) {
+				variant variant = order_item.getVariant();
+				variant.setQUANTITY(variant.getQUANTITY()+ order_item.getQUANTITY());
+			}
             orderDaos.save(orders);
             return true;
         }

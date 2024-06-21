@@ -93,7 +93,6 @@ body {
 	<script src="/js/nouislider.min.js"></script>
 	<script src="/js/jquery.zoom.min.js"></script>
 	<script src="/js/main.js"></script>
-	<script src="/js/address.js"></script>
 	<script src="/js/imgUpload.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>

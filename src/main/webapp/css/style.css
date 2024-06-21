@@ -2600,19 +2600,34 @@ body {
 .btn-info{
 	border-radius: 10px;
 }
-.inline-button {
-  border-radius: 6px;
-  border: 1px solid black;
-  margin-bottom: 5px;
-  width: 10em;
+.storage-link {
+    text-decoration: none; /* Remove underline from links */
 }
-.inline-button:focus{
-  border-radius: 6px;
-  background: black;
-  color: white;
+
+.storage-link {
+    display: inline-block;
+    background-color: #f0f0f0; /* Màu nền mặc định */
+    color: #333; /* Màu chữ mặc định */
+    border: 1px solid #ccc; /* Viền */
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    height: 2em;
+    line-height: 2em;
+    padding: 0 10px;
+    text-decoration: none;
 }
+
+/* CSS cho các liên kết khi được chọn */
+.storage-link.active {
+    background-color: #333; /* Màu nền khi được chọn */
+    color: #fff; /* Màu chữ khi được chọn */
+    border-color: #333; /* Viền khi được chọn */
+}
+
 .inline-button-color{
-	border-radius: 6px;
+  border-radius: 6px;
   border: 1px solid black;
   width: 10em;
 }
