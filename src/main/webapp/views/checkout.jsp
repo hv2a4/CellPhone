@@ -6,9 +6,10 @@
 <!DOCTYPE html>
 <!-- SECTION -->
 <div class="section">
-<!-- code có cộng tiền ship vào -->
-	<form id="succussForm" action="/shop/ordersuccess" method="post"
+	<!-- code có cộng tiền ship vào -->
+	<form id="succussForm" action="/shop/ordersuccess" method="get"
 		onsubmit="return submitOrder();">
+		
 		<!-- container -->
 		<div class="container">
 			<!-- row -->
@@ -31,24 +32,52 @@
 								<strong>TỔNG CỘNG</strong>
 							</div>
 						</div>
-						<c:forEach var="item" items="${order.order_items}">
-							<div class="order-products">
-								<div class="order-col">
-									<div>Số lượng ${item.QUANTITY} x
-										${item.variant.phone.NAME}</div>
-									<div>
-										<fmt:formatNumber value="${item.PRICE * item.QUANTITY}"
-											pattern="###,###.###" />
+						<input type="hidden" name="quantity" value="${quantity}" />
+    					<input type="hidden" name="totalOrder" value="${totalOrder}" />
+  					    <input type="hidden" name="variant" value="${variant.ID}" />
+  					    <c:if test="${not empty selectedItems}">
+      						  <input type="hidden" name="selectedItems" value="${selectedItems}">
+   						</c:if>
+						<c:choose>
+							<c:when test="${not empty variant}">
+								<div class="order-products">
+									<div class="order-col">
+										<div>Số lượng ${quantity} x ${variant.phone.NAME}</div>
+										<div>
+											<fmt:formatNumber value="${totalOrder}" pattern="###,###.###" />
+										</div>
 									</div>
 								</div>
-							</div>
-						</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="item" items="${items}">
+									<div class="order-products">
+										<div class="order-col">
+											<div>Số lượng ${item.QUANTITY} x
+												${item.variant.phone.NAME}</div>
+											<div>
+												<c:choose>
+													<c:when
+														test="${item.variant.discount_product.EXPIRY_DATE.time > System.currentTimeMillis()}">
+														<fmt:formatNumber pattern="###,###.###"
+															value="${(item.variant.PRICE * (100 - item.variant.discount_product.DISCOUNT_PERCENTAGE)/100) * item.QUANTITY}" />
+													</c:when>
+													<c:otherwise>
+														<fmt:formatNumber pattern="###,###.###"
+															value="${item.variant.PRICE * item.QUANTITY}" />
+													</c:otherwise>
+												</c:choose>
+											</div>
+										</div>
+									</div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
 						<div class="order-col">
 							<div>Vận Chuyển</div>
 							<div>
-								<strong id="shippingFee">
-								 <fmt:formatNumber value="${order.address.SHIPPING_FEE}"
-											pattern="###,###.###" />
+								<strong id="shippingFee"> <fmt:formatNumber
+										value="${order.address.SHIPPING_FEE}" pattern="###,###.###" />
 								</strong>
 							</div>
 						</div>
@@ -58,14 +87,15 @@
 							</div>
 							<div>
 								<strong id="totalOrder" class="order-total"> <fmt:formatNumber
-										value="${empty order?0:totalOrder+order.address.SHIPPING_FEE}" pattern="###,###.###" />
-										</strong>
-								<input type="hidden" name="moneys" id="moneys" value="${empty order?0:totalOrder}"> 		
+										value="${totalOrder}" pattern="###,###.###" />
+								</strong> <input type="hidden" name="moneys" id="moneys"
+									value="${empty order?0:totalOrder}">
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
-						<select class="input" name="address" id="addressSelect" onchange="sendAddress()">
+						<select class="input" name="address" id="addressSelect"
+							onchange="sendAddress()">
 							<c:forEach var="adr" items="${user.addresses}">
 								<option name="address" value="${adr.ID}">${adr.ADDRESS}</option>
 							</c:forEach>
@@ -76,8 +106,9 @@
 						<label for="">Phương thức thanh toán</label>
 						<c:forEach var="payq" items="${pays}">
 							<div class="input-radio">
-								<input onclick="UpdateOrder(${order.ID},${payq.ID })"
-									type="radio" name="payment" id="${payq.ID}"> <label
+								<input
+									onclick="UpdateOrder(${payq.ID})"
+									type="radio" name="payment" value="${payq.ID}" id="${payq.ID}"> <label
 									for="${payq.ID}"> <span></span> ${payq.NAME}
 								</label>
 							</div>
@@ -228,12 +259,12 @@ function submitOrder() {
 }
 </script>
 <script>
-function UpdateOrder(idOrder,idPay) {
+function UpdateOrder(idPay) {
 	var address = document.getElementsByName("address")[0].value;
     var form = document.getElementById('succussForm');
     var discountCode = document.getElementsByName("tel")[0].value;
     var selectedItem = "${selectedItems}";
-    form.action = "/shop/ordersuccess?id_order=" + idOrder + "&id_pay=" + idPay + "&id_address=" + address + "&discount=" + discountCode + "&selectedItem=" + selectedItem;
+    form.action = "/shop/ordersuccess?id_pay=" + idPay+ "&id_address=" + address + "&discount=" + discountCode + "&selectedItem=" + selectedItem;
 }
 
 </script>
