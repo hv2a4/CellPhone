@@ -26,8 +26,10 @@ public class address implements Serializable {
 	Integer DISTRICT;
 	String WARD;
 	Double SHIPPING_FEE;
-
-	@ManyToOne
+    String PROVINCE_NAME;
+    String DISTRICT_NAME;
+    String WARD_NAME;
+    @ManyToOne
 	@JoinColumn(name = "ID_USER")
 	user user;
 }

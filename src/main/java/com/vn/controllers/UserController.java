@@ -544,6 +544,83 @@ public class UserController {
 		return response;
 	}
 
+//	@RequestMapping("mualai")
+//	public String muaLai(Model model, @RequestParam("id_order") Integer id,
+//			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+//		user us = sessionService.get("list");
+//		if (us != null) {
+//			user user = userDao.findById(us.getUSERNAME()).get();
+//			order or = new order();
+//			or.setUser(user);
+//			or.setCREATE_AT(new Date());
+//			or.setUPDATE_AT(new Date());
+//			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
+//				or.setAddress(user.getAddresses().get(0));
+//			} else {
+//				return "redirect:/shop/address";
+//			}
+//			
+//			orderDao.save(or);
+//			
+//			order order = orderDao.getOrderMoi();
+//			
+//			Optional<variant> variant = variantDao.findById(id);
+//			order_item order_item = new order_item();
+//			order_item.setOrder(order);
+//			order_item.setVariant(variant.get());
+//			order_item.setPRICE(getPriceVariant(variant.get()));
+//			order_item.setQUANTITY(quantity);
+//			
+//			order_itemDao.save(order_item);
+//			return "redirect:/shop/checkout";
+//		}
+//		return "redirect:/shop/login";
+//	}
+//
+//	
+
+	@RequestMapping("addorder")
+	public String addorder(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItems,
+			Model model) {
+		user us = sessionService.get("list");
+		if (us != null) {
+			user user = userDao.findById(us.getUSERNAME()).get();
+			cart cart = user.getCarts().get(0);
+			order or = new order();
+			address addres=user.getAddresses().get(0).getADDRESS();)
+			or.setUser(user);
+			or.setCREATE_AT(new Date());
+			or.setUPDATE_AT(new Date());
+			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
+				or.setADDRESS((user.getAddresses().get(0)).getADDRESS());
+			} else {
+				return "redirect:/shop/address";
+			}
+			orderDao.save(or);
+			if (selectedItems == null || selectedItems.isEmpty()) {
+				// If no items are selected, process all items in the cart
+				selectedItems = cart.getCart_items().stream().map(cart_item::getID).collect(Collectors.toList());
+			}
+
+			for (cart_item citem : cart.getCart_items()) {
+				if (selectedItems.contains(citem.getID())) {
+					order_item order_item = new order_item();
+					order_item.setOrder(or);
+					order_item.setPRICE(getGiaKhuyenMai(citem.getVariant()));
+					order_item.setQUANTITY(citem.getQUANTITY());
+					order_item.setVariant(citem.getVariant());
+					order_itemDao.save(order_item);
+				}
+			}
+			String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
+					.collect(Collectors.joining(","));
+
+			return "redirect:/shop/checkout?selectedItems=" + selectedItemsQueryParam;
+		}
+		return "redirect:/shop/login";
+	}
+
+
 	public Double getPriceVariant(variant variant) {
 		if (variant.getDiscount_product().getEXPIRY_DATE().after(new Date())) {
 			return variant.getPRICE() * ((100 - variant.getDiscount_product().getDISCOUNT_PERCENTAGE()) / 100);
@@ -563,8 +640,11 @@ public class UserController {
 		order order = new order();
 		String adr = addressDao.findByNameAdr(idAddress.orElse(null));
 		payment_method pay = payment_methodDao.findById(idPay.orElse(2)).get();
-		order.setADDRESS(adr);
-		order.setUser(user1);
+
+        
+		order.setUser(user1);		
+		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
+        order.setADDRESS(adr);;
 		order.setPayment_method(pay);
 		order.setTOTAL_AMOUNT(totalAmount.orElse(null));
 		order.setCREATE_AT(new Date());
@@ -654,7 +734,7 @@ public class UserController {
 		String totalPrice = request.getParameter("vnp_Amount");
 		order order = orderDao.getOrderMoi();
 
-		model.addAttribute("adr", order.getADDRESS());
+		model.addAttribute("adr", order.getAddress());
 		model.addAttribute("pay", "Thanh toán online");
 		model.addAttribute("order", order);
 		model.addAttribute("totalPrice", totalPrice);
@@ -843,15 +923,19 @@ public class UserController {
 		String provinceName = paramService.getString("provinceName", "");
 		String districtName = paramService.getString("districtName", "");
 		String wardName = paramService.getString("wardName", "");
-		Double shippingFee = Double.parseDouble(paramService.getString("moneyShip", ""));
+	
 		user us = sessionService.get("list");
+		
 		String addreses = noteAddress + ", " + wardName + ", " + districtName + ", " + provinceName;
 		item.setADDRESS(addreses);
 		item.setUser(us);
+		item.setPROVINCE_NAME(provinceName);
+		item.setDISTRICT_NAME(districtName);
+		item.setWARD_NAME(wardName);
 		item.setPROVINCE(Integer.parseInt(provinceID));
 		item.setDISTRICT(Integer.parseInt(districtID));
 		item.setWARD(wardID);
-		item.setSHIPPING_FEE(shippingFee);
+	
 		addressDao.save(item);
 		String page = "address.jsp";
 		model.addAttribute("page", page);
@@ -892,15 +976,18 @@ public class UserController {
 		String provinceName = paramService.getString("provinceName", "");
 		String districtName = paramService.getString("districtName", "");
 		String wardName = paramService.getString("wardName", "");
-		Double shippingFee = Double.parseDouble(paramService.getString("moneyShip", ""));
+	
 		String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + provinceName;
 		item.setID(id);
+		item.setPROVINCE_NAME(provinceName);
+		item.setDISTRICT_NAME(districtName);
+		item.setWARD_NAME(wardName);
 		item.setADDRESS(addres);
 		item.setUser(us);
 		item.setPROVINCE(Integer.parseInt(provinceID));
 		item.setDISTRICT(Integer.parseInt(districtID));
 		item.setWARD(wardID);
-		item.setSHIPPING_FEE(shippingFee);
+	
 		addressDao.save(item);
 		String page = "address.jsp";
 		model.addAttribute("page", page);
@@ -914,18 +1001,25 @@ public class UserController {
 		address list = addressDao.findById(id).get();
 		model.addAttribute("id", list.getID());
 		model.addAttribute("item", list);
-		System.out.println(list.getADDRESS());
-		// tên đường
+	
+		 model.addAttribute("province", list.getPROVINCE());
+		 model.addAttribute("provinceNAME", list.getPROVINCE_NAME());
+	     model.addAttribute("district", list.getDISTRICT());
+	     model.addAttribute("districtNAME", list.getDISTRICT_NAME());
+	     model.addAttribute("ward", list.getWARD());
+	     model.addAttribute("wardNAME", list.getWARD_NAME());
+	     System.out.println(list.getADDRESS());
 		String sub = list.getADDRESS().substring(0, list.getADDRESS().indexOf(',')).trim();
 
 		model.addAttribute("sub", sub);
-
+		model.addAttribute("editCheck", "true");
 		String page = "address.jsp";
 		model.addAttribute("page", page);
 
 		return "index";
 	}
 
+	
 	@ModelAttribute("listAddress")
 	public List<address> getAddresses(Model model, address item) {
 		model.addAttribute("item", item);
