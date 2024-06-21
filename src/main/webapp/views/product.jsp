@@ -530,7 +530,7 @@ function updateBuyNowButton(idPhone, idVariant) {
 
     // Update the "Mua ngay" button's form action with the selected variant ID and quantity
     var buyNowButton = document.getElementById('buyNowButton');
-    buyNowButton.formAction = "/shop/muangay/" + idVariant + "?quantity=" + quantity;
+    buyNowButton.formAction = "/shop/checkout/" + idVariant + "?quantity=" + quantity;
 
     // Update the "Thêm giỏ hàng" button's form action with the selected variant ID and quantity
     var addToCartButton = document.getElementById('addToCartButton');

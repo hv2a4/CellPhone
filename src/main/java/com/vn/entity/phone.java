@@ -161,4 +161,5 @@ public class phone implements Serializable {
 
 	@OneToMany(mappedBy = "phone", cascade = CascadeType.ALL, orphanRemoval = true)
 	List<image> images ;
+
 }
