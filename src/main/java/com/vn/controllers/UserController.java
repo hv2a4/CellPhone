@@ -146,14 +146,6 @@ public class UserController {
 			model.addAttribute("username_error", "Tài khoản này chưa được đăng ký!");
 			return "/views/forgotpass1";
 		}
-
-		String otp = mailer.gererateOtp(email); // Corrected the method name
-		System.out.println(otp);
-		sessionService.set("listUserSession", listUser);
-		mailer.send(email, "Mã OTP xác nhận mật khẩu", "Mã OTP của bạn là: " + otp);
-		sessionService.set("email", email);
-		model.addAttribute("email", email);
-		return "/views/forgotpass2";
 	}
 
 	@PostMapping("forgotpass3")
