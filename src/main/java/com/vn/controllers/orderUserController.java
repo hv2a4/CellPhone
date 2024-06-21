@@ -2,6 +2,7 @@ package com.vn.controllers;
 
 import java.util.List;
 
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.vn.DAO.invoiceDao;
 import com.vn.DAO.orderDao;
 import com.vn.DAO.status_orderDao;
+import com.vn.entity.invoice;
 import com.vn.entity.order;
 import com.vn.entity.status_order;
 import com.vn.entity.user;
@@ -31,6 +34,8 @@ public class orderUserController {
      ParamService paramService;
      @Autowired
      SessionService sessionService;
+     @Autowired
+     invoiceDao invoiceDao;
 	@RequestMapping("order")
 	public String getOrder(Model model) {
 	   
@@ -47,10 +52,16 @@ public class orderUserController {
 		System.out.println(reason);
 		if(ordes.getStatus_order().getSTATUS().equals("Chờ xác nhận")) {
 			 System.out.println("code 1");
+		   List<invoice> listInvoices=invoiceDao.findByOrder(ordes);	 
+		   for(invoice inv:listInvoices) {
+			 if(inv!=null) {
+				 invoiceDao.delete(inv);
+			 }
+		   }
 			ordes.setStatus_order(statusOrder);
 		    ordes.setREASON(reason);
 		    orderDao.save(ordes);
-		    model.addAttribute("successError", "true");
+	         model.addAttribute("successError", "true");
 			   String page = "order.jsp";
 				model.addAttribute("page", page);
 				return "index";

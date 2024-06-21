@@ -101,9 +101,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box table-responsive">
-									<table
-										class="table table-striped table-bordered dt-responsive nowrap"
-										cellspacing="0" width="100%">
+									<table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
 										<thead>
 											<tr>
 												<th>STT</th>
@@ -118,18 +116,24 @@
 											</tr>
 										</thead>
 										<tbody>
-											<c:forEach items="${pageDiscountCode.content}" var="item"
-												varStatus="loop">
+											<c:forEach items="${pageDiscountCode.content}" var="item" varStatus="loop">
 												<tr>
 													<td>${loop.index +1 }</td>
 													<td>${item.CODE }</td>
 													<td>${item.getRank().getNAME()}</td>
-													<td>${item.START_DATE }</td>
-													<td>${item.EXPIRY_DATE }</td>
-													<td><fmt:formatNumber pattern="###">
-                                                ${item.PERCENTAGE }</fmt:formatNumber> %</td>
-													<td><fmt:formatNumber pattern="###,###">
-                                                ${item.QUANTITY }</fmt:formatNumber></td>
+                                                     <%--  <td>${item.START_DATE }</td> --%>
+													<td id="startDateTime">
+											            <fmt:formatDate value="${item.START_DATE}" pattern="yyyy-MM-dd" />
+											        </td>
+											        <td id="expiryDateTime">
+											            <fmt:formatDate value="${item.EXPIRY_DATE}" pattern="yyyy-MM-dd" />
+											        </td>
+													<td>
+														<fmt:formatNumber pattern="###">${item.PERCENTAGE }</fmt:formatNumber> %
+													</td>
+													<td>
+														<fmt:formatNumber pattern="###,###">${item.QUANTITY }</fmt:formatNumber>
+													</td>
 													<td><fmt:formatNumber pattern="###,###">
                                                 ${item.MINIMUM }</fmt:formatNumber> đ</td>
 													<td class="text-center"><i
@@ -477,5 +481,21 @@ $(document).ready(function () {
     
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get current date and time
+        var currentDate = new Date();
+        var currentTimeFormatted = currentDate.toLocaleTimeString('en-US', {hour12: false});
+
+        // Update the time in the appropriate <td> elements
+        var startDateTimeTd = document.querySelector('#startDateTime');
+        var expiryDateTimeTd = document.querySelector('#expiryDateTime');
+        
+        if (startDateTimeTd && expiryDateTimeTd) {
+            startDateTimeTd.textContent += " " + currentTimeFormatted;
+            expiryDateTimeTd.textContent += " " + currentTimeFormatted;
+        }
+    });
+</script>
 </body>
 </html>

@@ -221,6 +221,54 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	
+	 <c:if test="${editCheck}">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            	try {
+            		const provinceId =Number("${province}");
+                    const districtId =Number("${district}");
+                    const wardId = "${ward}";
+                     console.log( wardId)
+                    fetchProvinceNameById(provinceId)
+                        .then(provinceName => {
+                        	   $('#province').append(`<option value="${province}" selected>${provinceNAME}</option>`);
+                        	    $('#province').trigger('change');
+                               return   fetchDistrictNameById(districtId);
+                          
+                        }).then(districtName => {
+                            console.log(districtName+'  tên huyện  '+${district});
+                           
+                           
+                            setTimeout(function() {
+                            	 $('#district').append(`<option value="${district}" selected>${districtNAME}</option>`);
+                                 $('#district').trigger('change');   // Kích hoạt sự kiện onchange cho district
+                            	return  fetchWardNameById(wardId);
+                            	}, 100);
+                            
+                        }).then(wardName => {
+                            setTimeout(function() {
+                            	  console.log(wardName+'  tên xã  '+${ward});
+                            	 $('#ward').append(`<option value="${ward}" selected>${wardNAME}</option>`);
+                           	}, 300);
+                             
+                        })
+                        
+                        
+                        
+            	} catch (error) {
+                     console.error('Lỗi khi fetch tên địa điểm:', error);
+                }
+                
+                 
+                
+            });
+            
+           
+        </script>
+    </c:if>
+	
 	
 	<c:choose>
 	 <c:when test="${messageAdd }">
@@ -266,6 +314,7 @@
          </script>
 	 </c:when>
 	</c:choose>
+
     <script>
         const token = '61810660-2862-11ef-8e53-0a00184fe694';  // Thay thế bằng token thực
         const shopId = '192562';  // Thay thế bằng shop ID thực
@@ -280,7 +329,7 @@
 		
 		
 		// Hàm lấy tên tỉnh/thành phố theo ID
-        function fetchProvinceNameById(provinceId) {
+         function fetchProvinceNameById(provinceId) {
             return fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province', {
                 headers: {
                     'Content-Type': 'application/json',
@@ -330,6 +379,7 @@
         // Hàm lấy tên phường/xã theo ID
         function fetchWardNameById(wardId) {
         	const districtId = document.getElementById('district').value;
+        	console.log(districtId+' tên huyện tìm thấy')
             return fetch('https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id='+districtId+'&shop_id='+shopId, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -340,6 +390,7 @@
             .then(data => {
                 const ward = data.data.find(ward => ward.WardCode === wardId);
                 if (ward) {
+                	
                     return ward.WardName;
                 } else {
                     throw new Error('Ward not found');

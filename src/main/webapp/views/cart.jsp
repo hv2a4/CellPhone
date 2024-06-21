@@ -26,23 +26,24 @@
 							<c:forEach var="item" items="${listCartItems}">
 								<tr class="cartItem cartItem_${item.ID}">
 									<td><input type="checkbox" name="selectedItems"
-										value="${item.ID}" class="selectItem" checked="checked"/></td>
-									<td class="hidden-xs"><a href="/shop/product/${item.variant.phone.ID}?id_variant=${item.variant.ID}&id_storage=${item.variant.storage.ID}"> <img
-											data-sizes="auto"
+										value="${item.ID}" class="selectItem" /></td>
+									<td class="hidden-xs"><a
+										href="/shop/product/${item.variant.phone.ID}?id_variant=${item.variant.ID}&id_storage=${item.variant.storage.ID}">
+											<img data-sizes="auto"
 											class="lazyautosizes ls-is-cached lazyloaded" alt=""
-											sizes="100px" src="/images/${item.variant.phone.IMAGE}"></a></td>
-									<td id="itemNameCell"><a class="itemName" href="">${item.variant.phone.NAME} - 
-									<c:if test="${item.variant.storage.ID != GB}">
-											<c:if
-												test="${2048 >= item.variant.storage.GB && item.variant.storage.GB >= 1024}">
+											sizes="100px" src="/images/${item.variant.phone.IMAGE}">
+									</a></td>
+									<td><a class="itemName" href="">${item.variant.phone.NAME}
+											- <c:if test="${item.variant.storage.ID != GB}">
+												<c:if
+													test="${2048 >= item.variant.storage.GB && item.variant.storage.GB >= 1024}">
 												1TB
 											</c:if>
-											<c:if test="${1024 > item.variant.storage.GB}">
-											
+												<c:if test="${1024 > item.variant.storage.GB}">
 													${item.variant.storage.GB}GB
 											</c:if>
-											</c:if>
-											- ${item.variant.color.NAME}</a>
+											</c:if> - ${item.variant.color.NAME}
+									</a>
 										<div class="att attcode">Code:</div>
 										<div class="att itemPri visible-xs">
 											<i>Giá</i>:
@@ -89,7 +90,7 @@
 									<td class="text-center hidden-xs"><a
 										href="/shop/cart/delete/${item.ID}"><i
 											class="removeCartItem fa fa-trash-o" aria-hidden="true"></i></a>
-									</td> 
+									</td>
 								</tr>
 							</c:forEach>
 						</tbody>
