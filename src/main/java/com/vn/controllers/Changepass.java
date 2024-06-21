@@ -21,18 +21,19 @@ import com.vn.utils.SessionService;
 @Controller
 @RequestMapping("/shop")
 public class Changepass {
-   @Autowired
+	@Autowired
 	ParamService paramService;
-   @Autowired
-   SessionService sessionService;
-   @Autowired
-   userDao userDao;
+	@Autowired
+	SessionService sessionService;
+	@Autowired
+	userDao userDao;
+
 	@RequestMapping("changepass")
 	public String getchangepass(Model model) {
-		
+
 		return "/views/changepassword";
 	}
-	
+
 	@PostMapping("changepass")
 	public String postChangePass(Model model, RedirectAttributes redirectAttributes) {
 	    String userName = paramService.getString("userName", "");

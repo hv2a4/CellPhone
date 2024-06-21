@@ -208,7 +208,7 @@ public class UserController {
 
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-				
+
 			List<cart_item> cartItems = (List<cart_item>) user.getCarts().get(0).getCart_items();
 			Double totalCart = 0.0;
 			int totalquantity = 0;
@@ -687,8 +687,7 @@ public class UserController {
 					}
 				}
 			}
-			
-			
+
 		}
 		invoice inv = new invoice();
 		if (pay.getNAME().equalsIgnoreCase("Thanh toán khi nhận hàng")) {
@@ -742,6 +741,16 @@ public class UserController {
 		model.addAttribute("paymentTime", paymentTime);
 		model.addAttribute("transactionId", transactionId);
 
+		if (paymentStatus != 1) {
+			invoice invoice = getInvoiceMoi();
+			invoiceDao.delete(invoice);
+			order om = orderDao.getOrderMoi();
+			List<order_item> listOrderItem = om.getOrder_items();
+			for (order_item order_item : listOrderItem) {
+				order_itemDao.delete(order_item);
+			}
+			orderDao.delete(om);
+		}
 		return paymentStatus == 1 ? "views/ordersuccess" : "views/orderfail";
 	}
 

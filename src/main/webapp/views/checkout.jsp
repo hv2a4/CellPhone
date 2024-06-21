@@ -94,8 +94,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<select class="input" name="address" id="addressSelect"
-							onchange="sendAddress()">
+						<select class="input" name="address" id="addressSelect">
 							<c:forEach var="adr" items="${user.addresses}">
 								<option name="address" value="${adr.ID}">${adr.ADDRESS}</option>
 							</c:forEach>
