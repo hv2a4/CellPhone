@@ -29,13 +29,8 @@ public class address implements Serializable {
     String PROVINCE_NAME;
     String DISTRICT_NAME;
     String WARD_NAME;
+    
     @ManyToOne
 	@JoinColumn(name = "ID_USER")
 	user user;
-<<<<<<< HEAD
-
-//	@OneToMany(mappedBy = "address")
-//	List<order> orders;
-=======
->>>>>>> 088ac0b24981ee275d162738c1bcafa5e5ff6a3e
 }
