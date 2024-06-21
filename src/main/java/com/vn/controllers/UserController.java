@@ -127,20 +127,25 @@ public class UserController {
 	}
 
 	@PostMapping("forgotpass2")
-	public String postForgotpass2(Model model, @RequestParam("emailUser") String email) {
-		List<user> listUser = userDao.findByEMAILLike(email);
-		if (listUser == null || listUser.isEmpty()) {
-			model.addAttribute("emailNotFound", "Email này chưa được đăng ký!");
+	public String postForgotpass2(Model model, @RequestParam("emailUser") String email,
+			@RequestParam("userName") String userName) {
+		try {
+			user user = userDao.getById(userName);
+			if (!user.getEMAIL().equals(email)) {
+				model.addAttribute("emailNotFound", "Email không đúng!");
+				return "/views/forgotpass1";
+			}
+			String otp = mailer.gererateOtp(email);
+			System.out.println(otp);
+			sessionService.set("listUserSession", user);
+			mailer.send(email, "Mã OTP xác nhận mật khẩu", "Mã OTP của bạn là: " + otp);
+			sessionService.set("email", email);
+			model.addAttribute("email", email);
+			return "/views/forgotpass2";
+		} catch (Exception e) {
+			model.addAttribute("username_error", "Tài khoản này chưa được đăng ký!");
 			return "/views/forgotpass1";
 		}
-
-		String otp = mailer.gererateOtp(email); // Corrected the method name
-		System.out.println(otp);
-		sessionService.set("listUserSession", listUser);
-		mailer.send(email, "Mã OTP xác nhận mật khẩu", "Mã OTP của bạn là: " + otp);
-		sessionService.set("email", email);
-		model.addAttribute("email", email);
-		return "/views/forgotpass2";
 	}
 
 	@PostMapping("forgotpass3")
@@ -203,7 +208,8 @@ public class UserController {
 
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+				
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().get(0).getCart_items();
 			Double totalCart = 0.0;
 			int totalquantity = 0;
 			for (cart_item cart_item : cartItems) {
@@ -298,7 +304,7 @@ public class UserController {
 		user us = sessionService.get("list");
 		if (us != null) {
 			user user = userDao.findById(us.getUSERNAME()).get();
-			List<cart_item> cart_items = user.getCarts().getFirst().getCart_items();
+			List<cart_item> cart_items = user.getCarts().get(0).getCart_items();
 			double totalPrice = 0;
 			for (cart_item item : cart_items) {
 				totalPrice += getGiaKhuyenMai(item.getVariant()) * item.getQUANTITY();
@@ -732,7 +738,7 @@ public class UserController {
 		user userss = sessionService.get("list");
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().get(0).getCart_items();
 			return cartItems;
 		} else {
 			List<cart_item> cartItems = new ArrayList<cart_item>();

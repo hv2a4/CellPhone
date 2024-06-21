@@ -26,4 +26,5 @@ public interface userDao extends JpaRepository<user, String> {
     
     @Query("SELECT p FROM user p ORDER BY p.UPDATE_AT DESC")
 	Page<user> findAllSX(Pageable pageable);
+	
 }
