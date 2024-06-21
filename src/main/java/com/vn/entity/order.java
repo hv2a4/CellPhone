@@ -33,6 +33,10 @@ public class order implements Serializable {
 	status_order status_order;
 
 	@ManyToOne
+	@JoinColumn(name = "ID_ADDRESS")
+	address address;
+	
+	@ManyToOne
 	@JoinColumn(name = "ID_PAYMENT_METHOD")
 	payment_method payment_method;
 

@@ -574,6 +574,7 @@ public class UserController {
 			user user = userDao.findById(us.getUSERNAME()).get();
 			cart cart = user.getCarts().get(0);
 			order or = new order();
+			address addres=user.getAddresses().get(0).getADDRESS();)
 			or.setUser(user);
 			or.setCREATE_AT(new Date());
 			or.setUPDATE_AT(new Date());
@@ -623,7 +624,7 @@ public class UserController {
 		address adr = addressDao.findById(idAddress.orElse(1)).get();
 		payment_method pay = payment_methodDao.findById(idPay.orElse(2)).get();
 
-		order.setADDRESS((user1.getAddresses().get(0)).getADDRESS());
+		order.setAddress(adr);)
 		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT() + adr.getSHIPPING_FEE());
 		order.setPayment_method(pay);
 		order.setStatus_order(status_orderDao.findById(2).get());
@@ -696,7 +697,7 @@ public class UserController {
 		String totalPrice = request.getParameter("vnp_Amount");
 		order order = orderDao.getOrderMoi();
 
-		model.addAttribute("adr", order.getADDRESS());
+		model.addAttribute("adr", order.getAddress());
 		model.addAttribute("pay", "Thanh toán online");
 		model.addAttribute("order", order);
 		model.addAttribute("totalPrice", totalPrice);
@@ -885,15 +886,19 @@ public class UserController {
 		String provinceName = paramService.getString("provinceName", "");
 		String districtName = paramService.getString("districtName", "");
 		String wardName = paramService.getString("wardName", "");
-		Double shippingFee = Double.parseDouble(paramService.getString("moneyShip", ""));
+	
 		user us = sessionService.get("list");
+		
 		String addreses = noteAddress + ", " + wardName + ", " + districtName + ", " + provinceName;
 		item.setADDRESS(addreses);
 		item.setUser(us);
+		item.setPROVINCE_NAME(provinceName);
+		item.setDISTRICT_NAME(districtName);
+		item.setWARD_NAME(wardName);
 		item.setPROVINCE(Integer.parseInt(provinceID));
 		item.setDISTRICT(Integer.parseInt(districtID));
 		item.setWARD(wardID);
-		item.setSHIPPING_FEE(shippingFee);
+	
 		addressDao.save(item);
 		String page = "address.jsp";
 		model.addAttribute("page", page);
@@ -934,15 +939,18 @@ public class UserController {
 		String provinceName = paramService.getString("provinceName", "");
 		String districtName = paramService.getString("districtName", "");
 		String wardName = paramService.getString("wardName", "");
-		Double shippingFee = Double.parseDouble(paramService.getString("moneyShip", ""));
+	
 		String addres = noteAddress + ", " + wardName + ", " + districtName + ", " + provinceName;
 		item.setID(id);
+		item.setPROVINCE_NAME(provinceName);
+		item.setDISTRICT_NAME(districtName);
+		item.setWARD_NAME(wardName);
 		item.setADDRESS(addres);
 		item.setUser(us);
 		item.setPROVINCE(Integer.parseInt(provinceID));
 		item.setDISTRICT(Integer.parseInt(districtID));
 		item.setWARD(wardID);
-		item.setSHIPPING_FEE(shippingFee);
+	
 		addressDao.save(item);
 		String page = "address.jsp";
 		model.addAttribute("page", page);
@@ -956,18 +964,25 @@ public class UserController {
 		address list = addressDao.findById(id).get();
 		model.addAttribute("id", list.getID());
 		model.addAttribute("item", list);
-		System.out.println(list.getADDRESS());
-		// tên đường
+	
+		 model.addAttribute("province", list.getPROVINCE());
+		 model.addAttribute("provinceNAME", list.getPROVINCE_NAME());
+	     model.addAttribute("district", list.getDISTRICT());
+	     model.addAttribute("districtNAME", list.getDISTRICT_NAME());
+	     model.addAttribute("ward", list.getWARD());
+	     model.addAttribute("wardNAME", list.getWARD_NAME());
+	     System.out.println(list.getADDRESS());
 		String sub = list.getADDRESS().substring(0, list.getADDRESS().indexOf(',')).trim();
 
 		model.addAttribute("sub", sub);
-
+		model.addAttribute("editCheck", "true");
 		String page = "address.jsp";
 		model.addAttribute("page", page);
 
 		return "index";
 	}
 
+	
 	@ModelAttribute("listAddress")
 	public List<address> getAddresses(Model model, address item) {
 		model.addAttribute("item", item);

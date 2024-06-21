@@ -137,6 +137,7 @@
                          maximumFractionDigits: 3,
                          useGrouping: true
                      }).format(response.shippingFee);
+                	 
                 	 console.log(totalOrderNumber)
                 	  console.log(shippingFeeNumber)
                 	 var total = totalOrderNumber + shippingFeeNumber;
