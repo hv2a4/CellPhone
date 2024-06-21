@@ -659,6 +659,7 @@ public class AdminController {
 		return "/Admin/production/homeadmin";
 	}
 
+	
 	// nhận hàng
 	@GetMapping("returns/{id}")
 	@ResponseBody
@@ -667,8 +668,7 @@ public class AdminController {
 		// Tìm đối tượng order theo ID
 		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 		// Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
-		status_order returnStatus = status_orderDao.findById(6)
-				.orElseThrow(() -> new RuntimeException("Status not found"));
+		status_order returnStatus = status_orderDao.findById(6).orElseThrow(() -> new RuntimeException("Status not found"));
 		if (orders.getStatus_order().getID() == 5) {
 			// Cập nhật trạng thái trả hàng cho đối tượng order
 			orders.setStatus_order(returnStatus);
@@ -693,8 +693,7 @@ public class AdminController {
 		// Tìm đối tượng order theo ID
 		order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
 		// Tìm đối tượng status_order mới có ID là 5
-		status_order returnStatus = status_orderDao.findById(5)
-				.orElseThrow(() -> new RuntimeException("Status not found"));
+		status_order returnStatus = status_orderDao.findById(5).orElseThrow(() -> new RuntimeException("Status not found"));
 		if (orders.getStatus_order().getID() == 7) {
 			// Cập nhật trạng thái trả hàng cho đối tượng order
 			orders.setStatus_order(returnStatus);
@@ -780,6 +779,7 @@ public class AdminController {
 		return orderDao.findAllSX();
 	}
 
+	// Quản Lý Đơn Hàng
 	@GetMapping("order")
 	public String getQLDonHang(Model model, @RequestParam(name = "pages", defaultValue = "1") Optional<Integer> pages) {
 		Pageable pageable = PageRequest.of(pages.orElse(1) - 1, 10);
