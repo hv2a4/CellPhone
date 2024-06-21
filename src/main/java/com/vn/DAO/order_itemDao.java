@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
 public interface order_itemDao extends JpaRepository<order_item, Integer> {
 	@Query("select oi from order_item oi where oi.order.ID = ?1")
 	List<order_item> finByAllOrder(Integer id);
+	
+
 }
