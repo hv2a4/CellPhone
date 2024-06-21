@@ -95,26 +95,32 @@ public class UserController {
 	}
 
 	@PostMapping("forgotpass2")
-	public String postForgotpass2(Model model, @RequestParam("emailUser") String email) {
-		List<user> listUser = userDao.findByEMAILLike(email);
-		if (listUser == null || listUser.isEmpty()) {
-			model.addAttribute("emailNotFound", "Email này chưa được đăng ký!");
+	public String postForgotpass2(Model model, @RequestParam("emailUser") String email,
+			@RequestParam("userName") String userName) {
+		try {
+			user user = userDao.getById(userName);
+			if (!user.getEMAIL().equals(email)) {
+				model.addAttribute("emailNotFound", "Email không đúng!");
+				return "/views/forgotpass1";
+			}
+			String otp = mailer.gererateOtp(email);
+			System.out.println(otp);
+			sessionService.set("listUserSession", user);
+			mailer.send(email, "Mã OTP xác nhận mật khẩu", "Mã OTP của bạn là: " + otp);
+			sessionService.set("email", email);
+			model.addAttribute("email", email);
+			return "/views/forgotpass2";
+		} catch (Exception e) {
+			model.addAttribute("username_error", "Tài khoản này chưa được đăng ký!");
 			return "/views/forgotpass1";
 		}
-		
-		String otp = mailer.gererateOtp(email); // Corrected the method name
-		System.out.println(otp);
-		sessionService.set("listUserSession", listUser);
-		mailer.send(email, "Mã OTP xác nhận mật khẩu", "Mã OTP của bạn là: " + otp);
-		sessionService.set("email", email);
-		model.addAttribute("email", email);
-		return "/views/forgotpass2";
+
 	}
 
 	@PostMapping("forgotpass3")
 	public String postForgotpass3(Model model, @RequestParam(name = "emailUser") String email,
 			@RequestParam(name = "otpEmail") String otp) {
-		
+
 		Boolean statusEmailOtp = mailer.validateOtp(email, otp);
 		System.out.println(statusEmailOtp);
 
@@ -617,7 +623,7 @@ public class UserController {
 	@RequestMapping("ordersuccess")
 	public String getOrderSuccess(Model model, @RequestParam("id_pay") Optional<Integer> idPay,
 			@RequestParam("id_address") Optional<Integer> idAddress) {
-		
+
 		user user1 = getUser();
 		order order = orderDao.getOrderMoi();
 		address adr = addressDao.findById(idAddress.orElse(1)).get();
