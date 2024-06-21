@@ -419,6 +419,7 @@ public class UserController {
 		return categoryDao.findAll();
 	}
 
+	// Đổi mật khẩu
 	@GetMapping("changepass")
 	public String getchangepass(Model model) {
 		return "/views/changepassword";

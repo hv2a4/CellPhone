@@ -31,6 +31,6 @@ public class address implements Serializable {
 	@JoinColumn(name = "ID_USER")
 	user user;
 
-	@OneToMany(mappedBy = "address")
-	List<order> orders;
+//	@OneToMany(mappedBy = "address")
+//	List<order> orders;
 }
