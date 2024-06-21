@@ -1989,7 +1989,10 @@ public class AdminController {
     @GetMapping("delete/{username}")
     public String deleteUser(@PathVariable("username") String username, RedirectAttributes redirectAttributes) {
         try {
-            userDao.deleteById(username);
+            user user1 = userDao.findById(username).get();
+            user1.setSTATUS(false);
+            System.out.println(user1.getSTATUS()+ " " + user1.getUSERNAME());
+            userDao.save(user1); // Lưu thay đổi trạng thái của người dùng
             redirectAttributes.addFlashAttribute("message", "Vô hiệu hóa thành công");
             redirectAttributes.addFlashAttribute("messageType", "success");
             System.out.println("Thành công");
@@ -2000,6 +2003,7 @@ public class AdminController {
         }
         return "redirect:/admin/user";
     }
+
 
 
     @PostMapping("variant/create")

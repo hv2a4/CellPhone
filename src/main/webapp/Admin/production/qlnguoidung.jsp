@@ -145,10 +145,10 @@
                                             data-bs-target="#exampleModal_${stt.index + 1}">${stt.index + 1}</td>
 
                                         <td style="width: 120px; height: 120px;"><img alt=""
-                                          data-bs-toggle="modal"
-                                          data-bs-target="#exampleModal_${stt.index + 1}"
-                                          src="/images-user/${item.AVATAR}"
-                                          style="width: 100%; height: 100%; object-fit: cover;">
+                                                                                      data-bs-toggle="modal"
+                                                                                      data-bs-target="#exampleModal_${stt.index + 1}"
+                                                                                      src="/images-user/${item.AVATAR}"
+                                                                                      style="width: 100%; height: 100%; object-fit: cover;">
                                         </td>
 
                                         <td data-bs-toggle="modal"
@@ -169,11 +169,24 @@
                                                    style="width: 100px; color: #fff;">Mở khóa</a>
                                             </c:when>
                                             <c:otherwise>
-                                                <button class="btn btn-danger" style="width: 100px"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#xoaNguoiDung_${item.USERNAME}">
-                                                    Vô hiệu
-                                                </button>
+                                                <c:choose>
+                                                    <c:when test="${item.STATUS}">
+                                                        <button class="btn btn-danger" style="width: 100px"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#xoaNguoiDung_${item.USERNAME}">
+                                                            Vô hiệu
+                                                        </button>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <button class="btn btn-danger" style="width: 100px"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#xoaNguoiDung_${item.USERNAME}"
+                                                                disabled>
+                                                            Vô hiệu
+                                                        </button>
+                                                    </c:otherwise>
+                                                </c:choose>
+
                                             </c:otherwise>
                                         </c:choose></td>
                                     </tr>
@@ -201,6 +214,7 @@
                                                     </button>
                                                     <a class="btn btn-primary" style="color: #fff;"
                                                        href="/admin/delete/${item.USERNAME}">Xác nhận</a>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -290,14 +304,11 @@
             showConfirmButton: false,
             timer: 1800
         }).then(() => {
-            if (messageType === "success") {
-                window.location.href = "/shop/login";
-            } else {
-                window.location.href = "/admin/user";
-            }
+            window.location.href = "/admin/user";
         });
     </script>
 </c:if>
+
 
 <script>
     function xacNhanKhoaMoKhoa(hanhDong, tenTaiKhoan) {
