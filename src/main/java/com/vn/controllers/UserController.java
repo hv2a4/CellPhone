@@ -1,39 +1,71 @@
 package com.vn.controllers;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.antlr.v4.runtime.misc.Utils;
-import org.eclipse.tags.shaded.org.apache.xpath.compiler.Keywords;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vn.DAO.addressDao;
+import com.vn.DAO.brandDao;
+import com.vn.DAO.cartDao;
+import com.vn.DAO.cart_itemDao;
+import com.vn.DAO.categoryDao;
+import com.vn.DAO.discount_codeDao;
+import com.vn.DAO.invoiceDao;
+import com.vn.DAO.orderDao;
+import com.vn.DAO.order_itemDao;
+import com.vn.DAO.payment_methodDao;
+import com.vn.DAO.phoneDao;
+import com.vn.DAO.status_invoiceDao;
+import com.vn.DAO.status_orderDao;
+import com.vn.DAO.systemDao;
+import com.vn.DAO.userDao;
+import com.vn.DAO.variantDao;
+import com.vn.entity.address;
+import com.vn.entity.brand;
+import com.vn.entity.cart;
+import com.vn.entity.cart_item;
+import com.vn.entity.category;
+import com.vn.entity.invoice;
+import com.vn.entity.order;
+import com.vn.entity.order_item;
+import com.vn.entity.payment_method;
+import com.vn.entity.phone;
+import com.vn.entity.status_invoice;
+import com.vn.entity.system;
+import com.vn.entity.user;
+import com.vn.entity.variant;
 import com.vn.service.VNPayService;
-import com.vn.DAO.*;
-import com.vn.entity.*;
 import com.vn.serviceimpl.MailerServiceImpl;
-import com.vn.utils.*;
+import com.vn.utils.CookieService;
+import com.vn.utils.ParamService;
+import com.vn.utils.SessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -95,26 +127,31 @@ public class UserController {
 	}
 
 	@PostMapping("forgotpass2")
-	public String postForgotpass2(Model model, @RequestParam("emailUser") String email) {
-		List<user> listUser = userDao.findByEMAILLike(email);
-		if (listUser == null || listUser.isEmpty()) {
-			model.addAttribute("emailNotFound", "Email này chưa được đăng ký!");
+	public String postForgotpass2(Model model, @RequestParam("emailUser") String email,
+			@RequestParam("userName") String userName) {
+		try {
+			user user = userDao.getById(userName);
+			if (!user.getEMAIL().equals(email)) {
+				model.addAttribute("emailNotFound", "Email không đúng!");
+				return "/views/forgotpass1";
+			}
+			String otp = mailer.gererateOtp(email);
+			System.out.println(otp);
+			sessionService.set("listUserSession", user);
+			mailer.send(email, "Mã OTP xác nhận mật khẩu", "Mã OTP của bạn là: " + otp);
+			sessionService.set("email", email);
+			model.addAttribute("email", email);
+			return "/views/forgotpass2";
+		} catch (Exception e) {
+			model.addAttribute("username_error", "Tài khoản này chưa được đăng ký!");
 			return "/views/forgotpass1";
 		}
-		
-		String otp = mailer.gererateOtp(email); // Corrected the method name
-		System.out.println(otp);
-		sessionService.set("listUserSession", listUser);
-		mailer.send(email, "Mã OTP xác nhận mật khẩu", "Mã OTP của bạn là: " + otp);
-		sessionService.set("email", email);
-		model.addAttribute("email", email);
-		return "/views/forgotpass2";
 	}
 
 	@PostMapping("forgotpass3")
 	public String postForgotpass3(Model model, @RequestParam(name = "emailUser") String email,
 			@RequestParam(name = "otpEmail") String otp) {
-		
+
 		Boolean statusEmailOtp = mailer.validateOtp(email, otp);
 		System.out.println(statusEmailOtp);
 
@@ -171,7 +208,8 @@ public class UserController {
 
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+				
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().get(0).getCart_items();
 			Double totalCart = 0.0;
 			int totalquantity = 0;
 			for (cart_item cart_item : cartItems) {
@@ -266,7 +304,7 @@ public class UserController {
 		user us = sessionService.get("list");
 		if (us != null) {
 			user user = userDao.findById(us.getUSERNAME()).get();
-			List<cart_item> cart_items = user.getCarts().getFirst().getCart_items();
+			List<cart_item> cart_items = user.getCarts().get(0).getCart_items();
 			double totalPrice = 0;
 			for (cart_item item : cart_items) {
 				totalPrice += getGiaKhuyenMai(item.getVariant()) * item.getQUANTITY();
@@ -435,80 +473,54 @@ public class UserController {
 		return "/views/forgotpass3";
 	}
 
-	@RequestMapping("checkout")
+	@RequestMapping("checkout/{id}")
 	public String getCheckout(
-			@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems,
-			Model model) {
-		// code này thu được tiền ship
+			@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems, Model model,
+			@RequestParam("quantity") Optional<Integer> quantity, @PathVariable("id") Optional<Integer> id) {
 		user us = sessionService.get("list");
+
 		if (us != null) {
-			order order = orderDao.getOrderMoi();
-			double totalAmount = 0;
-			double totalDiscount = 0;
-			List<order_item> listItem = order.getOrder_items();
-			for (order_item oi : listItem) {
-				totalAmount += oi.getPRICE() * oi.getQUANTITY();
-				totalDiscount += oi.getPRICE() * (oi.getVariant().getDiscount_product().getDISCOUNT_PERCENTAGE() / 100);
-			}
-			order.setTOTAL_AMOUNT(totalAmount);
-			order.setTOTAL_DISCOUNT(totalDiscount);
-			orderDao.save(order);
 			user user = userDao.findById(us.getUSERNAME()).get();
 			List<payment_method> listPay = payment_methodDao.findAll();
-			model.addAttribute("pays", listPay);
+			if (!selectedItems.isPresent()) {
+				variant v = variantDao.findById(id.orElse(1))
+						.orElseThrow(() -> new RuntimeException("Variant not found"));
+				double totalAmount = getGiaKhuyenMai(v) * quantity.orElse(1);
 
-			model.addAttribute("user", user);
-			model.addAttribute("order", order);
-			model.addAttribute("totalOrder", totalAmount);
-
-			String selectedItemsQueryParam = "";
-			if (selectedItems.isPresent()) {
-				List<String> selectedItemStrings = new ArrayList<>();
-				for (Integer selectedItem : selectedItems.get()) {
-					selectedItemStrings.add(String.valueOf(selectedItem));
+				model.addAttribute("totalOrder", totalAmount);
+				model.addAttribute("variant", v);
+				model.addAttribute("quantity", quantity.orElse(1));
+			} else {
+				List<cart_item> list = cart_itemdao.findByIdOT(selectedItems.orElse(Collections.emptyList()));
+				double totalAmount = 0;
+				for (cart_item cart_item : list) {
+					totalAmount += getGiaKhuyenMai(cart_item.getVariant()) * cart_item.getQUANTITY();
 				}
-				selectedItemsQueryParam = String.join(",", selectedItemStrings);
+				model.addAttribute("totalOrder", totalAmount);
+				model.addAttribute("items", list);
+				String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
+						.collect(Collectors.joining(","));
+				model.addAttribute("selectedItems", selectedItemsQueryParam);
 			}
-			model.addAttribute("selectedItems", selectedItemsQueryParam);
-
+			model.addAttribute("user", user);
+			model.addAttribute("pays", listPay);
 			String page = "checkout.jsp";
 			model.addAttribute("page", page);
-
 			return "index";
 		} else {
 			return "redirect:/shop/login";
 		}
 	}
 
-	@RequestMapping("muangay/{id}")
-	public String muaNgay(Model model, @PathVariable("id") Integer id,
-			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+	@RequestMapping("addorder")
+	public String addorder(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItems,
+			Model model) {
 		user us = sessionService.get("list");
 		if (us != null) {
-			user user = userDao.findById(us.getUSERNAME()).get();
-			order or = new order();
-			or.setUser(user);
-			or.setCREATE_AT(new Date());
-			or.setUPDATE_AT(new Date());
-			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-				or.setADDRESS((user.getAddresses().get(0)).getADDRESS());
-			} else {
-				return "redirect:/shop/address";
-			}
+			String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
+					.collect(Collectors.joining(","));
 
-			orderDao.save(or);
-
-			order order = orderDao.getOrderMoi();
-
-			Optional<variant> variant = variantDao.findById(id);
-			order_item order_item = new order_item();
-			order_item.setOrder(order);
-			order_item.setVariant(variant.get());
-			order_item.setPRICE(getGiaKhuyenMai(variant.get()));
-			order_item.setQUANTITY(quantity);
-
-			order_itemDao.save(order_item);
-			return "redirect:/shop/checkout";
+			return "redirect:/shop/checkout/0?selectedItems=" + selectedItemsQueryParam;
 		}
 		return "redirect:/shop/login";
 	}
@@ -532,80 +544,6 @@ public class UserController {
 		}
 		return response;
 	}
-//	@RequestMapping("mualai")
-//	public String muaLai(Model model, @RequestParam("id_order") Integer id,
-//			@RequestParam(name = "quantity", defaultValue = "1") int quantity) {
-//		user us = sessionService.get("list");
-//		if (us != null) {
-//			user user = userDao.findById(us.getUSERNAME()).get();
-//			order or = new order();
-//			or.setUser(user);
-//			or.setCREATE_AT(new Date());
-//			or.setUPDATE_AT(new Date());
-//			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-//				or.setAddress(user.getAddresses().get(0));
-//			} else {
-//				return "redirect:/shop/address";
-//			}
-//			
-//			orderDao.save(or);
-//			
-//			order order = orderDao.getOrderMoi();
-//			
-//			Optional<variant> variant = variantDao.findById(id);
-//			order_item order_item = new order_item();
-//			order_item.setOrder(order);
-//			order_item.setVariant(variant.get());
-//			order_item.setPRICE(getPriceVariant(variant.get()));
-//			order_item.setQUANTITY(quantity);
-//			
-//			order_itemDao.save(order_item);
-//			return "redirect:/shop/checkout";
-//		}
-//		return "redirect:/shop/login";
-//	}
-//
-//	
-
-	@RequestMapping("addorder")
-	public String addorder(@RequestParam(value = "selectedItems", required = false) List<Integer> selectedItems,
-			Model model) {
-		user us = sessionService.get("list");
-		if (us != null) {
-			user user = userDao.findById(us.getUSERNAME()).get();
-			cart cart = user.getCarts().get(0);
-			order or = new order();
-			or.setUser(user);
-			or.setCREATE_AT(new Date());
-			or.setUPDATE_AT(new Date());
-			if (user.getAddresses() != null && !user.getAddresses().isEmpty()) {
-				or.setADDRESS((user.getAddresses().get(0)).getADDRESS());
-			} else {
-				return "redirect:/shop/address";
-			}
-			orderDao.save(or);
-			if (selectedItems == null || selectedItems.isEmpty()) {
-				// If no items are selected, process all items in the cart
-				selectedItems = cart.getCart_items().stream().map(cart_item::getID).collect(Collectors.toList());
-			}
-
-			for (cart_item citem : cart.getCart_items()) {
-				if (selectedItems.contains(citem.getID())) {
-					order_item order_item = new order_item();
-					order_item.setOrder(or);
-					order_item.setPRICE(getGiaKhuyenMai(citem.getVariant()));
-					order_item.setQUANTITY(citem.getQUANTITY());
-					order_item.setVariant(citem.getVariant());
-					order_itemDao.save(order_item);
-				}
-			}
-			String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
-					.collect(Collectors.joining(","));
-
-			return "redirect:/shop/checkout?selectedItems=" + selectedItemsQueryParam;
-		}
-		return "redirect:/shop/login";
-	}
 
 	public Double getPriceVariant(variant variant) {
 		if (variant.getDiscount_product().getEXPIRY_DATE().after(new Date())) {
@@ -616,42 +554,62 @@ public class UserController {
 	}
 
 	@RequestMapping("ordersuccess")
-	public String getOrderSuccess(Model model, @RequestParam("id_pay") Optional<Integer> idPay,
-			@RequestParam("id_address") Optional<Integer> idAddress) {
-		
+	public String getOrderSuccess(Model model, @RequestParam("payment") Optional<Integer> idPay,
+			@RequestParam("address") Optional<Integer> idAddress, @RequestParam("variant") Optional<variant> v,
+			@RequestParam("quantity") Optional<Integer> quantity,
+			@RequestParam(value = "selectedItems", required = false) Optional<String> selectedItems,
+			@RequestParam("totalOrder") Optional<Double> totalAmount) {
+
 		user user1 = getUser();
-		order order = orderDao.getOrderMoi();
-		address adr = addressDao.findById(idAddress.orElse(1)).get();
+		order order = new order();
+		String adr = addressDao.findByNameAdr(idAddress.orElse(null));
 		payment_method pay = payment_methodDao.findById(idPay.orElse(2)).get();
-
-		order.setADDRESS((user1.getAddresses().get(0)).getADDRESS());
-		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT() + adr.getSHIPPING_FEE());
+		order.setADDRESS(adr);
+		order.setUser(user1);
 		order.setPayment_method(pay);
+		order.setTOTAL_AMOUNT(totalAmount.orElse(null));
+		order.setCREATE_AT(new Date());
+		order.setUPDATE_AT(new Date());
 		order.setStatus_order(status_orderDao.findById(2).get());
-
 		orderDao.save(order);
-		List<order_item> listOrderItem = order_itemDao.finByAllOrder(order.getID());
-		for (order_item oi : listOrderItem) {
-			variant v = variantdao.findById(oi.getVariant().getID()).get();
-			v.setQUANTITY(v.getQUANTITY() - oi.getQUANTITY());
-			variantDao.save(v);
-		}
-		user us = sessionService.get("list");
-		user user = userDao.findById(us.getUSERNAME()).get();
-		cart cart = user.getCarts().get(0);
 
-		List<cart_item> cart_items = cart.getCart_items();
-		List<order_item> order_items = order.getOrder_items();
-
-		for (cart_item item : cart_items) {
-			for (order_item order_item : order_items) {
-				if (order_item.getVariant().getID() == item.getVariant().getID()) {
-					cart_itemdao.delete(item);
-					break;
+		order_item order_item = new order_item();
+		if (v.isPresent()) {
+			order_item.setOrder(order);
+			order_item.setPRICE(getGiaKhuyenMai(v.orElse(null)));
+			order_item.setQUANTITY(quantity.orElse(1));
+			order_item.setVariant(v.orElse(null));
+			order_itemDao.save(order_item);
+			variant vari = variantDao.findById(order_item.getVariant().getID()).get();
+			vari.setQUANTITY(vari.getQUANTITY() - order_item.getQUANTITY());
+			variantdao.save(vari);
+		} else {
+			String encodedSelectedItems = selectedItems.orElse(null);
+			String decodedSelectedItems = URLDecoder.decode(encodedSelectedItems, StandardCharsets.UTF_8);
+			String cleanedSelectedItems = decodedSelectedItems.replaceAll("[\\[\\]\\s]", "");
+			List<Integer> selectedItemsList = Arrays.stream(cleanedSelectedItems.split(",")).map(Integer::valueOf)
+					.collect(Collectors.toList());
+			List<cart_item> list = cart_itemdao.findByIdOT(selectedItemsList);
+			for (cart_item cart_item : list) {
+				order_item orderItem = new order_item();
+				orderItem.setOrder(order);
+				orderItem.setPRICE(getGiaKhuyenMai(cart_item.getVariant()));
+				orderItem.setQUANTITY(cart_item.getQUANTITY());
+				orderItem.setVariant(cart_item.getVariant());
+				order_itemDao.save(orderItem);
+				variant vari = variantDao.findById(cart_item.getVariant().getID()).get();
+				vari.setQUANTITY(vari.getQUANTITY() - cart_item.getQUANTITY());
+				variantdao.save(vari);
+				for (Integer item : selectedItemsList) {
+					if (cart_item.getID() == item) {
+						cart_itemdao.deleteById(cart_item.getID());
+						break;
+					}
 				}
 			}
+			
+			
 		}
-
 		invoice inv = new invoice();
 		if (pay.getNAME().equalsIgnoreCase("Thanh toán khi nhận hàng")) {
 			inv.setStatus_invoice(status_invoice(2));
@@ -661,7 +619,7 @@ public class UserController {
 			inv.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
 			invoiceDao.save(inv);
 			model.addAttribute("order", order);
-			model.addAttribute("adr", adr.getADDRESS());
+			model.addAttribute("adr", adr);
 			model.addAttribute("pay", pay.getNAME());
 			return "/views/ordersuccess";
 		} else {
@@ -675,7 +633,7 @@ public class UserController {
 			invoice invm = getInvoiceMoi();
 
 			model.addAttribute("order", order);
-			model.addAttribute("adr", adr.getADDRESS());
+			model.addAttribute("adr", adr);
 			model.addAttribute("pay", pay.getNAME());
 			request.setAttribute("id_oder", invm.getID());
 
@@ -781,7 +739,7 @@ public class UserController {
 		user userss = sessionService.get("list");
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().get(0).getCart_items();
 			return cartItems;
 		} else {
 			List<cart_item> cartItems = new ArrayList<cart_item>();
