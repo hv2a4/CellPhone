@@ -237,15 +237,7 @@
                 </div>
                 <div class="clearfix"></div>
 
-                <div class="titlebill">Thông tin đặt hàng:</div>
-                <div class="infoorder">
-                    <div>Mã đơn hàng: <b>${order.ID }</b></div>
-                    <div>Địa chỉ nhận hàng: <b>${adr}</b></div>
-                    <div><b>${pay}</b></div>
-                    <div>Tổng tiền: <strong class="red">
-                    <fmt:formatNumber value="${order.TOTAL_AMOUNT }"
-											pattern="###,###.###" /></strong></div>
-                </div>
+                
                 <div class="callship">
                     Trước khi giao nhân viên sẽ gọi cho Qúy khách <b>${list.FULLNAME}</b>
                     để xác nhận. Khi cần hỗ trợ vui lòng gọi
