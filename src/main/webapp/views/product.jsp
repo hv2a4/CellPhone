@@ -54,14 +54,13 @@
 								<c:when
 									test="${variant2.discount_product.EXPIRY_DATE.time > System.currentTimeMillis()}">
 									<fmt:formatNumber pattern="###,###"
-								value=" ${price *(100-discount)/100}"></fmt:formatNumber>
+										value=" ${price *(100-discount)/100}"></fmt:formatNumber>
 								</c:when>
 								<c:otherwise>
-									<fmt:formatNumber pattern="###,###"
-										value="${price}"></fmt:formatNumber>
+									<fmt:formatNumber pattern="###,###" value="${price}"></fmt:formatNumber>
 								</c:otherwise>
 							</c:choose>
-							
+
 						</h3>
 						<del id="discount${finByIdPhone.ID}" class="product-old-price"
 							style="font-size: 18px">
@@ -85,19 +84,17 @@
 												<a
 													href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"
 													class="storage-link"
-													data-storage-id="${variant.storage.ID}">
-													<button type="button" class="btn btn-default inline-button">1
-														TB</button>
-												</a>
+													data-storage-id="${variant.storage.ID}"
+													style="width: 5em; border: 1px solid black; height: 2em;">
+													1TB </a>
 											</c:if>
 											<c:if test="${1024 > variant.storage.GB}">
 												<a
 													href="/shop/product/${idphone}?id_variant=${variant.ID}&id_storage=${variant.storage.ID}"
 													class="storage-link"
-													data-storage-id="${variant.storage.ID}">
-													<button type="button" class="btn btn-default inline-button">${variant.storage.GB}
-														GB</button>
-												</a>
+													data-storage-id="${variant.storage.ID}"
+													style="width: 5em; border: 1px solid black; height: 2em;">
+													${variant.storage.GB} GB </a>
 											</c:if>
 
 											<c:set var="GB" value="${variant.storage.ID}"></c:set>
@@ -123,23 +120,29 @@
 									</c:forEach>
 								</div>
 							</div>
-
+							<div class="error-message"
+								style="display: none; color: red; margin-bottom: 10px;">
+								Vui lòng chọn đầy đủ dung lượng và màu trước khi mua.</div>
 						</div>
 
 						<div class="add-to-cart">
 							<div class="qty-label">
 								<input class="updateCart" value="1" type="number"
-									name="quantity" min="1" max="${quantity }"
+									name="quantity" min="1" max="${quantity }" id="quantity"
 									style="width: 6em; height: 3em; text-align: center;" />
 							</div>
+							<div class="error-message-quantity"
+								style="display: none; color: red; margin-bottom: 10px;">
+								Vui lòng chọn đầy đủ dung lượng và màu trước khi mua.</div>
 						</div>
-						<div class="add-to-cart">
-							<button class="add-to-cart-btn" id="buyNowButton">
+						<div class="add-to-cart" onclick="return validateBeforeBuy();">
+							<button class="add-to-cart-btn" id="buyNowButton"
+								>
 								<i class="fa-brands fa-bitcoin" style="font-size: 20px"></i> Mua
 								ngay
 							</button>
 							<button class="add-to-cart-btn" type="submit"
-								id="addToCartButton" >
+								id="addToCartButton">
 								<i class="fa fa-shopping-cart"></i> Thêm giỏ hàng
 							</button>
 							<!-- 	<a href="/shop/cart"><button class="add-to-cart-btn">
@@ -524,69 +527,127 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+function validateBeforeBuy() {
+    var selectedStorage = document.querySelector('.storage-link.active');
+    var selectedColor = document.querySelector('input[name="color"]:checked');
+    var quantityInput = document.querySelector('input[name="quantity"]');
+    var quantity = parseInt(quantityInput.value); // Parse quantity to integer
+
+    // Check if a storage option and color are selected
+    if (!selectedStorage || !selectedColor) {
+        var errorMessage = document.querySelector('.error-message');
+        if (errorMessage) {
+            errorMessage.style.display = 'block';
+        }
+        return false;
+    }
+
+    // Check if quantity is valid (greater than 0 and less than or equal to available stock)
+    var maxQuantity = parseInt(quantityInput.max); // Assuming max attribute is set to available stock
+    if (isNaN(quantity) || quantity <= 0 || quantity > maxQuantity) {
+        var errorMessage = document.querySelector('.error-message-quantity');
+        if (errorMessage) {
+            errorMessage.textContent = 'Vui lòng chọn số lượng nhỏ hơn '+maxQuantity;
+            errorMessage.style.display = 'block';
+        }
+        return false;
+    }
+
+    // All conditions are met, no error
+    var errorMessage = document.querySelector('.error-message');
+    if (errorMessage) {
+        errorMessage.style.display = 'none';
+    }
+    return true;
+}
+
+// Update the "Thêm giỏ hàng" button's behavior
+
+// Call the getGia function to update prices based on the selected phone and variant
 function updateBuyNowButton(idPhone, idVariant) {
-    // Get the quantity from the input field named 'quantity'
-    var quantity = document.getElementsByName('quantity')[0].value;
+    var quantity = document.querySelector('input[name="quantity"]').value;
 
     // Update the "Mua ngay" button's form action with the selected variant ID and quantity
     var buyNowButton = document.getElementById('buyNowButton');
     buyNowButton.formAction = "/shop/checkout/" + idVariant + "?quantity=" + quantity;
-
-    // Update the "Thêm giỏ hàng" button's form action with the selected variant ID and quantity
-    var addToCartButton = document.getElementById('addToCartButton');
-    addToCartButton.onclick = function(event) {
+    
+    document.getElementById('addToCartButton').addEventListener('click', function(event) {
         event.preventDefault(); // Prevent the default form submission
-        var quantity = document.getElementsByName('quantity')[0].value;
-        $.ajax({
-            type: "GET",
-            url: "/shop/addcart/" + idVariant + "?quantity=" + quantity,
-            success: function() {
-                // If successful, show a success toast notification
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 1000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    }
-                });
-                Toast.fire({
-                    icon: "success",
-                    title: "Đã thêm vào giỏ hàng"
-                }).then(function(){
-        	        location.reload();
-      	      });
-                // Optionally, update UI or perform other actions here
-            },
-            error: function(xhr, status, error) {
-                // If there's an error, log it to console
-                console.log("Error: " + error);
-                // Optionally, show an error toast notification
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                    }
-                });
-                Toast.fire({
-                    icon: "error",
-                    title: "Đã xảy ra lỗi khi thêm vào giỏ hàng"
-                });
-            }
-        });
-    };
+
+        if (validateBeforeBuy()) {
+            $.ajax({
+                type: "GET",
+                url: "/shop/addcart/" + idVariant + "?quantity=" + quantity,
+                success: function() {
+                    // If successful, show a success toast notification
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer);
+                            toast.addEventListener('mouseleave', Swal.resumeTimer);
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Đã thêm vào giỏ hàng"
+                    }).then(function(){
+                        location.reload(); // Optionally reload the page after adding to cart
+                    });
+                },
+                error: function(xhr, status, error) {
+                    // If there's an error, log it to console
+                    console.log("Error: " + error);
+                    // Optionally, show an error toast notification
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer);
+                            toast.addEventListener('mouseleave', Swal.resumeTimer);
+                        }
+                    });
+                    Toast.fire({
+                        icon: "error",
+                        title: "Đã xảy ra lỗi khi thêm vào giỏ hàng"
+                    });
+                }
+            });
+        }
+    });
 
     // Call the getGia function to update prices based on the selected phone and variant
     getGia(idPhone, idVariant);
 }
+
+// Update the selected state when clicking on storage links
+document.querySelectorAll('.storage-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+        // Remove 'active' class from all storage links
+        document.querySelectorAll('.storage-link').forEach(function(otherLink) {
+            otherLink.classList.remove('active');
+        });
+        // Add 'active' class to the clicked link
+        this.classList.add('active');
+
+        // Update the buy now and add to cart buttons if validation passes
+        if (validateBeforeBuy()) {
+            var idVariant = this.getAttribute('data-storage-id');
+            var quantity = document.querySelector('input[name="quantity"]').value;
+
+            // Update buy now button
+            var buyNowButton = document.getElementById('buyNowButton');
+            buyNowButton.formAction = "/shop/checkout/" + idVariant + "?quantity=" + quantity;
+        }
+    });
+});
+
 
 // Đảm bảo rằng hàm này sẽ được gọi khi trang web được tải
 window.onload = function() {
@@ -666,5 +727,62 @@ function formatPrice(price) {
 	    }
 	  });
 	} */
+	document.addEventListener('DOMContentLoaded', function() {
+	    const storageLinks = document.querySelectorAll('.storage-link');
 
+	    function handleStorageLinkClick(event) {
+	        event.preventDefault();
+
+	        // Loại bỏ lớp active từ tất cả các liên kết
+	        storageLinks.forEach(link => link.classList.remove('active'));
+
+	        // Thêm lớp active vào liên kết được click
+	        this.classList.add('active');
+
+	        // Lưu trữ ID của lưu trữ được chọn vào local storage
+	        const storageId = this.getAttribute('data-storage-id');
+	        localStorage.setItem('activeStorageId', storageId);
+
+	        // Có thể điều hướng đến liên kết href nếu cần
+	         window.location.href = this.getAttribute('href');
+	    }
+
+	    // Đính kèm sự kiện click cho từng liên kết
+	    storageLinks.forEach(link => {
+	        link.addEventListener('click', handleStorageLinkClick);
+	    });
+
+	    // Thiết lập lại trạng thái được chọn từ local storage khi tải lại trang
+	    function setActiveStorageLink() {
+	        const activeStorageId = localStorage.getItem('activeStorageId');
+	        storageLinks.forEach(link => {
+	            if (link.getAttribute('data-storage-id') === activeStorageId) {
+	                link.classList.add('active');
+	            } else {
+	                link.classList.remove('active');
+	            }
+	        });
+	    }
+
+	    // Khởi tạo trạng thái active khi trang được tải
+	    setActiveStorageLink();
+	});
+	
+</script>
+
+<script>
+  const input = document.getElementById('quantity');
+  
+  input.addEventListener('onchange', function() {
+    const value = parseInt(input.value);
+    const max = parseInt(input.max);
+    
+    if (value > max) {
+      // Hiển thị thông báo lỗi
+      input.setCustomValidity('Giá trị vượt quá giới hạn.');
+    } else {
+      // Xóa thông báo lỗi
+      input.setCustomValidity('');
+    }
+  });
 </script>
