@@ -97,9 +97,10 @@
                                                 <tr>
                                                     <th>Mã đơn hàng</th>
                                                     <th>Tên người đặt</th>
+                                                    <th>Địa chỉ</th>
                                                     <th>Tổng tiền</th>
                                                     <th>Ngày đặt</th>
-                                                    <th>Trạng thái</th>
+                                                    <th>Trạng thái thanh toán</th>
                                                     <th>Hoạt động</th>
                                                 </tr>
                                                 </thead>
@@ -107,57 +108,43 @@
                                                 <c:forEach var="item" items="${pageOrder.content}"
                                                            varStatus="loop">
                                                     <tr>
-                                                        <td>DK<fmt:formatDate value="${item.UPDATE_AT}"
+                                                        <td data-bs-toggle="modal"
+                                                            data-bs-target="#staticBackdrop_${item.ID}">
+                                                            DK<fmt:formatDate value="${item.UPDATE_AT}"
                                                                               pattern="yyyy-MM-dd"/>${loop.index +1}</td>
-                                                        <td>${item.user.FULLNAME}</td>
+                                                        <td data-bs-toggle="modal"
+                                                            data-bs-target="#staticBackdrop_${item.ID}">${item.user.FULLNAME}</td>
+                                                        <td>${item.ADDRESS}</td>
                                                         <td><fmt:formatNumber type="number"
                                                                               currencyCode="VND"
                                                                               value="${item.TOTAL_AMOUNT}"/></td>
                                                         <td><fmt:formatDate value="${item.UPDATE_AT}"
                                                                             pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                                                        <td><c:choose>
-                                                            <c:when
-                                                                    test="${item.status_order.STATUS == 'Hoàn thành'}">
-																			<span class="badge rounded-pill"
-                                                                                  style="width: 200px; background-color: #4caf50; color: white; font-size: 15px">
-																				Hoàn thành </span>
-                                                            </c:when>
-                                                            <c:when
-                                                                    test="${item.status_order.STATUS == 'Chờ xác nhận'}">
-																			<span class="badge rounded-pill"
-                                                                                  style="width: 200px; background-color: #ffeb3b; color: black; font-size: 15px">
-																				Chờ xác nhận </span>
-                                                            </c:when>
-                                                            <c:when
-                                                                    test="${item.status_order.STATUS == 'Đã xác nhận'}">
-																			<span class="badge rounded-pill"
-                                                                                  style="width: 200px; background-color: #2196f3; color: white; font-size: 15px">
-																				Đã xác nhận </span>
-                                                            </c:when>
-                                                            <c:when
-                                                                    test="${item.status_order.STATUS == 'Giao hàng'}">
-																			<span class="badge rounded-pill"
-                                                                                  style="width: 200px; background-color: #ff9800; color: white; font-size: 15px">
-																				Giao hàng </span>
-                                                            </c:when>
-                                                            <c:when test="${item.status_order.STATUS == 'Hủy'}">
-																			<span class="badge rounded-pill"
-                                                                                  style="width: 200px; background-color: #f44336; color: white; font-size: 15px">
-																				Hủy </span>
-                                                            </c:when>
-                                                            <c:when
-                                                                    test="${item.status_order.STATUS == 'Trả hàng'}">
-																			<span class="badge rounded-pill"
-                                                                                  style="width: 200px; background-color: #9e9e9e; color: white; font-size: 15px">
-																				Trả hàng </span>
-                                                            </c:when>
-                                                            <c:when
-                                                                    test="${item.status_order.STATUS == 'Chờ xác nhận trả'}">
-																			<span class="badge rounded-pill"
-                                                                                  style="width: 200px; background-color: #9e9e9e; color: white; font-size: 15px">
-																				Chờ xác nhận trả hàng </span>
-                                                            </c:when>
-                                                        </c:choose></td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty item.invoices and not empty item.invoices.get(0)}">
+                                                                    <c:choose>
+                                                                        <c:when test="${item.invoices.get(0).status_invoice.NAME == 'Đã thanh toán'}">
+                                                                                <span class="text-center badge rounded-pill text-bg-success"
+                                                                                      style="font-size: 15px;width: 130px">${item.invoices.get(0).status_invoice.NAME}</span>
+                                                                        </c:when>
+                                                                        <c:when test="${item.invoices.get(0).status_invoice.NAME == 'Chưa thanh toán'}">
+                                                                                <span class="text-center badge rounded-pill text-bg-warning"
+                                                                                      style="font-size: 15px;width: 130px">${item.invoices.get(0).status_invoice.NAME}</span>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                                <span class="text-center badge rounded-pill text-bg-danger"
+                                                                                      style="font-size: 15px;width: 130px">${item.invoices.get(0).status_invoice.NAME}</span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                                <span class="text-center badge rounded-pill text-bg-danger"
+                                                                                      style="font-size: 15px;width: 130px">Chưa thanh toán</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+
                                                         <td class="text-center"><c:choose>
                                                             <c:when
                                                                     test="${item.status_order.STATUS == 'Hoàn thành'}">
@@ -215,6 +202,7 @@
                                                             </c:when>
                                                         </c:choose></td>
                                                     </tr>
+
                                                     <div class="modal fade"
                                                          id="exampleModal_${loop.index + 1}" tabindex="-1"
                                                          aria-labelledby="exampleModalLabel_${loop.index + 1}"
@@ -232,7 +220,7 @@
                                                                 <div class="modal-body">
                                                                     <h2>Tên: ${item.user.FULLNAME}</h2>
                                                                     <h2>Trạng thái: ${item.status_order.STATUS}</h2>
-<%--                                                                    <h2>Địa chỉ: ${item.address.ADDRESS}</h2>--%>
+                                                                        <%--                                                                    <h2>Địa chỉ: ${item.address.ADDRESS}</h2>--%>
                                                                     <h2>Phương thức thanh toán:
                                                                             ${item.payment_method.NAME}</h2>
                                                                     <h2>Tổng giảm giá: <fmt:formatNumber type="number"
@@ -286,6 +274,82 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="modal fade" id="staticBackdrop_${item.ID}"
+                                                         data-bs-backdrop="static" data-bs-keyboard="false"
+                                                         tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                                         aria-hidden="true">
+                                                        <div class="modal-dialog modal-xl">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5"
+                                                                        id="staticBackdropLabel_${item.ID}">Thông tin
+                                                                        đơn hàng</h1>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 text-center py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 text-center py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2 text-center py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3">
+                                                                            <div class="col-md-1 border-bottom">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-primary"
+                                                                            data-bs-dismiss="modal">Đóng
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </c:forEach>
                                                 </tbody>
                                             </table>
@@ -330,8 +394,8 @@
                                                     <th>Tên người đặt</th>
                                                     <th>Tổng tiền</th>
                                                     <th>Ngày đặt</th>
-                                                    <th>Trạng thái</th>
-                                                    <th>Hoạt động</th>
+                                                    <th>Trạng thái thanh toán</th>
+                                                    <th class="text-center">Hoạt động</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -356,9 +420,52 @@
                                                                         style="width: 120px; background-color: #ffc107; color: black;">
                                                                     Xác Nhận
                                                                 </button>
+                                                                <button class="btn" data-bs-toggle="modal"
+                                                                        data-bs-target="#huyBoiAdmin_${item.ID}"
+                                                                        style="width: 120px; background-color: #dc3545; color: #fff;">
+                                                                    Hủy
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     </c:if>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="huyBoiAdmin_${item.ID}" tabindex="-1"
+                                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                                                        Lý do hủy đơn hàng</h1>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+
+                                                                <div class="modal-body">
+                                                                    <div class="form-floating">
+                                                                        <textarea class="form-control"
+                                                                                  placeholder="Leave a comment here"
+                                                                                  id="floatingTextarea2_${item.ID}"
+                                                                                  style="height: 100px"
+                                                                                  name="REASON"></textarea>
+                                                                        <label for="floatingTextarea2_${item.ID}">Nhập
+                                                                            lý do
+                                                                            của
+                                                                            bạn </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Đóng
+                                                                    </button>
+                                                                    <button onclick="huyDonHang(${item.ID})"
+                                                                            class="btn btn-primary">Xác nhận hủy
+                                                                    </button>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </c:forEach>
                                                 </tbody>
                                             </table>
@@ -396,7 +503,7 @@
                                                     <th>Tên người đặt</th>
                                                     <th>Tổng tiền</th>
                                                     <th>Ngày xác nhận</th>
-                                                    <th>Trạng thái</th>
+                                                    <th>Trạng thái thanh toán</th>
                                                     <th>Hoạt động</th>
                                                 </tr>
                                                 </thead>
@@ -461,7 +568,7 @@
                                                     <th>Tên người đặt</th>
                                                     <th>Tổng tiền</th>
                                                     <th>Ngày giao</th>
-                                                    <th>Trạng thái</th>
+                                                    <th>Trạng thái thanh toán</th>
                                                     <th class="text-center">Hoạt động</th>
                                                 </tr>
                                                 </thead>
@@ -574,7 +681,7 @@
                                                                     <div class="modal-body">
                                                                         <h2>Tên: ${item.user.FULLNAME}</h2>
                                                                         <h2>Trạng thái: ${item.status_order.STATUS}</h2>
-<%--                                                                        <h2>Địa chỉ: ${item.address.ADDRESS}</h2>--%>
+                                                                            <%--                                                                        <h2>Địa chỉ: ${item.address.ADDRESS}</h2>--%>
                                                                         <h2>Phương thức thanh toán:
                                                                                 ${item.payment_method.NAME}</h2>
                                                                         <h2>
@@ -1255,6 +1362,76 @@
             }
         });
     }
+
+
+    function huyDonHang(id) {
+        let addressID = document.getElementById("floatingTextarea2_" + id).value;
+        $.ajax({
+            type: "GET",
+            url: "/admin/order/huyDonHang/" + id,
+            data: {address: addressID},
+            success: function (response) {
+                if (response) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Hoàn tất"
+                    }).then(function () {
+                        window.location.href = "/admin/order";
+                    });
+                } else {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "error",
+                        title: "Người dùng đã cập nhật trạng thái mới"
+                    }).then(function () {
+                        window.location.href = "/admin/order";
+                    });
+                }
+
+            },
+            error: function (xhr, status, error) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "Người dùng đã cập nhật trạng thái mới"
+                }).then(function () {
+                    window.location.href = "/admin/order";
+                });
+            }
+        });
+    }
+
 </script>
 </body>
 </html>

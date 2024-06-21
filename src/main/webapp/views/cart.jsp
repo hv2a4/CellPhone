@@ -13,7 +13,7 @@
 					<table class="table table-cart table-no-border" cellspacing="10">
 						<thead>
 							<tr>
-								<th class="hidden-xs"></th>
+								<th class="hidden-xs"><input type="checkbox" id="selectAllCheckbox" checked="checked" onchange="toggleAllCheckboxes()"/></th>
 								<th class="hidden-xs">Ảnh sản phẩm</th>
 								<th class="hidden-xs">Tên sản phẩm</th>
 								<th class="text-center hidden-xs">Giá tiền</th>
@@ -97,16 +97,17 @@
 					</table>
 					<div class="row">
 						<div class="col-md-12">
-							<span class="totalPrice pull-right">Tổng tiền: <span><fmt:formatNumber
-										pattern="###,###" value="${totalPrice}"></fmt:formatNumber></span> đ
+						<span class="totalPrice pull-right">Tổng
+								tiền: <span id="totalPriceValue"><fmt:formatNumber pattern="###,###"
+										value="${totalPrice}"></fmt:formatNumber></span> đ
 							</span>
 						</div>
-						<div class="col-md-12">
+						<%-- <div class="col-md-12">
 							<span class="totalPrice pull-right">Tổng tiền đã chọn: <span
 								id="totalPriceValue"><fmt:formatNumber pattern="###,###"
 										value="0"></fmt:formatNumber></span> đ
 							</span>
-						</div>
+						</div> --%>
 
 					</div>
 
@@ -129,18 +130,49 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+function toggleAllCheckboxes() {
+    var isChecked = document.getElementById('selectAllCheckbox').checked;
+    var checkboxes = document.getElementsByName('selectedItems');
+    
+    for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = isChecked;
+    }
+    updateSelectedTotal()
+}
     function submitOrder() {
         var selectedItems = document.querySelectorAll('.selectItem:checked');
         var cartForm = document.getElementById('cartForm');
-
+        var error = false;
         // If no items are checked, check all items
         if (selectedItems.length === 0) {
             document.querySelectorAll('.selectItem').forEach(checkbox => {
                 checkbox.checked = true;
             });
         }
-        updateSelectedTotal();
-        cartForm.submit();
+       
+        // Check each selected item
+        selectedItems.forEach(function(item) {
+            var itemId = item.value;
+            var inputElement = document.getElementById('quantity_' + itemId);
+            var currentQuantity = parseInt(inputElement.value);
+            var maxQuantity = parseInt(inputElement.getAttribute('max'));
+            if (currentQuantity > maxQuantity) {
+            	Swal.fire({
+        	        title: "Số lượng sản phẩm không vượt quá "+maxQuantity,
+        	        text: "",
+        	        icon: "error",
+        	        showCancelButton: true,
+        	        confirmButtonColor: "#3085d6",
+        	        cancelButtonColor: "#d33"
+        	      })
+                error = true;
+            }
+        });
+
+        if (!error) {
+            updateSelectedTotal();
+            cartForm.submit();
+        }
     }
 
     function updateQuantity(itemId, maxQuantity, change) {
@@ -152,13 +184,23 @@
         if (newQuantity < 1) {
             newQuantity = 1;
         } else if (newQuantity > maxQuantity) {
-            newQuantity = maxQuantity;
+        	var itemNameContent = $('#itemNameCell .itemName').text().trim();
+        	Swal.fire({
+    	        title: "Số lượng sản phẩm không vượt quá "+maxQuantity,
+    	        text: "",
+    	        icon: "error",
+    	        showCancelButton: true,
+    	        confirmButtonColor: "#3085d6",
+    	        cancelButtonColor: "#d33",
+    	      })
+            return; // Không làm gì nếu vượt quá số lượng tối đa
         }
 
         inputElement.value = newQuantity;
 
         // Gửi form sử dụng AJAX để cập nhật số lượng và giá
-        $.ajax({type: "POST",
+        $.ajax({
+            type: "POST",
             url: "/shop/updateQuantity",
             data: {
                 id: itemId,
@@ -173,6 +215,7 @@
             }
         });
     }
+
     function updateSelectedTotal() {
         var selectedItems = document.querySelectorAll('.selectItem:checked');
         var total = 0;

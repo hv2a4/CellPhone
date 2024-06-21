@@ -39,21 +39,21 @@
                     <div class="input-group">
                         <input name="password" type="password" class="form-control-lg fs-6 input"
                             placeholder=" ">
-                            <span class="mt-2">${message1}</span>
                         <label for="" class="label">Mật khẩu hiện tại</label>
                     </div>
+                    <span class="mt-2">${message1}</span>
                     <div class="input-group">
                           <input name="newPassword" type="password" class="form-control-lg fs-6 input"
                             placeholder=" ">
-                              <span class="mt-2">${message2}</span>
                         <label for="" class="label">Mật khẩu mới</label>
                     </div>
+                    <span class="mt-2">${message2}</span>
                     <div class="input-group">
                         <input name="reterNewPassword" type="password" class="form-control-lg fs-6 input"
                             placeholder=" ">
-                              <span class="mt-2">${message3}</span>
                         <label for="" class="label">Xác nhận</label>
                     </div>
+                    <span class="mt-2">${message3}</span>
                     <div class="input-group d-flex justify-content-between">
                         <div class="forgot">
                             <small><a href="/shop/forgotpass1">Forgot Password?</a></small>
@@ -84,6 +84,9 @@
      }, 2200);
    
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
+    setTimeout(function() {
+        window.location.href = "/shop/login"; // Chuyển hướng đến trang đăng nhập
+    }, 1500);
     </script>
     </c:if>
 </body>
