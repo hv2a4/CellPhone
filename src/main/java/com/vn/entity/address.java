@@ -30,7 +30,4 @@ public class address implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "ID_USER")
 	user user;
-
-	@OneToMany(mappedBy = "address")
-	List<order> orders;
 }

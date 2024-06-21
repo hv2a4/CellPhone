@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -12,12 +13,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-
 import lombok.NoArgsConstructor;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @NoArgsConstructor
@@ -39,7 +40,6 @@ public class user implements Serializable {
 	@NotBlank(message = "Không Được để trống !")
 	@Email(message = "Không Đúng Định Dạng Email !")
 	String EMAIL;
-	@NotNull(message = "Bạn cho chọn vai trò")
 	Boolean ROLE;
 	Boolean STATUS;
 	String AVATAR;
