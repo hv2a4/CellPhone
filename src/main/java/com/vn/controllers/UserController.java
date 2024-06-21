@@ -203,7 +203,8 @@ public class UserController {
 
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+				
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().get(0).getCart_items();
 			Double totalCart = 0.0;
 			int totalquantity = 0;
 			for (cart_item cart_item : cartItems) {
@@ -298,7 +299,7 @@ public class UserController {
 		user us = sessionService.get("list");
 		if (us != null) {
 			user user = userDao.findById(us.getUSERNAME()).get();
-			List<cart_item> cart_items = user.getCarts().getFirst().getCart_items();
+			List<cart_item> cart_items = user.getCarts().get(0).getCart_items();
 			double totalPrice = 0;
 			for (cart_item item : cart_items) {
 				totalPrice += getGiaKhuyenMai(item.getVariant()) * item.getQUANTITY();
@@ -732,7 +733,7 @@ public class UserController {
 		user userss = sessionService.get("list");
 		if (userss != null) {
 			user user = userDao.getById(userss.getUSERNAME());
-			List<cart_item> cartItems = (List<cart_item>) user.getCarts().getFirst().getCart_items();
+			List<cart_item> cartItems = (List<cart_item>) user.getCarts().get(0).getCart_items();
 			return cartItems;
 		} else {
 			List<cart_item> cartItems = new ArrayList<cart_item>();

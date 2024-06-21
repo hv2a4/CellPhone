@@ -25,7 +25,7 @@
 			<div class="row mt-4">
 				<div class="col-md-12 text-center">
 					<div class="d-flex flex-column align-items-center">
-						<img id="imagePreview" src="/images/${list.AVATAR}"
+						<img id="imagePreview" src="/images-user/${list.AVATAR}"
 							class="img-fluid img-thumbnail avatar-rounded" alt="Avatar">
 						<div class="mt-2">
 							<input  id="imageUpload" type="file" class="form-control"
