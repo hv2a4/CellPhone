@@ -20,44 +20,44 @@ import com.vn.utils.SessionService;
 @Controller
 @RequestMapping("/shop")
 public class Changepass {
-   @Autowired
+	@Autowired
 	ParamService paramService;
-   @Autowired
-   SessionService sessionService;
-   @Autowired
-   userDao userDao;
+	@Autowired
+	SessionService sessionService;
+	@Autowired
+	userDao userDao;
+
 	@RequestMapping("changepass")
 	public String getchangepass(Model model) {
-		
+
 		return "/views/changepassword";
 	}
-	
+
 	@PostMapping("changepass")
 	public String postChangePass(Model model) {
-		 
-		String userName=paramService.getString("userName", "");
-		String password=paramService.getString("password", "");
-		String newPassword=paramService.getString("newPassword", "");
-		String reterNewPassword=paramService.getString("reterNewPassword", "");
-		Optional<user> us=userDao.findById(userName);
-		
-	
-			if(password.equals(us.get().getPASSWORD())) {
-				if(newPassword.equals(reterNewPassword)) {
-					us.get().setPASSWORD(newPassword);
-					userDao.save(us.get());
-					 model.addAttribute("formSubmitted", "true");
-					 return "/views/changepassword";
-				}else {
-					model.addAttribute("message3", "Mật khẩu không trùng khớp");
-					return "/views/changepassword";
-				}
-			}else if(newPassword.isEmpty()||newPassword.length()<6) {
-				model.addAttribute("message2", "Mật khẩu không trống và lớn hơn 6 kí tự");
+
+		String userName = paramService.getString("userName", "");
+		String password = paramService.getString("password", "");
+		String newPassword = paramService.getString("newPassword", "");
+		String reterNewPassword = paramService.getString("reterNewPassword", "");
+		Optional<user> us = userDao.findById(userName);
+
+		if (password.equals(us.get().getPASSWORD())) {
+			if (newPassword.equals(reterNewPassword)) {
+				us.get().setPASSWORD(newPassword);
+				userDao.save(us.get());
+				model.addAttribute("formSubmitted", "true");
 				return "/views/changepassword";
-			}else {
-				model.addAttribute("message1", "Mật khẩu cũ không đúng");
+			} else {
+				model.addAttribute("message3", "Mật khẩu không trùng khớp");
 				return "/views/changepassword";
 			}
+		} else if (newPassword.isEmpty() || newPassword.length() < 6) {
+			model.addAttribute("message2", "Mật khẩu không trống và lớn hơn 6 kí tự");
+			return "/views/changepassword";
+		} else {
+			model.addAttribute("message1", "Mật khẩu cũ không đúng");
+			return "/views/changepassword";
+		}
 	}
 }

@@ -129,7 +129,7 @@
 						<div class="add-to-cart">
 							<div class="qty-label">
 								<input class="updateCart" value="1" type="number"
-									name="quantity" min="1" max="${quantity }"
+									name="quantity" min="1" max="${quantity }" id="quantity"
 									style="width: 6em; height: 3em; text-align: center;" />
 							</div>
 						</div>
@@ -667,4 +667,21 @@ function formatPrice(price) {
 	  });
 	} */
 
+</script>
+
+<script>
+  const input = document.getElementById('quantity');
+  
+  input.addEventListener('onchange', function() {
+    const value = parseInt(input.value);
+    const max = parseInt(input.max);
+    
+    if (value > max) {
+      // Hiển thị thông báo lỗi
+      input.setCustomValidity('Giá trị vượt quá giới hạn.');
+    } else {
+      // Xóa thông báo lỗi
+      input.setCustomValidity('');
+    }
+  });
 </script>

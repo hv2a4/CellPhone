@@ -80,7 +80,7 @@
          timer: 1500
      });
      setTimeout(function() {
-    	 window.location.href = "/shop/changepass"; 
+    	 window.location.href = "/shop/login"; 
      }, 2200);
    
     // Thay đổi "/shop/login" thành URL của trang đăng nhập của bạn
