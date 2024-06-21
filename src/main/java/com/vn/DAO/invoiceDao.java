@@ -1,15 +1,17 @@
 package com.vn.DAO;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import com.vn.entity.color;
 import com.vn.entity.invoice;
 import com.vn.entity.order;
 import com.vn.entity.system;
+import com.vn.entity.user;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -64,4 +66,7 @@ List<Double> getTotalPricePerMonth(@Param("year") int year);
 	
 	@Query("SELECT o FROM invoice o WHERE o.ID = (SELECT MAX(o2.ID) FROM invoice o2)")
     invoice getInvoiceMoi();
+	
+	
+	 List<invoice> findByOrder(order order);
 }

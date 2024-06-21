@@ -32,9 +32,7 @@ public class order implements Serializable {
 	@JoinColumn(name = "ID_STATUS")
 	status_order status_order;
 
-	@ManyToOne
-	@JoinColumn(name = "ID_ADDRESS")
-	address address;
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_PAYMENT_METHOD")

@@ -641,10 +641,10 @@ public class UserController {
 		String adr = addressDao.findByNameAdr(idAddress.orElse(null));
 		payment_method pay = payment_methodDao.findById(idPay.orElse(2)).get();
 
-
-		order.setAddress(adr);
-		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT() + adr.getSHIPPING_FEE());
-
+        
+		order.setUser(user1);		
+		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
+        order.setADDRESS(adr);;
 		order.setPayment_method(pay);
 		order.setTOTAL_AMOUNT(totalAmount.orElse(null));
 		order.setCREATE_AT(new Date());
