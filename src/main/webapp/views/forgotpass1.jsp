@@ -27,11 +27,17 @@
                     <h2>Nhập email</h2>
                 </div>
                 <form action="/shop/forgotpass2" method="post">
-                    <h6 class="text-danger">${emailNotFound}</h6>
+                    
+                    <div class="input-group">
+                        <input type="text" class="form-control-lg fs-6 input" placeholder="" name="userName" required>
+                        <label for="" class="label">Tài khoản</label>
+                    </div>
+                    <h6 class="text-danger">${username_error}</h6>
                     <div class="input-group">
                         <input type="text" class="form-control-lg fs-6 input" placeholder="" name="emailUser" required>
                         <label for="" class="label">Email</label>
                     </div>
+                    <h6 class="text-danger">${emailNotFound}</h6>
                     <div class="input-group">
                         <button class="btn btn-lg btn-primary w-100 fs-6">Nhận OTP</button>
                     </div>

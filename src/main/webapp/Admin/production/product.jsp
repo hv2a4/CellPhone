@@ -1068,7 +1068,12 @@
 	            showConfirmButton: false,
 	            timer: 1800
 	        }).then(() => {
-	            window.location.href = "/admin/product";
+	        	if (messageType == 'success' ) {
+	        		 window.location.href = "/shop/login";
+				}else{
+					window.location.href = "/admin/product";
+				}
+	            
 	        });
 	    </script>
 	</c:if>
