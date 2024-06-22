@@ -101,7 +101,9 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="card-box table-responsive">
-									<table class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+									<table
+										class="table table-striped table-bordered dt-responsive nowrap"
+										cellspacing="0" width="100%">
 										<thead>
 											<tr>
 												<th>STT</th>
@@ -116,23 +118,20 @@
 											</tr>
 										</thead>
 										<tbody>
-											<c:forEach items="${pageDiscountCode.content}" var="item" varStatus="loop">
+											<c:forEach items="${pageDiscountCode.content}" var="item"
+												varStatus="loop">
 												<tr>
 													<td>${loop.index +1 }</td>
 													<td>${item.CODE }</td>
 													<td>${item.getRank().getNAME()}</td>
-                                                     <%--  <td>${item.START_DATE }</td> --%>
-													<td id="startDateTime">
-											            <fmt:formatDate value="${item.START_DATE}" pattern="yyyy-MM-dd" />
-											        </td>
-											        <td id="expiryDateTime">
-											            <fmt:formatDate value="${item.EXPIRY_DATE}" pattern="yyyy-MM-dd" />
-											        </td>
-													<td>
-														<fmt:formatNumber pattern="###">${item.PERCENTAGE }</fmt:formatNumber> %
-													</td>
-													<td>
-														<fmt:formatNumber pattern="###,###">${item.QUANTITY }</fmt:formatNumber>
+													<%--  <td>${item.START_DATE }</td> --%>
+													<td id="startDateTime"><fmt:formatDate
+															value="${item.START_DATE}" pattern="yyyy-MM-dd" /></td>
+													<td id="expiryDateTime"><fmt:formatDate
+															value="${item.EXPIRY_DATE}" pattern="yyyy-MM-dd" /></td>
+													<td><fmt:formatNumber pattern="###">${item.PERCENTAGE }</fmt:formatNumber>
+														%</td>
+													<td><fmt:formatNumber pattern="###,###">${item.QUANTITY }</fmt:formatNumber>
 													</td>
 													<td><fmt:formatNumber pattern="###,###">
                                                 ${item.MINIMUM }</fmt:formatNumber> đ</td>
@@ -296,10 +295,31 @@
     </script>
 	</c:if>
 
+	<script>
+		function modelDelete(id) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/ajax/getdiscount_code/" + id,
+            success: function (discount_code) {
+                // Đổ dữ liệu vào modal
+                $("#thongbao").text("Bạn có muốn xóa mã code " + discount_code.code);
+                var modal = new bootstrap.Modal(document.getElementById('delete'));
+                modal.show();
 
+                // Xử lý khi nhấn nút Delete
+                $("#deleteButton").on("click", function () {
+                    window.location.href = "/admin/discount_code/delete?id=" + discount_code.id;
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
+            }
+        });
+    }
+	</script>
 
 	<script>
-    function getdiscount_codeById(id) {
+		function getdiscount_codeById(id) {
         $.ajax({
             type: "GET",
             url: "/admin/ajax/getdiscount_code/" + id,
@@ -332,26 +352,10 @@
         });
     }
 
-    function modelDelete(id) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/ajax/getdiscount_code/" + id,
-            success: function (discount_code) {
-                // Đổ dữ liệu vào modal
-                $("#thongbao").text("Bạn có muốn xóa mã code " + discount_code.code);
-                var modal = new bootstrap.Modal(document.getElementById('delete'));
-                modal.show();
+	</script>
 
-                // Xử lý khi nhấn nút Delete
-                $("#deleteButton").on("click", function () {
-                    window.location.href = "/admin/discount_code/delete?id=" + discount_code.id;
-                });
-            },
-            error: function (xhr, status, error) {
-                console.log("Error: " + error);
-            }
-        });
-    }
+
+	<script>
 // Bắt lỗi thêm 
     $(document).ready(function () {
         $('#discountCodeForm').submit(function (event) {
@@ -363,7 +367,7 @@
             let today = new Date();
 
             // Kiểm tra START_DATE không được là ngày trước ngày hôm nay
-            if (startDate < today) {
+            if (startDate =< today) {
                $('#START_DATE_error').text("Ngày bắt đầu phải là ngày hiện tại hoặc sau ngày hiện tại.");
                return;
             } else {
@@ -429,7 +433,7 @@ $(document).ready(function () {
             let today = new Date();
 
             // Kiểm tra START_DATE không được là ngày trước ngày hôm nay
-            if (startDate < today) {
+            if (startDate =< today) {
                $('#START_DATE_update_error').text("Ngày bắt đầu phải là ngày hiện tại hoặc sau ngày hiện tại.");
                return;
             } else {
@@ -481,7 +485,7 @@ $(document).ready(function () {
     
 </script>
 
-<script>
+	<script>
     document.addEventListener('DOMContentLoaded', function() {
         // Get current date and time
         var currentDate = new Date();
