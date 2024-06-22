@@ -466,7 +466,7 @@ public class AdminController {
 
     @PostMapping("/discount_code/create")
     public ResponseEntity<Map<String, String>> createDiscountCode(
-            @Validated @ModelAttribute("discount_code") discount_code discount_code, BindingResult bindingResult,
+            @Validated @ModelAttribute("discount_code") discount_code discountCode, BindingResult bindingResult,
             HttpServletRequest req) {
         Map<String, String> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
@@ -475,14 +475,14 @@ public class AdminController {
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            List<discount_code> discount_codes = discount_codeDao.findAll();
-            for (discount_code item : discount_codes) {
-                if (item.getCODE().equalsIgnoreCase(discount_code.getCODE())) {
+            List<discount_code> discountCodes = discount_codeDao.findAll();
+            for (discount_code item : discountCodes) {
+                if (item.getCODE().equalsIgnoreCase(discountCode.getCODE())) {
                     response.put("status", "error");
                     return ResponseEntity.ok(response);
                 }
             }
-            discount_codeDao.save(discount_code);
+            discount_codeDao.save(discountCode);
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
@@ -492,6 +492,7 @@ public class AdminController {
         response.put("status", "success");
         return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/discount_code/update")
     public ResponseEntity<Map<String, String>> updateDiscountCode(
