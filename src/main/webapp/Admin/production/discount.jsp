@@ -319,6 +319,28 @@
     </script>
 </c:if>
 
+	<script>
+		function modelDelete(id) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/ajax/getdiscount_code/" + id,
+            success: function (discount_code) {
+                // Đổ dữ liệu vào modal
+                $("#thongbao").text("Bạn có muốn xóa mã code " + discount_code.code);
+                var modal = new bootstrap.Modal(document.getElementById('delete'));
+                modal.show();
+
+                // Xử lý khi nhấn nút Delete
+                $("#deleteButton").on("click", function () {
+                    window.location.href = "/admin/discount_code/delete?id=" + discount_code.id;
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log("Error: " + error);
+            }
+        });
+    }
+	</script>
 
 <script>
     function getdiscount_codeById(id) {
@@ -354,28 +376,11 @@
         });
     }
 
-    function modelDelete(id) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/ajax/getdiscount_code/" + id,
-            success: function (discount_code) {
-                // Đổ dữ liệu vào modal
-                $("#thongbao").text("Bạn có muốn xóa mã code " + discount_code.code);
-                var modal = new bootstrap.Modal(document.getElementById('delete'));
-                modal.show();
+	</script>
 
-                // Xử lý khi nhấn nút Delete
-                $("#deleteButton").on("click", function () {
-                    window.location.href = "/admin/discount_code/delete?id=" + discount_code.id;
-                });
-            },
-            error: function (xhr, status, error) {
-                console.log("Error: " + error);
-            }
-        });
-    }
 
-    // Bắt lỗi thêm
+	<script>
+// Bắt lỗi thêm 
     $(document).ready(function () {
         $('#discountCodeForm').submit(function (event) {
             event.preventDefault(); // Ngăn chặn việc submit form mặc định

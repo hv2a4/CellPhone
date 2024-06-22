@@ -15,7 +15,7 @@
         <!-- menu profile quick info -->
         <div class="profile clearfix">
             <div class="profile_pic">
-                <img src="/images-user/${list.AVATAR}" alt="..."
+                <img src="/images/${list.AVATAR}" alt="..."
                      class="img-circle profile_img">
             </div>
             <div class="profile_info">

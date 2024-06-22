@@ -468,7 +468,6 @@ public class AdminController {
     public ResponseEntity<Map<String, String>> createDiscountCode(
             @Validated @ModelAttribute("discount_code") discount_code discountCode, BindingResult bindingResult,
             HttpServletRequest req) {
-
         Map<String, String> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
             // Trả về lỗi xác thực
