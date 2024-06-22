@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.vn.DAO.userDao;
 import com.vn.entity.user;
@@ -20,44 +21,52 @@ import com.vn.utils.SessionService;
 @Controller
 @RequestMapping("/shop")
 public class Changepass {
-   @Autowired
+	@Autowired
 	ParamService paramService;
-   @Autowired
-   SessionService sessionService;
-   @Autowired
-   userDao userDao;
+	@Autowired
+	SessionService sessionService;
+	@Autowired
+	userDao userDao;
+
 	@RequestMapping("changepass")
 	public String getchangepass(Model model) {
-		
+
 		return "/views/changepassword";
 	}
-	
+
 	@PostMapping("changepass")
-	public String postChangePass(Model model) {
-		 
-		String userName=paramService.getString("userName", "");
-		String password=paramService.getString("password", "");
-		String newPassword=paramService.getString("newPassword", "");
-		String reterNewPassword=paramService.getString("reterNewPassword", "");
-		Optional<user> us=userDao.findById(userName);
-		
-	
-			if(password.equals(us.get().getPASSWORD())) {
-				if(newPassword.equals(reterNewPassword)) {
-					us.get().setPASSWORD(newPassword);
-					userDao.save(us.get());
-					 model.addAttribute("formSubmitted", "true");
-					 return "/views/changepassword";
-				}else {
-					model.addAttribute("message3", "Mật khẩu không trùng khớp");
-					return "/views/changepassword";
-				}
-			}else if(newPassword.isEmpty()||newPassword.length()<6) {
-				model.addAttribute("message2", "Mật khẩu không trống và lớn hơn 6 kí tự");
-				return "/views/changepassword";
-			}else {
-				model.addAttribute("message1", "Mật khẩu cũ không đúng");
-				return "/views/changepassword";
-			}
+	public String postChangePass(Model model, RedirectAttributes redirectAttributes) {
+	    String userName = paramService.getString("userName", "");
+	    String password = paramService.getString("password", "");
+	    String newPassword = paramService.getString("newPassword", "");
+	    String reterNewPassword = paramService.getString("reterNewPassword", "");
+	    
+	    Optional<user> userOptional = userDao.findById(userName);
+	    
+	    if (userOptional.isPresent()) {
+	        user user = userOptional.get();
+	        
+	        if (password.equals(user.getPASSWORD())) {
+	            if (!newPassword.isEmpty() && newPassword.length() >= 6 && newPassword.equals(reterNewPassword)) {
+	                user.setPASSWORD(newPassword);
+	                userDao.save(user);
+	                redirectAttributes.addFlashAttribute("formSubmitted", "true");
+	                return "redirect:/shop/changepass"; // Redirect to avoid duplicate form submissions
+	            } else {
+	                if (newPassword.isEmpty() || newPassword.length() < 6) {
+	                    redirectAttributes.addFlashAttribute("message2", "Mật khẩu không được để trống và phải có ít nhất 6 kí tự");
+	                } else {
+	                    redirectAttributes.addFlashAttribute("message3", "Mật khẩu không trùng khớp");
+	                }
+	                return "redirect:/shop/changepass";
+	            }
+	        } else {
+	            redirectAttributes.addFlashAttribute("message1", "Mật khẩu cũ không đúng");
+	            return "redirect:/shop/changepass";
+	        }
+	    } else {
+	        redirectAttributes.addFlashAttribute("message1", "Người dùng không tồn tại");
+	        return "redirect:/shop/changepass";
+	    }
 	}
 }
