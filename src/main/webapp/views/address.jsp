@@ -565,13 +565,15 @@
             .then(data => {
            
                 const moneyShip = document.getElementById('moneyShip').value;
+              
                 if (data.code === 200 && data.data) {
 					
              
-                    console.log(data.data.total+'   tiền ');
+                	  console.log(data.data.total+'   tiền ');
                     document.getElementById('moneyShip').value=data.data.total;
                 } else {
-                    shippingFeeElement.textContent = 'Không thể tính phí vận chuyển';
+                	console.log(' không thể tính  tiền ');
+                	  console.log(data.data.total+'   tiền ');
                 }
             })
             .catch(error => {
