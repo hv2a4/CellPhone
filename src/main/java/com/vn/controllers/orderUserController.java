@@ -1,6 +1,7 @@
 package com.vn.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.vn.DAO.invoiceDao;
 import com.vn.DAO.orderDao;
+import com.vn.DAO.order_itemDao;
 import com.vn.DAO.status_orderDao;
+import com.vn.DAO.variantDao;
 import com.vn.entity.invoice;
 import com.vn.entity.order;
+import com.vn.entity.order_item;
 import com.vn.entity.status_order;
 import com.vn.entity.user;
+import com.vn.entity.variant;
 import com.vn.utils.ParamService;
 import com.vn.utils.SessionService;
 @Controller
@@ -29,9 +34,13 @@ public class orderUserController {
      @Autowired
 	  orderDao orderDao;
      @Autowired
+     order_itemDao order_itemDao;
+     @Autowired
      status_orderDao status_orderDao;
      @Autowired
      ParamService paramService;
+     @Autowired
+     variantDao variantDao;
      @Autowired
      SessionService sessionService;
      @Autowired
@@ -47,20 +56,31 @@ public class orderUserController {
 	public String postDeleteOrder(Model model,@PathVariable("id") Integer id,@RequestParam("noteReasons") String reason) {
 		order ordes=orderDao.getById(id);
 		status_order statusOrder =status_orderDao.getById(6);
+		int idVari=0;
+		variant variantitems=new variant();
 		System.out.println(statusOrder.getSTATUS());
 		System.out.println(ordes.getID());
 		System.out.println(reason);
+		
 		if(ordes.getStatus_order().getSTATUS().equals("Chờ xác nhận")) {
 			 System.out.println("code 1");
-		   List<invoice> listInvoices=invoiceDao.findByOrder(ordes);	 
+		   List<invoice> listInvoices=invoiceDao.findByOrder(ordes);	
+		  List<order_item> listOrder_items=order_itemDao.finByAllOrder(ordes.getID()); 
+		  for(order_item odrItem:listOrder_items) {
+			  idVari=odrItem.getVariant().getID();
+			  variantitems.setQUANTITY(odrItem.getQUANTITY());
+		  }
+		
+		  Optional<variant> listVari=variantDao.findById(idVari);
+		  listVari.get().setQUANTITY(listVari.get().getQUANTITY() +variantitems.getQUANTITY());
+		 variantDao.save(listVari.get());
 		   for(invoice inv:listInvoices) {
 			 if(inv!=null) {
 				 invoiceDao.delete(inv);
 			 }
 		   }
 			ordes.setStatus_order(statusOrder);
-		    ordes.setREASON(reason);
-		    orderDao.save(ordes);
+		    ordes.setREASON(reason);		    orderDao.save(ordes);
 	         model.addAttribute("successError", "true");
 			   String page = "order.jsp";
 				model.addAttribute("page", page);
