@@ -35,53 +35,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.vn.DAO.ColorDao;
-import com.vn.DAO.battery_typeDao;
-import com.vn.DAO.brandDao;
-import com.vn.DAO.categoryDao;
-import com.vn.DAO.charging_portDao;
-import com.vn.DAO.discount_codeDao;
-import com.vn.DAO.discount_productDao;
-import com.vn.DAO.graphics_chipDao;
-import com.vn.DAO.headphone_jackDao;
-import com.vn.DAO.imageDao;
-import com.vn.DAO.invoiceDao;
-import com.vn.DAO.orderDao;
-import com.vn.DAO.payment_methodDao;
-import com.vn.DAO.phoneDao;
-import com.vn.DAO.rankDao;
-import com.vn.DAO.screen_resolutionDao;
-import com.vn.DAO.status_invoiceDao;
-import com.vn.DAO.status_orderDao;
-import com.vn.DAO.storageDao;
-import com.vn.DAO.systemDao;
-import com.vn.DAO.userDao;
-import com.vn.DAO.variantDao;
-import com.vn.DAO.wireless_charging_technologyDao;
-import com.vn.entity.battery_type;
-import com.vn.entity.brand;
-import com.vn.entity.category;
-import com.vn.entity.charging_port;
-import com.vn.entity.color;
-import com.vn.entity.discount_code;
-import com.vn.entity.discount_product;
-import com.vn.entity.graphics_chip;
-import com.vn.entity.headphone_jack;
-import com.vn.entity.image;
-import com.vn.entity.invoice;
-import com.vn.entity.order;
-import com.vn.entity.order_item;
-import com.vn.entity.payment_method;
-import com.vn.entity.phone;
-import com.vn.entity.rank;
-import com.vn.entity.screen_resolution;
-import com.vn.entity.status_invoice;
-import com.vn.entity.status_order;
-import com.vn.entity.storage;
-import com.vn.entity.system;
-import com.vn.entity.user;
-import com.vn.entity.variant;
-import com.vn.entity.wireless_charging_technology;
+import com.vn.DAO.*;
+import com.vn.entity.*;
 import com.vn.utils.ParamService;
 import com.vn.utils.SessionService;
 
@@ -511,9 +466,8 @@ public class AdminController {
 
     @PostMapping("/discount_code/create")
     public ResponseEntity<Map<String, String>> createDiscountCode(
-            @Validated @ModelAttribute("discount_code") discount_code discount_code, BindingResult bindingResult,
+            @Validated @ModelAttribute("discount_code") discount_code discountCode, BindingResult bindingResult,
             HttpServletRequest req) {
-
         Map<String, String> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
             // Trả về lỗi xác thực
@@ -521,14 +475,14 @@ public class AdminController {
             return ResponseEntity.badRequest().body(response);
         }
         try {
-            List<discount_code> discount_codes = discount_codeDao.findAll();
-            for (discount_code item : discount_codes) {
-                if (item.getCODE().equalsIgnoreCase(discount_code.getCODE())) {
+            List<discount_code> discountCodes = discount_codeDao.findAll();
+            for (discount_code item : discountCodes) {
+                if (item.getCODE().equalsIgnoreCase(discountCode.getCODE())) {
                     response.put("status", "error");
                     return ResponseEntity.ok(response);
                 }
             }
-            discount_codeDao.save(discount_code);
+            discount_codeDao.save(discountCode);
         } catch (Exception e) {
             e.printStackTrace();
             response.put("status", "error");
@@ -538,6 +492,7 @@ public class AdminController {
         response.put("status", "success");
         return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/discount_code/update")
     public ResponseEntity<Map<String, String>> updateDiscountCode(
@@ -665,8 +620,8 @@ public class AdminController {
         // Tìm đối tượng order theo ID
         order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         // Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
-        status_order returnStatus = status_orderDao.findById(6).orElseThrow(() -> new RuntimeException("Status not found"));
-        if (orders.getStatus_order().getID() == 5) {
+        status_order returnStatus = status_orderDao.findById(5).orElseThrow(() -> new RuntimeException("Status not found"));
+        if (orders.getStatus_order().getID() == 8) {
             // Cập nhật trạng thái trả hàng cho đối tượng order
             orders.setStatus_order(returnStatus);
             orders.setUPDATE_AT(new Date());
@@ -686,14 +641,14 @@ public class AdminController {
         }
         return false;
     }
-    
-    public void capNhatTrangThaiThanhToanDonHang(order order, Integer idStatusInvoice){
-    	 invoice invoice = order.getInvoices().get(0);
-         status_invoice siv = status_invoiceDao.findById(idStatusInvoice).get();
-         invoice.setStatus_invoice(siv);
-         invoiceDao.save(invoice);
+
+    public void capNhatTrangThaiThanhToanDonHang(order order, Integer idStatusInvoice) {
+        invoice invoice = order.getInvoices().get(0);
+        status_invoice siv = status_invoiceDao.findById(idStatusInvoice).get();
+        invoice.setStatus_invoice(siv);
+        invoiceDao.save(invoice);
     }
-    
+
     // xác nhận trả hàng
     @GetMapping("xacNhanTraHang/{id}")
     @ResponseBody
@@ -701,7 +656,7 @@ public class AdminController {
         // Tìm đối tượng order theo ID
         order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         // Tìm đối tượng status_order mới có ID là 5
-        status_order returnStatus = status_orderDao.findById(5).orElseThrow(() -> new RuntimeException("Status not found"));
+        status_order returnStatus = status_orderDao.findById(8).orElseThrow(() -> new RuntimeException("Status not found"));
         if (orders.getStatus_order().getID() == 7) {
             // Cập nhật trạng thái trả hàng cho đối tượng order
             orders.setStatus_order(returnStatus);
@@ -811,9 +766,9 @@ public class AdminController {
             capNhatTrangThaiThanhToanDonHang(orders, 2);
             List<order_item> listOrderItem = orders.getOrder_items();
             for (order_item order_item : listOrderItem) {
-				variant variant = order_item.getVariant();
-				variant.setQUANTITY(variant.getQUANTITY()+ order_item.getQUANTITY());
-			}
+                variant variant = order_item.getVariant();
+                variant.setQUANTITY(variant.getQUANTITY() + order_item.getQUANTITY());
+            }
             orderDaos.save(orders);
             return true;
         }
@@ -2008,7 +1963,7 @@ public class AdminController {
         try {
             user user1 = userDao.findById(username).get();
             user1.setSTATUS(false);
-            System.out.println(user1.getSTATUS()+ " " + user1.getUSERNAME());
+            user1.setUPDATE_AT(new Date());
             userDao.save(user1); // Lưu thay đổi trạng thái của người dùng
             redirectAttributes.addFlashAttribute("message", "Vô hiệu hóa thành công");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -2020,8 +1975,6 @@ public class AdminController {
         }
         return "redirect:/admin/user";
     }
-
-
 
     @PostMapping("variant/create")
     public ResponseEntity<Map<String, String>> createVariant(

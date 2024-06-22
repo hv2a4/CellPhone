@@ -140,137 +140,138 @@
                                 <tbody>
                                 <c:forEach var="item" items="${pageUser.content}"
                                            varStatus="stt">
-                                    <tr>
-                                        <td data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal_${stt.index + 1}">${stt.index + 1}</td>
+                                    <c:if test="${item.USERNAME != list.USERNAME}">
+                                        <tr>
+                                            <td data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal_${stt.index + 1}">${stt.index + 1}</td>
 
-                                        <td style="width: 120px; height: 120px;"><img alt=""
-                                                                                      data-bs-toggle="modal"
-                                                                                      data-bs-target="#exampleModal_${stt.index + 1}"
-                                                                                      src="/images-user/${item.AVATAR}"
-                                                                                      style="width: 100%; height: 100%; object-fit: cover;">
-                                        </td>
+                                            <td style="width: 120px; height: 120px;"><img alt=""
+                                                  data-bs-toggle="modal"
+                                                  data-bs-target="#exampleModal_${stt.index + 1}"
+                                                  src="/images/${item.AVATAR}"
+                                                  style="width: 100%; height: 100%; object-fit: cover;">
+                                            </td>
 
-                                        <td data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal_${stt.index + 1}">${item.FULLNAME}</td>
-                                        <td>${item.USERNAME}</td>
-                                        <td>${item.EMAIL}</td>
-                                        <td>${item.PHONE_NUMBER}</td>
-                                        <td>${item.STATUS ? "Hoạt động" : "Đã khóa"}</td>
-                                        <td class="text-center"><c:choose>
-                                            <c:when test="${!item.ROLE && item.STATUS}">
-                                                <a class="btn btn-success khoa-btn"
-                                                   onclick="xacNhanKhoaMoKhoa('khoa', '${item.USERNAME}')"
-                                                   style="width: 100px; color: #fff;">Khóa</a>
-                                            </c:when>
-                                            <c:when test="${!item.ROLE && !item.STATUS}">
-                                                <a class="btn btn-warning moKhoa-btn"
-                                                   onclick="xacNhanKhoaMoKhoa('moKhoa', '${item.USERNAME}')"
-                                                   style="width: 100px; color: #fff;">Mở khóa</a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <c:choose>
-                                                    <c:when test="${item.STATUS}">
-                                                        <button class="btn btn-danger" style="width: 100px"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#xoaNguoiDung_${item.USERNAME}">
-                                                            Vô hiệu
-                                                        </button>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <button class="btn btn-danger" style="width: 100px"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#xoaNguoiDung_${item.USERNAME}"
-                                                                disabled>
-                                                            Vô hiệu
-                                                        </button>
-                                                    </c:otherwise>
-                                                </c:choose>
-
-                                            </c:otherwise>
-                                        </c:choose></td>
-                                    </tr>
-
-                                    <div class="modal fade" id="xoaNguoiDung_${item.USERNAME}"
-                                         tabindex="-1"
-                                         aria-labelledby="exampleModalLabel_${item.USERNAME}"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5 fw-bold"
-                                                        id="exampleModalLabel_${stt.index + 1}">Vô hiệu hóa
-                                                        tài khoản</h1>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <h2>Bạn có chắc muốn vô hiệu hóa tài khoản
-                                                            ${item.USERNAME } này hay không?</h2>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
-                                                    <a class="btn btn-primary" style="color: #fff;"
-                                                       href="/admin/delete/${item.USERNAME}">Xác nhận</a>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal_${stt.index + 1}"
-                                         tabindex="-1"
-                                         aria-labelledby="exampleModalLabel_${stt.index + 1}"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5 fw-bold"
-                                                        id="exampleModalLabel_${stt.index + 1}">Chi tiết</h1>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <h2>Tên: ${item.FULLNAME}</h2>
-                                                    <h2>Tài khoản: ${item.USERNAME}</h2>
-                                                    <h2>Email: ${item.EMAIL}</h2>
-                                                    <h2>Số điện thoại: ${item.PHONE_NUMBER}</h2>
+                                            <td data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal_${stt.index + 1}">${item.FULLNAME}</td>
+                                            <td>${item.USERNAME}</td>
+                                            <td>${item.EMAIL}</td>
+                                            <td>${item.PHONE_NUMBER}</td>
+                                            <td>${item.STATUS ? "Hoạt động" : "Đã khóa"}</td>
+                                            <td class="text-center"><c:choose>
+                                                <c:when test="${!item.ROLE && item.STATUS}">
+                                                    <a class="btn btn-success khoa-btn"
+                                                       onclick="xacNhanKhoaMoKhoa('khoa', '${item.USERNAME}')"
+                                                       style="width: 100px; color: #fff;">Khóa</a>
+                                                </c:when>
+                                                <c:when test="${!item.ROLE && !item.STATUS}">
+                                                    <a class="btn btn-warning moKhoa-btn"
+                                                       onclick="xacNhanKhoaMoKhoa('moKhoa', '${item.USERNAME}')"
+                                                       style="width: 100px; color: #fff;">Mở khóa</a>
+                                                </c:when>
+                                                <c:otherwise>
                                                     <c:choose>
-                                                        <c:when test="${item.GENDER == 'NAM'}">
-                                                            <h2>Giới tính: Nam</h2>
-                                                        </c:when>
-                                                        <c:when test="${item.GENDER == 'NU'}">
-                                                            <h2>Giới tính: Nữ</h2>
-                                                        </c:when>
-                                                        <c:when test="${item.GENDER == 'KHAC'}">
-                                                            <h2>Giới tính: Khác</h2>
+                                                        <c:when test="${item.STATUS}">
+                                                            <button class="btn btn-danger" style="width: 100px"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#xoaNguoiDung_${item.USERNAME}">
+                                                                Vô hiệu
+                                                            </button>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <h2>Giới tính: Không xác định</h2>
+                                                            <button class="btn btn-danger" style="width: 100px"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#xoaNguoiDung_${item.USERNAME}"
+                                                                    disabled>
+                                                                Vô hiệu
+                                                            </button>
                                                         </c:otherwise>
                                                     </c:choose>
-                                                    <c:forEach var="adr" items="${item.addresses}">
-                                                        <c:if test="${!item.ROLE}">
-                                                            <h2>Địa chỉ: ${adr.ADDRESS}</h2>
-                                                        </c:if>
-                                                    </c:forEach>
 
-                                                    <h2>Quyền: ${item.ROLE ? "Admin":"User"}</h2>
-                                                    <h2>Ngày tạo: ${item.CREATE_AT}</h2>
-                                                    <h2>Ngày cập nhật: ${item.UPDATE_AT}</h2>
-                                                    <h2>Trạng thái: ${item.STATUS ? "Hoạt động": "Đã khóa"}</h2>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary"
-                                                            data-bs-dismiss="modal">Close
-                                                    </button>
+                                                </c:otherwise>
+                                            </c:choose></td>
+                                        </tr>
+
+                                        <div class="modal fade" id="xoaNguoiDung_${item.USERNAME}"
+                                             tabindex="-1"
+                                             aria-labelledby="exampleModalLabel_${item.USERNAME}"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5 fw-bold"
+                                                            id="exampleModalLabel_${stt.index + 1}">Vô hiệu hóa
+                                                            tài khoản</h1>
+                                                        <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h2>Bạn có chắc muốn vô hiệu hóa tài khoản
+                                                                ${item.USERNAME } này hay không?</h2>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                        <a class="btn btn-primary" style="color: #fff;"
+                                                           href="/admin/delete/${item.USERNAME}">Xác nhận</a>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal_${stt.index + 1}"
+                                             tabindex="-1"
+                                             aria-labelledby="exampleModalLabel_${stt.index + 1}"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5 fw-bold"
+                                                            id="exampleModalLabel_${stt.index + 1}">Chi tiết</h1>
+                                                        <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h2>Tên: ${item.FULLNAME}</h2>
+                                                        <h2>Tài khoản: ${item.USERNAME}</h2>
+                                                        <h2>Email: ${item.EMAIL}</h2>
+                                                        <h2>Số điện thoại: ${item.PHONE_NUMBER}</h2>
+                                                        <c:choose>
+                                                            <c:when test="${item.GENDER == 'NAM'}">
+                                                                <h2>Giới tính: Nam</h2>
+                                                            </c:when>
+                                                            <c:when test="${item.GENDER == 'NU'}">
+                                                                <h2>Giới tính: Nữ</h2>
+                                                            </c:when>
+                                                            <c:when test="${item.GENDER == 'KHAC'}">
+                                                                <h2>Giới tính: Khác</h2>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <h2>Giới tính: Không xác định</h2>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:forEach var="adr" items="${item.addresses}">
+                                                            <c:if test="${!item.ROLE}">
+                                                                <h2>Địa chỉ: ${adr.ADDRESS}</h2>
+                                                            </c:if>
+                                                        </c:forEach>
 
+                                                        <h2>Quyền: ${item.ROLE ? "Admin":"User"}</h2>
+                                                        <h2>Ngày tạo: ${item.CREATE_AT}</h2>
+                                                        <h2>Ngày cập nhật: ${item.UPDATE_AT}</h2>
+                                                        <h2>Trạng thái: ${item.STATUS ? "Hoạt động": "Đã khóa"}</h2>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-bs-dismiss="modal">Close
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
                                 </c:forEach>
                                 </tbody>
                             </table>
