@@ -217,12 +217,11 @@
 	</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	
+
 	 <c:if test="${editCheck}">
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -565,13 +564,15 @@
             .then(data => {
            
                 const moneyShip = document.getElementById('moneyShip').value;
+              
                 if (data.code === 200 && data.data) {
 					
              
-                    console.log(data.data.total+'   tiền ');
+                	  console.log(data.data.total+'   tiền ');
                     document.getElementById('moneyShip').value=data.data.total;
                 } else {
-                    shippingFeeElement.textContent = 'Không thể tính phí vận chuyển';
+                	console.log(' không thể tính  tiền ');
+                	  console.log(data.data.total+'   tiền ');
                 }
             })
             .catch(error => {
