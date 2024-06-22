@@ -9,7 +9,7 @@
 	<!-- code có cộng tiền ship vào -->
 	<form id="succussForm" action="/shop/ordersuccess" method="get"
 		onsubmit="return submitOrder();">
-		
+
 		<!-- container -->
 		<div class="container">
 			<!-- row -->
@@ -20,8 +20,23 @@
 						<h3 class="title">Đơn Hàng Của Bạn</h3>
 					</div>
 					<div class="form-group">
-						<input class="input" type="tel" value="" name="tel"
-							placeholder="Mã giảm giá">
+						<div class="row">
+							<div class="col-md-8">
+								<input class="input" type="text" name="couponCode"
+									id="couponCode" placeholder="Mã giảm giá">
+
+							</div>
+							<div class="col-md-4">
+								<button type="button" class="btn btn-primary"
+									onclick="applyCoupon()">Áp dụng</button>
+							</div>
+						</div>
+						<div id="discountMessage">
+							<c:if test="${not empty errod}">
+								<p style="color: red;">${errod}</p>
+							</c:if>
+						</div>
+
 					</div>
 					<div class="order-summary">
 						<div class="order-col">
@@ -32,12 +47,13 @@
 								<strong>TỔNG CỘNG</strong>
 							</div>
 						</div>
-						<input type="hidden" name="quantity" value="${quantity}" />
-    					<input type="hidden" name="totalOrder" value="${totalOrder}" />
-  					    <input type="hidden" name="variant" value="${variant.ID}" />
-  					    <c:if test="${not empty selectedItems}">
-      						  <input type="hidden" name="selectedItems" value="${selectedItems}">
-   						</c:if>
+						<input type="hidden" name="quantity" value="${quantity}" /> <input
+							type="hidden" name="totalOrder" value="${totalOrder}" /> <input
+							type="hidden" name="variantId" value="${variant.ID}" />
+						<c:if test="${not empty selectedItems}">
+							<input type="hidden" name="selectedItems"
+								value="${selectedItems}">
+						</c:if>
 						<c:choose>
 							<c:when test="${not empty variant}">
 								<div class="order-products">
@@ -86,10 +102,24 @@
 								<strong>TỔNG CỘNG</strong>
 							</div>
 							<div>
-								<strong id="totalOrder" class="order-total"> <fmt:formatNumber
-										value="${totalOrder}" pattern="###,###.###" />
-								</strong> <input type="hidden" name="moneys" id="moneys"
-									value="${empty order?0:totalOrder}">
+								<c:choose>
+									<c:when test="${discount != 0}">
+										<strong id="totalOrder" class="order-total"> <fmt:formatNumber
+												value="${totalOrder * ((100 - discount)/100)}"
+												pattern="###,###.###" />
+										</strong>
+										<input type="hidden" name="moneys" id="moneys"
+											value="${empty order?0:totalOrder}">
+									</c:when>
+									<c:otherwise>
+										<strong id="totalOrder" class="order-total"> <fmt:formatNumber
+												value="${totalOrder}" pattern="###,###.###" />
+										</strong>
+										<input type="hidden" name="moneys" id="moneys"
+											value="${empty order?0:totalOrder}">
+									</c:otherwise>
+								</c:choose>
+
 							</div>
 						</div>
 					</div>
@@ -105,9 +135,8 @@
 						<label for="">Phương thức thanh toán</label>
 						<c:forEach var="payq" items="${pays}">
 							<div class="input-radio">
-								<input
-									onclick="UpdateOrder(${payq.ID})"
-									type="radio" name="payment" value="${payq.ID}" id="${payq.ID}"> <label
+								<input onclick="UpdateOrder(${payq.ID})" type="radio"
+									name="payment" value="${payq.ID}" id="${payq.ID}"> <label
 									for="${payq.ID}"> <span></span> ${payq.NAME}
 								</label>
 							</div>
@@ -146,124 +175,136 @@
 <!-- /SECTION -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function sendAddress() {
-        var addressID = document.getElementById("addressSelect").value;
-        var totalOrderText = document.getElementById("moneys").value;
-        console.log(totalOrderText)
-       var totalOrderNumber = parseFloat(totalOrderText); 
-         totalOrderNumber = parseInt(totalOrderNumber.toFixed(0)); 
-        var formattedNumber = new Intl.NumberFormat('en-US').format(totalOrderNumber);
-
-        $.ajax({
-            url: '/shop/getShippingFee',
-            type: 'GET',
-            data: { address: addressID },
-            success: function(response) {
-                console.log(response); // Ghi log phản hồi
-                if (response && response.shippingFee !== undefined) {
-                	 var shippingFeeNumber = Number(response.shippingFee);
-                	 var formattedFee = new Intl.NumberFormat('en-US', {
-                         minimumFractionDigits: 0,
-                         maximumFractionDigits: 3,
-                         useGrouping: true
-                     }).format(response.shippingFee);
-                	 
-                	 console.log(totalOrderNumber)
-                	  console.log(shippingFeeNumber)
-                	 var total = totalOrderNumber + shippingFeeNumber;
-                	 
-                	 var formattedTotal = new Intl.NumberFormat('en-US', {
-                		    minimumFractionDigits: 0,
-                		    maximumFractionDigits: 3,
-                		    useGrouping: true
-                		}).format(total);
-
-                    document.getElementById("shippingFee").innerText = formattedFee.replace(/,/g, '.');
-                    document.getElementById("totalOrder").innerText = formattedTotal.replace(/,/g, '.');
-                } else {
-                    document.getElementById("shippingFee").innerText = "lỗi";
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-                document.getElementById("shippingFee").innerText = "lỗi 2";
-            }
+document.addEventListener('DOMContentLoaded', function () {
+    // Check if showAddressAlert flag is set
+    var showAddressAlert = "${showAddressAlert}";
+    if (showAddressAlert === 'true') {
+        Swal.fire({
+            title: "Vui lòng thêm địa chỉ để đặt hàng",
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+        }).then(() => {
+            window.location.href = '/shop/address';
         });
     }
-</script>
-<script>
-//Lắng nghe sự kiện change trên các radio button phương thức thanh toán
-var paymentRadios = document.querySelectorAll('input[name="payment"]');
-for (var i = 0; i < paymentRadios.length; i++) {
-    paymentRadios[i].addEventListener('change', function() {
-        validatePaymentSelection();
-    });
-}
-
-// Lắng nghe sự kiện change trên checkbox điều kiện
-var termsCheckbox = document.getElementById('terms');
-termsCheckbox.addEventListener('change', function() {
-    validateTermsAgreement();
+    return;
 });
 
-// Hàm kiểm tra xem có radio button phương thức thanh toán nào được chọn không
-function validatePaymentSelection() {
-    var isChecked = false;
-    for (var i = 0; i < paymentRadios.length; i++) {
-        if (paymentRadios[i].checked) {
-            isChecked = true;
-            break;
-        }
-    }
-    // Hiển thị hoặc ẩn thông báo tùy thuộc vào việc có phương thức thanh toán nào được chọn hay không
-    var paymentErrorMessage = document.getElementById('paymentErrorMessage');
-    paymentErrorMessage.style.display = isChecked ? 'none' : 'block';
-}
+	 function sendAddress() {
+	        var addressID = document.getElementById("addressSelect").value;
+	        var totalOrderText = document.getElementById("moneys").value;
+	        console.log(totalOrderText)
+	       var totalOrderNumber = parseFloat(totalOrderText); 
+	         totalOrderNumber = parseInt(totalOrderNumber.toFixed(0)); 
+	        var formattedNumber = new Intl.NumberFormat('en-US').format(totalOrderNumber);
 
-// Hàm kiểm tra xem checkbox điều kiện đã được chọn hay không
-function validateTermsAgreement() {
-    var isChecked = termsCheckbox.checked;
-    // Hiển thị hoặc ẩn thông báo tùy thuộc vào việc checkbox điều kiện đã được chọn hay không
-    var termsErrorMessage = document.getElementById('termsErrorMessage');
-    termsErrorMessage.style.display = isChecked ? 'none' : 'block';
-}
+	        $.ajax({
+	            url: '/shop/getShippingFee',
+	            type: 'GET',
+	            data: { address: addressID },
+	            success: function(response) {
+	                console.log(response); // Ghi log phản hồi
+	                if (response && response.shippingFee !== undefined) {
+	                	 var shippingFeeNumber = Number(response.shippingFee);
+	                	 var formattedFee = new Intl.NumberFormat('en-US', {
+	                         minimumFractionDigits: 0,
+	                         maximumFractionDigits: 3,
+	                         useGrouping: true
+	                     }).format(response.shippingFee);
+	                	 
+	                	 console.log(totalOrderNumber)
+	                	  console.log(shippingFeeNumber)
+	                	 var total = totalOrderNumber + shippingFeeNumber;
+	                	 
+	                	 var formattedTotal = new Intl.NumberFormat('en-US', {
+	                		    minimumFractionDigits: 0,
+	                		    maximumFractionDigits: 3,
+	                		    useGrouping: true
+	                		}).format(total);
 
-// Hàm xử lý khi người dùng nhấn nút "Đặt Hàng"
-function submitOrder() {
-    // Kiểm tra xem có radio button phương thức thanh toán nào được chọn không
-    var isPaymentSelected = false;
-    for (var i = 0; i < paymentRadios.length; i++) {
-        if (paymentRadios[i].checked) {
-            isPaymentSelected = true;
-            break;
-        }
-    }
-    // Kiểm tra xem checkbox điều kiện đã được chọn hay không
-    var isTermsAgreed = termsCheckbox.checked;
+	                    document.getElementById("shippingFee").innerText = formattedFee.replace(/,/g, '.');
+	                    document.getElementById("totalOrder").innerText = formattedTotal.replace(/,/g, '.');
+	                } else {
+	                    document.getElementById("shippingFee").innerText = "lỗi";
+	                }
+	            },
+	            error: function(xhr, status, error) {
+	                console.error(error);
+	                document.getElementById("shippingFee").innerText = "lỗi 2";
+	            }
+	        });
+	    }
+	//Lắng nghe sự kiện change trên các radio button phương thức thanh toán
+	var paymentRadios = document.querySelectorAll('input[name="payment"]');
+	for (var i = 0; i < paymentRadios.length; i++) {
+	    paymentRadios[i].addEventListener('change', function() {
+	        validatePaymentSelection();
+	    });
+	}
 
-    // Hiển thị hoặc ẩn thông báo lỗi về phương thức thanh toán
-    var paymentErrorMessage = document.getElementById('paymentErrorMessage');
-    paymentErrorMessage.style.display = isPaymentSelected ? 'none' : 'block';
+	// Lắng nghe sự kiện change trên checkbox điều kiện
+	var termsCheckbox = document.getElementById('terms');
+	termsCheckbox.addEventListener('change', function() {
+	    validateTermsAgreement();
+	});
 
-    // Hiển thị hoặc ẩn thông báo lỗi về điều kiện
-    var termsErrorMessage = document.getElementById('termsErrorMessage');
-    termsErrorMessage.style.display = isTermsAgreed ? 'none' : 'block';
+	// Hàm kiểm tra xem có radio button phương thức thanh toán nào được chọn không
+	function validatePaymentSelection() {
+	    var isChecked = false;
+	    for (var i = 0; i < paymentRadios.length; i++) {
+	        if (paymentRadios[i].checked) {
+	            isChecked = true;
+	            break;
+	        }
+	    }
+	    // Hiển thị hoặc ẩn thông báo tùy thuộc vào việc có phương thức thanh toán nào được chọn hay không
+	    var paymentErrorMessage = document.getElementById('paymentErrorMessage');
+	    paymentErrorMessage.style.display = isChecked ? 'none' : 'block';
+	}
 
-    // Nếu không có lỗi, cho phép gửi form
-    if (isPaymentSelected && isTermsAgreed) {
-        return true;
-    } else {
-        return false;
-    }
-}
-</script>
-<script>
-function UpdateOrder(idPay) {
-	var address = document.getElementsByName("address")[0].value;
-    var form = document.getElementById('succussForm');
-    var discountCode = document.getElementsByName("tel")[0].value;
-    var selectedItem = "${selectedItems}";
-    form.action = "/shop/ordersuccess?id_pay=" + idPay+ "&id_address=" + address + "&discount=" + discountCode + "&selectedItem=" + selectedItem;
-}
+	// Hàm kiểm tra xem checkbox điều kiện đã được chọn hay không
+	function validateTermsAgreement() {
+	    var isChecked = termsCheckbox.checked;
+	    // Hiển thị hoặc ẩn thông báo tùy thuộc vào việc checkbox điều kiện đã được chọn hay không
+	    var termsErrorMessage = document.getElementById('termsErrorMessage');
+	    termsErrorMessage.style.display = isChecked ? 'none' : 'block';
+	}
 
+	// Hàm xử lý khi người dùng nhấn nút "Đặt Hàng"
+	function submitOrder() {
+	    // Kiểm tra xem có radio button phương thức thanh toán nào được chọn không
+	    var isPaymentSelected = false;
+	    for (var i = 0; i < paymentRadios.length; i++) {
+	        if (paymentRadios[i].checked) {
+	            isPaymentSelected = true;
+	            break;
+	        }
+	    }
+	    // Kiểm tra xem checkbox điều kiện đã được chọn hay không
+	    var isTermsAgreed = termsCheckbox.checked;
+
+	    // Hiển thị hoặc ẩn thông báo lỗi về phương thức thanh toán
+	    var paymentErrorMessage = document.getElementById('paymentErrorMessage');
+	    paymentErrorMessage.style.display = isPaymentSelected ? 'none' : 'block';
+
+	    // Hiển thị hoặc ẩn thông báo lỗi về điều kiện
+	    var termsErrorMessage = document.getElementById('termsErrorMessage');
+	    termsErrorMessage.style.display = isTermsAgreed ? 'none' : 'block';
+
+	    // Nếu không có lỗi, cho phép gửi form
+	    if (isPaymentSelected && isTermsAgreed) {
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+		function UpdateOrder(idPay) {
+		var address = document.getElementsByName("address")[0].value;
+	    var form = document.getElementById('succussForm');
+	    var discountCode = document.getElementsByName("tel")[0].value;
+	    var selectedItem = "${selectedItems}";
+	    form.action = "/shop/ordersuccess?id_pay=" + idPay+ "&id_address=" + address + "&discount=" + discountCode + "&selectedItem=" + selectedItem;
+	}
+
+   
 </script>
