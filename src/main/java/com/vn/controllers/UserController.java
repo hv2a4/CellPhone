@@ -2,6 +2,9 @@ package com.vn.controllers;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -491,26 +494,26 @@ public class UserController {
 				return "index";
 			}
 			double discount = 0;
-			 if (couponCode.isPresent()) {
-		            discount_code discountCode = discount_codeDao.findByLikeCODE(couponCode.orElse(null));
-		            if (discountCode != null) {
-		                if (discountCode.getRank().getID() == user.getRank().getID()) {
-		                    if (discountCode.getQUANTITY() > 0) {
-		                        if (discountCode.getEXPIRY_DATE().after(new Date())) {
-		                            discount = discountCode.getPERCENTAGE();
-		                        } else {
-		                            model.addAttribute("errod", "Mã này đã hết hạn sử dụng");
-		                        }
-		                    } else {
-		                        model.addAttribute("errod", "Mã này đã hết");
-		                    }
-		                } else {
-		                    model.addAttribute("errod", "Mã này không cùng cấp với bạn");
-		                }
-		            } else {
-		                model.addAttribute("errod", "Mã này không tồn tại");
-		            }
-		        }
+			if (couponCode.isPresent()) {
+				discount_code discountCode = discount_codeDao.findByLikeCODE(couponCode.orElse(null));
+				if (discountCode != null) {
+					if (discountCode.getRank().getID() == user.getRank().getID()) {
+						if (discountCode.getQUANTITY() > 0) {
+							if (discountCode.getEXPIRY_DATE().isAfter(LocalDateTime.now())) {
+								discount = discountCode.getPERCENTAGE();
+							} else {
+								model.addAttribute("errod", "Mã này đã hết hạn sử dụng");
+							}
+						} else {
+							model.addAttribute("errod", "Mã này đã hết");
+						}
+					} else {
+						model.addAttribute("errod", "Mã này không cùng cấp với bạn");
+					}
+				} else {
+					model.addAttribute("errod", "Mã này không tồn tại");
+				}
+			}
 			double totalAmount = 0;
 			List<payment_method> listPay = payment_methodDao.findAll();
 			if (!selectedItems.isPresent()) {
@@ -633,7 +636,6 @@ public class UserController {
 		order.setUser(user1);
 		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
 		order.setADDRESS(adr);
-		;
 		order.setPayment_method(pay);
 		order.setTOTAL_AMOUNT(totalAmount.orElse(null));
 		order.setCREATE_AT(new Date());
