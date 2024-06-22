@@ -52,6 +52,7 @@ import com.vn.entity.brand;
 import com.vn.entity.cart;
 import com.vn.entity.cart_item;
 import com.vn.entity.category;
+import com.vn.entity.discount_code;
 import com.vn.entity.invoice;
 import com.vn.entity.order;
 import com.vn.entity.order_item;
@@ -258,7 +259,7 @@ public class UserController {
 				if (variant.get().getID() == item.getVariant().getID()) {
 					cart_item = item;
 					if (cart_item.getQUANTITY() <= variant.get().getQUANTITY()) {
-						if (cart_item.getQUANTITY() >= variant.get().getQUANTITY()) {
+						if (cart_item.getQUANTITY() == variant.get().getQUANTITY()) {
 							cart_item.setQUANTITY(variant.get().getQUANTITY());
 						} else {
 							cart_item.setQUANTITY(cart_item.getQUANTITY() + 1);
@@ -343,9 +344,10 @@ public class UserController {
 
 			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
 			for (cart_item item : list_cart_item) {
-				if (variant.get().getID() == item.getVariant().getID()) {
+				if (variant.get().getID() >= item.getVariant().getID()) {
 					cart_item = item;
-					cart_item.setQUANTITY(cart_item.getQUANTITY() + quantity);
+					cart_item.setQUANTITY(cart_item.getVariant().getQUANTITY());
+					model.addAttribute("show", true);
 					break;
 				}
 			}
@@ -476,32 +478,59 @@ public class UserController {
 	@RequestMapping("checkout/{id}")
 	public String getCheckout(
 			@RequestParam(value = "selectedItems", required = false) Optional<List<Integer>> selectedItems, Model model,
-			@RequestParam("quantity") Optional<Integer> quantity, @PathVariable("id") Optional<Integer> id) {
+			@RequestParam("quantity") Optional<Integer> quantity, @PathVariable("id") Optional<Integer> id,
+			@RequestParam(value = "couponCode", required = false) Optional<String> couponCode) {
 		user us = sessionService.get("list");
 
 		if (us != null) {
 			user user = userDao.findById(us.getUSERNAME()).get();
+			if (user.getAddresses() == null || user.getAddresses().isEmpty()) {
+				model.addAttribute("showAddressAlert", true);
+				String page = "checkout.jsp";
+				model.addAttribute("page", page);
+				return "index";
+			}
+			double discount = 0;
+			 if (couponCode.isPresent()) {
+		            discount_code discountCode = discount_codeDao.findByLikeCODE(couponCode.orElse(null));
+		            if (discountCode != null) {
+		                if (discountCode.getRank().getID() == user.getRank().getID()) {
+		                    if (discountCode.getQUANTITY() > 0) {
+		                        if (discountCode.getEXPIRY_DATE().after(new Date())) {
+		                            discount = discountCode.getPERCENTAGE();
+		                        } else {
+		                            model.addAttribute("errod", "Mã này đã hết hạn sử dụng");
+		                        }
+		                    } else {
+		                        model.addAttribute("errod", "Mã này đã hết");
+		                    }
+		                } else {
+		                    model.addAttribute("errod", "Mã này không cùng cấp với bạn");
+		                }
+		            } else {
+		                model.addAttribute("errod", "Mã này không tồn tại");
+		            }
+		        }
+			double totalAmount = 0;
 			List<payment_method> listPay = payment_methodDao.findAll();
 			if (!selectedItems.isPresent()) {
 				variant v = variantDao.findById(id.orElse(1))
 						.orElseThrow(() -> new RuntimeException("Variant not found"));
-				double totalAmount = getGiaKhuyenMai(v) * quantity.orElse(1);
-
-				model.addAttribute("totalOrder", totalAmount);
+				totalAmount = getGiaKhuyenMai(v) * quantity.orElse(1);
 				model.addAttribute("variant", v);
 				model.addAttribute("quantity", quantity.orElse(1));
 			} else {
 				List<cart_item> list = cart_itemdao.findByIdOT(selectedItems.orElse(Collections.emptyList()));
-				double totalAmount = 0;
 				for (cart_item cart_item : list) {
 					totalAmount += getGiaKhuyenMai(cart_item.getVariant()) * cart_item.getQUANTITY();
 				}
-				model.addAttribute("totalOrder", totalAmount);
 				model.addAttribute("items", list);
 				String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
 						.collect(Collectors.joining(","));
 				model.addAttribute("selectedItems", selectedItemsQueryParam);
 			}
+			model.addAttribute("totalOrder", totalAmount);
+			model.addAttribute("discout", discount);
 			model.addAttribute("user", user);
 			model.addAttribute("pays", listPay);
 			String page = "checkout.jsp";
@@ -572,6 +601,7 @@ public class UserController {
 			Model model) {
 		user us = sessionService.get("list");
 		if (us != null) {
+
 			String selectedItemsQueryParam = selectedItems.stream().map(String::valueOf)
 					.collect(Collectors.joining(","));
 

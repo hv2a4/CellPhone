@@ -19,4 +19,6 @@ public interface discount_codeDao extends JpaRepository<discount_code, Integer> 
 	@Query("SELECT p FROM discount_code p ORDER BY p.START_DATE DESC")
 	Page<discount_code> findAllSX(Pageable pageable);
 	
+	@Query("select dc from discount_code dc where dc.CODE = ?1")
+	discount_code findByLikeCODE(String code);
 }	

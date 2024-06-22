@@ -38,6 +38,7 @@
 							<div class="cart-dropdown">
 
 								<div class="cart-list">
+								<form id="checkout-form" action="/shop/addorder" method="get">
 									<c:forEach var="cartItem" items="${cartItems}">
 										<div class="product-widget">
 											<div class="product-img">
@@ -57,8 +58,10 @@
 											<button class="delete" onclick="deleteCart(${cartItem.ID})">
 												<i class="fa fa-close"></i>
 											</button>
+											<input type="hidden" name="selectedItems" value="${cartItem.ID}">
 										</div>
 									</c:forEach>
+									</form>
 								</div>
 
 								<div class="cart-summary">
@@ -69,7 +72,8 @@
 									</h5>
 								</div>
 								<div class="cart-btns">
-									<a href="/shop/cart">Xem giỏ hàng</a> <a href="/shop/addorder">Đặt hàng
+									<a href="/shop/cart">Xem giỏ hàng</a> 
+									<a onclick="submitCheckoutForm()">Đặt hàng
 									 <i class="fa fa-arrow-circle-right"></i>
 									</a>
 								</div>
@@ -135,6 +139,9 @@ function deleteCart(id) {
 	    }
 	  });
 	}
+function submitCheckoutForm() {
+    document.getElementById('checkout-form').submit();
+}
 </script>
 
 

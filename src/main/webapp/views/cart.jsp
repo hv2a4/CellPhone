@@ -26,7 +26,7 @@
 							<c:forEach var="item" items="${listCartItems}">
 								<tr class="cartItem cartItem_${item.ID}">
 									<td><input type="checkbox" name="selectedItems"
-										value="${item.ID}" class="selectItem" /></td>
+										value="${item.ID}" class="selectItem" checked="checked"/></td>
 									<td class="hidden-xs"><a
 										href="/shop/product/${item.variant.phone.ID}?id_variant=${item.variant.ID}&id_storage=${item.variant.storage.ID}">
 											<img data-sizes="auto"
@@ -161,10 +161,10 @@ function toggleAllCheckboxes() {
         	        title: "Số lượng sản phẩm không vượt quá "+maxQuantity,
         	        text: "",
         	        icon: "error",
-        	        showCancelButton: true,
-        	        confirmButtonColor: "#3085d6",
-        	        cancelButtonColor: "#d33"
-        	      })
+        	        confirmButtonColor: "#3085d6"
+        	      }).then(() => {
+        	            window.location.href = '/shop/cart';
+        	        });
                 error = true;
             }
         });
@@ -189,10 +189,10 @@ function toggleAllCheckboxes() {
     	        title: "Số lượng sản phẩm không vượt quá "+maxQuantity,
     	        text: "",
     	        icon: "error",
-    	        showCancelButton: true,
     	        confirmButtonColor: "#3085d6",
-    	        cancelButtonColor: "#d33",
-    	      })
+    	      }).then(() => {
+    	            window.location.href = '/shop/cart';
+    	        });
             return; // Không làm gì nếu vượt quá số lượng tối đa
         }
 
