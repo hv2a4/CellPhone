@@ -665,8 +665,8 @@ public class AdminController {
         // Tìm đối tượng order theo ID
         order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         // Tìm đối tượng status_order mới có ID là 6 (Trả hàng)
-        status_order returnStatus = status_orderDao.findById(6).orElseThrow(() -> new RuntimeException("Status not found"));
-        if (orders.getStatus_order().getID() == 5) {
+        status_order returnStatus = status_orderDao.findById(5).orElseThrow(() -> new RuntimeException("Status not found"));
+        if (orders.getStatus_order().getID() == 8) {
             // Cập nhật trạng thái trả hàng cho đối tượng order
             orders.setStatus_order(returnStatus);
             orders.setUPDATE_AT(new Date());
@@ -686,14 +686,14 @@ public class AdminController {
         }
         return false;
     }
-    
-    public void capNhatTrangThaiThanhToanDonHang(order order, Integer idStatusInvoice){
-    	 invoice invoice = order.getInvoices().get(0);
-         status_invoice siv = status_invoiceDao.findById(idStatusInvoice).get();
-         invoice.setStatus_invoice(siv);
-         invoiceDao.save(invoice);
+
+    public void capNhatTrangThaiThanhToanDonHang(order order, Integer idStatusInvoice) {
+        invoice invoice = order.getInvoices().get(0);
+        status_invoice siv = status_invoiceDao.findById(idStatusInvoice).get();
+        invoice.setStatus_invoice(siv);
+        invoiceDao.save(invoice);
     }
-    
+
     // xác nhận trả hàng
     @GetMapping("xacNhanTraHang/{id}")
     @ResponseBody
@@ -701,7 +701,7 @@ public class AdminController {
         // Tìm đối tượng order theo ID
         order orders = orderDaos.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         // Tìm đối tượng status_order mới có ID là 5
-        status_order returnStatus = status_orderDao.findById(5).orElseThrow(() -> new RuntimeException("Status not found"));
+        status_order returnStatus = status_orderDao.findById(8).orElseThrow(() -> new RuntimeException("Status not found"));
         if (orders.getStatus_order().getID() == 7) {
             // Cập nhật trạng thái trả hàng cho đối tượng order
             orders.setStatus_order(returnStatus);
@@ -811,9 +811,9 @@ public class AdminController {
             capNhatTrangThaiThanhToanDonHang(orders, 2);
             List<order_item> listOrderItem = orders.getOrder_items();
             for (order_item order_item : listOrderItem) {
-				variant variant = order_item.getVariant();
-				variant.setQUANTITY(variant.getQUANTITY()+ order_item.getQUANTITY());
-			}
+                variant variant = order_item.getVariant();
+                variant.setQUANTITY(variant.getQUANTITY() + order_item.getQUANTITY());
+            }
             orderDaos.save(orders);
             return true;
         }
@@ -2008,7 +2008,7 @@ public class AdminController {
         try {
             user user1 = userDao.findById(username).get();
             user1.setSTATUS(false);
-            System.out.println(user1.getSTATUS()+ " " + user1.getUSERNAME());
+            user1.setUPDATE_AT(new Date());
             userDao.save(user1); // Lưu thay đổi trạng thái của người dùng
             redirectAttributes.addFlashAttribute("message", "Vô hiệu hóa thành công");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -2020,8 +2020,6 @@ public class AdminController {
         }
         return "redirect:/admin/user";
     }
-
-
 
     @PostMapping("variant/create")
     public ResponseEntity<Map<String, String>> createVariant(
