@@ -192,7 +192,7 @@
                                                                     <!-- Dữ liệu từng đơn hàng -->
                                                                     <c:forEach items="${item.order_items}"
                                                                                var="orderItem">
-                                                                        <div class="row mt-3">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
                                                                             <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
                                                                             <div class="col-md-2 border-bottom">
                                                                                 <img src="/images/${orderItem.variant.phone.IMAGE}"
@@ -267,7 +267,8 @@
 
                                         <c:choose>
                                             <c:when test="${item.status_order.STATUS == 'Chờ xác nhận'}">
-                                                <td>${item.ID }</td>
+                                                <td data-toggle="modal" data-target="#deleteOrder_${item.ID}">${item.ID }</td>
+                                                
                                                 <td>${item.user.USERNAME }</td>
                                                 <td><fmt:formatNumber type="currency"
                                                                       currencyCode="VND"
@@ -317,13 +318,83 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                
                                             </c:when>
 
                                         </c:choose>
 
 
                                         </tbody>
+                                   <div id="deleteOrder_${item.ID}" class="modal fade" role="dialog">
+											<div class="modal-dialog modal-lg">
 
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Thông Tin Đơn Hàng</h4>
+													</div>
+													<div class="modal-body">
+														  <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white ">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2  py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
+                                                                            <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Close</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
                                     </c:forEach>
                                 </table>
                             </div>
@@ -355,7 +426,7 @@
 
                                         <c:choose>
                                             <c:when test="${item.status_order.STATUS == 'Đã xác nhận'}">
-                                                <td>${item.ID }</td>
+                                                <td data-toggle="modal" data-target="#xacNhan_${item.ID}">${item.ID }</td>
                                                 <td>${item.user.USERNAME }</td>
                                                 <td><fmt:formatNumber type="currency"
                                                                       currencyCode="VND"
@@ -369,6 +440,76 @@
                                         </c:choose>
 
                                         </tbody>
+                                        <div id="xacNhan_${item.ID}" class="modal fade" role="dialog">
+											<div class="modal-dialog modal-lg">
+
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Thông Tin Đơn Hàng</h4>
+													</div>
+													<div class="modal-body">
+														  <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white ">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2  py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
+                                                                            <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Close</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
                                     </c:forEach>
                                 </table>
                             </div>
@@ -401,7 +542,7 @@
 
                                         <c:choose>
                                             <c:when test="${item.status_order.STATUS == 'Giao hàng'}">
-                                                <td>${item.ID }</td>
+                                                <td data-toggle="modal" data-target="#vanChuyen_${item.ID}">${item.ID }</td>
                                                 <td>${item.user.USERNAME }</td>
                                                 <td><fmt:formatNumber type="currency"
                                                                       currencyCode="VND"
@@ -416,6 +557,76 @@
                                         </c:choose>
 
                                         </tbody>
+                                        <div id="vanChuyen_${item.ID}" class="modal fade" role="dialog">
+											<div class="modal-dialog modal-lg">
+
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Thông Tin Đơn Hàng</h4>
+													</div>
+													<div class="modal-body">
+														  <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white ">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2  py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
+                                                                            <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Close</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
                                     </c:forEach>
                                 </table>
                             </div>
@@ -448,7 +659,7 @@
 
                                         <c:choose>
                                             <c:when test="${item.status_order.STATUS == 'Hoàn thành'}">
-                                                <td>${item.ID }</td>
+                                                <td  data-toggle="modal" data-target="#hoanhThanh_${item.ID}">${item.ID }</td>
                                                 <td>${item.user.USERNAME }</td>
                                                 <td><fmt:formatNumber type="currency"
                                                                       currencyCode="VND"
@@ -503,6 +714,76 @@
                                         </c:choose>
 
                                         </tbody>
+                                        <div id="hoanhThanh_${item.ID}" class="modal fade" role="dialog">
+											<div class="modal-dialog modal-lg">
+
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Thông Tin Đơn Hàng</h4>
+													</div>
+													<div class="modal-body">
+														  <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white ">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2  py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
+                                                                            <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Close</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
                                     </c:forEach>
                                 </table>
                             </div>
@@ -533,9 +814,8 @@
                                         <tbody>
 
                                         <c:choose>
-                                            <c:when
-                                                    test="${item.status_order.STATUS == 'Chờ xác nhận trả '}">
-                                                <td>${item.ID }</td>
+                                            <c:when test="${item.status_order.STATUS == 'Chờ xác nhận trả'}">
+                                                <td  data-toggle="modal" data-target="#choTra_${item.ID}">${item.ID }</td>
                                                 <td>${item.user.USERNAME }</td>
                                                 <td><fmt:formatNumber type="currency"
                                                                       currencyCode="VND"
@@ -551,6 +831,76 @@
                                         </c:choose>
 
                                         </tbody>
+                                        <div id="choTra_${item.ID}" class="modal fade" role="dialog">
+											<div class="modal-dialog modal-lg">
+
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Thông Tin Đơn Hàng</h4>
+													</div>
+													<div class="modal-body">
+														  <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white ">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2  py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
+                                                                            <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Close</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
                                     </c:forEach>
                                 </table>
                             </div>
@@ -562,7 +912,7 @@
                      aria-labelledby="xacNhanTraHang-tab" tabindex="0">
                     <div class="card mt-3">
                         <div class="card-header">
-                            <h2 class="card-title">Danh Sáchfgff</h2>
+                            <h2 class="card-title">Danh Sách</h2>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -582,8 +932,8 @@
 
                                         <c:choose>
                                             <c:when
-                                                    test="${item.status_order.STATUS == 'Xác nhận trả hàng'}">
-                                                <td>${item.ID }</td>
+                                                    test="${item.status_order.STATUS == 'Giao trả'}">
+                                                <td  data-toggle="modal" data-target="#giaoTra_${item.ID}">${item.ID }</td>
                                                 <td>${item.user.USERNAME }</td>
                                                 <td><fmt:formatNumber type="currency"
                                                                       currencyCode="VND"
@@ -599,6 +949,76 @@
                                         </c:choose>
 
                                         </tbody>
+                                        <div id="giaoTra_${item.ID}" class="modal fade" role="dialog">
+											<div class="modal-dialog modal-lg">
+
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Thông Tin Đơn Hàng</h4>
+													</div>
+													<div class="modal-body">
+														  <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white ">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2  py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
+                                                                            <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Close</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
                                     </c:forEach>
                                 </table>
                             </div>
@@ -630,7 +1050,7 @@
 
                                         <c:choose>
                                             <c:when test="${item.status_order.STATUS == 'Hủy'}">
-                                                <td>${item.ID }</td>
+                                                <td data-toggle="modal" data-target="#huyHang_${item.ID}">${item.ID }</td>
                                                 <td>${item.user.USERNAME }</td>
                                                 <td><fmt:formatNumber type="currency"
                                                                       currencyCode="VND"
@@ -649,6 +1069,76 @@
                                         </c:choose>
 
                                         </tbody>
+                                        <div id="huyHang_${item.ID}" class="modal fade" role="dialog">
+											<div class="modal-dialog modal-lg">
+
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Thông Tin Đơn Hàng</h4>
+													</div>
+													<div class="modal-body">
+														  <!-- Header của danh sách đơn hàng -->
+                                                                    <div class="row bg-dark text-white ">
+                                                                        <div class="col-md-1 py-2">Mã</div>
+                                                                        <div class="col-md-2 py-2">Hình ảnh</div>
+                                                                        <div class="col-md-3 py-2">Tên sản phẩm</div>
+                                                                        <div class="col-md-2 py-2">Số
+                                                                            lượng
+                                                                        </div>
+                                                                        <div class="col-md-2 py-2">Đơn giá
+                                                                        </div>
+                                                                        <div class="col-md-2  py-2">Tổng
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Dữ liệu từng đơn hàng -->
+                                                                    <c:forEach items="${item.order_items}"
+                                                                               var="orderItem">
+                                                                        <div class="row mt-3" style="margin-top: 20px;">
+                                                                            <div class="col-md-1 border-bottom ">${orderItem.ID}</div>
+                                                                            <div class="col-md-2 border-bottom">
+                                                                                <img src="/images/${orderItem.variant.phone.IMAGE}"
+                                                                                     alt="${orderItem.variant.phone.NAME}"
+                                                                                     class="img-fluid"
+                                                                                     style="width: 100px; height: 100px">
+                                                                            </div>
+                                                                            <div class="col-md-3 border-bottom d-flex align-items-center">
+
+                                                                                    ${orderItem.variant.phone.NAME}
+                                                                                (${orderItem.variant.color.NAME} -
+                                                                                <c:choose>
+                                                                                    <c:when test="${orderItem.variant.storage.GB == 1024}">
+                                                                                        1T
+                                                                                    </c:when>
+                                                                                    <c:otherwise>${orderItem.variant.storage.GB} GB</c:otherwise>
+                                                                                </c:choose>
+                                                                                )
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">${orderItem.QUANTITY}</div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE}"/>
+                                                                            </div>
+                                                                            <div class="col-md-2 border-bottom d-flex align-items-center justify-content-center">
+                                                                                <fmt:formatNumber type="number"
+                                                                                                  currencyCode="VND"
+                                                                                                  value="${orderItem.PRICE * orderItem.QUANTITY}"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Lặp lại các block trên cho từng orderItem -->
+                                                                    </c:forEach>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default"
+															data-dismiss="modal">Close</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
                                     </c:forEach>
                                 </table>
                             </div>
