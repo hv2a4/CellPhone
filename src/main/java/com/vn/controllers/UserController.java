@@ -347,10 +347,15 @@ public class UserController {
 
 			List<cart_item> list_cart_item = user.getCarts().get(0).getCart_items();
 			for (cart_item item : list_cart_item) {
-				if (variant.get().getID() >= item.getVariant().getID()) {
+				if (variant.get().getID() == item.getVariant().getID()) {
 					cart_item = item;
-					cart_item.setQUANTITY(cart_item.getVariant().getQUANTITY());
-					model.addAttribute("show", true);
+					if (item.getQUANTITY() >= variant.get().getQUANTITY()) {
+
+						cart_item.setQUANTITY(cart_item.getVariant().getQUANTITY());
+					} else {
+						cart_item.setQUANTITY(cart_item.getQUANTITY() + quantity);
+					}
+
 					break;
 				}
 			}

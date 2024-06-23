@@ -627,6 +627,7 @@ public class AdminController {
             orders.setUPDATE_AT(new Date());
             invoice invoice = orders.getInvoices().get(0);
             status_invoice siv = status_invoiceDao.findById(2).get();
+            System.out.println(status_invoiceDao.findById(2).get().getID());
             invoice.setStatus_invoice(siv);
             invoiceDao.save(invoice);
             orderDaos.save(orders);
