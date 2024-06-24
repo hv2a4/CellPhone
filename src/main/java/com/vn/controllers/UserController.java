@@ -628,7 +628,7 @@ public class UserController {
 
 	@RequestMapping("ordersuccess")
 	public String getOrderSuccess(Model model, @RequestParam("payment") Optional<Integer> idPay,
-			@RequestParam("address") Optional<Integer> idAddress, @RequestParam("variant") Optional<variant> v,
+			@RequestParam("address") Optional<Integer> idAddress, @RequestParam("variantId") Optional<variant> v,
 			@RequestParam("quantity") Optional<Integer> quantity,
 			@RequestParam(value = "selectedItems", required = false) Optional<String> selectedItems,
 			@RequestParam("totalOrder") Optional<Double> totalAmount) {
