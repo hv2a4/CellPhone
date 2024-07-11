@@ -637,7 +637,7 @@ public class UserController {
 		order order = new order();
 		String adr = addressDao.findByNameAdr(idAddress.orElse(null));
 		payment_method pay = payment_methodDao.findById(idPay.orElse(2)).get();
-
+		
 		order.setUser(user1);
 		order.setTOTAL_AMOUNT(order.getTOTAL_AMOUNT());
 		order.setADDRESS(adr);
@@ -928,7 +928,7 @@ public class UserController {
 		String provinceName = paramService.getString("provinceName", "");
 		String districtName = paramService.getString("districtName", "");
 		String wardName = paramService.getString("wardName", "");
-
+        Double tienship=Double.parseDouble(paramService.getString("moneyShip", ""));
 		user us = sessionService.get("list");
 
 		String addreses = noteAddress + ", " + wardName + ", " + districtName + ", " + provinceName;
@@ -940,7 +940,7 @@ public class UserController {
 		item.setPROVINCE(Integer.parseInt(provinceID));
 		item.setDISTRICT(Integer.parseInt(districtID));
 		item.setWARD(wardID);
-
+        item.setSHIPPING_FEE(tienship);
 		addressDao.save(item);
 		String page = "address.jsp";
 		model.addAttribute("page", page);

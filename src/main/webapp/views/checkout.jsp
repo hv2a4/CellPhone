@@ -109,7 +109,7 @@
 												pattern="###,###.###" />
 										</strong>
 										<input type="hidden" name="moneys" id="moneys"
-											value="${empty order?0:totalOrder}">
+											value="${totalOrder * ((100 - discount)/100)}">
 									</c:when>
 									<c:otherwise>
 										<strong id="totalOrder" class="order-total"> <fmt:formatNumber
@@ -124,7 +124,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<select class="input" name="address" id="addressSelect">
+						<select class="input" name="address" id="addressSelect" onchange="sendAddress()">
 							<c:forEach var="adr" items="${user.addresses}">
 								<option name="address" value="${adr.ID}">${adr.ADDRESS}</option>
 							</c:forEach>
