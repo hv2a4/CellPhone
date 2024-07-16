@@ -31,14 +31,6 @@ Chào mừng đến với Cửa hàng Điện thoại Di động, nền tảng m
 - Xem chi tiết và thông số kỹ thuật của từng điện thoại.
 - Thêm sản phẩm vào giỏ hàng và thanh toán.
 
-## Đóng góp
-
-1. Fork repository.
-2. Tạo một nhánh mới (`git checkout -b feature/your-feature`).
-3. Commit các thay đổi (`git commit -am 'Add new feature'`).
-4. Đẩy nhánh lên repository (`git push origin feature/your-feature`).
-5. Tạo Pull Request mới.
-
 
 
 
