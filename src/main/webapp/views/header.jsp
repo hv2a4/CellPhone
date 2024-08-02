@@ -102,7 +102,6 @@
 										<li><a href="/shop/logout">Đăng xuất</a></li>
 									</c:when>
 									<c:otherwise>
-
 										<li><a href="/shop/profile">Thông tin cá nhân</a></li>
 										<li><a href="/shop/changepass">Đổi mật khẩu</a></li>
 										<li role="separator" class="divider"></li>

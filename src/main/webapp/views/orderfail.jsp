@@ -251,249 +251,249 @@
     </div>
     
     <style type="text/css">
-        body {
-            background: #f0f0f0;
-        }
+            body {
+                background: #f0f0f0;
+            }
 
-        .order-content {
-            background: #fff;
-            padding-top: 50px;
-            padding-bottom: 30px;
-        }
+            .order-content {
+                background: #fff;
+                padding-top: 50px;
+                padding-bottom: 30px;
+            }
 
-        .orderView {
-            width: 600px;
-            background: #fff;
-            margin: 0 auto;
-            padding-bottom: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, .15);
-        }
+            .orderView {
+                width: 600px;
+                background: #fff;
+                margin: 0 auto;
+                padding-bottom: 15px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, .15);
+            }
 
-        .picsuccess {
-            display: block;
-            overflow: visible;
-            position: relative;
-            width: 600px;
-        }
+            .picsuccess {
+                display: block;
+                overflow: visible;
+                position: relative;
+                width: 600px;
+            }
 
-        .picsuccess img {
-            display: block;
-            width: 100%;
-            max-width: 640px;
-            height: auto;
-            object-fit: scale-down;
-        }
+            .picsuccess img {
+                display: block;
+                width: 100%;
+                max-width: 640px;
+                height: auto;
+                object-fit: scale-down;
+            }
 
-        .picsuccess .notistatus {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -18px;
-            width: 280px;
-            line-height: 36px;
-            font-size: 16px;
-            color: #00af1d;
-            font-weight: 600;
-            text-align: center;
-            display: block;
-            margin: auto;
-            text-transform: uppercase;
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .16);
-        }
+            .picsuccess .notistatus {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -18px;
+                width: 280px;
+                line-height: 36px;
+                font-size: 16px;
+                color: #00af1d;
+                font-weight: 600;
+                text-align: center;
+                display: block;
+                margin: auto;
+                text-transform: uppercase;
+                background: #fff;
+                border-radius: 20px;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .16);
+            }
 
-        .iconnoti {
-            background: url(https://cdn.tgdd.vn/v2015/Content/desktop/images/V4/iconcartmobile@2x.png) no-repeat;
-            background-size: 80px 85px;
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-            display: inline-block;
-        }
+            .iconnoti {
+                background: url(https://cdn.tgdd.vn/v2015/Content/desktop/images/V4/iconcartmobile@2x.png) no-repeat;
+                background-size: 80px 85px;
+                width: 20px;
+                height: 20px;
+                vertical-align: middle;
+                display: inline-block;
+            }
 
-        .iconsuccess {
-            background-position: -25px 0;
-            width: 19px;
-            height: 15px;
-            margin-right: 3px;
-        }
+            .iconsuccess {
+                background-position: -25px 0;
+                width: 19px;
+                height: 15px;
+                margin-right: 3px;
+            }
 
-        .thank {
-            display: block;
-            overflow: hidden;
-            width: 560px;
-            margin: auto;
-            color: #333;
-            line-height: 22px;
-            padding: 40px 20px 20px;
-            background: #fff;
-        }
+            .thank {
+                display: block;
+                overflow: hidden;
+                width: 560px;
+                margin: auto;
+                color: #333;
+                line-height: 22px;
+                padding: 40px 20px 20px;
+                background: #fff;
+            }
 
-        .titlebill {
-            display: block;
-            margin: 0 20px;
-            line-height: 30px;
-            font-size: 14px;
-            color: #333;
-            background: #f3f3f3;
-            text-transform: uppercase;
-            padding: 0 10px;
-        }
+            .titlebill {
+                display: block;
+                margin: 0 20px;
+                line-height: 30px;
+                font-size: 14px;
+                color: #333;
+                background: #f3f3f3;
+                text-transform: uppercase;
+                padding: 0 10px;
+            }
 
-        .infoorder,
-        .callship,
-        .cty {
-            display: block;
-            overflow: hidden;
-            font-size: 14px;
-            color: #333;
-            padding: 10px 20px 0 20px;
-            margin: auto;
-            background: #fff;
-        }
+            .infoorder,
+            .callship,
+            .cty {
+                display: block;
+                overflow: hidden;
+                font-size: 14px;
+                color: #333;
+                padding: 10px 20px 0 20px;
+                margin: auto;
+                background: #fff;
+            }
 
-        .infoorder div {
-            display: block;
-            overflow: hidden;
-            margin-bottom: 5px;
-            padding-left: 10px;
-        }
+            .infoorder div {
+                display: block;
+                overflow: hidden;
+                margin-bottom: 5px;
+                padding-left: 10px;
+            }
 
-        .callship {
-            line-height: 22px;
-            padding-bottom: 10px;
-        }
+            .callship {
+                line-height: 22px;
+                padding-bottom: 10px;
+            }
 
-        .callship a {
-            color: #288ad6;
-            font-weight: 600;
-        }
+            .callship a {
+                color: #288ad6;
+                font-weight: 600;
+            }
 
-        .titlebill {
-            display: block;
-            margin: 0 20px;
-            line-height: 30px;
-            font-size: 14px;
-            color: #333;
-            background: #f3f3f3;
-            text-transform: uppercase;
-        }
+            .titlebill {
+                display: block;
+                margin: 0 20px;
+                line-height: 30px;
+                font-size: 14px;
+                color: #333;
+                background: #f3f3f3;
+                text-transform: uppercase;
+            }
 
-        .listorder {
-            display: block;
-            overflow: visible;
-            background: #fff;
-            width: 600px;
-            margin: auto;
-        }
+            .listorder {
+                display: block;
+                overflow: visible;
+                background: #fff;
+                width: 600px;
+                margin: auto;
+            }
 
-        .listorder li {
-            display: block;
-            overflow: visible;
-            border-bottom: 1px solid #eee;
-            padding: 10px 0;
-            margin: 0 20px;
-        }
+            .listorder li {
+                display: block;
+                overflow: visible;
+                border-bottom: 1px solid #eee;
+                padding: 10px 0;
+                margin: 0 20px;
+            }
 
-        .listorder li .colimg {
-            float: left;
-            overflow: hidden;
-            width: 75px;
-        }
+            .listorder li .colimg {
+                float: left;
+                overflow: hidden;
+                width: 75px;
+            }
 
-        .listorder li a {
-            display: block;
-            overflow: hidden;
-        }
+            .listorder li a {
+                display: block;
+                overflow: hidden;
+            }
 
-        .listorder li img {
-            display: block;
-            width: 55px;
-            height: 55px;
-            margin: 5px auto 10px;
-        }
+            .listorder li img {
+                display: block;
+                width: 55px;
+                height: 55px;
+                margin: 5px auto 10px;
+            }
 
-        .listorder li .colinfo {
-            display: block;
-            overflow: visible;
-            margin-left: 75px;
-        }
+            .listorder li .colinfo {
+                display: block;
+                overflow: visible;
+                margin-left: 75px;
+            }
 
-        .listorder li .colinfo strong {
-            font-weight: 300;
-            font-size: 14px;
-            color: #c10017;
-            float: right;
-            margin-right: 10px;
-        }
+            .listorder li .colinfo strong {
+                font-weight: 300;
+                font-size: 14px;
+                color: #c10017;
+                float: right;
+                margin-right: 10px;
+            }
 
-        .listorder li a {
-            display: block;
-            overflow: hidden;
-        }
+            .listorder li a {
+                display: block;
+                overflow: hidden;
+            }
 
-        .listorder li .colinfo a {
-            display: inline-block;
-            font-size: 14px;
-            color: #333;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            text-overflow: ellipsis;
-            width: 62%;
-        }
+            .listorder li .colinfo a {
+                display: inline-block;
+                font-size: 14px;
+                color: #333;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                text-overflow: ellipsis;
+                width: 62%;
+            }
 
-        .onecolor {
-            float: left;
-            position: relative;
-            background: #fff;
-            font-size: 14px;
-            color: #333;
-            margin-top: 10px;
-        }
+            .onecolor {
+                float: left;
+                position: relative;
+                background: #fff;
+                font-size: 14px;
+                color: #333;
+                margin-top: 10px;
+            }
 
-        .onecolor span {
-            color: #999;
-        }
+            .onecolor span {
+                color: #999;
+            }
 
-        .quan {
-            float: right;
-            margin-top: 10px;
-            margin-right: 10px;
-        }
+            .quan {
+                float: right;
+                margin-top: 10px;
+                margin-right: 10px;
+            }
 
-        .listorder li .promotion {
-            background: #fff;
-            padding: 5px;
-            height: auto;
-            margin: 10px 10px 0 0;
-            display: block;
-            overflow: hidden;
-        }
+            .listorder li .promotion {
+                background: #fff;
+                padding: 5px;
+                height: auto;
+                margin: 10px 10px 0 0;
+                display: block;
+                overflow: hidden;
+            }
 
-        .listorder li .promotion.choose {
-            overflow: visible !important;
-            margin-top: 5px !important;
-            float: left;
-            width: 90%;
-        }
+            .listorder li .promotion.choose {
+                overflow: visible !important;
+                margin-top: 5px !important;
+                float: left;
+                width: 90%;
+            }
 
-        .buyother {
-            display: block;
-            overflow: hidden;
-            background: #fff;
-            line-height: 40px;
-            text-align: center;
-            margin: 15px auto;
-            width: 300px;
-            font-size: 14px;
-            color: #288ad6;
-            font-weight: 600;
-            text-transform: uppercase;
-            border: 1px solid #288ad6;
-            border-radius: 4px;
-        }
+            .buyother {
+                display: block;
+                overflow: hidden;
+                background: #fff;
+                line-height: 40px;
+                text-align: center;
+                margin: 15px auto;
+                width: 300px;
+                font-size: 14px;
+                color: #288ad6;
+                font-weight: 600;
+                text-transform: uppercase;
+                border: 1px solid #288ad6;
+                border-radius: 4px;
+            }
     </style>
     <div id="site-overlay" class="site-overlay"></div>
     <div class="modalPview">
